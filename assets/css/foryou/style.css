@@ -1,0 +1,115 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ffe5e5 0%, #fff0f5 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    text-align: center;
+    padding: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.main-button {
+    background: #ff69b4;
+    color: white;
+    border: none;
+    padding: 1.5rem 3rem;
+    font-size: 1.5rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+    transition: all 0.3s ease;
+}
+
+.main-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
+}
+
+.main-button:active {
+    transform: translateY(1px);
+}
+
+.content {
+    margin-top: 2rem;
+}
+
+.title {
+    font-family: Arial, sans-serif;
+    color: #ff69b4;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    animation: fadeIn 1s ease-out;
+    font-weight: bold;
+}
+
+.message {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    animation: slideUp 1s ease-out;
+}
+
+.message p {
+    font-size: 1.2rem;
+    color: #666;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+}
+
+.signature {
+    font-family: Arial, sans-serif;
+    font-size: 1.5rem !important;
+    color: #ff69b4 !important;
+    text-align: right;
+    margin-top: 1rem !important;
+    font-weight: bold;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .main-button {
+        font-size: 1.2rem;
+        padding: 1.2rem 2.5rem;
+    }
+    
+    .title {
+        font-size: 2rem;
+    }
+    
+    .message p {
+        font-size: 1rem;
+    }
+} 
