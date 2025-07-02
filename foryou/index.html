@@ -1,1 +1,25 @@
-Mau buat pesan juga?
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buat Pesan ForYou</title>
+    <link rel="stylesheet" href="../assets/css/foryou/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Buat Pesan ForYou</h1>
+        <form id="foryou-form" class="content">
+            <input type="text" id="title" placeholder="Title (untuk preview link)" required><br><br>
+            <input type="text" id="judul" placeholder="Judul" required><br><br>
+            <input type="text" id="tombol" placeholder="Teks pada tombol" required><br><br>
+            <input type="text" id="pesan" placeholder="Pesan yang ingin dimasukan" required><br><br>
+            <input type="text" id="nama_pengirim" placeholder="Nama pengirim" required><br><br>
+            <input type="text" id="sublink" placeholder="Sub-link (untuk URL)" required><br><br>
+            <button type="submit" class="main-button">Generate</button>
+        </form>
+        <div id="info" style="margin-top:2rem;"></div>
+    </div>
+    <script src="../assets/js/foryou/generator.js"></script>
+</body>
+</html>
