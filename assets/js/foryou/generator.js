@@ -30,3 +30,12 @@ document.getElementById('foryou-form').addEventListener('submit', async function
         document.getElementById('info').innerHTML = "Pesan kamu sedang diproses dan akan segera tersedia di: <br><b>zanxa.site/foryou/" + data.sublink + "</b><br>Silakan cek dalam 2 menit.";
     }, 2000);
 });
+
+// Auto-resize textarea pesan
+const textarea = document.getElementById('pesan');
+if (textarea) {
+    textarea.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+}
