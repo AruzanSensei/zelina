@@ -8,28 +8,103 @@
     body {
       margin: 0;
       padding: 0;
-      background: #000; /* biar elegan */
+      background: #000;
     }
-    img {
+    .img-wrapper {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      background: #111; /* warna dasar hitam */
+    }
+    /* skeleton shimmer */
+    .skeleton {
+      width: 100%;
+      padding-top: 141.4%; /* aspect ratio kira2 A4 (1:1.414) */
+      background: linear-gradient(
+        90deg,
+        #1a1a1a 25%,
+        #333 37%,
+        #1a1a1a 63%
+      );
+      background-size: 400% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+    @keyframes shimmer {
+      0% { background-position: -400% 0; }
+      100% { background-position: 400% 0; }
+    }
+    /* gambar hidden dulu */
+    .img-wrapper img {
+      position: absolute;
+      top: 0; left: 0;
       width: 100%;
       height: auto;
       display: block;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    .img-wrapper img.loaded {
+      opacity: 1;
     }
   </style>
 </head>
 <body>
-  <!-- Gambar pertama dimuat langsung -->
-  <img src="images/1.jpg" alt="Halaman 1">
+  <!-- Gambar 1 -->
+  <div class="img-wrapper">
+    <div class="skeleton"></div>
+    <img src="images/1.jpg" alt="Halaman 1" loading="eager">
+  </div>
 
-  <!-- Sisanya lazy load -->
-  <img src="images/2.jpg" alt="Halaman 2" loading="lazy">
-  <img src="images/3.jpg" alt="Halaman 3" loading="lazy">
-  <img src="images/4.jpg" alt="Halaman 4" loading="lazy">
-  <img src="images/5.jpg" alt="Halaman 5" loading="lazy">
-  <img src="images/6.jpg" alt="Halaman 6" loading="lazy">
-  <img src="images/7.jpg" alt="Halaman 7" loading="lazy">
-  <img src="images/8.jpg" alt="Halaman 8" loading="lazy">
-  <img src="images/9.jpg" alt="Halaman 9" loading="lazy">
-  <img src="images/10.jpg" alt="Halaman 10" loading="lazy">
+  <!-- Gambar 2–10 -->
+  <div class="img-wrapper">
+    <div class="skeleton"></div>
+    <img src="images/2.jpg" alt="Halaman 2" loading="lazy">
+  </div>
+  <div class="img-wrapper">
+    <div class="skeleton"></div>
+    <img src="images/3.jpg" alt="Halaman 3" loading="lazy">
+  </div>
+  <div class="img-wrapper">
+    <div class="skeleton"></div>
+    <img src="images/4.jpg" alt="Halaman 4" loading="lazy">
+  </div>
+  <div class="img-wrapper">
+    <div class="skeleton"></div>
+    <img src="images/5.jpg" alt="Halaman 5" loading="lazy">
+  </div>
+  <div class="img-wrapper">
+    <div class="skeleton"></div>
+    <img src="images/6.jpg" alt="Halaman 6" loading="lazy">
+  </div>
+  <div class="img-wrapper">
+    <div class="skeleton"></div>
+    <img src="images/7.jpg" alt="Halaman 7" loading="lazy">
+  </div>
+  <div class="img-wrapper">
+    <div class="skeleton"></div>
+    <img src="images/8.jpg" alt="Halaman 8" loading="lazy">
+  </div>
+  <div class="img-wrapper">
+    <div class="skeleton"></div>
+    <img src="images/9.jpg" alt="Halaman 9" loading="lazy">
+  </div>
+  <div class="img-wrapper">
+    <div class="skeleton"></div>
+    <img src="images/10.jpg" alt="Halaman 10" loading="lazy">
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const wrappers = document.querySelectorAll(".img-wrapper");
+      wrappers.forEach(wrapper => {
+        const img = wrapper.querySelector("img");
+        const skeleton = wrapper.querySelector(".skeleton");
+        img.addEventListener("load", () => {
+          img.classList.add("loaded");
+          skeleton.style.display = "none"; // ilangin skeleton
+        });
+      });
+    });
+  </script>
 </body>
 </html>
