@@ -14,16 +14,16 @@
     .image-wrapper {
       position: relative;
       width: 100%;
-      aspect-ratio: 16/9; /* tetap 16:9 */
+      aspect-ratio: 16/9;
       overflow: hidden;
       background: linear-gradient(
-        135deg, /* diagonal kiri atas → kanan bawah */
+        135deg,
         #1a1a1a 25%,
         #2a2a2a 50%,
         #1a1a1a 75%
       );
       background-size: 200% 200%;
-      animation: shimmer 3s linear infinite; /* lebih lembut, konstan */
+      animation: shimmer 3s linear infinite;
     }
 
     @keyframes shimmer {
@@ -41,16 +41,41 @@
 </head>
 <body>
 
-  <div class="image-wrapper"><img src="images/1.jpg" alt="Halaman 1"></div>
-  <div class="image-wrapper"><img src="images/2.jpg" alt="Halaman 2"></div>
-  <div class="image-wrapper"><img src="images/3.jpg" alt="Halaman 3"></div>
-  <div class="image-wrapper"><img src="images/4.jpg" alt="Halaman 4"></div>
-  <div class="image-wrapper"><img src="images/5.jpg" alt="Halaman 5"></div>
-  <div class="image-wrapper"><img src="images/6.jpg" alt="Halaman 6"></div>
-  <div class="image-wrapper"><img src="images/7.jpg" alt="Halaman 7"></div>
-  <div class="image-wrapper"><img src="images/8.jpg" alt="Halaman 8"></div>
-  <div class="image-wrapper"><img src="images/9.jpg" alt="Halaman 9"></div>
-  <div class="image-wrapper"><img src="images/10.jpg" alt="Halaman 10"></div>
+  <!-- Tempat ngerender gambar -->
+  <div id="gallery"></div>
 
+  <script>
+    const totalImages = 10;
+    const gallery = document.getElementById("gallery");
+
+    // fungsi load berurutan
+    async function loadSequential() {
+      for (let i = 1; i <= totalImages; i++) {
+        await loadImage(i);
+      }
+    }
+
+    // load 1 gambar, resolve setelah selesai
+    function loadImage(num) {
+      return new Promise((resolve) => {
+        const wrapper = document.createElement("div");
+        wrapper.className = "image-wrapper";
+
+        const img = new Image();
+        img.src = `images/${num}.jpg`;
+        img.alt = `Halaman ${num}`;
+
+        img.onload = () => {
+          resolve();
+        };
+
+        wrapper.appendChild(img);
+        gallery.appendChild(wrapper);
+      });
+    }
+
+    // mulai load berurutan
+    loadSequential();
+  </script>
 </body>
 </html>
