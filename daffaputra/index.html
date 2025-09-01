@@ -31,12 +31,17 @@
       height: 100%;
       object-fit: cover;
       display: block;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .image-wrapper img.loaded {
+      opacity: 1;
     }
   </style>
 </head>
 <body>
 
-  <!-- Tempat ngerender gambar -->
   <div id="gallery"></div>
 
   <script>
@@ -51,19 +56,21 @@
 
     function loadImage(num) {
       return new Promise((resolve) => {
+        // skeleton tunggal
         const wrapper = document.createElement("div");
         wrapper.className = "image-wrapper";
+        gallery.appendChild(wrapper);
 
         const img = new Image();
         img.src = `images/${num}.jpg`;
         img.alt = `Halaman ${num}`;
 
         img.onload = () => {
+          wrapper.appendChild(img);
+          setTimeout(() => img.classList.add("loaded"), 50); // fade-in
+          wrapper.style.animation = "none"; // stop skeleton
           resolve();
         };
-
-        wrapper.appendChild(img);
-        gallery.appendChild(wrapper);
       });
     }
 
