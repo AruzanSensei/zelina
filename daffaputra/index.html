@@ -16,19 +16,14 @@
       width: 100%;
       aspect-ratio: 16/9;
       overflow: hidden;
-      background: linear-gradient(
-        135deg,
-        #1a1a1a 25%,
-        #2a2a2a 50%,
-        #1a1a1a 75%
-      );
-      background-size: 200% 200%;
-      animation: shimmer 3s linear infinite;
+      background: #1f1f1f;
+      animation: pulse 2s ease-in-out infinite;
     }
 
-    @keyframes shimmer {
-      0% { background-position: 0 0; }
-      100% { background-position: 200% 200%; }
+    @keyframes pulse {
+      0%   { background-color: #1f1f1f; }
+      50%  { background-color: #3a3a3a; }
+      100% { background-color: #1f1f1f; }
     }
 
     .image-wrapper img {
@@ -48,14 +43,12 @@
     const totalImages = 10;
     const gallery = document.getElementById("gallery");
 
-    // fungsi load berurutan
     async function loadSequential() {
       for (let i = 1; i <= totalImages; i++) {
         await loadImage(i);
       }
     }
 
-    // load 1 gambar, resolve setelah selesai
     function loadImage(num) {
       return new Promise((resolve) => {
         const wrapper = document.createElement("div");
@@ -74,7 +67,6 @@
       });
     }
 
-    // mulai load berurutan
     loadSequential();
   </script>
 </body>
