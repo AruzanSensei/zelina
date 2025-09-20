@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri - QurbanKu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2 data-id="brand">QurbanKu</h2>
+            </div>
+            
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link" data-id="nav-home">Beranda</a>
+                </li>
+                <li class="nav-item">
+                    <a href="animals.html" class="nav-link" data-id="nav-animals">Hewan Qurban</a>
+                </li>
+                <li class="nav-item">
+                    <a href="gallery.html" class="nav-link active" data-id="nav-gallery">Galeri</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link" data-id="nav-contact">Kontak</a>
+                </li>
+            </ul>
+
+            <div class="nav-actions">
+                <div class="language-toggle">
+                    <button id="lang-toggle" class="lang-btn">
+                        <span id="current-flag">🇮🇩</span>
+                        <span id="current-lang">ID</span>
+                    </button>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 data-id="gallery-title">Galeri Dokumentasi</h1>
+            <p data-id="gallery-subtitle">Dokumentasi pelaksanaan qurban kami</p>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section">
+        <div class="container">
+            <div class="gallery-grid">
+                <div class="gallery-item" data-image="https://images.unsplash.com/photo-1493962853295-0fd70327578a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                    <img src="https://images.unsplash.com/photo-1493962853295-0fd70327578a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Sapi Premium Quality">
+                    <div class="gallery-overlay">
+                        <h3 data-id="gallery1-title">Sapi Premium Quality</h3>
+                        <p data-id="gallery1-desc">Sapi berkualitas tinggi siap untuk qurban</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-image="https://images.unsplash.com/photo-1465379944081-7f47de8d74ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                    <img src="https://images.unsplash.com/photo-1465379944081-7f47de8d74ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Proses Pemeriksaan">
+                    <div class="gallery-overlay">
+                        <h3 data-id="gallery2-title">Proses Pemeriksaan</h3>
+                        <p data-id="gallery2-desc">Pemeriksaan kesehatan hewan secara menyeluruh</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-image="https://images.unsplash.com/photo-1485833077593-4278bba3f11f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                    <img src="https://images.unsplash.com/photo-1485833077593-4278bba3f11f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Kambing Berkualitas">
+                    <div class="gallery-overlay">
+                        <h3 data-id="gallery3-title">Kambing Berkualitas</h3>
+                        <p data-id="gallery3-desc">Kambing sehat dan gemuk untuk qurban</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-image="https://images.unsplash.com/photo-1472396961693-142e6e269027?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                    <img src="https://images.unsplash.com/photo-1472396961693-142e6e269027?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Area Peternakan">
+                    <div class="gallery-overlay">
+                        <h3 data-id="gallery4-title">Area Peternakan</h3>
+                        <p data-id="gallery4-desc">Lingkungan bersih dan nyaman untuk hewan</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-image="https://images.unsplash.com/photo-1466721591366-2d5fba72006d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                    <img src="https://images.unsplash.com/photo-1466721591366-2d5fba72006d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Perawatan Hewan">
+                    <div class="gallery-overlay">
+                        <h3 data-id="gallery5-title">Perawatan Hewan</h3>
+                        <p data-id="gallery5-desc">Perawatan terbaik untuk kesehatan hewan</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-image="https://images.unsplash.com/photo-1469041797191-50ace28483c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                    <img src="https://images.unsplash.com/photo-1469041797191-50ace28483c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Transportasi">
+                    <div class="gallery-overlay">
+                        <h3 data-id="gallery6-title">Transportasi</h3>
+                        <p data-id="gallery6-desc">Transportasi aman untuk pengiriman hewan</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-image="https://images.unsplash.com/photo-1452378174528-3090a4bba7b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                    <img src="https://images.unsplash.com/photo-1452378174528-3090a4bba7b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Tim Profesional">
+                    <div class="gallery-overlay">
+                        <h3 data-id="gallery7-title">Tim Profesional</h3>
+                        <p data-id="gallery7-desc">Tim berpengalaman dalam menangani hewan qurban</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-image="https://images.unsplash.com/photo-1493962853295-0fd70327578a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                    <img src="https://images.unsplash.com/photo-1493962853295-0fd70327578a?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Penyembelihan">
+                    <div class="gallery-overlay">
+                        <h3 data-id="gallery8-title">Proses Penyembelihan</h3>
+                        <p data-id="gallery8-desc">Penyembelihan sesuai syariat Islam</p>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-image="https://images.unsplash.com/photo-1465379944081-7f47de8d74ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80">
+                    <img src="https://images.unsplash.com/photo-1465379944081-7f47de8d74ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Pembagian Daging">
+                    <div class="gallery-overlay">
+                        <h3 data-id="gallery9-title">Pembagian Daging</h3>
+                        <p data-id="gallery9-desc">Pembagian daging yang adil dan higienis</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox">
+        <div class="lightbox-content">
+            <span class="lightbox-close">&times;</span>
+            <img id="lightbox-image" src="" alt="">
+            <div class="lightbox-nav">
+                <button id="prev-btn" class="nav-btn">&#8249;</button>
+                <button id="next-btn" class="nav-btn">&#8250;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 data-id="brand">QurbanKu</h3>
+                    <p data-id="footer-desc">Melayani kebutuhan qurban umat dengan penuh amanah dan profesional.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-id="footer-links">Tautan</h4>
+                    <ul>
+                        <li><a href="index.html" data-id="nav-home">Beranda</a></li>
+                        <li><a href="animals.html" data-id="nav-animals">Hewan Qurban</a></li>
+                        <li><a href="gallery.html" data-id="nav-gallery">Galeri</a></li>
+                        <li><a href="contact.html" data-id="nav-contact">Kontak</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-id="footer-contact">Kontak</h4>
+                    <p>📞 +62 812-3456-7890</p>
+                    <p>📧 info@qurbanku.com</p>
+                    <p>📍 Jakarta, Indonesia</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 QurbanKu. <span data-id="footer-rights">Semua hak dilindungi.</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

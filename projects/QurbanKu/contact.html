@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontak - QurbanKu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2 data-id="brand">QurbanKu</h2>
+            </div>
+            
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link" data-id="nav-home">Beranda</a>
+                </li>
+                <li class="nav-item">
+                    <a href="animals.html" class="nav-link" data-id="nav-animals">Hewan Qurban</a>
+                </li>
+                <li class="nav-item">
+                    <a href="gallery.html" class="nav-link" data-id="nav-gallery">Galeri</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link active" data-id="nav-contact">Kontak</a>
+                </li>
+            </ul>
+
+            <div class="nav-actions">
+                <div class="language-toggle">
+                    <button id="lang-toggle" class="lang-btn">
+                        <span id="current-flag">🇮🇩</span>
+                        <span id="current-lang">ID</span>
+                    </button>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 data-id="contact-title">Hubungi Kami</h1>
+            <p data-id="contact-subtitle">Siap melayani kebutuhan qurban Anda 24/7</p>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section">
+        <div class="container">
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h2 data-id="contact-info-title">Informasi Kontak</h2>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div class="contact-details">
+                            <h3 data-id="address-title">Alamat</h3>
+                            <p data-id="address-text">Jl. Raya Qurban No. 123<br>Jakarta Selatan, 12345<br>Indonesia</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">📞</div>
+                        <div class="contact-details">
+                            <h3 data-id="phone-title">Telepon</h3>
+                            <p>+62 812-3456-7890</p>
+                            <p>+62 21-1234-5678</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">📧</div>
+                        <div class="contact-details">
+                            <h3 data-id="email-title">Email</h3>
+                            <p>info@qurbanku.com</p>
+                            <p>cs@qurbanku.com</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">🕒</div>
+                        <div class="contact-details">
+                            <h3 data-id="hours-title">Jam Operasional</h3>
+                            <p data-id="hours-text">Senin - Jumat: 08:00 - 17:00<br>Sabtu - Minggu: 08:00 - 15:00</p>
+                        </div>
+                    </div>
+
+                    <div class="social-media">
+                        <h3 data-id="social-title">Media Sosial</h3>
+                        <div class="social-links">
+                            <a href="#" class="social-link">📘 Facebook</a>
+                            <a href="#" class="social-link">📷 Instagram</a>
+                            <a href="#" class="social-link">🐦 Twitter</a>
+                            <a href="#" class="social-link">💬 WhatsApp</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="contact-form-container">
+                    <h2 data-id="contact-form-title">Kirim Pesan</h2>
+                    <form id="contact-form" class="contact-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName" data-id="first-name-label">Nama Depan *</label>
+                                <input type="text" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName" data-id="last-name-label">Nama Belakang *</label>
+                                <input type="text" id="lastName" name="lastName" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactEmail" data-id="email-label">Email *</label>
+                            <input type="email" id="contactEmail" name="email" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="contactPhone" data-id="phone-label">Nomor Telepon *</label>
+                            <input type="tel" id="contactPhone" name="phone" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subject" data-id="subject-label">Subjek *</label>
+                            <select id="subject" name="subject" required>
+                                <option value="" data-id="select-subject">Pilih subjek</option>
+                                <option value="inquiry" data-id="subject-inquiry">Pertanyaan Umum</option>
+                                <option value="order" data-id="subject-order">Pemesanan</option>
+                                <option value="complaint" data-id="subject-complaint">Keluhan</option>
+                                <option value="suggestion" data-id="subject-suggestion">Saran</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message" data-id="message-label">Pesan *</label>
+                            <textarea id="message" name="message" rows="5" required placeholder="Tulis pesan Anda di sini..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-large" data-id="send-message-btn">Kirim Pesan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="map-section">
+        <div class="container">
+            <h2 data-id="location-title">Lokasi Kami</h2>
+            <div class="map-container">
+                <iframe 
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.521260322283!2d106.8195613!3d-6.2297465!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e945e34b9d%3A0x5371bf0fdad786a2!2sNational%20Monument!5e0!3m2!1sen!2sid!4v1635724123456!5m2!1sen!2sid"
+                    width="100%" 
+                    height="400" 
+                    style="border:0;" 
+                    allowfullscreen="" 
+                    loading="lazy" 
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 data-id="brand">QurbanKu</h3>
+                    <p data-id="footer-desc">Melayani kebutuhan qurban umat dengan penuh amanah dan profesional.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-id="footer-links">Tautan</h4>
+                    <ul>
+                        <li><a href="index.html" data-id="nav-home">Beranda</a></li>
+                        <li><a href="animals.html" data-id="nav-animals">Hewan Qurban</a></li>
+                        <li><a href="gallery.html" data-id="nav-gallery">Galeri</a></li>
+                        <li><a href="contact.html" data-id="nav-contact">Kontak</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-id="footer-contact">Kontak</h4>
+                    <p>📞 +62 812-3456-7890</p>
+                    <p>📧 info@qurbanku.com</p>
+                    <p>📍 Jakarta, Indonesia</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 QurbanKu. <span data-id="footer-rights">Semua hak dilindungi.</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

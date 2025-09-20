@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Downloader</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root[data-bs-theme="dark"] {
+            --primary-color: #007acc;
+            --secondary-color: #005f99;
+            --background-color: #1e1e1e;
+            --card-bg: #2b2b2b;
+            --text-color: #ffffff;
+            --hover-bg: rgba(0,122,204,0.1);
+            --border-color: #444;
+            --shadow-color: rgba(0,0,0,0.2);
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar {
+            background-color: var(--card-bg);
+            box-shadow: 0 2px 4px var(--shadow-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px var(--shadow-color);
+        }
+
+        .card-header {
+            background-color: transparent;
+            border-bottom: 1px solid var(--border-color);
+            transition: border-color 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+
+        .form-control {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            background-color: var(--card-bg);
+            border-color: var(--primary-color);
+            color: var(--text-color);
+            box-shadow: 0 0 0 0.2rem rgba(0,122,204,0.25);
+        }
+
+        .episode-list {
+            max-height: 400px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-color) var(--card-bg);
+        }
+
+        .episode-list::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .episode-list::-webkit-scrollbar-track {
+            background: var(--card-bg);
+        }
+
+        .episode-list::-webkit-scrollbar-thumb {
+            background-color: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .episode-item {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 4px 0;
+        }
+
+        .episode-item:hover {
+            background-color: var(--hover-bg);
+            transform: translateX(4px);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading i {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        #searchResults {
+            display: grid;
+            gap: 2px;
+            padding: 8px;
+            /* gap: 15px;
+            padding: 8px; */
+            /* align-items: stretch; */
+            justify-content: center;
+            justify-items: center;
+        }
+
+        @media (min-width: 992px) {
+            #searchResults {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 991px) and (min-width: 576px) {
+             #searchResults {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 575px) {
+             #searchResults {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                width: 100%;
+                max-width: 100%;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .search-container {
+                max-width: 300px;
+                margin: 0 auto;
+            }
+
+            .search-input {
+                height: 40px;
+                font-size: 14px;
+            }
+
+            .search-btn {
+                height: 34px;
+                width: 34px;
+                right: 3px;
+                top: 3px;
+            }
+
+            body {
+                font-size: 10pt;
+            }
+
+            .navbar-brand {
+                font-size: 1.2em;
+            }
+
+            .anime-card .card-body {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            .anime-card .anime-cover {
+                width: 100%;
+                height: auto;
+                max-height: 200px;
+                border-radius: 4px;
+            }
+
+            .anime-card .anime-details {
+                width: 100%;
+            }
+
+            .anime-card .card-title {
+                font-size: 1em;
+                margin-bottom: 0.25rem;
+            }
+
+            .anime-info {
+                font-size: 0.8em;
+                margin-bottom: 0.5rem;
+            }
+
+            .anime-info span {
+                margin-right: 10px;
+            }
+
+            .btn-primary, .download-btn, .back-button {
+                padding: 5px 10px;
+                font-size: 0.9em;
+            }
+
+            .checkbox-container label {
+                font-size: 0.9em;
+            }
+
+            .custom-checkbox {
+                width: 16px;
+                height: 16px;
+            }
+
+            .custom-checkbox.checked::after {
+                font-size: 10px;
+            }
+        }
+
+        .anime-card {
+            background-color: var(--card-bg);
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            margin-bottom: 0;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            width: 300px; /* Fixed width for anime card */
+        }
+
+        .anime-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px var(--shadow-color);
+        }
+
+        .anime-card .card-body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            width: 100%;
+        }
+
+        .anime-card .anime-cover {
+            width: 100%;
+            height: auto;
+            max-width: 150px;
+            max-height: 220px;
+            object-fit: cover;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .anime-card .anime-details {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            width: 100%;
+        }
+
+        .anime-card .card-title {
+            font-size: 1.2em;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .anime-info {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .anime-info span {
+            margin-right: 0;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .anime-info span:hover {
+            color: var(--primary-color);
+        }
+
+        .download-btn {
+            background-color: #27ae60;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .download-btn:hover {
+            background-color: #219150;
+            transform: translateY(-1px);
+        }
+
+        .theme-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .theme-switch-btn {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-switch-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 0;
+        }
+
+        .checkbox-container label {
+            margin: 0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .custom-checkbox {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--primary-color);
+            border-radius: 4px;
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .custom-checkbox:hover {
+            background-color: var(--hover-bg);
+        }
+
+        .custom-checkbox.checked {
+            background-color: var(--primary-color);
+        }
+
+        .custom-checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .download-all-btn {
+            background-color: #27ae60;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .download-all-btn:hover {
+            background-color: #219150;
+            transform: translateY(-1px);
+        }
+
+        .download-all-btn:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .episode-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 4px 0;
+        }
+
+        .episode-item:hover {
+            background-color: var(--hover-bg);
+            transform: translateX(4px);
+        }
+
+        .episode-item.selected {
+            background-color: var(--hover-bg);
+        }
+
+        .episode-content {
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .episode-title {
+            flex: 1 1 auto;
+        }
+
+        .episode-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+
+        .back-button {
+            background-color: #6c757d;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-button:hover {
+            background-color: #5a6268;
+            transform: translateY(-1px);
+        }
+
+        .search-container {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-input {
+            padding-right: 50px;
+            border-radius: 25px;
+            height: 50px;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            border-radius: 20px;
+            height: 40px;
+            width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 25px;
+            background-color: #232323;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: var(--primary-color);
+            text-align: center;
+            line-height: 25px;
+            color: white;
+            font-weight: bold;
+            transition: width 0.3s ease;
+        }
+
+        .download-status {
+            margin-top: 0.5rem;
+            font-size: 0.9em;
+            color: #aaa;
+            text-align: center;
+        }
+
+        /* Container for selected anime card and synopsis card */
+        .anime-details-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+
+        .anime-details-container .anime-card {
+             /* Adjust flex basis for layout */
+            flex: 1 1 250px;
+            margin-bottom: 0;
+        }
+
+         .anime-details-container .synopsis-card {
+            flex: 1;
+            background-color: var(--card-bg);
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            transition: all 0.3s ease;
+            min-width: 300px;
+         }
+
+         .anime-details-container .synopsis-card:hover {
+             transform: translateY(-2px);
+             box-shadow: 0 6px 12px var(--shadow-color);
+         }
+
+         /* Ensure stacking on small screens */
+         @media (max-width: 768px) {
+             .anime-details-container { /* This class is no longer used in JS, but removing for safety */
+                 flex-direction: column;
+             }
+             /* Removed custom flex rules, Bootstrap grid should handle stacking */
+             /* .anime-details-row .anime-card-col, .anime-details-row .synopsis-col { */
+                 /* flex: 1 1 100%; */
+             /* } */
+         }
+
+         /* Add mobile specific styles */
+         @media (max-width: 767.98px) {
+             .navbar-brand {
+                 font-size: 1.2em; /* Make title smaller on mobile */
+             }
+
+             .theme-switch-btn span {
+                 display: none; /* Hide text, show only icon */
+             }
+
+             .theme-switch-btn {
+                  padding: 8px; /* Adjust padding for icon only button */
+                  width: 40px; /* Make button square */
+                  height: 40px;
+                  justify-content: center; /* Center the icon */
+                  gap: 0; /* Remove gap */
+             }
+             .download-btn span {
+                 display: none; /* Hide download button text on mobile */
+             }
+
+             .download-btn i.me-1 {
+                 margin-right: 0 !important; /* Remove margin next to icon */
+             }
+
+             .download-btn {
+                 padding: 8px; /* Adjust padding for icon only button */
+                 width: 40px; /* Make button square */
+                 height: 40px;
+                 display: flex; /* Use flexbox to center icon */
+                 justify-content: center; /* Center icon horizontally */
+                 align-items: center; /* Center icon vertically */
+             }
+             .episode-item .download-btn i {
+                 font-size: 0.9em; /* Reduce download icon size on mobile */
+             }
+          }
+
+          /* Adjust episode header spacing on smaller screens */
+          @media (max-width: 576px) {
+              .card-header.d-flex {
+                  flex-direction: column; /* Stack items vertically */
+                  align-items: flex-start; /* Align items to the start */
+                  gap: 10px; /* Adjust gap for stacked items */
+              }
+
+              .card-header .d-flex.align-items-center {
+                  flex-direction: column; /* Stack the buttons and checkbox vertically */
+                  align-items: flex-start; /* Align items to the start */
+                  gap: 10px; /* Adjust gap */
+                  width: 100%; /* Make container take full width */
+              }
+
+              .card-header .d-flex.align-items-center .checkbox-container {
+                  width: 100%; /* Make checkbox container take full width */
+                  justify-content: flex-start; /* Align checkbox and text to the start */
+              }
+
+              .card-header .d-flex.align-items-center button {
+                  width: 100%; /* Make buttons take full width */
+                  justify-content: center; /* Center button text/icon */
+              }
+          }
+
+        /* Add compact view styles */
+        .compact-view .anime-card {
+            width: 160px; /* Smaller width for compact view */
+        }
+
+        .compact-view #searchResults {
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        }
+
+        .compact-view .anime-info {
+            display: none;
+        }
+
+        /* Add scroll to top button styles */
+        .scroll-to-episodes {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .scroll-to-episodes.visible {
+            opacity: 1;
+        }
+
+        /* Update view switch button styles */
+        .view-switch {
+            position: relative;
+            margin-left: auto;
+        }
+
+        .view-switch-btn {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .view-switch-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        @media (max-width: 767.98px) {
+            .view-switch {
+                display: block;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .view-switch {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-play-circle me-2"></i>
+                Anime Downloader
+                <small class="ms-2 text-muted">by Zanxa</small>
+            </a>
+            <div class="view-switch">
+                <button class="view-switch-btn" onclick="toggleView()" title="Switch View">
+                    <i class="fas fa-th-large"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="scroll-to-episodes" onclick="scrollToEpisodes()">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="search-container">
+                            <input type="text" id="searchInput" class="form-control search-input" placeholder="Search for anime...">
+                            <button class="btn btn-primary search-btn" id="searchBtn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="loading" id="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p class="mt-2">Loading...</p>
+                </div>
+                <div id="searchResults"></div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card" id="episodeCard" style="display: none;">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Episodes</h5>
+                        <div class="d-flex align-items-center gap-3">
+                            <button class="back-button" onclick="backToSearch()">
+                                <i class="fas fa-arrow-left"></i>
+                                Back to Search
+                            </button>
+                            <div class="checkbox-container">
+                                <div class="custom-checkbox" id="selectAllCheckbox" onclick="toggleSelectAll()"></div>
+                                <label for="selectAllCheckbox">Select All</label>
+                                <button class="download-all-btn" id="downloadAllBtn" onclick="startSequentialDownload()" disabled>
+                                    <i class="fas fa-download"></i>
+                                    Download Selected
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="episode-list" id="episodeList"></div>
+                        <div class="progress-container" id="overallProgressContainer">
+                            <div class="progress-bar" id="overallProgressBar"></div>
+                        </div>
+                        <div class="download-status" id="overallDownloadStatus"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentAnimeUrl = null;
+        let selectedEpisodes = new Set();
+        let currentSearchResults = [];
+        let downloadQueue = [];
+        let isDownloading = false;
+        let totalEpisodesToDownload = 0;
+        let completedDownloads = 0;
+
+        function toggleSelectAll() {
+            const checkbox = document.getElementById('selectAllCheckbox');
+            const isChecked = checkbox.classList.toggle('checked');
+            const episodeItems = document.querySelectorAll('.episode-item:not([data-is-batch="true"])');
+            
+            selectedEpisodes.clear();
+            episodeItems.forEach(item => {
+                const episodeCheckbox = item.querySelector('.custom-checkbox');
+                if (isChecked) {
+                    episodeCheckbox.classList.add('checked');
+                    item.classList.add('selected');
+                    selectedEpisodes.add(item.dataset.url);
+                } else {
+                    episodeCheckbox.classList.remove('checked');
+                    item.classList.remove('selected');
+                }
+            });
+
+            updateDownloadButton();
+        }
+
+        function toggleEpisodeSelection(element, url) {
+            const checkbox = element.querySelector('.custom-checkbox');
+            const isChecked = checkbox.classList.toggle('checked');
+            element.classList.toggle('selected');
+
+            if (isChecked) {
+                selectedEpisodes.add(url);
+            } else {
+                selectedEpisodes.delete(url);
+            }
+
+            updateDownloadButton();
+            updateSelectAllCheckbox();
+        }
+
+        function updateSelectAllCheckbox() {
+            const checkbox = document.getElementById('selectAllCheckbox');
+            const episodeItems = document.querySelectorAll('.episode-item:not([data-is-batch="true"])');
+            if (episodeItems.length === 0) {
+                checkbox.classList.remove('checked');
+                return;
+            }
+            const allChecked = Array.from(episodeItems).every(item => 
+                item.querySelector('.custom-checkbox').classList.contains('checked')
+            );
+            
+            checkbox.classList.toggle('checked', allChecked);
+        }
+
+        function updateDownloadButton() {
+            const downloadBtn = document.getElementById('downloadAllBtn');
+            downloadBtn.disabled = selectedEpisodes.size === 0 || isDownloading;
+        }
+
+        function startSequentialDownload() {
+            if (selectedEpisodes.size === 0 || isDownloading) return;
+
+            isDownloading = true;
+            downloadQueue = Array.from(selectedEpisodes);
+            totalEpisodesToDownload = downloadQueue.length;
+            completedDownloads = 0;
+            selectedEpisodes.clear();
+            document.querySelectorAll('.episode-item').forEach(item => {
+                 item.classList.remove('selected');
+                 item.querySelector('.custom-checkbox').classList.remove('checked');
+            });
+            updateDownloadButton();
+            updateSelectAllCheckbox();
+
+            document.getElementById('overallProgressContainer').style.display = 'block';
+            updateOverallProgress();
+
+            processDownloadQueue();
+        }
+
+        async function processDownloadQueue() {
+            if (downloadQueue.length === 0) {
+                isDownloading = false;
+                document.getElementById('overallDownloadStatus').textContent = 'All downloads completed!';
+                setTimeout(() => {
+                     document.getElementById('overallProgressContainer').style.display = 'none';
+                     document.getElementById('overallProgressBar').style.width = '0%';
+                     document.getElementById('overallDownloadStatus').textContent = '';
+                }, 3000);
+                updateDownloadButton();
+                return;
+            }
+
+            const nextUrl = downloadQueue.shift();
+            const episodeItem = document.querySelector(`.episode-item[data-url='${nextUrl}']`);
+            if (episodeItem) {
+                episodeItem.classList.add('downloading');
+            }
+
+            document.getElementById('overallDownloadStatus').textContent = `Downloading episode ${completedDownloads + 1} of ${totalEpisodesToDownload}...`;
+
+            try {
+                await downloadEpisode(nextUrl);
+                completedDownloads++;
+                updateOverallProgress();
+                if (episodeItem) {
+                     episodeItem.classList.remove('downloading');
+                     episodeItem.classList.add('completed');
+                }
+            } catch (error) {
+                console.error(`Error downloading ${nextUrl}:`, error);
+                 if (episodeItem) {
+                     episodeItem.classList.remove('downloading');
+                     episodeItem.classList.add('failed');
+                 }
+            } finally {
+                processDownloadQueue();
+            }
+        }
+
+        function updateOverallProgress() {
+            const progress = totalEpisodesToDownload === 0 ? 0 : (completedDownloads / totalEpisodesToDownload) * 100;
+            document.getElementById('overallProgressBar').style.width = `${progress}%`;
+            document.getElementById('overallProgressBar').textContent = `${completedDownloads}/${totalEpisodesToDownload} Episodes`;
+        }
+
+        async function searchAnime() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) return;
+
+            showLoading();
+            document.getElementById('searchResults').innerHTML = '';
+            document.getElementById('episodeCard').style.display = 'none';
+            selectedEpisodes.clear();
+            updateDownloadButton();
+            updateSelectAllCheckbox();
+            document.getElementById('overallProgressContainer').style.display = 'none';
+            document.getElementById('overallDownloadStatus').textContent = '';
+
+            try {
+                const response = await fetch('/search', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ query })
+                });
+
+                const data = await response.json();
+                currentSearchResults = data.results;
+                displayResults(currentSearchResults);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while searching');
+                displayResults(currentSearchResults);
+                document.getElementById('episodeCard').style.display = 'none';
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function displayResults(results) {
+            const container = document.getElementById('searchResults');
+            container.innerHTML = '';
+
+            if (results.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">No results found</div>';
+                return;
+            }
+
+            results.forEach(result => {
+                const card = document.createElement('div');
+                card.className = 'card mb-3 anime-card';
+                // Clean up the title
+                const cleanTitle = result.title.replace(/Subtitle Indonesia/gi, '').trim();
+                card.innerHTML = `
+                    <div class="card-body">
+                        ${result.image_url ? `<img src="${result.image_url}" class="anime-cover" alt="${cleanTitle} cover">` : ''}
+                        <div class="anime-details">
+                            <h5 class="card-title">${cleanTitle}</h5>
+                            <div class="anime-info">
+                                <span class="me-3"><i class="fas fa-film me-1"></i>${result.episodes || 'Unknown'}</span>
+                                <span class="me-3"><i class="fas fa-star me-1"></i>${result.rating || 'Unknown'}</span>
+                                <span class="me-3"><i class="fas fa-tags me-1"></i>${result.genres || 'Unknown'}</span>
+                                <span><i class="fas fa-info-circle me-1"></i>${result.status || 'Unknown'}</span>
+                            </div>
+                            <button class="btn btn-primary btn-sm mt-auto" onclick="getEpisodes('${result.url}')">
+                                <i class="fas fa-list me-1"></i>View Episodes
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function getEpisodes(url) {
+            currentAnimeUrl = url;
+            showLoading();
+
+            const selectedAnime = currentSearchResults.find(anime => anime.url === url);
+
+            const searchResultsContainer = document.getElementById('searchResults');
+            searchResultsContainer.innerHTML = '';
+
+            // Create and append the anime card
+            const animeCard = document.createElement('div');
+            animeCard.className = 'card mb-3 anime-card';
+            animeCard.innerHTML = `
+                <div class="card-body">
+                     ${selectedAnime.image_url ? `<img src="${selectedAnime.image_url}" class="anime-cover" alt="${selectedAnime.title} cover">` : ''}
+                    <div class="anime-details">
+                        <h5 class="card-title">${selectedAnime.title}</h5>
+                        <div class="anime-info">
+                            <span class="me-3"><i class="fas fa-film me-1"></i>${selectedAnime.episodes || 'Unknown'}</span>
+                            <span class="me-3"><i class="fas fa-star me-1"></i>${selectedAnime.rating || 'Unknown'}</span>
+                            <span class="me-3"><i class="fas fa-tags me-1"></i>${selectedAnime.genres || 'Unknown'}</span>
+                            <span><i class="fas fa-info-circle me-1"></i>${selectedAnime.status || 'Unknown'}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            searchResultsContainer.appendChild(animeCard);
+
+            try {
+                const response = await fetch('/get_episodes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url })
+                });
+
+                const data = await response.json();
+
+                if (data.cover_image_url) {
+                    const selectedAnimeCardImg = searchResultsContainer.querySelector('.anime-cover');
+                    if (selectedAnimeCardImg) {
+                         selectedAnimeCardImg.src = data.cover_image_url;
+                    } else if (selectedAnime) {
+                         const animeDetailsDiv = searchResultsContainer.querySelector('.anime-card .anime-details');
+                         if(animeDetailsDiv) {
+                            const img = document.createElement('img');
+                            img.src = data.cover_image_url;
+                            img.className = 'anime-cover';
+                            img.alt = `${selectedAnime.title} cover`;
+                             searchResultsContainer.querySelector('.anime-card .card-body').insertBefore(img, animeDetailsDiv);
+                         }
+                    }
+                }
+
+                displayEpisodes(data);
+                 document.getElementById('episodeCard').style.display = 'block';
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while fetching episodes');
+                displayResults(currentSearchResults);
+                document.getElementById('episodeCard').style.display = 'none';
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function displayEpisodes(data) {
+            const container = document.getElementById('episodeList');
+            container.innerHTML = '';
+            selectedEpisodes.clear();
+            updateDownloadButton();
+            updateSelectAllCheckbox();
+
+            // Display batch episodes first
+            if (data.batch.length > 0) {
+                const batchHeader = document.createElement('div');
+                batchHeader.className = 'episode-header mb-2';
+                batchHeader.innerHTML = '<h6 class="text-primary">Batch Downloads</h6>';
+                container.appendChild(batchHeader);
+
+                data.batch.forEach(episode => {
+                    addEpisodeItem(container, episode, true); // true indicates it's a batch episode
+                });
+            }
+
+            if (data.reguler.length > 0) {
+                const regulerHeader = document.createElement('div');
+                regulerHeader.className = 'episode-header mb-2 mt-3';
+                regulerHeader.innerHTML = '<h6 class="text-primary">Regular Episodes</h6>';
+                container.appendChild(regulerHeader);
+
+                data.reguler.forEach(episode => {
+                    addEpisodeItem(container, episode, false);
+                });
+            }
+
+            if (data.ova.length > 0) {
+                const ovaHeader = document.createElement('div');
+                ovaHeader.className = 'episode-header mb-2 mt-3';
+                ovaHeader.innerHTML = '<h6 class="text-primary">OVAs</h6>';
+                container.appendChild(ovaHeader);
+
+                data.ova.forEach(episode => {
+                    addEpisodeItem(container, episode, false);
+                });
+            }
+        }
+
+        function addEpisodeItem(container, episode, isBatch) {
+            const item = document.createElement('div');
+            item.className = 'episode-item';
+            item.dataset.url = episode.url;
+            item.dataset.isBatch = isBatch;
+            item.onclick = (e) => {
+                if (!e.target.closest('.download-btn')) {
+                    toggleEpisodeSelection(item, episode.url);
+                }
+            };
+            
+            // Simplify episode name
+            const episodeName = episode.name.replace(/Subtitle Indonesia/gi, '').trim();
+            const simplifiedName = episodeName.replace(/^.*?episode\s*/i, 'Episode ');
+            
+            item.innerHTML = `
+                <div class="custom-checkbox episode-checkbox"></div>
+                <div class="episode-content">
+                    <span class="episode-title">${simplifiedName}</span>
+                    <div class="episode-actions">
+                         <button class="btn btn-sm download-btn" onclick="downloadEpisode('${episode.url}'); event.stopPropagation();">
+                            <i class="fas fa-download me-1"></i><span>Download</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(item);
+        }
+
+        async function downloadEpisode(url) {
+            showLoading();
+            try {
+                const response = await fetch('/download', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ url })
+                });
+
+                const data = await response.json();
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+
+                window.open(data.download_url, '_blank');
+
+                console.log(`Opened download link for: ${data.filename}`);
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while getting download link: ' + error.message);
+                throw error;
+            } finally {
+                 hideLoading();
+            }
+        }
+
+        function backToSearch() {
+            document.getElementById('episodeList').innerHTML = '';
+            document.getElementById('episodeCard').style.display = 'none';
+
+            selectedEpisodes.clear();
+            downloadQueue = [];
+            isDownloading = false;
+            totalEpisodesToDownload = 0;
+            completedDownloads = 0;
+            updateDownloadButton();
+            updateSelectAllCheckbox();
+            document.getElementById('overallProgressContainer').style.display = 'none';
+            document.getElementById('overallProgressBar').style.width = '0%';
+            document.getElementById('overallProgressBar').textContent = '';
+            document.getElementById('overallDownloadStatus').textContent = '';
+
+            displayResults(currentSearchResults);
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function toggleView() {
+            document.body.classList.toggle('compact-view');
+        }
+
+        function scrollToEpisodes() {
+            const episodeCard = document.getElementById('episodeCard');
+            if (episodeCard) {
+                episodeCard.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Add scroll button visibility logic
+        window.addEventListener('scroll', function() {
+            const scrollButton = document.querySelector('.scroll-to-episodes');
+            if (window.scrollY > 300) {
+                scrollButton.classList.add('visible');
+            } else {
+                scrollButton.classList.remove('visible');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('searchBtn').addEventListener('click', searchAnime);
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchAnime();
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

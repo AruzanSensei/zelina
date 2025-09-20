@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pembayaran - QurbanKu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2 data-id="brand">QurbanKu</h2>
+            </div>
+            
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link" data-id="nav-home">Beranda</a>
+                </li>
+                <li class="nav-item">
+                    <a href="animals.html" class="nav-link" data-id="nav-animals">Hewan Qurban</a>
+                </li>
+                <li class="nav-item">
+                    <a href="gallery.html" class="nav-link" data-id="nav-gallery">Galeri</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link" data-id="nav-contact">Kontak</a>
+                </li>
+            </ul>
+
+            <div class="nav-actions">
+                <div class="language-toggle">
+                    <button id="lang-toggle" class="lang-btn">
+                        <span id="current-flag">🇮🇩</span>
+                        <span id="current-lang">ID</span>
+                    </button>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 data-id="payment-title">Pembayaran</h1>
+            <p data-id="payment-subtitle">Lengkapi pesanan dan pembayaran Anda</p>
+        </div>
+    </section>
+
+    <!-- Payment Form -->
+    <section class="payment-section">
+        <div class="container">
+            <div class="payment-container">
+                <div class="order-form">
+                    <h2 data-id="order-info-title">Informasi Pesanan</h2>
+                    <form id="payment-form">
+                        <div class="form-group">
+                            <label for="fullName" data-id="full-name-label">Nama Lengkap *</label>
+                            <input type="text" id="fullName" name="fullName" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone" data-id="phone-label">Nomor Telepon *</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" data-id="email-label">Email</label>
+                            <input type="email" id="email" name="email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="address" data-id="address-label">Alamat Lengkap *</label>
+                            <textarea id="address" name="address" rows="3" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="deliveryDate" data-id="delivery-date-label">Tanggal Pengiriman *</label>
+                            <input type="date" id="deliveryDate" name="deliveryDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notes" data-id="notes-label">Catatan Khusus</label>
+                            <textarea id="notes" name="notes" rows="2" placeholder="Catatan atau permintaan khusus"></textarea>
+                        </div>
+
+                        <h3 data-id="payment-method-title">Metode Pembayaran</h3>
+                        
+                        <div class="payment-methods">
+                            <div class="payment-option">
+                                <input type="radio" id="bank-transfer" name="paymentMethod" value="bank-transfer" checked>
+                                <label for="bank-transfer">
+                                    <div class="payment-method-info">
+                                        <strong data-id="bank-transfer-label">Transfer Bank</strong>
+                                        <span data-id="bank-transfer-desc">Transfer ke rekening bank kami</span>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="payment-option">
+                                <input type="radio" id="e-wallet" name="paymentMethod" value="e-wallet">
+                                <label for="e-wallet">
+                                    <div class="payment-method-info">
+                                        <strong data-id="e-wallet-label">E-Wallet</strong>
+                                        <span data-id="e-wallet-desc">Bayar dengan GoPay, OVO, DANA</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="bank-details" class="payment-details active">
+                            <h4 data-id="bank-account-title">Detail Rekening Bank</h4>
+                            <div class="bank-info">
+                                <p><strong>Bank BCA</strong></p>
+                                <p data-id="account-number">No. Rekening: 1234567890</p>
+                                <p data-id="account-name">Atas Nama: QurbanKu Indonesia</p>
+                            </div>
+                        </div>
+
+                        <div id="ewallet-details" class="payment-details">
+                            <h4 data-id="ewallet-qr-title">Scan QR Code</h4>
+                            <div class="qr-placeholder">
+                                <p data-id="qr-instruction">QR Code akan ditampilkan setelah konfirmasi pesanan</p>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-large" data-id="confirm-order-btn">Konfirmasi Pesanan</button>
+                    </form>
+                </div>
+
+                <div class="order-summary">
+                    <h2 data-id="order-summary-title">Ringkasan Pesanan</h2>
+                    
+                    <div class="summary-item" id="selected-animal">
+                        <div class="item-info">
+                            <h3 id="animal-name" data-id="default-animal">Pilih Hewan Qurban</h3>
+                            <p class="item-type" id="animal-type"></p>
+                        </div>
+                        <div class="item-price" id="animal-price">Rp 0</div>
+                    </div>
+
+                    <div class="summary-divider"></div>
+
+                    <div class="summary-row">
+                        <span data-id="subtotal-label">Subtotal:</span>
+                        <span id="subtotal">Rp 0</span>
+                    </div>
+
+                    <div class="summary-row">
+                        <span data-id="delivery-fee-label">Biaya Pengiriman:</span>
+                        <span id="delivery-fee">Rp 500.000</span>
+                    </div>
+
+                    <div class="summary-row total">
+                        <span data-id="total-label">Total:</span>
+                        <span id="total">Rp 500.000</span>
+                    </div>
+
+                    <div class="guarantee-info">
+                        <h4 data-id="guarantee-title">Garansi Kepuasan</h4>
+                        <ul>
+                            <li data-id="guarantee1">✓ Hewan berkualitas terjamin</li>
+                            <li data-id="guarantee2">✓ Pengiriman tepat waktu</li>
+                            <li data-id="guarantee3">✓ Dokumentasi lengkap</li>
+                            <li data-id="guarantee4">✓ Layanan 24/7</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 data-id="brand">QurbanKu</h3>
+                    <p data-id="footer-desc">Melayani kebutuhan qurban umat dengan penuh amanah dan profesional.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-id="footer-links">Tautan</h4>
+                    <ul>
+                        <li><a href="index.html" data-id="nav-home">Beranda</a></li>
+                        <li><a href="animals.html" data-id="nav-animals">Hewan Qurban</a></li>
+                        <li><a href="gallery.html" data-id="nav-gallery">Galeri</a></li>
+                        <li><a href="contact.html" data-id="nav-contact">Kontak</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-id="footer-contact">Kontak</h4>
+                    <p>📞 +62 812-3456-7890</p>
+                    <p>📧 info@qurbanku.com</p>
+                    <p>📍 Jakarta, Indonesia</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 QurbanKu. <span data-id="footer-rights">Semua hak dilindungi.</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
