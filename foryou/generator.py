@@ -1,4 +1,29 @@
-<!DOCTYPE html>
+import os
+import webbrowser
+
+# Lokasi script
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Cek apakah script ada di dalam folder "foryou" atau di luarnya
+if os.path.basename(SCRIPT_DIR) == "foryou":
+    FORYOU_DIR = SCRIPT_DIR               # kalau script ada di dalam "foryou"
+    BASE_PATH = os.path.dirname(SCRIPT_DIR) # parent folder
+else:
+    FORYOU_DIR = os.path.join(SCRIPT_DIR, "foryou")  # kalau script sejajar dengan "foryou"
+    BASE_PATH = SCRIPT_DIR
+
+# Validasi folder foryou
+if not os.path.exists(FORYOU_DIR):
+    raise FileNotFoundError(f"Folder 'foryou' tidak ditemukan di {BASE_PATH}")
+
+# Ambil daftar folder di foryou/
+pages = [
+    d for d in os.listdir(FORYOU_DIR)
+    if os.path.isdir(os.path.join(FORYOU_DIR, d))
+]
+
+# === Buat konten HTML ===
+html_content = """<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -194,84 +219,48 @@
     <p class="subtitle">Halaman khusus untuk orang spesial ❤️</p>
   </header>
   <ul class="grid">
-    <li class="card">
-      <a href="./aa-zeze/">
-        <div class="card-title">Aa Zeze</div>
-        <div class="card-description">Untuk si Jeze yang cerewet 😝</div>
+"""
+
+# Tentukan prefix link
+link_prefix = "./foryou/" if os.path.basename(SCRIPT_DIR) != "foryou" else "./"
+
+page_descriptions = {
+    'aa-zeze': 'Untuk si Jeze yang cerewet 😝',
+    'ayu': 'Spesial untuk Ayu tersayang 💕',
+    'forBieYang': 'For my special one, Bie Yang 💝',
+    'hbd-sahabat': 'Ucapan ulang tahun untuk sahabat 🎂',
+    'ira': 'Halaman spesial untuk Ira 🌸',
+    'joan': 'Untuk Joan yang baik hati 💫',
+    'kak-alfi': 'Untuk Kak Alfi yang selalu support 🌟',
+    'kak-alzan': 'Untuk Kak Alzan yang hebat 🚀',
+    'la': 'Untuk La yang misterius 🎭',
+    'lala': 'Halaman spesial untuk Lala 🌺',
+    'ricka': 'Untuk Ricka yang penuh semangat ⭐',
+    'sample': 'Template halaman for you 📝',
+    'sya': 'Untuk Sya yang selalu ceria 🌞'
+}
+
+for page in pages:
+    title = page.replace("-", " ").title()
+    description = page_descriptions.get(page, "A special page for someone special 💖")
+    html_content += f'''    <li class="card">
+      <a href="{link_prefix}{page}/">
+        <div class="card-title">{title}</div>
+        <div class="card-description">{description}</div>
       </a>
-    </li>
-    <li class="card">
-      <a href="./ayu/">
-        <div class="card-title">Ayu</div>
-        <div class="card-description">Spesial untuk Ayu tersayang 💕</div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./forBieYang/">
-        <div class="card-title">Forbieyang</div>
-        <div class="card-description">For my special one, Bie Yang 💝</div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./hbd-sahabat/">
-        <div class="card-title">Hbd Sahabat</div>
-        <div class="card-description">Ucapan ulang tahun untuk sahabat 🎂</div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./ira/">
-        <div class="card-title">Ira</div>
-        <div class="card-description">Halaman spesial untuk Ira 🌸</div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./joan/">
-        <div class="card-title">Joan</div>
-        <div class="card-description">Untuk Joan yang baik hati 💫</div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./kak-alfi/">
-        <div class="card-title">Kak Alfi</div>
-        <div class="card-description">Untuk Kak Alfi yang selalu support 🌟</div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./kak-alzan/">
-        <div class="card-title">Kak Alzan</div>
-        <div class="card-description">Untuk Kak Alzan yang hebat 🚀</div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./la/">
-        <div class="card-title">La</div>
-        <div class="card-description">Untuk La yang misterius 🎭</div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./lala/">
-        <div class="card-title">Lala</div>
-        <div class="card-description">Halaman spesial untuk Lala 🌺</div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./ricka/">
-        <div class="card-title">Ricka</div>
-        <div class="card-description">Untuk Ricka yang penuh semangat ⭐</div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./sample/">
-        <div class="card-title">Sample</div>
-        <div class="card-description">Template halaman for you 📝</div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./sya/">
-        <div class="card-title">Sya</div>
-        <div class="card-description">Untuk Sya yang selalu ceria 🌞</div>
-      </a>
-    </li>
-  </ul>
+    </li>\n'''
+
+html_content += """  </ul>
 </body>
 </html>
+"""
+
+# Simpan file index.html di folder script
+OUTPUT_PATH = os.path.join(SCRIPT_DIR, "index.html")
+with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+print(f"✅ index.html berhasil digenerate di {OUTPUT_PATH}")
+
+# Buka otomatis di browser
+webbrowser.open("file://" + OUTPUT_PATH)
