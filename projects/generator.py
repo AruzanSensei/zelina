@@ -28,7 +28,7 @@ html_content = """<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Projects</title>
+  <title>Kumpulan Proyek Random</title>
   <style>
     :root {
       --primary: #2563eb;
