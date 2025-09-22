@@ -225,16 +225,16 @@ html_content = """<!DOCTYPE html>
 link_prefix = "./projects/" if os.path.basename(SCRIPT_DIR) != "projects" else "./"
 
 project_descriptions = {
-    'AJI-Web': 'my pertama bikin website perusahaan (walau gagal sih hhe)',
-    'chatbot.zanxa': 'Iseng saja bikin chatbot ~_~',
-    'contact': 'Sistem manajemen kontak yang sederhana dan elegan',
+    'AJI-Web': 'my pertama bikin website perusahaan (tapi gagal awokawok)',
+    'chatbot.zanxa': 'Iseng aja bikin chatbot ~_~',
+    'contact': 'Kontak gweh ini cuy, mau tau? ada sandinya haha :P',
     'dairyMilk': 'Platform e-commerce untuk produk susu',
     'Kotoba-Minna-ni-Hongo': 'Aplikasi belajar bahasa Jepang dengan fitur interaktif',
     'lms-2023-2024': 'Sistem Manajemen Pembelajaran dengan pelacakan lanjutan',
     'LMS2324': 'Versi terbaru dari Sistem Manajemen Pembelajaran',
     'otakuDownload': 'Platform manajemen konten anime dan manga',
     'pixel-commerce-oasis': 'Solusi e-commerce modern dengan desain pixel-perfect',
-    'QurbanKu': 'Sistem manajemen dan distribusi qurban'
+    'QurbanKu': 'ada yang mau embe?'
 }
 
 for project in projects:
