@@ -144,17 +144,17 @@ html_content = """<!DOCTYPE html>
       }
 
       .breadcrumb {
-        margin-bottom: 0.8rem;
+        margin-bottom: 0.5rem;
       }
       
       .header {
         margin-bottom: 1.5rem;
-        padding: 1rem;
+        padding: 0.8rem;
       }
       
       h1 {
         font-size: 1.75rem;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0rem;
       }
 
       .subtitle {
@@ -172,12 +172,11 @@ html_content = """<!DOCTYPE html>
       }
 
       .card a {
-        padding: 1rem;
+        padding: 0.5rem 1rem 0.8rem 1rem;
       }
 
       .card-title {
         font-size: 1rem;
-        margin-bottom: 0.25rem;
       }
 
       .card-description {
