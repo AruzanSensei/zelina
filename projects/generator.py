@@ -89,7 +89,7 @@ html_content = """<!DOCTYPE html>
     }
 
     .breadcrumb span {
-      color: var(--gray-400);
+      color: #4c586a;
     }
     
     .header {
