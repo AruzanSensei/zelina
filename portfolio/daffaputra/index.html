@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daffa Portofolio</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+    }
+
+    .image-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      background: #1f1f1f;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%   { background-color: #1f1f1f; }
+      50%  { background-color: #3a3a3a; }
+      100% { background-color: #1f1f1f; }
+    }
+
+    .image-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .image-wrapper img.loaded {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="gallery"></div>
+
+  <script>
+    const totalImages = 10;
+    const gallery = document.getElementById("gallery");
+
+    async function loadSequential() {
+      for (let i = 1; i <= totalImages; i++) {
+        await loadImage(i);
+      }
+    }
+
+    function loadImage(num) {
+      return new Promise((resolve) => {
+        // skeleton tunggal
+        const wrapper = document.createElement("div");
+        wrapper.className = "image-wrapper";
+        gallery.appendChild(wrapper);
+
+        const img = new Image();
+        img.src = `images/${num}.jpg`;
+        img.alt = `Halaman ${num}`;
+
+        img.onload = () => {
+          wrapper.appendChild(img);
+          setTimeout(() => img.classList.add("loaded"), 50); // fade-in
+          wrapper.style.animation = "none"; // stop skeleton
+          resolve();
+        };
+      });
+    }
+
+    loadSequential();
+  </script>
+</body>
+</html>
