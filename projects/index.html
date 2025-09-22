@@ -11,12 +11,32 @@
       --text: #0f172a;
       --card-bg: #ffffff;
       --gray-400: #94a3b8;
+      --dot-color: rgba(77, 37, 235, 0.075);
+      --dot-size: 2px;
+      --dot-space: 22px;
     }
     
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+    }
+
+    .dots-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      background-image: 
+        radial-gradient(var(--dot-color) var(--dot-size), transparent var(--dot-size)),
+        radial-gradient(var(--dot-color) var(--dot-size), transparent var(--dot-size));
+      background-position: 0 0, calc(var(--dot-space) / 2) calc(var(--dot-space) / 2);
+      background-size: var(--dot-space) var(--dot-space);
+      mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+      -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
     }
     
     body {
@@ -162,6 +182,7 @@
   </style>
 </head>
 <body>
+  <div class="dots-background"></div>
   <nav class="breadcrumb">
     <a href="../">🏠</a>
     <span>/</span>
