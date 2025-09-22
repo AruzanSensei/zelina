@@ -215,8 +215,8 @@ html_content = """<!DOCTYPE html>
     <span>/</span>
   </nav>
   <header class="header">
-    <h1>My Projects</h1>
-    <p class="subtitle">A collection of my web development projects</p>
+    <h1>Proyek Random</h1>
+    <p class="subtitle">Koleksi proyek yang mungkin berguna ^_^</p>
   </header>
   <ul class="grid">
 """
@@ -225,16 +225,16 @@ html_content = """<!DOCTYPE html>
 link_prefix = "./projects/" if os.path.basename(SCRIPT_DIR) != "projects" else "./"
 
 project_descriptions = {
-    'AJI-Web': 'A modern web platform for seamless information management',
-    'chatbot.zanxa': 'Interactive chatbot with advanced natural language processing',
-    'contact': 'Simple and elegant contact management system',
-    'dairyMilk': 'E-commerce platform for dairy products',
-    'Kotoba-Minna-ni-Hongo': 'Japanese learning application with interactive features',
-    'lms-2023-2024': 'Learning Management System with advanced tracking',
-    'LMS2324': 'Updated version of the Learning Management System',
-    'otakuDownload': 'Anime and manga content management platform',
-    'pixel-commerce-oasis': 'Modern e-commerce solution with pixel-perfect design',
-    'QurbanKu': 'Qurban management and distribution system'
+    'AJI-Web': 'my pertama bikin website perusahaan (walau gagal sih hhe)',
+    'chatbot.zanxa': 'Iseng saja bikin chatbot ~_~',
+    'contact': 'Sistem manajemen kontak yang sederhana dan elegan',
+    'dairyMilk': 'Platform e-commerce untuk produk susu',
+    'Kotoba-Minna-ni-Hongo': 'Aplikasi belajar bahasa Jepang dengan fitur interaktif',
+    'lms-2023-2024': 'Sistem Manajemen Pembelajaran dengan pelacakan lanjutan',
+    'LMS2324': 'Versi terbaru dari Sistem Manajemen Pembelajaran',
+    'otakuDownload': 'Platform manajemen konten anime dan manga',
+    'pixel-commerce-oasis': 'Solusi e-commerce modern dengan desain pixel-perfect',
+    'QurbanKu': 'Sistem manajemen dan distribusi qurban'
 }
 
 for project in projects:
