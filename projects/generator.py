@@ -37,7 +37,7 @@ html_content = """<!DOCTYPE html>
       --card-bg: #ffffff;
       --gray-400: #94a3b8;
       --dot-color: rgba(77, 37, 235, 0.075);
-      --dot-size: 2px;
+      --dot-size: 1.5px;
       --dot-space: 22px;
     }
     
