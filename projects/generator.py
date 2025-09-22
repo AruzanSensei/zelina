@@ -74,20 +74,21 @@ html_content = """<!DOCTYPE html>
     
     .header {
       text-align: center;
-      margin-bottom: 3rem;
-      padding: 2rem 0;
+      margin-bottom: 1rem;
+      padding: 1rem 0;
     }
     
     h1 {
       font-size: 2.5rem;
       font-weight: 700;
       color: var(--text);
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
     }
     
     .subtitle {
       font-size: 1.1rem;
       color: #64748b;
+      margin-bottom: 1.5rem;
     }
     
     .grid {
@@ -113,7 +114,7 @@ html_content = """<!DOCTYPE html>
     
     .card a {
       display: block;
-      padding: 1.5rem;
+      padding: 1rem;
       text-decoration: none;
       color: var(--text);
     }
@@ -124,7 +125,6 @@ html_content = """<!DOCTYPE html>
       gap: 0.5rem;
       font-size: 1.1rem;
       font-weight: 500;
-      margin-bottom: 0.5rem;
     }
 
     .card-title::before {
@@ -135,17 +135,21 @@ html_content = """<!DOCTYPE html>
     .card-description {
       font-size: 0.9rem;
       color: var(--gray-400);
-      margin-left: 2rem;
+      margin-left: 0.5rem;
     }
     
     @media (max-width: 640px) {
       body {
         padding: 0.75rem;
       }
+
+      .breadcrumb {
+        margin-bottom: 0.8rem;
+      }
       
       .header {
         margin-bottom: 1.5rem;
-        padding: 1rem 0;
+        padding: 1rem;
       }
       
       h1 {
@@ -155,6 +159,7 @@ html_content = """<!DOCTYPE html>
 
       .subtitle {
         font-size: 0.9rem;
+        margin-bottom: 0.5rem;
       }
       
       .grid {
