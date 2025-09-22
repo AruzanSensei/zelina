@@ -1,3 +1,17 @@
+// Verifikasi sandi angka 8 digit sebelum masuk
+(function() {
+    var pass = sessionStorage.getItem('contact_pass');
+    if (pass !== '20022020') {
+        var input = prompt('Masukkan sandi angka 8 digit untuk mengakses halaman ini:');
+        if (input !== '20022020') {
+            alert('Sandi salah!');
+            window.location.href = 'https://www.google.com';
+        } else {
+            sessionStorage.setItem('contact_pass', '20022020');
+        }
+    }
+})();
+
 document.addEventListener('DOMContentLoaded', () => {
     const contactsTableBody = document.getElementById('contactsTableBody');
     const searchInput = document.getElementById('searchInput');
