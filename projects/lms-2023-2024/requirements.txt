@@ -1,4 +1,0 @@
-gunicorn
-Flask==3.0.0
-Flask-WTF==1.2.1
-Werkzeug==3.0.1 

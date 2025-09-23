@@ -229,7 +229,6 @@ project_descriptions = {
     'chatbot.zanxa': 'Iseng aja bikin chatbot ~_~',
     'contact': 'Kontak gweh ini cuy, mau tau? ada sandinya haha :P',
     'dairyMilk': 'Platform e-commerce untuk produk susu',
-    'Kotoba-Minna-ni-Hongo': 'Aplikasi belajar bahasa Jepang dengan fitur interaktif',
     'lms-2023-2024': 'Sistem Manajemen Pembelajaran dengan pelacakan lanjutan',
     'LMS2324': 'Versi terbaru dari Sistem Manajemen Pembelajaran',
     'otakuDownload': 'Platform manajemen konten anime dan manga',

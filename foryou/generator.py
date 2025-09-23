@@ -1,5 +1,8 @@
 import os
+import json
 import webbrowser
+from datetime import datetime
+from typing import Dict, List, Optional
 
 # Lokasi script
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -221,24 +224,78 @@ html_content = """<!DOCTYPE html>
   <ul class="grid">
 """
 
+# Fungsi untuk mendapatkan atau membuat config.json
+def get_or_create_config(folder_path: str, folder_name: str) -> Dict:
+    config_path = os.path.join(folder_path, "config.json")
+    if os.path.exists(config_path):
+        try:
+            with open(config_path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except json.JSONDecodeError:
+            pass
+    
+    # Default config jika file tidak ada atau rusak
+    default_config = {
+        "description": f"Halaman spesial untuk {folder_name.replace('-', ' ').title()} 💖",
+        "order": 999,  # Default ke urutan terakhir
+        "created_at": datetime.now().isoformat(),
+        "last_modified": datetime.now().isoformat()
+    }
+    
+    # Simpan default config
+    with open(config_path, "w", encoding="utf-8") as f:
+        json.dump(default_config, indent=2, ensure_ascii=False)
+    
+    return default_config
+
+def sort_pages(pages: List[str], sort_method: str = "order") -> List[str]:
+    """
+    Mengurutkan halaman berdasarkan metode yang dipilih
+    sort_method: "order" (dari config), "name" (alfabetis), "date" (tanggal pembuatan)
+    """
+    if sort_method == "name":
+        return sorted(pages)
+    
+    page_data = []
+    for page in pages:
+        page_path = os.path.join(FORYOU_DIR, page)
+        config = get_or_create_config(page_path, page)
+        
+        if sort_method == "date":
+            sort_key = config.get("created_at", "")
+        else:  # default to order
+            sort_key = config.get("order", 999)
+            
+        page_data.append((page, sort_key))
+    
+    return [page for page, _ in sorted(page_data, key=lambda x: x[1])]
+
 # Tentukan prefix link
 link_prefix = "./foryou/" if os.path.basename(SCRIPT_DIR) != "foryou" else "./"
 
-page_descriptions = {
-    'aa-zeze': 'Untuk si Jeze yang cerewet 😝',
-    'ayu': 'Spesial untuk Ayu tersayang 💕',
-    'forBieYang': 'For my special one, Bie Yang 💝',
-    'hbd-sahabat': 'Ucapan ulang tahun untuk sahabat 🎂',
-    'ira': 'Halaman spesial untuk Ira 🌸',
-    'joan': 'Untuk Joan yang baik hati 💫',
-    'kak-alfi': 'Untuk Kak Alfi yang selalu support 🌟',
-    'kak-alzan': 'Untuk Kak Alzan yang hebat 🚀',
-    'la': 'Untuk La yang misterius 🎭',
-    'lala': 'Halaman spesial untuk Lala 🌺',
-    'ricka': 'Untuk Ricka yang penuh semangat ⭐',
-    'sample': 'Template halaman for you 📝',
-    'sya': 'Untuk Sya yang selalu ceria 🌞'
-}
+# Baca konfigurasi sorting dari settings.json
+settings_path = os.path.join(FORYOU_DIR, "settings.json")
+try:
+    with open(settings_path, "r", encoding="utf-8") as f:
+        settings = json.load(f)
+        sort_method = settings.get("sort_method", "order")
+except (FileNotFoundError, json.JSONDecodeError):
+    sort_method = "order"
+    # Buat settings.json default
+    with open(settings_path, "w", encoding="utf-8") as f:
+        json.dump({"sort_method": sort_method}, indent=2)
+
+# Urutkan pages berdasarkan metode yang dipilih
+pages = sort_pages(pages, sort_method)
+
+# Dictionary untuk menyimpan descriptions dari config.json files
+page_descriptions = {}
+
+# Baca config dari setiap folder
+for page in pages:
+    page_path = os.path.join(FORYOU_DIR, page)
+    config = get_or_create_config(page_path, page)
+    page_descriptions[page] = config["description"]
 
 for page in pages:
     title = page.replace("-", " ").title()
