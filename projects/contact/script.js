@@ -5,7 +5,7 @@
         var input = prompt('Masukkan sandi angka 8 digit untuk mengakses halaman ini:');
         if (input !== '20022020') {
             alert('Sandi salah!');
-            window.location.href = 'https://zanxa.site/contact';
+            window.location.href = 'https://zanxa.site/projects/contact';
         } else {
             sessionStorage.setItem('contact_pass', '20022020');
         }

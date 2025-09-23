@@ -1,1 +1,0 @@
-# dibuka ya sya
