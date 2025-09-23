@@ -235,18 +235,55 @@ def get_or_create_config(folder_path: str, folder_name: str) -> Dict:
             pass
     
     # Default config jika file tidak ada atau rusak
+    current_time = datetime.now().strftime("%Y-%m-%dT%H.%M.%S")
     default_config = {
+        "created_at": current_time,
         "description": f"Halaman spesial untuk {folder_name.replace('-', ' ').title()} 💖",
-        "order": 999,  # Default ke urutan terakhir
-        "created_at": datetime.now().isoformat(),
-        "last_modified": datetime.now().isoformat()
+        "last_modified": current_time,
+        "order": 999  # Will be updated by fix_page_order
     }
     
     # Simpan default config
     with open(config_path, "w", encoding="utf-8") as f:
-        json.dump(default_config, indent=2, ensure_ascii=False)
+        json.dump(default_config, f, indent=2, ensure_ascii=False)
     
     return default_config
+
+def fix_page_order(pages: List[str]) -> None:
+    """
+    Memperbaiki urutan halaman:
+    1. Mengisi gap dalam urutan (misal 1,2,4,5 -> 1,2,3,4)
+    2. Menempatkan folder baru di urutan terakhir
+    3. Memastikan urutan dimulai dari 1 dan berurutan
+    """
+    # Kumpulkan semua data halaman dengan order dan created_at
+    page_data = []
+    for page in pages:
+        page_path = os.path.join(FORYOU_DIR, page)
+        config = get_or_create_config(page_path, page)
+        order = config.get("order", 999)
+        created_at = config.get("created_at", "")
+        page_data.append((page, order, created_at))
+    
+    # Urutkan berdasarkan order, lalu created_at untuk yang order sama
+    page_data.sort(key=lambda x: (x[1], x[2]))
+    
+    # Perbaiki urutan
+    new_order = 1
+    for page, order, _ in page_data:
+        page_path = os.path.join(FORYOU_DIR, page)
+        config_path = os.path.join(page_path, "config.json")
+        
+        with open(config_path, "r", encoding="utf-8") as f:
+            config = json.load(f)
+        
+        if config["order"] != new_order:
+            config["order"] = new_order
+            config["last_modified"] = datetime.now().strftime("%Y-%m-%dT%H.%M.%S")
+            with open(config_path, "w", encoding="utf-8") as f:
+                json.dump(config, f, indent=4, ensure_ascii=False)
+        
+        new_order += 1
 
 def sort_pages(pages: List[str], sort_method: str = "order") -> List[str]:
     """
@@ -284,6 +321,9 @@ except (FileNotFoundError, json.JSONDecodeError):
     # Buat settings.json default
     with open(settings_path, "w", encoding="utf-8") as f:
         json.dump({"sort_method": sort_method}, indent=2)
+
+# Perbaiki urutan pages terlebih dahulu
+fix_page_order(pages)
 
 # Urutkan pages berdasarkan metode yang dipilih
 pages = sort_pages(pages, sort_method)
