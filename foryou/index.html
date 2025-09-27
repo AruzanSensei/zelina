@@ -12,81 +12,99 @@
   <nav class="breadcrumb">
       <a href="../">✨</a>
       <span>/</span>
-      <span>foryou</span>
-      <span>/</span>
-      <span>generator</span>
+      <span href="../">foryou</span>
   </nav>
 
+  <div class="page-wrapper">
     <div class="container">
-        <h1>For You Page Generator</h1>
-        <p class="subtitle">Buat halaman spesial untuk orang spesial ❤️</p>
+      <h1>For You Page Generator</h1>
+      <p class="subtitle">Buat halaman spesial untuk orang terkasih dengan mudah</p>
+    </div>
 
-        <form id="generatorForm">
-            <div class="form-group">
-                <label for="folderName">Nama Folder:</label>
-                <input type="text" id="folderName" required
-                       placeholder="Contoh: kak-alzan"
-                       pattern="[a-zA-Z0-9-]+"
-                       title="Gunakan huruf, angka, dan tanda strip saja">
-            </div>
+    <div class="container">
+      <form id="generatorForm">
+          <div class="form-group">
+              <label for="folderName">Nama Folder</label>
+              <input type="text" id="folderName" required
+                      placeholder="Contoh: kak-alzan"
+                      pattern="[a-zA-Z0-9-]+"
+                      title="Gunakan huruf, angka, dan tanda strip saja">
+          </div>
 
-            <div class="form-group">
-                <label for="pageTitle">Judul Tab Browser:</label>
-                <input type="text" id="pageTitle" required
-                       placeholder="Contoh: Semangat syaa!">
-            </div>
+          <div class="form-group">
+              <label for="pageTitle">Judul Tab Browser</label>
+              <input type="text" id="pageTitle" required
+                      placeholder="Contoh: Semangat syaa!">
+          </div>
 
-            <div class="form-group">
-                <label for="headerTitle">Judul Halaman:</label>
-                <input type="text" id="headerTitle" required
-                       placeholder="Contoh: Semangat syakira!💪">
-            </div>
+          <div class="form-group">
+              <label for="headerTitle">Judul Halaman</label>
+              <input type="text" id="headerTitle" required
+                      placeholder="Contoh: Semangat syakira!💪">
+          </div>
 
-            <div class="form-group">
-                <label for="message">Pesan:</label>
-                <textarea id="message" required
-                          placeholder="Tulis pesan spesial kamu di sini..."></textarea>
-            </div>
+          <div class="form-group">
+              <label for="message">Pesan</label>
+              <textarea id="message" required
+                        placeholder="Tulis pesan spesial kamu di sini..."></textarea>
+          </div>
 
-            <div class="form-group">
-                <label for="senderName">Nama Pengirim:</label>
-                <input type="text" id="senderName" required
-                       placeholder="Contoh: kakak mu">
-            </div>
+          <div class="form-group">
+              <label for="senderName">Nama Pengirim</label>
+              <input type="text" id="senderName" required
+                      placeholder="Contoh: kakak mu">
+          </div>
 
-            <div class="form-group">
-                <label for="buttonText">Teks Tombol:</label>
-                <input type="text" id="buttonText" required
-                       placeholder="Contoh: Tekan tombol ini sya">
-            </div>
+          <div class="form-group">
+              <label for="buttonText">Teks Tombol</label>
+              <input type="text" id="buttonText" required
+                      placeholder="Contoh: Tekan tombol ini sya">
+          </div>
 
-            <div class="form-group">
-                <label for="footnote">Catatan Kecil (opsional):</label>
-                <input type="text" id="footnote"
-                       placeholder="Contoh: kayaknya udah selesai ya ketika kamu baca ini :)">
-            </div>
+          <div class="form-group">
+              <label for="footnote">Catatan Kecil (opsional)</label>
+              <input type="text" id="footnote"
+                      placeholder="Contoh: kayaknya udah selesai ya ketika kamu baca ini :)">
+          </div>
 
-            <button type="submit">Generate Page ✨</button>
-        </form>
+          <button type="submit">Generate Page ✨</button>
+      </form>
 
-        <!-- <div class="preview-section">
-            <h2 class="preview-title">Preview Halaman</h2>
-            <div class="preview-container">
-                <div class="preview-content">
-                    <h1 id="previewHeaderTitle">Judul akan muncul di sini</h1>
-                    <div class="preview-message">
-                        <p id="previewMessage">Pesan akan muncul di sini</p>
-                        <p id="previewSignature">-<span id="previewSender">pengirim</span></p>
-                        <p id="previewFootnote"></p>
-                    </div>
-                    <button id="previewButton">Teks tombol</button>
-                </div>
-            </div>
-        </div>
-    </div> -->
+      <!-- <div class="preview-section">
+          <h2 class="preview-title">Preview Halaman</h2>
+          <div class="preview-container">
+              <div class="preview-content">
+                  <h1 id="previewHeaderTitle">Judul akan muncul di sini</h1>
+                  <div class="preview-message">
+                      <p id="previewMessage">Pesan akan muncul di sini</p>
+                      <p id="previewSignature">-<span id="previewSender">pengirim</span></p>
+                      <p id="previewFootnote"></p>
+                  </div>
+                  <button id="previewButton">Teks tombol</button>
+              </div>
+          </div>
+      </div>
+  </div> -->
+  </div>
 
     <script>
       const form = document.getElementById('generatorForm');
+      
+      // Auto-resize textarea
+      function autoResize(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+      }
+      
+      // Apply auto-resize to message textarea
+      const messageTextarea = document.getElementById('message');
+      if (messageTextarea) {
+        messageTextarea.addEventListener('input', function() {
+          autoResize(this);
+        });
+        // Initial resize
+        autoResize(messageTextarea);
+      }
       
       function updatePreview() {
         // Update all preview elements
