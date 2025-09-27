@@ -1,51 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>For You Pages</title>
-  <style>
-    :root {
-      --primary: #2563eb;
-      --bg: #f8fafc;
-      --text: #0f172a;
-      --card-bg: #ffffff;
-      --gray-400: #94a3b8;
-      --dot-color: rgba(77, 37, 235, 0.075);
-      --dot-size: 1.5px;
-      --dot-space: 22px;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For You Page Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #ffe5e5 0%, #fff0f5 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem auto;
+        }
+
+        .breadcrumb a {
+            color: #ff69b4;
+            text-decoration: none;
+        }
+
+        .breadcrumb span {
+            color: #666;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: #ff69b4;
+            text-align: right;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            text-align: right;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+    .form-group {
+      margin-bottom: 1.5rem;
     }
 
-    .dots-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: -1;
-      background-image: 
-        radial-gradient(var(--dot-color) var(--dot-size), transparent var(--dot-size)),
-        radial-gradient(var(--dot-color) var(--dot-size), transparent var(--dot-size));
-      background-position: 0 0, calc(var(--dot-space) / 2) calc(var(--dot-space) / 2);
-      background-size: var(--dot-space) var(--dot-space);
-      mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
-      -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+    label {
+      display: block;
+      color: #ff69b4;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
     }
-    
-    body {
+
+    input, textarea {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #ffe5e5;
+      border-radius: 10px;
+      font-size: 1rem;
+      color: #666;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #ff69b4;
+      box-shadow: 0 0 10px rgba(255, 105, 180, 0.2);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    button {
+      background: #ff69b4;
+      color: white;
+      border: none;
+      padding: 1.5rem 3rem;
+      font-size: 1.5rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+      box-shadow: 0 4px 15px rgba(255, 105, 180, 0.3);
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .preview-section {
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      animation: slideUp 1s ease-out;
+    }
+
+    .preview-container {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .preview-title {
+      color: #ff69b4;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    #previewHeaderTitle {
+      font-family: Arial, sans-serif;
+      color: #ff69b4;
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      animation: fadeIn 1s ease-out;
+      font-weight: bold;
+    }
+
+    .preview-message {
+      background: white;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      animation: slideUp 1s ease-out;
+    }
+
+    #previewMessage {
+      font-size: 1.2rem;
+      color: #666;
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+
+    #previewSignature {
+      font-family: Arial, sans-serif;
+      font-size: 1.5rem !important;
+      color: #ff69b4 !important;
+      text-align: right;
+      margin-top: 1rem !important;
+      font-weight: bold;
+    }
+
+    #previewFootnote {
+      font-style: italic;
+      color: #666;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+                text-align: center;
+            }
+
+            .subtitle {
+                text-align: center;
+            }
+
+            button {
+                padding: 1.2rem 2rem;
+                font-size: 1.2rem;
+            }
+    }
+
+      body {
+        background: var(--bg);
+      }    body {
       font-family: 'Segoe UI', system-ui, sans-serif;
       background: var(--bg);
       color: var(--text);
       line-height: 1.6;
       padding: 1rem 2rem;
-      max-width: 1200px;
+      max-width: 800px;
       margin: 0 auto;
     }
 
@@ -69,7 +247,7 @@
     
     .header {
       text-align: center;
-      margin-bottom: 1rem;
+      margin-bottom: 2rem;
       padding: 1rem 0;
     }
     
@@ -85,98 +263,102 @@
       color: #64748b;
       margin-bottom: 1.5rem;
     }
-    
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 1.5rem;
-      padding: 0;
-      list-style: none;
-    }
-    
-    .card {
+
+    .form-container {
       background: var(--card-bg);
       border-radius: 1rem;
       box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      overflow: hidden;
+      padding: 2rem;
+      margin-bottom: 2rem;
     }
-    
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+    .form-group {
+      margin-bottom: 1.5rem;
     }
-    
-    .card a {
+
+    label {
       display: block;
-      padding: 1rem;
-      text-decoration: none;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
       color: var(--text);
     }
 
-    .card-title {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 1.1rem;
+    input, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      background: #f8fafc;
+      transition: border-color 0.2s ease;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-size: 1rem;
       font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      width: 100%;
     }
 
-    .card-title::before {
-      content: "💌";
-      font-size: 1.2rem;
+    button:hover {
+      background: #1d4ed8;
     }
 
-    .card-description {
+    .preview {
+      background: var(--card-bg);
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      padding: 2rem;
+      margin-top: 2rem;
+    }
+
+    .preview h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    pre {
+      background: #f1f5f9;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      overflow-x: auto;
+      font-family: 'Consolas', monospace;
       font-size: 0.9rem;
-      color: var(--gray-400);
-      margin-left: 0.5rem;
     }
-    
+
     @media (max-width: 640px) {
       body {
-        padding: 0.75rem;
+        padding: 1rem;
       }
 
-      .breadcrumb {
-        margin-bottom: 0.5rem;
+      .form-container {
+        padding: 1rem;
       }
-      
-      .header {
-        margin-bottom: 1.5rem;
-        padding: 0.8rem;
-      }
-      
+
       h1 {
         font-size: 1.75rem;
-        margin-bottom: 0rem;
       }
 
       .subtitle {
-        font-size: 0.9rem;
-        margin-bottom: 0.5rem;
-      }
-      
-      .grid {
-        grid-template-columns: 1fr;
-        gap: 0.75rem;
-      }
-
-      .card {
-        border-radius: 0.75rem;
-      }
-
-      .card a {
-        padding: 0.5rem 1rem 0.8rem 1rem;
-      }
-
-      .card-title {
         font-size: 1rem;
-      }
-
-      .card-description {
-        font-size: 0.8rem;
-        margin-left: 0.2rem;
       }
     }
   </style>
@@ -188,102 +370,153 @@
     <span>/</span>
     <span>foryou</span>
     <span>/</span>
+    <span>generator</span>
   </nav>
   <header class="header">
-    <h1>For You Pages</h1>
-    <p class="subtitle">Halaman khusus untuk orang spesial ❤️</p>
+    <h1>For You Page Generator</h1>
+    <p class="subtitle">Buat halaman spesial untuk orang spesial ❤️</p>
   </header>
-  <ul class="grid">
-    <li class="card">
-      <a href="./ayu/">
-        <div class="card-title">Ayu</div>
-        <div class="card-description">Spesial untuk Ayu tersayang </div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./forBieYang/">
-        <div class="card-title">Forbieyang</div>
-        <div class="card-description">For my special one, Bie Yang </div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./hbd-sahabat/">
-        <div class="card-title">Hbd Sahabat</div>
-        <div class="card-description">Ucapan ulang tahun untuk sahabat </div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./ira/">
-        <div class="card-title">Ira</div>
-        <div class="card-description">Halaman spesial untuk Ira </div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./joan/">
-        <div class="card-title">Joan</div>
-        <div class="card-description">Untuk Joan yang baik hati </div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./kak-alfi/">
-        <div class="card-title">Kak Alfi</div>
-        <div class="card-description">Untuk Kak Alfi yang selalu support </div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./kak-alzan/">
-        <div class="card-title">Kak Alzan</div>
-        <div class="card-description">Untuk Kak Alzan yang hebat </div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./la/">
-        <div class="card-title">La</div>
-        <div class="card-description">Untuk La yang misterius </div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./lala/">
-        <div class="card-title">Lala</div>
-        <div class="card-description">Halaman spesial untuk Lala </div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./ricka/">
-        <div class="card-title">Ricka</div>
-        <div class="card-description">Untuk Ricka yang penuh semangat </div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./sample/">
-        <div class="card-title">Sample</div>
-        <div class="card-description">Template halaman for you </div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./sya/">
-        <div class="card-title">Sya</div>
-        <div class="card-description">Untuk Sya yang selalu ceria </div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./aa-zeze/">
-        <div class="card-title">Aa Zeze</div>
-        <div class="card-description">Halaman spesial untuk Aa Zeze 💖</div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./admin/">
-        <div class="card-title">Admin</div>
-        <div class="card-description">Halaman spesial untuk Admin 💖</div>
-      </a>
-    </li>
-    <li class="card">
-      <a href="./anjay/">
-        <div class="card-title">Anjay</div>
-        <div class="card-description">Halaman spesial untuk Anjay 💖</div>
-      </a>
-    </li>
-  </ul>
+
+    <nav class="breadcrumb">
+        <a href="../">🏠</a>
+        <span>/</span>
+        <span>foryou</span>
+        <span>/</span>
+        <span>generator</span>
+    </nav>
+
+    <div class="container">
+        <h1>For You Page Generator</h1>
+        <p class="subtitle">Buat halaman spesial untuk orang spesial ❤️</p>
+
+        <form id="generatorForm">
+            <div class="form-group">
+                <label for="folderName">Nama Folder:</label>
+                <input type="text" id="folderName" required
+                       placeholder="Contoh: kak-alzan"
+                       pattern="[a-zA-Z0-9-]+"
+                       title="Gunakan huruf, angka, dan tanda strip saja">
+            </div>
+
+            <div class="form-group">
+                <label for="pageTitle">Judul Tab Browser:</label>
+                <input type="text" id="pageTitle" required
+                       placeholder="Contoh: Semangat syaa!">
+            </div>
+
+            <div class="form-group">
+                <label for="headerTitle">Judul Halaman:</label>
+                <input type="text" id="headerTitle" required
+                       placeholder="Contoh: Semangat syakira!💪">
+            </div>
+
+            <div class="form-group">
+                <label for="message">Pesan:</label>
+                <textarea id="message" required
+                          placeholder="Tulis pesan spesial kamu di sini..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="senderName">Nama Pengirim:</label>
+                <input type="text" id="senderName" required
+                       placeholder="Contoh: kakak mu">
+            </div>
+
+            <div class="form-group">
+                <label for="buttonText">Teks Tombol:</label>
+                <input type="text" id="buttonText" required
+                       placeholder="Contoh: Tekan tombol ini sya">
+            </div>
+
+            <div class="form-group">
+                <label for="footnote">Catatan Kecil (opsional):</label>
+                <input type="text" id="footnote"
+                       placeholder="Contoh: kayaknya udah selesai ya ketika kamu baca ini :)">
+            </div>
+
+            <button type="submit">Generate Page ✨</button>
+        </form>
+
+        <div class="preview-section">
+            <h2 class="preview-title">Preview Halaman</h2>
+            <div class="preview-container">
+                <div class="preview-content">
+                    <h1 id="previewHeaderTitle">Judul akan muncul di sini</h1>
+                    <div class="preview-message">
+                        <p id="previewMessage">Pesan akan muncul di sini</p>
+                        <p id="previewSignature">-<span id="previewSender">pengirim</span></p>
+                        <p id="previewFootnote"></p>
+                    </div>
+                    <button id="previewButton">Teks tombol</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+      const form = document.getElementById('generatorForm');
+      
+      function updatePreview() {
+        // Update all preview elements
+        document.getElementById('previewHeaderTitle').textContent = 
+          document.getElementById('headerTitle').value || 'Judul akan muncul di sini';
+        
+        document.getElementById('previewMessage').textContent = 
+          document.getElementById('message').value || 'Pesan akan muncul di sini';
+        
+        document.getElementById('previewSender').textContent = 
+          document.getElementById('senderName').value || 'pengirim';
+        
+        document.getElementById('previewFootnote').textContent = 
+          document.getElementById('footnote').value;
+        
+        document.getElementById('previewButton').textContent = 
+          document.getElementById('buttonText').value || 'Teks tombol';
+      }    // Update preview as user types
+    form.querySelectorAll('input, textarea').forEach(input => {
+      input.addEventListener('input', updatePreview);
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const folderName = document.getElementById('folderName').value;
+      const title = document.getElementById('title').value;
+      const description = document.getElementById('description').value;
+
+      try {
+        // Create the config object
+        const config = {
+          title,
+          description
+        };
+
+        // Create folder and files
+        const folderPath = `./${folderName}`;
+        
+        // Attempt to create the directory
+        const response = await fetch('/api/create-page', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            folderName,
+            config
+          })
+        });
+
+        if (response.ok) {
+          alert('Page created successfully!');
+          window.location.href = folderPath;
+        } else {
+          throw new Error('Failed to create page');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to create page. Please try again.');
+      }
+    });
+  </script>
 </body>
 </html>

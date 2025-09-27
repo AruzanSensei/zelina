@@ -352,8 +352,12 @@ html_content += """  </ul>
 </html>
 """
 
-# Simpan file index.html di folder script
-OUTPUT_PATH = os.path.join(SCRIPT_DIR, "index.html")
+# Simpan file index.html di folder admin
+ADMIN_DIR = os.path.join(FORYOU_DIR, "admin")
+if not os.path.exists(ADMIN_DIR):
+    os.makedirs(ADMIN_DIR)
+
+OUTPUT_PATH = os.path.join(ADMIN_DIR, "index.html")
 with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
     f.write(html_content)
 
