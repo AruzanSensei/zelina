@@ -7,7 +7,7 @@
   <style>
     :root {
       --primary: #2563eb;
-      --bg: #f8fafc;
+      --bg: #f1f1f1;
       --text: #0f172a;
       --card-bg: #ffffff;
       --gray-400: #94a3b8;
@@ -124,19 +124,22 @@
     }
 
     .card-content {
-      padding: 1rem;
+      padding: 0rem;
     }
 
     .card-title {
       font-size: 1.1rem;
       font-weight: 500;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0rem;
+      margin-left: 1rem;
     }
-
+    
     .card-description {
       font-size: 0.9rem;
       color: var(--gray-400);
-      margin-left: 0.5rem;
+      margin-left: 1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.3rem;
     }
     
     @media (max-width: 640px) {
@@ -149,6 +152,7 @@
       }
       
       .header {
+        margin-top: 1.5rem;
         margin-bottom: 1.5rem;
         padding: 0.8rem;
       }
@@ -182,7 +186,7 @@
 
       .card-description {
         font-size: 0.8rem;
-        margin-left: 0.2rem;
+        margin-left: 1rem;
       }
     }
   </style>
