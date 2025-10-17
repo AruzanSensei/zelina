@@ -212,7 +212,6 @@ html_content = """<!DOCTYPE html>
     <a href="../">🏠</a>
     <span>/</span>
     <span>projects</span>
-    <span>/</span>
   </nav>
   <header class="header">
     <h1>Proyek Random</h1>

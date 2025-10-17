@@ -215,7 +215,6 @@ html_content = """<!DOCTYPE html>
     <a href="../">🏠</a>
     <span>/</span>
     <span>foryou</span>
-    <span>/</span>
   </nav>
   <header class="header">
     <h1>For You Pages</h1>
