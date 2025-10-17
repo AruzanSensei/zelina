@@ -79,8 +79,8 @@ h1 {
     margin-bottom: 1.5rem;
 }
 
-.grid {
-    columns: 4 280px;
+.carousel-grid {
+    columns: 4 200px;
     column-gap: 1.5rem;
     padding: 0;
     list-style: none;
@@ -163,17 +163,17 @@ h1 {
     margin-bottom: 0.5rem;
     }
     
-    .grid {
+    .carousel-grid {
     columns: 1;
     column-gap: 0.75rem;
     }
 
-    .card {
+    .card-with-image {
     border-radius: 0.75rem;
     margin-bottom: 0.75rem;
     }
 
-    .card a {
+    .card-with-image a {
     padding: 0.5rem 1rem 0rem 1rem;
     }
 
