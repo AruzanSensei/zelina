@@ -95,8 +95,8 @@
     
     .nav-menu {
         position: fixed;
-        top: 80px;
-        left: -100%;
+        top: 66px;
+        left: 100%;
         width: 100%;
         height: calc(100vh - 80px);
         background: var(--white);
