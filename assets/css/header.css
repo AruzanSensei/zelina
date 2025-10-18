@@ -18,12 +18,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 2rem 0.5rem 2rem;
+    padding: 0.75rem 7rem 0.5rem 4rem;
 }
 
 .nav-logo img {
     height: 50px;
     width: auto;
+    object-fit: contain;
+    display: block;
 }
 
 .nav-menu {
@@ -113,11 +115,13 @@
     }
     
     .nav-container {
-        padding: 0.75rem 1rem 0.5rem 1rem;
+        padding: 0.75rem 1rem 0.6rem 1rem;
     }
 
     .nav-logo img {
-    height: 40px;
-    width: auto;
-}
+        height: 40px;
+        width: auto;
+        object-fit: contain;
+        display: block;
+    }
 }
