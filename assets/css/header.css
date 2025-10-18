@@ -23,7 +23,7 @@
 
 .nav-logo img {
     height: 50px;
-    width: auto;
+    width: 50px;
     object-fit: contain;
     display: block;
 }
@@ -120,7 +120,7 @@
 
     .nav-logo img {
         height: 40px;
-        width: auto;
+        width: 40px;
         object-fit: contain;
         display: block;
     }
