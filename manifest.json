@@ -3,12 +3,12 @@
   "short_name": "Zanxa",
   "icons": [
     {
-      "src": "/assets/image/favicon.png",
+      "src": "/assets/icon/favicon.png",
       "sizes": "512x512",
       "type": "image/png"
     }
   ],
-  "theme_color": "#FFD700",
+  "theme_color": "#786FFB",
   "background_color": "#FFFFFF",
   "display": "standalone"
 }
