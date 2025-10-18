@@ -104,3 +104,19 @@
 .whatsapp-btn:hover {
     background: #22c35e;
 }
+
+@media (max-width: 768px) {
+    .sticky-buttons {
+        bottom: 15px;
+        right: 15px;
+    }
+
+    .sticky-btn {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .sticky-btn i {
+        font-size: 20px;
+    }
+}
