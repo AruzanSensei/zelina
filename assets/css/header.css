@@ -22,9 +22,9 @@
 }
 
 .nav-logo img {
-    height: 50px;
-    width: 50px;
-    object-fit: contain;
+    height: 35px;
+    width: auto;
+    max-width: 100%;
     display: block;
 }
 
@@ -119,9 +119,9 @@
     }
 
     .nav-logo img {
-        height: 40px;
-        width: 40px;
-        object-fit: contain;
+        height: 30px;
+        width: auto;
+        max-width: 100%;
         display: block;
     }
 }
