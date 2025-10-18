@@ -7,20 +7,23 @@
     left: 0;
     right: 0;
     z-index: 1000;
-    transition: var(--transition);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.navbar.hide {
+    transform: translateY(-100%);
 }
 
 .nav-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
+    padding: 0.75rem 2rem 0.5rem 2rem;
 }
 
-.nav-logo h2 {
-    color: var(--primary-color);
-    font-size: 1.8rem;
-    margin: 0;
+.nav-logo img {
+    height: 50px;
+    width: auto;
 }
 
 .nav-menu {
@@ -110,6 +113,11 @@
     }
     
     .nav-container {
-        padding: 1rem;
+        padding: 0.75rem 1rem 0.5rem 1rem;
     }
+
+    .nav-logo img {
+    height: 40px;
+    width: auto;
+}
 }
