@@ -28,6 +28,21 @@
     display: block;
 }
 
+/*!  */
+/* Handle high DPI devices */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .nav-logo img {
+        height: 32px;
+    }
+}
+
+@media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 288dpi) {
+    .nav-logo img {
+        height: 30px;
+    }
+}
+/*!  */
+
 .nav-menu {
     display: flex;
     list-style: none;
@@ -119,9 +134,22 @@
     }
 
     .nav-logo img {
-        height: 30px;
+        height: 28px;
         width: auto;
         max-width: 100%;
         display: block;
+    }
+    
+    /* Handle high DPI devices in mobile */
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+        .nav-logo img {
+            height: 26px;
+        }
+    }
+    
+    @media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 288dpi) {
+        .nav-logo img {
+            height: 24px;
+        }
     }
 }
