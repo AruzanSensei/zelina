@@ -1,0 +1,14 @@
+{
+  "name": "Zanxa Studio",
+  "short_name": "Zanxa",
+  "icons": [
+    {
+      "src": "/assets/image/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#FFD700",
+  "background_color": "#FFFFFF",
+  "display": "standalone"
+}
