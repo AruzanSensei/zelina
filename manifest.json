@@ -3,7 +3,7 @@
   "short_name": "Zanxa",
   "icons": [
     {
-      "src": "/assets/icon/favicon.png",
+      "src": "/assets/icon/zanxa-transparent.png",
       "sizes": "512x512",
       "type": "image/png"
     }
