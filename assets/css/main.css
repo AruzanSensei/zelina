@@ -26,8 +26,7 @@ body {
 }
 
 .container {
-    max-width: 1000px;
-    min-width: 0;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
 }
@@ -44,7 +43,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Hero Section */
 .hero {
     position: relative;
-    height: 80vh;
+    height: 90vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -174,7 +173,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Sections */
 .services, .about, .gallery-section, .contact-section, .portfolio, .testimonials, .cta {
-    padding: 2rem 0;
+    padding: 5rem 0;
 }
 
 .section-header {
@@ -200,8 +199,9 @@ h1, h2, h3, h4, h5, h6 {
     padding: 1rem;
     background-color: var(--secondary-color);
     margin: 0;
-    min-height: 10vh;
+    height: 10vh;
     display: flex;
+    justify-content: center;
     align-items: center;
 }
 
@@ -244,7 +244,7 @@ h1, h2, h3, h4, h5, h6 {
 .quick-card .meta .title {
     font-weight: 700;
     font-size: 0.98rem;
-    margin-bottom: 0.1rem;
+    margin-bottom: 0.2rem;
 }
 
 .quick-card .meta .desc {
@@ -326,7 +326,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .about-text p {
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: var(--gray);
     margin-bottom: 2rem;
     line-height: 1.8;
@@ -785,14 +785,6 @@ h1, h2, h3, h4, h5, h6 {
         flex-direction: column;
         align-items: center;
     }
-
-    .section-title {
-        font-size: 2rem;
-    }
-
-    .section-subtitle {
-        line-height: rem;
-    }
     
     .about-content {
         grid-template-columns: 1fr;
@@ -828,7 +820,6 @@ h1, h2, h3, h4, h5, h6 {
     .services-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 1rem ;
-        margin: 0;
     }
 
     .service-card {
