@@ -214,7 +214,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .quick-card {
     display: flex;
-    gap: 1rem;
+    gap: 0.6rem;
     align-items: center;
     padding: 0.2rem;
     border-radius: 10px;
@@ -244,7 +244,7 @@ h1, h2, h3, h4, h5, h6 {
 .quick-card .meta .title {
     font-weight: 700;
     font-size: 0.98rem;
-    margin-bottom: 0.2rem;
+    margin-bottom: -0.2rem;
 }
 
 .quick-card .meta .desc {
