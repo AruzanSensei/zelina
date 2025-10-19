@@ -43,7 +43,7 @@ h1, h2, h3, h4, h5, h6 {
 /* Hero Section */
 .hero {
     position: relative;
-    height: 100vh;
+    height: 90vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -193,6 +193,72 @@ h1, h2, h3, h4, h5, h6 {
     max-width: 600px;
     margin: 0 auto;
 }
+
+/* Quick links cards */
+.quick-links {
+    padding: 1rem;
+    background-color: var(--secondary-color);
+    margin: 0;
+    height: 10vh;
+}
+
+.quick-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    align-items: stretch;
+}
+
+.quick-card {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.2rem;
+    border-radius: 10px;
+    color: var(--white);
+    text-decoration: none;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.quick-card .icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    box-shadow: inset 0 -10px 12px rgba(0, 0, 0, 0.085);
+}
+
+.quick-card .meta {
+    display: flex;
+    flex-direction: column;
+}
+
+.quick-card .meta .title {
+    font-weight: 700;
+    font-size: 0.98rem;
+    margin-bottom: 0.2rem;
+}
+
+.quick-card .meta .desc {
+    font-size: 0.85rem;
+    opacity: 0.95;
+}
+
+.quick-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+}
+
+/* Individual quick-card colors */
+.qc-primary { background: linear-gradient(135deg,#786FFB,#5E48D9);} /* Notion / Projects */
+.qc-accent { background: linear-gradient(135deg,#FF6B6B,#FF8A5B);} /* Running */
+.qc-green  { background: linear-gradient(135deg,#25D366,#1FA34B);} /* WhatsApp / downloads */
+.qc-teal   { background: linear-gradient(135deg,#2BC3C8,#1E9AAE);} /* Design */
 
 /* Services Grid */
 .services-grid {
@@ -697,73 +763,13 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
-/* Quick links cards */
-.quick-links {
-    padding: 1rem;
-    background-color: var(--secondary-color);
-    margin: -1px 0;
-}
-
-.quick-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1rem;
-    align-items: stretch;
-}
-
-.quick-card {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    padding: 1rem;
-    border-radius: 10px;
-    color: var(--white);
-    text-decoration: none;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-.quick-card .icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
-    box-shadow: inset 0 -10px 12px rgba(0, 0, 0, 0.085);
-}
-
-.quick-card .meta {
-    display: flex;
-    flex-direction: column;
-}
-
-.quick-card .meta .title {
-    font-weight: 700;
-    font-size: 0.98rem;
-    margin-bottom: 0.2rem;
-}
-
-.quick-card .meta .desc {
-    font-size: 0.85rem;
-    opacity: 0.95;
-}
-
-.quick-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
-}
-
-/* Individual quick-card colors */
-.qc-primary { background: linear-gradient(135deg,#786FFB,#5E48D9);} /* Notion / Projects */
-.qc-accent { background: linear-gradient(135deg,#FF6B6B,#FF8A5B);} /* Running */
-.qc-green  { background: linear-gradient(135deg,#25D366,#1FA34B);} /* WhatsApp / downloads */
-.qc-teal   { background: linear-gradient(135deg,#2BC3C8,#1E9AAE);} /* Design */
 
 /* Mobile Styles */
 @media (max-width: 768px) {
+    .hero {
+        height: 80vh;
+    }
+
     .hero-title {
         font-size: 2.5rem;
     }
@@ -780,6 +786,14 @@ h1, h2, h3, h4, h5, h6 {
     .about-content {
         grid-template-columns: 1fr;
         gap: 2rem;
+    }
+
+    .quick-links {
+        height: 20vh;
+    }
+
+    .quick-card {
+        padding: 0.2rem;
     }
     
     .services-grid {

@@ -134,22 +134,9 @@
     }
 
     .nav-logo img {
-        height: 28px;
+        height: 40px;
         width: auto;
         max-width: 100%;
         display: block;
-    }
-    
-    /* Handle high DPI devices in mobile */
-    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-        .nav-logo img {
-            height: 26px;
-        }
-    }
-    
-    @media (-webkit-min-device-pixel-ratio: 3), (min-resolution: 288dpi) {
-        .nav-logo img {
-            height: 24px;
-        }
     }
 }
