@@ -80,7 +80,7 @@
 }
 
 .back-to-top {
-    background: #000000;
+    background: #ff6b00;
     opacity: 0;
     visibility: hidden;
     transform: scale(0.5);
@@ -112,8 +112,8 @@
     }
 
     .sticky-btn {
-        width: 70px;
-        height: 70px;
+        width: 50px;
+        height: 50px;
     }
     
     .sticky-btn i {

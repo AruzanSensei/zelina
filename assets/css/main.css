@@ -196,7 +196,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Quick links cards */
 .quick-links {
-    padding: 1rem;
+    /* padding: 1rem; */
     background-color: var(--secondary-color);
     margin: 0;
     height: 10vh;
@@ -204,6 +204,8 @@ h1, h2, h3, h4, h5, h6 {
     justify-content: center;
     align-items: center;
 }
+
+
 
 .quick-grid {
     display: grid;
@@ -794,7 +796,11 @@ h1, h2, h3, h4, h5, h6 {
     .quick-links {
         height: 20vh;
     }
-
+    
+    .services, .about, .gallery-section, .contact-section, .portfolio, .testimonials, .cta {
+        padding: 2rem 0;
+    }
+    
     .quick-card {
         padding: 0.2rem;
     }
@@ -819,11 +825,12 @@ h1, h2, h3, h4, h5, h6 {
     
     .services-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 1rem ;
+        gap: 1rem 0.3rem;
+     ;
     }
 
     .service-card {
-        padding: 1rem;
+        padding: 0rem;
         min-height: 120px;
     }
 
@@ -891,7 +898,6 @@ h1, h2, h3, h4, h5, h6 {
         font-size: 18px;
     }
 
-    
 
     .hero-title {
         font-size: 2rem;
