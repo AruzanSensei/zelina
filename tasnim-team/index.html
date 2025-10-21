@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tasnim Team - Creative Agency</title>
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <style>
+    .header {
+        text-align: center;
+        margin-bottom: 1rem;
+        padding: 1rem 0;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+        font-size: 1.1rem;
+        color: #64748b;
+        margin-bottom: 1.5rem;
+    }
+
+    .sub-subtitle {
+        font-size: 0.9rem;
+        color: #3366ad;
+        margin-bottom: 0.7rem;
+        margin-top: -0.7rem;
+    }
+
+    .view-options {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .view-option {
+        padding: 0.5rem 1rem;
+        background: var(--card-bg);
+        border-radius: 0.5rem;
+        cursor: pointer;
+        border: 1px solid var(--border);
+        transition: all 0.2s ease;
+    }
+
+    .view-option.active {
+        background: var(--primary);
+        color: white;
+    }
+
+    .simple-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        padding: 0;
+        list-style: none;
+    }
+
+    .card {
+        background: var(--card-bg);
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 1rem;
+    }
+
+    .card:hover {
+        transform: translateY(-4px) rotate(2deg);
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    .card-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 1rem;
+        border: 3px solid var(--border);
+    }
+
+    .card-name {
+        font-weight: 600;
+        color: black;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-position {
+        font-size: 0.9rem;
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        color: white;
+        font-weight: 500;
+    }
+
+    .card-description {
+        margin-top: 0.75rem;
+        font-size: 0.9rem;
+        color: #666;
+        display: none;
+    }
+
+    .card.show-description .card-description {
+        display: block;
+    }
+
+    /* Position color variations */
+    .position-designer { background-color: #3b82f6; } /* Blue */
+    .position-hrd { background-color: #10b981; } /* Green */
+    .position-developer { background-color: #8b5cf6; } /* Purple */
+    .position-manager { background-color: #f59e0b; } /* Amber */
+    .position-consultant { background-color: #ef4444; } /* Red */
+    .position-content { background-color: #ec4899; } /* Pink */
+    .position-marketing { background-color: #06b6d4; } /* Cyan */
+
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+        .simple-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        h1 {
+            font-size: 2rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .simple-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+
+        .card {
+            padding: 0.75rem;
+        }
+
+        .card-image {
+            width: 80px;
+            height: 80px;
+        }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Tasnim Creative Team</h1>
+    <p class="subtitle">Meet our talented professionals</p>
+    <p class="sub-subtitle">Each member brings unique skills to create amazing results</p>
+  </div>
+
+  <div class="view-options">
+    <div class="view-option active" data-view="all">Show All</div>
+    <div class="view-option" data-view="photos">Photos Only</div>
+    <div class="view-option" data-view="with-description">With Descriptions</div>
+  </div>
+
+  <ul class="simple-grid">
+    <!-- Team Member Cards -->
+    <li class="card" data-position="designer">
+      <img src="https://via.placeholder.com/150/3b82f6/FFFFFF?text=A" alt="Team Member" class="card-image">
+      <div class="card-name">Alzan Adytia Juniar</div>
+      <div class="card-position position-designer">Designer</div>
+      <div class="card-description">Creative designer with 5+ years of experience in UI/UX</div>
+    </li>
+
+    <li class="card" data-position="hrd">
+      <img src="https://via.placeholder.com/150/10b981/FFFFFF?text=B" alt="Team Member" class="card-image">
+      <div class="card-name">Budi Santoso</div>
+      <div class="card-position position-hrd">HRD</div>
+      <div class="card-description">Human resource specialist focusing on team development</div>
+    </li>
+
+    <li class="card" data-position="developer">
+      <img src="https://via.placeholder.com/150/8b5cf6/FFFFFF?text=C" alt="Team Member" class="card-image">
+      <div class="card-name">Citra Dewi</div>
+      <div class="card-name">Citra Lestari</div>
+      <div class="card-position position-developer">Developer</div>
+      <div class="card-description">Full-stack developer with expertise in modern frameworks</div>
+    </li>
+
+    <li class="card" data-position="manager">
+      <img src="https://via.placeholder.com/150/f59e0b/FFFFFF?text=D" alt="Team Member" class="card-image">
+      <div class="card-name">Dian Kusuma</div>
+      <div class="card-position position-manager">Manager</div>
+      <div class="card-description">Project manager with strong leadership skills</div>
+    </li>
+
+    <li class="card" data-position="consultant">
+      <img src="https://via.placeholder.com/150/ef4444/FFFFFF?text=E" alt="Team Member" class="card-image">
+      <div class="card-name">Eko Prasetyo</div>
+      <div class="card-position position-consultant">Consultant</div>
+      <div class="card-description">Business consultant with strategic planning expertise</div>
+    </li>
+
+    <li class="card" data-position="content">
+      <img src="https://via.placeholder.com/150/ec4899/FFFFFF?text=F" alt="Team Member" class="card-image">
+      <div class="card-name">Fira Anjani</div>
+      <div class="card-position position-content">Content Creator</div>
+      <div class="card-description">Content specialist creating engaging narratives</div>
+    </li>
+
+    <li class="card" data-position="marketing">
+      <img src="https://via.placeholder.com/150/06b6d4/FFFFFF?text=G" alt="Team Member" class="card-image">
+      <div class="card-name">Gusman Hakim</div>
+      <div class="card-position position-marketing">Marketing</div>
+      <div class="card-description">Digital marketing expert with data-driven approach</div>
+    </li>
+
+    <li class="card" data-position="designer">
+      <img src="https://via.placeholder.com/150/3b82f6/FFFFFF?text=H" alt="Team Member" class="card-image">
+      <div class="card-name">Hani Saputra</div>
+      <div class="card-position position-designer">Senior Designer</div>
+      <div class="card-description">Lead designer with an eye for detail and innovation</div>
+    </li>
+  </ul>
+
+  <script>
+    // View option toggling
+    const viewOptions = document.querySelectorAll('.view-option');
+    const cards = document.querySelectorAll('.card');
+
+    viewOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        // Remove active class from all options
+        viewOptions.forEach(opt => opt.classList.remove('active'));
+        
+        // Add active class to clicked option
+        option.classList.add('active');
+        
+        const viewType = option.getAttribute('data-view');
+        
+        // Update card visibility based on selected view
+        cards.forEach(card => {
+          switch(viewType) {
+            case 'photos':
+              card.style.display = 'flex';
+              card.classList.remove('show-description');
+              break;
+            case 'with-description':
+              card.style.display = 'flex';
+              card.classList.add('show-description');
+              break;
+            case 'all':
+            default:
+              card.style.display = 'flex';
+              card.classList.remove('show-description');
+              break;
+          }
+        });
+      });
+    });
+
+    // Hover effect for cards
+    const allCards = document.querySelectorAll('.card');
+    allCards.forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        card.style.transform = 'translateY(-4px) rotate(2deg)';
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translateY(0) rotate(0)';
+      });
+    });
+  </script>
+</body>
+</html>
