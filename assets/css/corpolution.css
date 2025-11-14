@@ -308,46 +308,46 @@ label {
 /* Input validation styles */
 .input-field.input-filled {
   border-color: #22c55e;
-  box-shadow: 0 0 0 1px #22c55e;
+  box-shadow: 0 0 0 1.5px #22c55e;
 }
 
 .input-field.input-filled:focus {
   border-color: #16a34a;
-  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.2);
 }
 
 .input-field.input-empty {
   border-color: #ef4444;
-  box-shadow: 0 0 0 1px #ef4444;
+  box-shadow: 0 0 0 1.5px #ef4444;
 }
 
 .input-field.input-empty:focus {
   border-color: #dc2626;
-  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.2);
 }
 
 .input-group input.input-filled,
 .input-group textarea.input-filled {
   border-color: #22c55e;
-  box-shadow: 0 0 0 1px #22c55e;
+  box-shadow: 0 0 0 1.5px #22c55e;
 }
 
 .input-group input.input-filled:focus,
 .input-group textarea.input-filled:focus {
   border-color: #16a34a;
-  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+  box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.2);
 }
 
 .input-group input.input-empty,
 .input-group textarea.input-empty {
   border-color: #ef4444;
-  box-shadow: 0 0 0 1px #ef4444;
+  box-shadow: 0 0 0 1.5px #ef4444;
 }
 
 .input-group input.input-empty:focus,
 .input-group textarea.input-empty:focus {
   border-color: #dc2626;
-  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+  box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.2);
 }
 
 .input-group textarea {
