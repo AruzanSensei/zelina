@@ -86,7 +86,7 @@ const templates = [
       { id: 'bacabuku_waktu_mulai', label: 'Waktu Mulai', placeholder: 'Contoh: 05.00', cache: true },
       { id: 'bacabuku_waktu_selesai', label: 'Waktu Selesai', placeholder: 'Contoh: 05.05', cache: true },
       { id: 'bacabuku_judul', label: 'Judul Buku', placeholder: 'Contoh: Seni Berpikir Positif', cache: true },
-      { id: 'bacabuku_halaman', label: 'Halaman Buku', placeholder: 'Contoh: Hal. 115', cache: false },
+      { id: 'bacabuku_halaman', label: 'Halaman Buku', placeholder: 'Contoh: 115', cache: false },
       { id: 'bacabuku_paragraf', label: 'Isi Paragraf', placeholder: 'Masukkan isi paragraf...', cache: false, isTextarea: true }
     ],
     template: (name, inputs) => {
@@ -101,7 +101,7 @@ const templates = [
 ${formatTodayIndonesia()}
 ${waktu}
 *${judul}*
-${halaman}
+Hal. ${halaman}
 
 "${paragraf}"
 
