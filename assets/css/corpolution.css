@@ -127,17 +127,20 @@ label {
 /* Override autofill styling di Chrome/Safari - KUAT */
 .input-field:-webkit-autofill {
   -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
   -webkit-text-fill-color: var(--text) !important;
 }
 
 .input-field:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
   -webkit-text-fill-color: var(--text) !important;
   border-color: var(--primary) !important;
 }
 
 .input-field:-webkit-autofill:hover {
   -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
   -webkit-text-fill-color: var(--text) !important;
 }
 
@@ -284,20 +287,67 @@ label {
 }
 
 /* Override autofill styling untuk card inputs - KUAT */
-.input-group input:-webkit-autofill {
+.input-group input:-webkit-autofill:hover {
   -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
   -webkit-text-fill-color: var(--text) !important;
 }
 
 .input-group input:-webkit-autofill:focus {
   -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
   -webkit-text-fill-color: var(--text) !important;
   border-color: var(--primary) !important;
 }
 
-.input-group input:-webkit-autofill:hover {
+.input-group input:hover {
   -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
   -webkit-text-fill-color: var(--text) !important;
+}
+
+/* Input validation styles */
+.input-field.input-filled {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 1px #22c55e;
+}
+
+.input-field.input-filled:focus {
+  border-color: #16a34a;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+}
+
+.input-field.input-empty {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 1px #ef4444;
+}
+
+.input-field.input-empty:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+.input-group input.input-filled,
+.input-group textarea.input-filled {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 1px #22c55e;
+}
+
+.input-group input.input-filled:focus,
+.input-group textarea.input-filled:focus {
+  border-color: #16a34a;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+}
+
+.input-group input.input-empty,
+.input-group textarea.input-empty {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 1px #ef4444;
+}
+
+.input-group input.input-empty:focus,
+.input-group textarea.input-empty:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
 }
 
 .input-group textarea {

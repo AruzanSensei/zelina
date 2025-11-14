@@ -330,7 +330,11 @@ function createCard(template) {
           localStorage.setItem(`corpolution_${inputConfig.id}`, e.target.value);
         }
         updateCardOutput(template);
+        updateInputBorderColor(inputElement);
       });
+
+      // Initial check border color
+      updateInputBorderColor(inputElement);
 
       inputGroup.appendChild(label);
       inputGroup.appendChild(inputElement);
@@ -401,6 +405,57 @@ function getInputValues(template) {
   return inputs;
 }
 
+// Update border color berdasarkan apakah input terisi atau tidak
+function updateInputBorderColor(inputElement) {
+  if (inputElement.value.trim()) {
+    // Terisi - border hijau
+    inputElement.classList.remove('input-empty');
+    inputElement.classList.add('input-filled');
+  } else {
+    // Kosong - border merah
+    inputElement.classList.remove('input-filled');
+    inputElement.classList.add('input-empty');
+  }
+}
+
+// Validasi input - return array dari input yang kosong
+function validateInputs(template) {
+  const emptyInputs = [];
+  if (template.inputs) {
+    template.inputs.forEach((inputConfig) => {
+      const element = document.getElementById(inputConfig.id);
+      if (!element || !element.value.trim()) {
+        emptyInputs.push(inputConfig);
+      }
+    });
+  }
+  return emptyInputs;
+}
+
+// Handle ketika ada input kosong saat copy
+function handleEmptyInputs(template, emptyInputs) {
+  if (emptyInputs.length === 0) return true; // Semua terisi, lanjut copy
+
+  // Expand card
+  const card = document.querySelector(`[data-template-id="${template.id}"]`);
+  const content = card?.querySelector('.card-content');
+  if (content) {
+    content.classList.add('expanded');
+  }
+
+  // Scroll dan focus ke input pertama yang kosong
+  const firstEmptyInput = document.getElementById(emptyInputs[0].id);
+  if (firstEmptyInput) {
+    firstEmptyInput.focus();
+    firstEmptyInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // Tampilkan warning
+  alert(`❌ Harap isi ${emptyInputs.map(input => `"${input.label}"`).join(', ')} terlebih dahulu`);
+  
+  return false; // Jangan copy
+}
+
 // Update card output saat input berubah
 function updateCardOutput(template) {
   const card = document.querySelector(`[data-template-id="${template.id}"]`);
@@ -420,6 +475,14 @@ function updateCardOutput(template) {
 
 // Handle copy ke clipboard
 async function handleCopy(template, copyIndex, button, inputs = null) {
+  // Validasi input jika template memiliki inputs
+  if (template.hasInputs) {
+    const emptyInputs = validateInputs(template);
+    if (!handleEmptyInputs(template, emptyInputs)) {
+      return; // Jangan copy jika ada input kosong
+    }
+  }
+
   let text;
   
   if (template.hasInputs) {
