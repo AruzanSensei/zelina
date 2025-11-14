@@ -151,9 +151,53 @@ label {
 }
 
 .card-content.expanded {
-  max-height: 500px;
+  max-height: 1000px;
   padding: 1rem;
   border-top: 1px solid #e2e8f0;
+}
+
+.card-inputs-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-group label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.input-group input,
+.input-group textarea {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.4rem;
+  font-size: 0.9rem;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: var(--text);
+  background: #f9fafb;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: #ffffff;
+}
+
+.input-group textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: 'Courier New', monospace;
 }
 
 .card-output {
@@ -171,6 +215,7 @@ label {
   display: flex;
   align-items: flex-start;
   padding-top: 1rem;
+  white-space: pre-wrap;
 }
 
 /* Dark mode support (optional) */
@@ -182,6 +227,19 @@ label {
   }
 
   .input-field:focus {
+    background: #0f172a;
+    border-color: #60a5fa;
+  }
+
+  .input-group input,
+  .input-group textarea {
+    background: #1e293b;
+    border-color: #334155;
+    color: #f1f5f9;
+  }
+
+  .input-group input:focus,
+  .input-group textarea:focus {
     background: #0f172a;
     border-color: #60a5fa;
   }
@@ -262,6 +320,20 @@ label {
   }
 
   .card-content.expanded {
-    max-height: 400px;
+    max-height: 800px;
+  }
+
+  .card-inputs-section {
+    gap: 0.75rem;
+  }
+
+  .input-group input,
+  .input-group textarea {
+    font-size: 0.85rem;
+    padding: 0.5rem 0.6rem;
+  }
+
+  .input-group textarea {
+    min-height: 60px;
   }
 }
