@@ -112,15 +112,33 @@ label {
   border-radius: 0.5rem;
   font-size: 1rem;
   font-family: 'Segoe UI', system-ui, sans-serif;
-  color: var(--text);
-  background: #f9fafb;
+  color: var(--text) !important;
+  background: #ffffff !important;
   transition: border-color 0.2s ease, background-color 0.2s ease;
+  -webkit-text-fill-color: var(--text) !important;
 }
 
 .input-field:focus {
   outline: none;
   border-color: var(--primary);
-  background: #ffffff;
+  background: #ffffff !important;
+}
+
+/* Override autofill styling di Chrome/Safari - KUAT */
+.input-field:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: var(--text) !important;
+}
+
+.input-field:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: var(--text) !important;
+  border-color: var(--primary) !important;
+}
+
+.input-field:-webkit-autofill:hover {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: var(--text) !important;
 }
 
 .cards-container {
@@ -252,16 +270,34 @@ label {
   border-radius: 0.4rem;
   font-size: 0.9rem;
   font-family: 'Segoe UI', system-ui, sans-serif;
-  color: var(--text);
-  background: #f9fafb;
+  color: var(--text) !important;
+  background: #ffffff !important;
   transition: border-color 0.2s ease, background-color 0.2s ease;
+  -webkit-text-fill-color: var(--text) !important;
 }
 
 .input-group input:focus,
 .input-group textarea:focus {
   outline: none;
   border-color: var(--primary);
-  background: #ffffff;
+  background: #ffffff !important;
+}
+
+/* Override autofill styling untuk card inputs - KUAT */
+.input-group input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: var(--text) !important;
+}
+
+.input-group input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: var(--text) !important;
+  border-color: var(--primary) !important;
+}
+
+.input-group input:-webkit-autofill:hover {
+  -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+  -webkit-text-fill-color: var(--text) !important;
 }
 
 .input-group textarea {
@@ -291,27 +327,45 @@ label {
 /* Dark mode support (optional) */
 @media (prefers-color-scheme: dark) {
   .input-field {
-    background: #1e293b;
-    border-color: #334155;
-    color: #f1f5f9;
+    background: #ffffff !important;
+    border-color: #e2e8f0;
+    color: var(--text) !important;
+    -webkit-text-fill-color: var(--text) !important;
   }
 
   .input-field:focus {
-    background: #0f172a;
-    border-color: #60a5fa;
+    background: #ffffff !important;
+    border-color: var(--primary);
+  }
+
+  .input-field:-webkit-autofill,
+  .input-field:-webkit-autofill:hover,
+  .input-field:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+    -webkit-text-fill-color: var(--text) !important;
+    border-color: #e2e8f0 !important;
   }
 
   .input-group input,
   .input-group textarea {
-    background: #1e293b;
-    border-color: #334155;
-    color: #f1f5f9;
+    background: #ffffff !important;
+    border-color: #e2e8f0;
+    color: var(--text) !important;
+    -webkit-text-fill-color: var(--text) !important;
   }
 
   .input-group input:focus,
   .input-group textarea:focus {
-    background: #0f172a;
-    border-color: #60a5fa;
+    background: #ffffff !important;
+    border-color: var(--primary);
+  }
+
+  .input-group input:-webkit-autofill,
+  .input-group input:-webkit-autofill:hover,
+  .input-group input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
+    -webkit-text-fill-color: var(--text) !important;
+    border-color: #e2e8f0 !important;
   }
 
   .card-output {
