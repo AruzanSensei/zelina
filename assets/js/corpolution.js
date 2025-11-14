@@ -197,7 +197,7 @@ function createCard(template) {
   header.appendChild(headerContent);
   header.appendChild(actions);
 
-  // Content area (preview) - awalnya tersembunyi
+  // Content area - awalnya tersembunyi
   const content = document.createElement('div');
   content.className = 'card-content';
 
@@ -247,22 +247,15 @@ function createCard(template) {
     });
 
     content.appendChild(inputsSection);
-  }
 
-  const output = document.createElement('div');
-  output.className = 'card-output';
-  output.setAttribute('data-template-id', template.id);
-  
-  if (template.hasInputs) {
+    // Add output preview untuk card dengan inputs
+    const output = document.createElement('div');
+    output.className = 'card-output';
+    output.setAttribute('data-template-id', template.id);
     const inputs = getInputValues(template);
     output.textContent = template.template(userName, inputs);
-  } else if (template.isMultiCopy) {
-    output.textContent = generateOutput(template, 0);
-  } else {
-    output.textContent = generateOutput(template, 0);
+    content.appendChild(output);
   }
-
-  content.appendChild(output);
 
   // Event listener untuk expand/collapse saat header diklik
   header.addEventListener('click', (e) => {
@@ -308,10 +301,13 @@ function getInputValues(template) {
 
 // Update card output saat input berubah
 function updateCardOutput(template) {
-  const output = document.querySelector(`[data-template-id="${template.id}"]`);
-  if (output && template.hasInputs) {
-    const inputs = getInputValues(template);
-    output.textContent = template.template(userName, inputs);
+  const card = document.querySelector(`[data-template-id="${template.id}"]`);
+  if (card && template.hasInputs) {
+    const output = card.querySelector('.card-output');
+    if (output) {
+      const inputs = getInputValues(template);
+      output.textContent = template.template(userName, inputs);
+    }
   }
 }
 
@@ -352,13 +348,16 @@ async function handleCopy(template, copyIndex, button, inputs = null) {
 // Update semua cards ketika nama berubah
 function updateAllCards() {
   templates.forEach((template) => {
-    const output = document.querySelector(`[data-template-id="${template.id}"]`);
-    if (output) {
-      if (template.hasInputs) {
-        const inputs = getInputValues(template);
-        output.textContent = template.template(userName, inputs);
-      } else {
-        output.textContent = generateOutput(template, 0);
+    const card = document.querySelector(`[data-template-id="${template.id}"]`);
+    if (card) {
+      const output = card.querySelector('.card-output');
+      if (output) {
+        if (template.hasInputs) {
+          const inputs = getInputValues(template);
+          output.textContent = template.template(userName, inputs);
+        } else {
+          output.textContent = generateOutput(template, 0);
+        }
       }
     }
   });
