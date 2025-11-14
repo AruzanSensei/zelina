@@ -81,6 +81,20 @@ label {
   gap: 1rem;
   padding: 1rem;
   border-bottom: 1px solid #e2e8f0;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.card-header:hover {
+  background-color: #f9fafb;
+}
+
+.card-header-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
 }
 
 .card-icon {
@@ -130,8 +144,16 @@ label {
 }
 
 .card-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding: 0 1rem;
+}
+
+.card-content.expanded {
+  max-height: 500px;
   padding: 1rem;
-  flex: 1;
+  border-top: 1px solid #e2e8f0;
 }
 
 .card-output {
@@ -144,8 +166,11 @@ label {
   color: var(--text);
   word-break: break-word;
   min-height: 60px;
+  max-height: 300px;
+  overflow-y: auto;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  padding-top: 1rem;
 }
 
 /* Dark mode support (optional) */
@@ -164,6 +189,10 @@ label {
   .card-output {
     background: #1e293b;
     color: #f1f5f9;
+  }
+
+  .card-header:hover {
+    background-color: #1e293b;
   }
 
   .copy-btn {
@@ -208,6 +237,10 @@ label {
     gap: 0.75rem;
   }
 
+  .card-header-content {
+    gap: 0.75rem;
+  }
+
   .card-icon {
     font-size: 1.25rem;
   }
@@ -222,12 +255,13 @@ label {
     font-size: 0.8rem;
   }
 
-  .card-content {
-    padding: 0.75rem;
-  }
-
   .card-output {
     font-size: 0.9rem;
     min-height: 50px;
+    padding: 0.75rem;
+  }
+
+  .card-content.expanded {
+    max-height: 400px;
   }
 }

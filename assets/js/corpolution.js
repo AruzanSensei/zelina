@@ -75,6 +75,10 @@ function createCard(template) {
   const header = document.createElement('div');
   header.className = 'card-header';
 
+  // Bungkus icon dan title dalam div terpisah untuk expand/collapse
+  const headerContent = document.createElement('div');
+  headerContent.className = 'card-header-content';
+
   const icon = document.createElement('div');
   icon.className = 'card-icon';
   icon.textContent = template.icon;
@@ -82,6 +86,9 @@ function createCard(template) {
   const title = document.createElement('div');
   title.className = 'card-title';
   title.textContent = template.title;
+
+  headerContent.appendChild(icon);
+  headerContent.appendChild(title);
 
   const actions = document.createElement('div');
   actions.className = 'card-actions';
@@ -93,7 +100,8 @@ function createCard(template) {
       btn.className = 'copy-btn';
       btn.textContent = copy.label;
       btn.setAttribute('data-copy-index', index);
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent card expand/collapse
         handleCopy(template, index, btn);
       });
       actions.appendChild(btn);
@@ -103,17 +111,17 @@ function createCard(template) {
     const btn = document.createElement('button');
     btn.className = 'copy-btn';
     btn.textContent = '📋';
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation(); // Prevent card expand/collapse
       handleCopy(template, 0, btn);
     });
     actions.appendChild(btn);
   }
 
-  header.appendChild(icon);
-  header.appendChild(title);
+  header.appendChild(headerContent);
   header.appendChild(actions);
 
-  // Content area
+  // Content area (preview) - awalnya tersembunyi
   const content = document.createElement('div');
   content.className = 'card-content';
 
@@ -123,6 +131,15 @@ function createCard(template) {
   output.textContent = generateOutput(template, 0);
 
   content.appendChild(output);
+
+  // Event listener untuk expand/collapse saat header diklik
+  header.addEventListener('click', (e) => {
+    // Jangan expand jika yang diklik adalah button
+    if (e.target.closest('.copy-btn')) {
+      return;
+    }
+    content.classList.toggle('expanded');
+  });
 
   card.appendChild(header);
   card.appendChild(content);
