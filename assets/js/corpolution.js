@@ -18,6 +18,22 @@ function formatTodayIndonesia() {
   return `${date} ${monthName} ${year}`;
 }
 
+function formatTime(date) {
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  return `${hours}.${minutes}`;
+}
+
+function getAutoTimeRange() {
+  const now = new Date();
+  const fiveMinutesAgo = new Date(now.getTime() - 5 * 60000);
+  
+  const startTime = formatTime(fiveMinutesAgo);
+  const endTime = formatTime(now);
+  
+  return { startTime, endTime };
+}
+
 // Template konfigurasi - mudah untuk ditambah
 const templates = [
   {
@@ -67,13 +83,16 @@ const templates = [
     isMultiCopy: false,
     hasInputs: true,
     inputs: [
-      { id: 'bacabuku_waktu', label: 'Rentang Waktu', placeholder: 'Contoh: 05.00-05.05', cache: true },
+      { id: 'bacabuku_waktu_mulai', label: 'Waktu Mulai', placeholder: 'Contoh: 05.00', cache: true },
+      { id: 'bacabuku_waktu_selesai', label: 'Waktu Selesai', placeholder: 'Contoh: 05.05', cache: true },
       { id: 'bacabuku_judul', label: 'Judul Buku', placeholder: 'Contoh: Seni Berpikir Positif', cache: true },
       { id: 'bacabuku_halaman', label: 'Halaman Buku', placeholder: 'Contoh: Hal. 115', cache: false },
       { id: 'bacabuku_paragraf', label: 'Isi Paragraf', placeholder: 'Masukkan isi paragraf...', cache: false, isTextarea: true }
     ],
     template: (name, inputs) => {
-      const waktu = inputs.bacabuku_waktu || '';
+      const waktuMulai = inputs.bacabuku_waktu_mulai || '';
+      const waktuSelesai = inputs.bacabuku_waktu_selesai || '';
+      const waktu = waktuMulai && waktuSelesai ? `${waktuMulai}-${waktuSelesai}` : '';
       const judul = inputs.bacabuku_judul || '';
       const halaman = inputs.bacabuku_halaman || '';
       const paragraf = inputs.bacabuku_paragraf || '';
@@ -90,6 +109,52 @@ ${halaman}
 #buildinghappyliving
 #readingculture`;
     }
+  },
+  {
+    id: 'threegoals',
+    title: '3 Goals & Result',
+    icon: '🎯',
+    isMultiCopy: true,
+    hasInputs: true,
+    copies: [
+      {
+        label: '🎯',
+        template: (name, inputs) => {
+          const goal1 = inputs.threegoals_goal1 || '';
+          const goal2 = inputs.threegoals_goal2 || '';
+          const goal3 = inputs.threegoals_goal3 || '';
+          return `*3 Point Goals*
+${name}
+
+1. ${goal1}
+2. ${goal2}
+3. ${goal3}
+
+#buildinghappyliving`;
+        }
+      },
+      {
+        label: '🥇',
+        template: (name, inputs) => {
+          const goal1 = inputs.threegoals_goal1 || '';
+          const goal2 = inputs.threegoals_goal2 || '';
+          const goal3 = inputs.threegoals_goal3 || '';
+          return `*3 Point Results*
+${name}
+
+1. ${goal1}
+2. ${goal2}
+3. ${goal3}
+
+#buildinghappyliving`;
+        }
+      }
+    ],
+    inputs: [
+      { id: 'threegoals_goal1', label: 'Goal 1', placeholder: 'Masukkan goal pertama...', cache: false },
+      { id: 'threegoals_goal2', label: 'Goal 2', placeholder: 'Masukkan goal kedua...', cache: false },
+      { id: 'threegoals_goal3', label: 'Goal 3', placeholder: 'Masukkan goal ketiga...', cache: false }
+    ]
   }
 ];
 
@@ -173,15 +238,32 @@ function createCard(template) {
     });
   } else if (template.hasInputs) {
     // Copy button untuk template dengan inputs
-    const btn = document.createElement('button');
-    btn.className = 'copy-btn';
-    btn.textContent = '📋';
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation(); // Prevent card expand/collapse
-      const inputs = getInputValues(template);
-      handleCopy(template, 0, btn, inputs);
-    });
-    actions.appendChild(btn);
+    if (template.isMultiCopy && template.copies) {
+      // Multi-copy untuk template dengan inputs
+      template.copies.forEach((copy, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'copy-btn';
+        btn.textContent = copy.label;
+        btn.setAttribute('data-copy-index', index);
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const inputs = getInputValues(template);
+          handleCopy(template, index, btn, inputs);
+        });
+        actions.appendChild(btn);
+      });
+    } else {
+      // Single copy untuk template dengan inputs
+      const btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.textContent = '📋';
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const inputs = getInputValues(template);
+        handleCopy(template, 0, btn, inputs);
+      });
+      actions.appendChild(btn);
+    }
   } else {
     // Single copy button
     const btn = document.createElement('button');
@@ -228,8 +310,17 @@ function createCard(template) {
       inputElement.placeholder = inputConfig.placeholder;
 
       // Load dari cache jika tersimpan
-      const cached = localStorage.getItem(`corpolution_${inputConfig.id}`);
-      if (cached) {
+      let cached = localStorage.getItem(`corpolution_${inputConfig.id}`);
+      
+      // Auto-fill waktu untuk Baca Buku
+      if (template.id === 'bacabuku' && !cached) {
+        const timeRange = getAutoTimeRange();
+        if (inputConfig.id === 'bacabuku_waktu_mulai') {
+          inputElement.value = timeRange.startTime;
+        } else if (inputConfig.id === 'bacabuku_waktu_selesai') {
+          inputElement.value = timeRange.endTime;
+        }
+      } else if (cached) {
         inputElement.value = cached;
       }
 
@@ -253,7 +344,13 @@ function createCard(template) {
     output.className = 'card-output';
     output.setAttribute('data-template-id', template.id);
     const inputs = getInputValues(template);
-    output.textContent = template.template(userName, inputs);
+    
+    if (template.isMultiCopy && template.copies) {
+      // Untuk multi-copy, tampilkan copy pertama
+      output.textContent = template.copies[0].template(userName, inputs);
+    } else if (template.template) {
+      output.textContent = template.template(userName, inputs);
+    }
     content.appendChild(output);
   }
 
@@ -278,7 +375,12 @@ function generateOutput(template, copyIndex = 0) {
     return `(Masukkan nama untuk melihat hasil)`;
   }
 
-  if (template.isMultiCopy && template.copies[copyIndex]) {
+  if (template.hasInputs && template.isMultiCopy && template.copies) {
+    // Untuk template dengan inputs dan multi-copy
+    const inputs = getInputValues(template);
+    return template.copies[copyIndex].template(userName, inputs);
+  } else if (template.isMultiCopy && template.copies[copyIndex]) {
+    // Untuk template multi-copy biasa
     return template.copies[copyIndex].template(userName);
   } else if (!template.isMultiCopy && template.copies) {
     return template.copies[0].template(userName);
@@ -306,7 +408,12 @@ function updateCardOutput(template) {
     const output = card.querySelector('.card-output');
     if (output) {
       const inputs = getInputValues(template);
-      output.textContent = template.template(userName, inputs);
+      if (template.isMultiCopy && template.copies) {
+        // Untuk multi-copy, tampilkan copy pertama
+        output.textContent = template.copies[0].template(userName, inputs);
+      } else if (template.template) {
+        output.textContent = template.template(userName, inputs);
+      }
     }
   }
 }
@@ -315,11 +422,15 @@ function updateCardOutput(template) {
 async function handleCopy(template, copyIndex, button, inputs = null) {
   let text;
   
-  if (inputs) {
-    text = template.template(userName, inputs);
-  } else if (template.hasInputs) {
-    const inputValues = getInputValues(template);
-    text = template.template(userName, inputValues);
+  if (template.hasInputs) {
+    const inputValues = inputs || getInputValues(template);
+    if (template.isMultiCopy && template.copies[copyIndex]) {
+      text = template.copies[copyIndex].template(userName, inputValues);
+    } else if (template.copies) {
+      text = template.copies[0].template(userName, inputValues);
+    }
+  } else if (template.isMultiCopy && template.copies[copyIndex]) {
+    text = template.copies[copyIndex].template(userName);
   } else {
     text = generateOutput(template, copyIndex);
   }
