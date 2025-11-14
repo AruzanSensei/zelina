@@ -142,18 +142,18 @@ ${name}
           return `*3 Point Results*
 ${name}
 
-1. ${goal1}
-2. ${goal2}
-3. ${goal3}
+1. ${goal1} ✅
+2. ${goal2} ✅
+3. ${goal3} ✅
 
 #buildinghappyliving`;
         }
       }
     ],
     inputs: [
-      { id: 'threegoals_goal1', label: 'Goal 1', placeholder: 'Masukkan goal pertama...', cache: false },
-      { id: 'threegoals_goal2', label: 'Goal 2', placeholder: 'Masukkan goal kedua...', cache: false },
-      { id: 'threegoals_goal3', label: 'Goal 3', placeholder: 'Masukkan goal ketiga...', cache: false }
+      { id: 'threegoals_goal1', label: 'Goal/Result 1', placeholder: 'Masukkan goal pertama...', cache: false },
+      { id: 'threegoals_goal2', label: 'Goal/Result 2', placeholder: 'Masukkan goal kedua...', cache: false },
+      { id: 'threegoals_goal3', label: 'Goal/Result 3', placeholder: 'Masukkan goal ketiga...', cache: false }
     ]
   }
 ];
