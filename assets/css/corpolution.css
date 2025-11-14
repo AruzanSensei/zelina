@@ -267,7 +267,7 @@ label {
 .input-group textarea {
   resize: vertical;
   min-height: 80px;
-  font-family: 'Courier New', monospace;
+  /* font-family: 'Courier New', monospace; */
 }
 
 .card-output {
