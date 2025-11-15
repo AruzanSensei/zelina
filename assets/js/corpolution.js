@@ -44,15 +44,15 @@ const templates = [
     copies: [
       {
         label: '1',
-        template: (name) => `${name} Log in ✅`
+        template: (name) => `${name} Log IN ✅`
       },
       {
         label: '2',
-        template: (name) => `${name} Log in 2✅`
+        template: (name) => `${name} Log IN 2✅`
       },
       {
         label: '3',
-        template: (name) => `${name} Log in 3✅`
+        template: (name) => `${name} Log IN 3✅`
       }
     ]
   },
@@ -64,15 +64,15 @@ const templates = [
     copies: [
       {
         label: '🌅',
-        template: (name) => `${name} Tilawah pagi ✅`
+        template: (name) => `${name} Tilawah Pagi ✅`
       },
       {
         label: '☀️',
-        template: (name) => `${name} Tilawah siang ✅`
+        template: (name) => `${name} Tilawah Siang ✅`
       },
       {
         label: '🌆',
-        template: (name) => `${name} Tilawah sore ✅`
+        template: (name) => `${name} Tilawah Sore ✅`
       }
     ]
   },
@@ -86,8 +86,8 @@ const templates = [
       { id: 'bacabuku_waktu_mulai', label: 'Waktu Mulai', placeholder: 'Contoh: 05.00', cache: true },
       { id: 'bacabuku_waktu_selesai', label: 'Waktu Selesai', placeholder: 'Contoh: 05.05', cache: true },
       { id: 'bacabuku_judul', label: 'Judul Buku', placeholder: 'Contoh: Seni Berpikir Positif', cache: true },
-      { id: 'bacabuku_halaman', label: 'Halaman Buku', placeholder: 'Contoh: 115', cache: false },
-      { id: 'bacabuku_paragraf', label: 'Isi Paragraf', placeholder: 'Masukkan isi paragraf...', cache: false, isTextarea: true }
+      { id: 'bacabuku_halaman', label: 'Halaman Buku', placeholder: 'Contoh: 115', cache: true },
+      { id: 'bacabuku_paragraf', label: 'Isi Paragraf', placeholder: 'Masukkan isi paragraf...', cache: true, isTextarea: true }
     ],
     template: (name, inputs) => {
       const waktuMulai = inputs.bacabuku_waktu_mulai || '';
@@ -151,9 +151,9 @@ ${name}
       }
     ],
     inputs: [
-      { id: 'threegoals_goal1', label: 'Goal/Result 1', placeholder: 'Masukkan goal pertama...', cache: false },
-      { id: 'threegoals_goal2', label: 'Goal/Result 2', placeholder: 'Masukkan goal kedua...', cache: false },
-      { id: 'threegoals_goal3', label: 'Goal/Result 3', placeholder: 'Masukkan goal ketiga...', cache: false }
+      { id: 'threegoals_goal1', label: 'Goal/Result 1', placeholder: 'Masukkan goal pertama...', cache: true },
+      { id: 'threegoals_goal2', label: 'Goal/Result 2', placeholder: 'Masukkan goal kedua...', cache: true },
+      { id: 'threegoals_goal3', label: 'Goal/Result 3', placeholder: 'Masukkan goal ketiga...', cache: true }
     ]
   }
 ];
@@ -292,9 +292,22 @@ function createCard(template) {
       const inputGroup = document.createElement('div');
       inputGroup.className = 'input-group';
 
+      const labelContainer = document.createElement('div');
+      labelContainer.className = 'input-label-container';
+
       const label = document.createElement('label');
       label.htmlFor = inputConfig.id;
       label.textContent = inputConfig.label;
+
+      const clearBtn = document.createElement('button');
+      clearBtn.className = 'input-clear-btn';
+      clearBtn.textContent = '🗑️';
+      clearBtn.setAttribute('type', 'button');
+      clearBtn.setAttribute('title', `Hapus ${inputConfig.label}`);
+
+      labelContainer.appendChild(label);
+      labelContainer.appendChild(clearBtn);
+      inputGroup.appendChild(labelContainer);
 
       let inputElement;
       if (inputConfig.isTextarea) {
@@ -324,6 +337,18 @@ function createCard(template) {
         inputElement.value = cached;
       }
 
+      // Clear button functionality
+      clearBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        inputElement.value = '';
+        if (inputConfig.cache) {
+          localStorage.removeItem(`corpolution_${inputConfig.id}`);
+        }
+        updateCardOutput(template);
+        updateInputBorderColor(inputElement);
+        inputElement.focus();
+      });
+
       // Save ke cache saat berubah (jika cache enabled)
       inputElement.addEventListener('input', (e) => {
         if (inputConfig.cache) {
@@ -336,7 +361,6 @@ function createCard(template) {
       // Initial check border color
       updateInputBorderColor(inputElement);
 
-      inputGroup.appendChild(label);
       inputGroup.appendChild(inputElement);
       inputsSection.appendChild(inputGroup);
     });

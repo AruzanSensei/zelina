@@ -319,6 +319,24 @@ label {
   -webkit-text-fill-color: var(--text) !important;
 }
 
+.input-group select {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.4rem;
+  font-size: 0.9rem;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: var(--text) !important;
+  background: #ffffff !important;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.input-group select:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: #ffffff !important;
+}
+
 .input-group input:focus,
 .input-group textarea:focus {
   outline: none;

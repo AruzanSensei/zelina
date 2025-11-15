@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Corpolution - Corporate Text Automation</title>
-  <link rel="stylesheet" href="../assets/css/corpolution.css">
+  <link rel="stylesheet" href="./assets/css/corpolution.css">
   <link rel="manifest" href="/manifest.json">
   <link rel="icon" href="../favicon.ico" sizes="any">
   <link rel="icon" type="image/png" href="../favicon.png">
@@ -16,7 +16,7 @@
       "@type": "Organization",
       "name": "Corpolution",
       "url": "https://zanxa.site/corpolution/",
-      "description": "Otomatisasi pengetikan repetitif di lingkungan corporate
+      "description": "Otomatisasi pengetikan repetitif di lingkungan corporate",
       "logo": "https://zanxa.site/assets/icon/zanxa-transparent.png"
       }
   </script>
@@ -54,6 +54,12 @@
     <!-- Cards akan diisi oleh JavaScript -->
   </div>
 
-  <script src="../assets/js/corpolution.js"></script>
+  <!-- Modular JavaScript Files (load in order) -->
+  <script src="./assets/js/utils.js"></script>
+  <script src="./assets/js/templates.js"></script>
+  <script src="./assets/js/storage.js"></script>
+  <script src="./assets/js/validation.js"></script>
+  <script src="./assets/js/ui.js"></script>
+  <script src="./assets/js/main.js"></script>
 </body>
 </html>
