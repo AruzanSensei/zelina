@@ -126,22 +126,68 @@ ${name}
 3. ${goal3} ✅
 
 #buildinghappyliving`;
-        }
-      }
-    ],
-    inputs: [
-      { id: 'threegoals_goal1', label: 'Goal/Result 1', placeholder: 'Masukkan goal pertama...', cache: true },
-      { id: 'threegoals_goal2', label: 'Goal/Result 2', placeholder: 'Masukkan goal kedua...', cache: true },
+}
+}
+],
+inputs: [
+    { id: 'threegoals_goal1', label: 'Goal/Result 1', placeholder: 'Masukkan goal pertama...', cache: true },
+    { id: 'threegoals_goal2', label: 'Goal/Result 2', placeholder: 'Masukkan goal kedua...', cache: true },
       { id: 'threegoals_goal3', label: 'Goal/Result 3', placeholder: 'Masukkan goal ketiga...', cache: true }
     ]
-  },
+},
+{
+  id: 'valueterapan',
+  title: 'ValueTerapan',
+  icon: '🧠',
+  isMultiCopy: false,
+  hasInputs: true,
+  inputs: [
+    {
+      id: 'valueterapan_value',
+      label: 'Value',
+      placeholder: 'Pilih value...',
+      cache: true,
+      isSelect: true,
+      options: [
+        'No. 01 Bahagia',
+        'No. 02 Yakin',
+        'No. 03 Syukur',
+        'No. 04 Tenang',
+        'No. 05 Sabar',
+        'No. 06 Islami',
+        'No. 07 Alami',
+        'No. 08 Integritas',
+        'No. 09 Profesional',
+        'No. 10 Humble'
+      ]
+    },
+    { id: 'valueterapan_makna', label: 'Isi Makna', placeholder: 'Maknanya...', cache: true, isTextarea: true },
+    { id: 'valueterapan_terapan', label: 'Isi Terapan', placeholder: 'Terapannya...', cache: true, isTextarea: true }
+  ],
+  template: (name, inputs) => {
+    const value = inputs.valueterapan_value || '';
+    const makna = inputs.valueterapan_makna || '';
+    const terapan = inputs.valueterapan_terapan || '';
+    
+    return `*Value ${value}*
+${name}
+
+*Makna*
+${makna}
+
+*Terapan*
+${terapan}
+
+#Buildinghappyliving`;
+  }
+},
   {
-    id: 'pausetime',
+      id: 'pausetime',
     title: 'Pause Time',
     icon: '⏸️',
     isMultiCopy: false,
     copies: [
-      {
+        {
         label: 'Jeda',
         template: (name) => `${name} Pause Time ✅`
       }
@@ -156,53 +202,7 @@ ${name}
       {
         label: 'Keluar',
         template: (name) => `${name} Log OUT ✅`
-      }
+    }
     ]
   },
-  {
-    id: 'valueterapan',
-    title: 'ValueTerapan',
-    icon: '🧠',
-    isMultiCopy: false,
-    hasInputs: true,
-    inputs: [
-      {
-        id: 'valueterapan_value',
-        label: 'Value',
-        placeholder: 'Pilih value...',
-        cache: true,
-        isSelect: true,
-        options: [
-          'No. 01 Bahagia',
-          'No. 02 Yakin',
-          'No. 03 Syukur',
-          'No. 04 Tenang',
-          'No. 05 Sabar',
-          'No. 06 Islami',
-          'No. 07 Alami',
-          'No. 08 Integritas',
-          'No. 09 Profesional',
-          'No. 10 Humble'
-        ]
-      },
-      { id: 'valueterapan_makna', label: 'Isi Makna', placeholder: 'Maknanya...', cache: true, isTextarea: true },
-      { id: 'valueterapan_terapan', label: 'Isi Terapan', placeholder: 'Terapannya...', cache: true, isTextarea: true }
-    ],
-    template: (name, inputs) => {
-      const value = inputs.valueterapan_value || '';
-      const makna = inputs.valueterapan_makna || '';
-      const terapan = inputs.valueterapan_terapan || '';
-      
-      return `*Value ${value}*
-${name}
-
-*Makna*
-${makna}
-
-*Terapan*
-${terapan}
-
-#Buildinghappyliving`;
-    }
-  }
 ];
