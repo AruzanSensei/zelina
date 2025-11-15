@@ -118,6 +118,12 @@ label {
   -webkit-text-fill-color: var(--text) !important;
 }
 
+.input-field::placeholder {
+  color: #94a3b8 !important;
+  -webkit-text-fill-color: #94a3b8 !important;
+  opacity: 1;
+}
+
 .input-field:focus {
   outline: none;
   border-color: var(--primary);
@@ -319,6 +325,13 @@ label {
   -webkit-text-fill-color: var(--text) !important;
 }
 
+.input-group input::placeholder,
+.input-group textarea::placeholder {
+  color: #94a3b8 !important;
+  -webkit-text-fill-color: #94a3b8 !important;
+  opacity: 1;
+}
+
 .input-group select {
   padding: 0.6rem 0.8rem;
   border: 1px solid #e2e8f0;
@@ -409,8 +422,9 @@ label {
 }
 
 .input-group textarea {
-  resize: vertical;
+  resize: none;
   min-height: 80px;
+  overflow: hidden;
   /* font-family: 'Courier New', monospace; */
 }
 

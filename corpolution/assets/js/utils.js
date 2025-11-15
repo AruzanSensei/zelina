@@ -44,3 +44,15 @@ function getAutoTimeRange() {
   
   return { startTime, endTime };
 }
+
+/**
+ * Auto-expand textarea berdasarkan content height
+ * Textarea akan bertambah tinggi otomatis saat ada text baru
+ * @param {HTMLElement} textarea - Textarea element
+ */
+function autoExpandTextarea(textarea) {
+  // Reset height dulu untuk mendapat scrollHeight yang akurat
+  textarea.style.height = 'auto';
+  // Set height sesuai content
+  textarea.style.height = textarea.scrollHeight + 'px';
+}

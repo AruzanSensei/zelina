@@ -241,6 +241,10 @@ function createCard(template) {
         if (inputConfig.cache) {
           saveInputValue(inputConfig.id, e.target.value);
         }
+        // Auto-expand untuk textarea
+        if (inputConfig.isTextarea) {
+          autoExpandTextarea(inputElement);
+        }
         updateCardOutput(template);
         updateInputBorderColor(inputElement);
       });
@@ -258,6 +262,13 @@ function createCard(template) {
 
       // Initial check border color
       updateInputBorderColor(inputElement);
+
+      // Load cached value dan trigger auto-expand jika ada
+      if (cached && inputConfig.isTextarea) {
+        setTimeout(() => {
+          autoExpandTextarea(inputElement);
+        }, 0);
+      }
 
       inputGroup.appendChild(inputElement);
       inputsSection.appendChild(inputGroup);
