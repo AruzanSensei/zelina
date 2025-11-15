@@ -137,7 +137,7 @@ inputs: [
 },
 {
   id: 'valueterapan',
-  title: 'ValueTerapan',
+  title: 'Value Terapan',
   icon: '🧠',
   isMultiCopy: false,
   hasInputs: true,
