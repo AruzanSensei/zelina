@@ -23,7 +23,7 @@ const templates = [
     copies: [
       {
         label: '1',
-        template: (name) => `${name} Log IN ✅`
+        template: (name) => `${name} Log IN✅`
       },
       {
         label: '2',
@@ -43,15 +43,15 @@ const templates = [
     copies: [
       {
         label: '🌅',
-        template: (name) => `${name} Tilawah Pagi ✅`
+        template: (name) => `${name} Tilawah Pagi✅`
       },
       {
         label: '☀️',
-        template: (name) => `${name} Tilawah Siang ✅`
+        template: (name) => `${name} Tilawah Siang✅`
       },
       {
         label: '🌆',
-        template: (name) => `${name} Tilawah Sore ✅`
+        template: (name) => `${name} Tilawah Sore✅`
       }
     ]
   },
@@ -121,9 +121,9 @@ ${name}
           return `*3 Point Results*
 ${name}
 
-1. ${goal1} ✅
-2. ${goal2} ✅
-3. ${goal3} ✅
+1. ${goal1}✅
+2. ${goal2}✅
+3. ${goal3}✅
 
 #buildinghappyliving`;
 }
@@ -189,7 +189,7 @@ ${terapan}
     copies: [
         {
         label: 'Jeda',
-        template: (name) => `${name} Pause Time ✅`
+        template: (name) => `${name} Pause Time✅`
       }
     ]
   },
@@ -201,7 +201,7 @@ ${terapan}
     copies: [
       {
         label: 'Keluar',
-        template: (name) => `${name} Log OUT ✅`
+        template: (name) => `${name} Log OUT✅`
     }
     ]
   },
