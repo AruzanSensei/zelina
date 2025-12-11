@@ -2,752 +2,802 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>For You Page Generator ✨</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
-    <style>
-        :root {
-            --primary: #ff69b4;
-            --primary-hover: #ff85c2;
-            --bg: #ffffff;
-            --bg-secondary: #f8fafc;
-            --text: #0f172a;
-            --text-secondary: #64748b;
-            --border: #e2e8f0;
-            --card-bg: #ffffff;
-            --shadow: rgba(0, 0, 0, 0.1);
-            --shadow-hover: rgba(0, 0, 0, 0.15);
-            --input-bg: #f1f5f9;
-            --gradient: linear-gradient(135deg, #ffe5e5 0%, #fff0f5 100%);
-        }
-
-        [data-theme="dark"] {
-            --bg: #0f172a;
-            --bg-secondary: #1e293b;
-            --text: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --border: #334155;
-            --card-bg: #1e293b;
-            --shadow: rgba(0, 0, 0, 0.3);
-            --shadow-hover: rgba(0, 0, 0, 0.4);
-            --input-bg: #334155;
-            --gradient: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            transition: background 0.3s ease, color 0.3s ease;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1rem 1.5rem;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 0;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 2rem;
-        }
-
-        .breadcrumb {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
-
-        .breadcrumb a {
-            color: var(--primary);
-            text-decoration: none;
-            transition: opacity 0.2s;
-        }
-
-        .breadcrumb a:hover {
-            opacity: 0.8;
-        }
-
-        .theme-toggle {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 50px;
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-        }
-
-        .theme-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px var(--shadow);
-        }
-
-        .hero {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-        }
-
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .form-section,
-        .preview-section {
-            background: var(--card-bg);
-            border-radius: 1rem;
-            padding: 2rem;
-            box-shadow: 0 4px 12px var(--shadow);
-            transition: all 0.3s ease;
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.5rem;
-        }
-
-        .reset-preview-btn {
-            background: var(--input-bg);
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--text);
-            font-family: inherit;
-        }
-
-        .reset-preview-btn:hover {
-            background: var(--border);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--text);
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            background: var(--input-bg);
-            color: var(--text);
-            font-family: inherit;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.1);
-        }
-
-        .form-group textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .color-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 0.75rem;
-        }
-
-        .color-option {
-            aspect-ratio: 1;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            border: 3px solid transparent;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .color-option:hover {
-            transform: scale(1.1);
-        }
-
-        .color-option.active {
-            border-color: var(--text);
-            box-shadow: 0 4px 12px var(--shadow-hover);
-        }
-
-        .color-option::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 1.5rem;
-            font-weight: bold;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .color-option.active::after {
-            opacity: 1;
-        }
-
-        .color-pink {
-            background: linear-gradient(135deg, #ffe5e5 0%, #ffb3d9 100%);
-        }
-
-        .color-blue {
-            background: linear-gradient(135deg, #e0f2fe 0%, #93c5fd 100%);
-        }
-
-        .color-yellow {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde047 100%);
-        }
-
-        .color-orange {
-            background: linear-gradient(135deg, #fed7aa 0%, #fb923c 100%);
-        }
-
-        .color-gray {
-            background: linear-gradient(135deg, #e5e7eb 0%, #9ca3af 100%);
-        }
-
-        .font-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
-        }
-
-        .font-option {
-            padding: 1rem;
-            border: 2px solid var(--border);
-            border-radius: 0.5rem;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.3s ease;
-            background: var(--input-bg);
-        }
-
-        .font-option:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .font-option.active {
-            border-color: var(--primary);
-            background: var(--primary);
-            color: white;
-        }
-
-        .font-poppins {
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .font-inter {
-            font-family: 'Inter', sans-serif;
-        }
-
-        .font-outfit {
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .font-quicksand {
-            font-family: 'Quicksand', sans-serif;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 0.5rem;
-            font-family: inherit;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255, 105, 180, 0.3);
-        }
-
-        .preview-container {
-            background: var(--gradient);
-            border-radius: 1rem;
-            padding: 2rem;
-            min-height: 400px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-        .preview-button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 1.5rem 3rem;
-            font-size: 1.3rem;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 500;
-            box-shadow: 0 8px 20px rgba(255, 105, 180, 0.3);
-            transition: all 0.3s ease;
-            margin-bottom: 2rem;
-        }
-
-        .preview-content {
-            display: none;
-        }
-
-        .preview-content.show {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .preview-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-        }
-
-        .preview-message {
-            background: white;
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            color: #666;
-            line-height: 1.8;
-        }
-
-        .preview-signature {
-            margin-top: 1rem;
-            text-align: right;
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media (max-width: 968px) {
-            .main-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .hero h1 {
-                font-size: 2rem;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .container {
-                padding: 1rem;
-            }
-
-            .header {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: stretch;
-            }
-
-            .theme-toggle {
-                align-self: flex-end;
-            }
-
-            .hero h1 {
-                font-size: 1.75rem;
-            }
-
-            .form-section,
-            .preview-section {
-                padding: 1.5rem;
-            }
-
-            .preview-button {
-                padding: 1.2rem 2rem;
-                font-size: 1.1rem;
-            }
-
-            .color-grid {
-                grid-template-columns: repeat(5, 1fr);
-            }
-
-            .font-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        .helper-text {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-top: 0.25rem;
-            font-style: italic;
-        }
-
-        .required {
-            color: var(--primary);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For You Page Generator ✨</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary: #ff69b4;
+      --primary-hover: #ff85c2;
+      --bg: #ffffff;
+      --bg-secondary: #f8fafc;
+      --text: #0f172a;
+      --text-secondary: #64748b;
+      --border: #e2e8f0;
+      --card-bg: #ffffff;
+      --shadow: rgba(0, 0, 0, 0.1);
+      --shadow-hover: rgba(0, 0, 0, 0.15);
+      --input-bg: #f1f5f9;
+      --gradient: linear-gradient(135deg, #ffe5e5 0%, #fff0f5 100%);
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --bg-secondary: #1e293b;
+      --text: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --border: #334155;
+      --card-bg: #1e293b;
+      --shadow: rgba(0, 0, 0, 0.3);
+      --shadow-hover: rgba(0, 0, 0, 0.4);
+      --input-bg: #334155;
+      --gradient: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.4;
+      transition: background 0.3s ease, color 0.3s ease;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0.5rem 1rem;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1rem;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .breadcrumb a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .breadcrumb a:hover {
+      opacity: 0.8;
+    }
+
+    .theme-toggle {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 50px;
+      padding: 0.35rem 0.75rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--shadow);
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-section,
+    .preview-section {
+      background: var(--card-bg);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      box-shadow: 0 4px 12px var(--shadow);
+      transition: all 0.3s ease;
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.35rem;
+    }
+
+    .reset-preview-btn {
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 0.35rem 0.65rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: var(--text);
+      font-family: inherit;
+    }
+
+    .reset-preview-btn:hover {
+      background: var(--border);
+    }
+
+    .form-group {
+      margin-bottom: 0.75rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-weight: 500;
+      font-size: 0.8rem;
+      color: var(--text);
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.45rem 0.65rem;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      background: var(--input-bg);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.8rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.1);
+    }
+
+    .form-group textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+    }
+
+    .color-option {
+      aspect-ratio: 1;
+      border-radius: 0.35rem;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .color-option:hover {
+      transform: scale(1.1);
+    }
+
+    .color-option.active {
+      border-color: var(--text);
+      box-shadow: 0 4px 12px var(--shadow-hover);
+    }
+
+    .color-option::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 1rem;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .color-option.active::after {
+      opacity: 1;
+    }
+
+    .color-pink {
+      background: linear-gradient(135deg, #ffe5e5 0%, #ffb3d9 100%);
+    }
+
+    .color-blue {
+      background: linear-gradient(135deg, #e0f2fe 0%, #93c5fd 100%);
+    }
+
+    .color-yellow {
+      background: linear-gradient(135deg, #fef3c7 0%, #fde047 100%);
+    }
+
+    .color-orange {
+      background: linear-gradient(135deg, #fed7aa 0%, #fb923c 100%);
+    }
+
+    .color-gray {
+      background: linear-gradient(135deg, #e5e7eb 0%, #9ca3af 100%);
+    }
+
+    .font-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+
+    .font-option {
+      padding: 0.5rem;
+      border: 2px solid var(--border);
+      border-radius: 0.35rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+      background: var(--input-bg);
+      font-size: 0.75rem;
+    }
+
+    .font-option:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .font-option.active {
+      border-color: var(--primary);
+      background: var(--primary);
+      color: white;
+    }
+
+    .font-poppins {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .font-inter {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .font-outfit {
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .font-quicksand {
+      font-family: 'Quicksand', sans-serif;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 0.65rem 1.25rem;
+      border: none;
+      border-radius: 0.35rem;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(255, 105, 180, 0.3);
+    }
+
+    .preview-container {
+      background: var(--gradient);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .preview-button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.85rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 500;
+      box-shadow: 0 8px 20px rgba(255, 105, 180, 0.3);
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+    }
+
+    .preview-content {
+      display: none;
+    }
+
+    .preview-content.show {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .preview-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .preview-message {
+      background: white;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      color: #666;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+
+    .preview-signature {
+      margin-top: 0.5rem;
+      text-align: right;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--primary);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 968px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 0.5rem;
+      }
+
+      .header {
+        flex-direction: row;
+        gap: 0.5rem;
+        align-items: center;
+        padding: 0.5rem 0;
+      }
+
+      .breadcrumb {
+        flex: 1;
+      }
+
+      .theme-toggle {
+        flex-shrink: 0;
+      }
+
+      .hero h1 {
+        font-size: 1.25rem;
+      }
+
+      .hero p {
+        font-size: 0.7rem;
+      }
+
+      .form-section,
+      .preview-section {
+        padding: 0.75rem;
+      }
+
+      .main-grid {
+        display: flex;
+        flex-direction: column-reverse;
+      }
+
+      .preview-section {
+        display: block;
+      }
+
+      .mobile-preview-btn {
+        display: none;
+      }
+
+      .preview-button {
+        padding: 0.65rem 1.25rem;
+        font-size: 0.75rem;
+      }
+
+      .color-grid {
+        grid-template-columns: repeat(5, 1fr);
+      }
+
+      .font-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .helper-text {
+      font-size: 0.65rem;
+      color: var(--text-secondary);
+      margin-top: 0.15rem;
+      font-style: italic;
+    }
+
+    .required {
+      color: var(--primary);
+    }
+
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <header class="header">
-            <nav class="breadcrumb">
-                <a href="../">🏠</a>
-                <span>/</span>
-                <span>foryou</span>
-                <span>/</span>
-                <span>generator</span>
-            </nav>
-            <button class="theme-toggle" id="themeToggle">
-                <span id="themeIcon">🌙</span>
-            </button>
-        </header>
+  <div class="container">
+    <header class="header">
+      <nav class="breadcrumb">
+        <a href="../">🏠</a>
+        <span>/</span>
+        <span>foryou</span>
+        <span>/</span>
+        <span>generator</span>
+      </nav>
+      <button class="theme-toggle" id="themeToggle">
+        <span id="themeIcon">🌙</span>
+      </button>
+    </header>
 
-        <div class="hero">
-            <h1>For You Page Generator ✨</h1>
-            <p>Buat halaman spesial untuk orang terkasih dengan mudah</p>
-        </div>
-
-        <div class="main-grid">
-            <div class="form-section">
-                <h2 class="section-title">📝 Isi Detail</h2>
-                <form id="generatorForm">
-                    <div class="form-group">
-                        <label for="folderName">Nama Penerima <span class="required">*</span></label>
-                        <input type="text" id="folderName" required placeholder="contoh: nama-orang"
-                            pattern="[a-z0-9-]+" title="Gunakan huruf kecil, angka, dan tanda '-' saja">
-                        <div class="helper-text">*ini akan menjadi link untuk mengaksesnya, jadi tentukan dengan bijak
-                            ya</div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="description">Deskripsi Singkat <span class="required">*</span></label>
-                        <input type="text" id="description" required placeholder="Halaman spesial untuk...">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Pilih Warna Tema <span class="required">*</span></label>
-                        <div class="color-grid">
-                            <div class="color-option color-pink active" data-color="pink" title="Pink Pastel"></div>
-                            <div class="color-option color-blue" data-color="blue" title="Blue Pastel"></div>
-                            <div class="color-option color-yellow" data-color="yellow" title="Yellow Pastel"></div>
-                            <div class="color-option color-orange" data-color="orange" title="Orange Pastel"></div>
-                            <div class="color-option color-gray" data-color="gray" title="Gray Pastel"></div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Pilih Font <span class="required">*</span></label>
-                        <div class="font-grid">
-                            <div class="font-option font-poppins active" data-font="Poppins">Poppins</div>
-                            <div class="font-option font-inter" data-font="Inter">Inter</div>
-                            <div class="font-option font-outfit" data-font="Outfit">Outfit</div>
-                            <div class="font-option font-quicksand" data-font="Quicksand">Quicksand</div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="titleText">Judul Halaman <span class="required">*</span></label>
-                        <input type="text" id="titleText" required placeholder="Haii [Nama]!!">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="messageContent">Pesan <span class="required">*</span></label>
-                        <textarea id="messageContent" required
-                            placeholder="Tulis pesan spesial untuk orang terkasih..."></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="buttonText">Teks Tombol</label>
-                        <input type="text" id="buttonText" placeholder="[Nama], tekan tombol ini">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">
-                        <span>✨ Generate & Download</span>
-                    </button>
-                </form>
-            </div>
-
-            <div class="preview-section">
-                <h2 class="section-title">
-                    <span>👁️ Preview</span>
-                    <button class="reset-preview-btn" id="resetPreview" style="display: none;">🔄 Reset</button>
-                </h2>
-                <div class="preview-container" id="previewContainer">
-                    <button class="preview-button" id="previewButton">Tekan tombol ini</button>
-                    <div class="preview-content" id="previewContent">
-                        <h1 class="preview-title" id="previewTitle">Haii!!</h1>
-                        <div class="preview-message">
-                            <p id="previewMessage">Pesan akan muncul di sini...</p>
-                            <p class="preview-signature">~ ajan</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="hero">
+      <h1>For You Page Generator ✨</h1>
+      <p>Buat halaman spesial untuk orang terkasih dengan mudah</p>
     </div>
 
-    <script>
-        // Theme toggle
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
-        const html = document.documentElement;
+    <div class="main-grid">
+      <div class="form-section">
+        <h2 class="section-title">📝 Isi Detail</h2>
+                <form id="generatorForm">
+          <div class="form-group">
+            <label for="buttonText">Teks Tombol <span class="required">*</span></label>
+            <input type="text" id="buttonText" required placeholder="[Nama], tekan tombol ini">
+            <div class="helper-text">*buat dia tertarik untuk menekan tombolnya!</div>
+          </div>
 
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        html.setAttribute('data-theme', savedTheme);
-        themeIcon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+          <div class="form-group">
+            <label for="titleText">Judul Halaman <span class="required">*</span></label>
+            <input type="text" id="titleText" required placeholder="Haii [Nama]!!">
+            <div class="helper-text">*Judul menentukan semuanya!</div>
+          </div>
 
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            html.setAttribute('data-theme', newTheme);
-            themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
-            localStorage.setItem('theme', newTheme);
-        });
+          <div class="form-group">
+            <label for="messageContent">Pesan <span class="required">*</span></label>
+            <textarea id="messageContent" required placeholder="Tulis pesan spesial untuk orang terkasih..."></textarea>
+            <div class="helper-text">*apa yang kamu rasakan?</div>
+          </div>
 
-        // Color theme selection
-        const colorOptions = document.querySelectorAll('.color-option');
-        let selectedColor = 'pink';
+          <div class="form-group">
+            <label for="senderName">Nama Pengirim <span class="required">*</span></label>
+            <input type="text" id="senderName" required placeholder="contoh: ajan" value="ajan">
+            <div class="helper-text">*nama yang akan muncul setelah pesan</div>
+          </div>
 
-        colorOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                colorOptions.forEach(opt => opt.classList.remove('active'));
-                option.classList.add('active');
-                selectedColor = option.dataset.color;
-                updatePreviewTheme();
-            });
-        });
+          <div class="form-group">
+            <label for="folderName">Nama Penerima <span class="required">*</span></label>
+            <input type="text" id="folderName" required placeholder="contoh: nama-orang" pattern="[a-z0-9-]+" title="Gunakan huruf kecil, angka, dan tanda '-' saja">
+            <div class="helper-text">*untuk siapa kamu menulis ini semua?</div>
+          </div>
 
-        // Font selection
-        const fontOptions = document.querySelectorAll('.font-option');
-        let selectedFont = 'Poppins';
+          <div class="form-group">
+            <label for="description">Deskripsi Singkat <span class="required">*</span></label>
+            <input type="text" id="description" required placeholder="Halaman spesial untuk...">
+            <div class="helper-text">*teks ini akan muncul ketika kamu membagikan linknya di Whatsapp, tentukan dengan baik</div>
+          </div>
 
-        fontOptions.forEach(option => {
-            option.addEventListener('click', () => {
-                fontOptions.forEach(opt => opt.classList.remove('active'));
-                option.classList.add('active');
-                selectedFont = option.dataset.font;
-                updatePreviewFont();
-            });
-        });
+          <div class="form-group">
+            <label>Pilih Warna Tema <span class="required">*</span></label>
+            <div class="color-grid">
+              <div class="color-option color-pink active" data-color="pink" title="Pink Pastel"></div>
+              <div class="color-option color-blue" data-color="blue" title="Blue Pastel"></div>
+              <div class="color-option color-yellow" data-color="yellow" title="Yellow Pastel"></div>
+              <div class="color-option color-orange" data-color="orange" title="Orange Pastel"></div>
+              <div class="color-option color-gray" data-color="gray" title="Gray Pastel"></div>
+            </div>
+          </div>
 
-        // Color themes
-        const colorThemes = {
-            pink: {
-                gradient: "linear-gradient(135deg, #ffe5e5 0%, #fff0f5 100%)",
-                primary: "#ff69b4",
-                light: "#fff0f5",
-                shadow: "rgba(255, 105, 180, 0.3)"
-            },
-            blue: {
-                gradient: "linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%)",
-                primary: "#60a5fa",
-                light: "#dbeafe",
-                shadow: "rgba(96, 165, 250, 0.3)"
-            },
-            yellow: {
-                gradient: "linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%)",
-                primary: "#fbbf24",
-                light: "#fef3c7",
-                shadow: "rgba(251, 191, 36, 0.3)"
-            },
-            orange: {
-                gradient: "linear-gradient(135deg, #fed7aa 0%, #ffedd5 100%)",
-                primary: "#fb923c",
-                light: "#fed7aa",
-                shadow: "rgba(251, 146, 60, 0.3)"
-            },
-            gray: {
-                gradient: "linear-gradient(135deg, #e5e7eb 0%, #f3f4f6 100%)",
-                primary: "#9ca3af",
-                light: "#e5e7eb",
-                shadow: "rgba(156, 163, 175, 0.3)"
-            }
-        };
+          <div class="form-group">
+            <label>Pilih Font <span class="required">*</span></label>
+            <div class="font-grid">
+              <div class="font-option font-poppins active" data-font="Poppins">Poppins</div>
+              <div class="font-option font-inter" data-font="Inter">Inter</div>
+              <div class="font-option font-outfit" data-font="Outfit">Outfit</div>
+              <div class="font-option font-quicksand" data-font="Quicksand">Quicksand</div>
+            </div>
+          </div>
 
-        function updatePreviewTheme() {
-            const theme = colorThemes[selectedColor];
-            const container = document.getElementById('previewContainer');
-            container.style.background = theme.gradient;
+          <button type="submit" class="btn btn-primary">
+            <span>✨ Generate & Download</span>
+          </button>
+        </form>
+      </div>
 
-            const button = document.getElementById('previewButton');
-            button.style.background = theme.primary;
-            button.style.boxShadow = `0 8px 20px ${theme.shadow}`;
+      <div class="preview-section">
+        <h2 class="section-title">
+          <span>👁️ Preview</span>
+          <button class="reset-preview-btn" id="resetPreview" style="display: none;">🔄 Reset</button>
+        </h2>
+        <div class="preview-container" id="previewContainer">
+          <button class="preview-button" id="previewButton">Tekan tombol ini</button>
+          <div class="preview-content" id="previewContent">
+            <h1 class="preview-title" id="previewTitle">Haii!!</h1>
+            <div class="preview-message">
+              <p id="previewMessage">Pesan akan muncul di sini...</p>
+              <p class="preview-signature" id="previewSignature">~ ajan</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-            const title = document.getElementById('previewTitle');
-            title.style.color = theme.primary;
+  <script>
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const html = document.documentElement;
 
-            const signature = document.querySelector('.preview-signature');
-            signature.style.color = theme.primary;
-        }
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    html.setAttribute('data-theme', savedTheme);
+    themeIcon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
 
-        function updatePreviewFont() {
-            const container = document.getElementById('previewContainer');
-            container.style.fontFamily = `'${selectedFont}', sans-serif`;
-        }
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+      localStorage.setItem('theme', newTheme);
+    });
 
-        // Live preview
-        const titleInput = document.getElementById('titleText');
-        const messageInput = document.getElementById('messageContent');
-        const buttonInput = document.getElementById('buttonText');
+    // Color theme selection
+    const colorOptions = document.querySelectorAll('.color-option');
+    let selectedColor = 'pink';
 
-        titleInput.addEventListener('input', () => {
-            document.getElementById('previewTitle').textContent = titleInput.value || 'Haii!!';
-        });
+    colorOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        colorOptions.forEach(opt => opt.classList.remove('active'));
+        option.classList.add('active');
+        selectedColor = option.dataset.color;
+        updatePreviewTheme();
+        
+      });
+    });
 
-        messageInput.addEventListener('input', () => {
-            document.getElementById('previewMessage').textContent = messageInput.value || 'Pesan akan muncul di sini...';
-        });
+    // Font selection
+    const fontOptions = document.querySelectorAll('.font-option');
+    let selectedFont = 'Poppins';
 
-        buttonInput.addEventListener('input', () => {
-            document.getElementById('previewButton').textContent = buttonInput.value || 'Tekan tombol ini';
-        });
+    fontOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        fontOptions.forEach(opt => opt.classList.remove('active'));
+        option.classList.add('active');
+        selectedFont = option.dataset.font;
+        updatePreviewFont();
+        
+      });
+    });
 
-        // Preview button interaction
-        const previewButton = document.getElementById('previewButton');
-        const previewContent = document.getElementById('previewContent');
-        const resetPreviewBtn = document.getElementById('resetPreview');
-        let previewClicked = false;
+    // Color themes
+    const colorThemes = {
+      pink: {
+        gradient: "linear-gradient(135deg, #ffe5e5 0%, #fff0f5 100%)",
+        primary: "#ff69b4",
+        light: "#fff0f5",
+        shadow: "rgba(255, 105, 180, 0.3)"
+      },
+      blue: {
+        gradient: "linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%)",
+        primary: "#60a5fa",
+        light: "#dbeafe",
+        shadow: "rgba(96, 165, 250, 0.3)"
+      },
+      yellow: {
+        gradient: "linear-gradient(135deg, #fef3c7 0%, #fef9e7 100%)",
+        primary: "#fbbf24",
+        light: "#fef3c7",
+        shadow: "rgba(251, 191, 36, 0.3)"
+      },
+      orange: {
+        gradient: "linear-gradient(135deg, #fed7aa 0%, #ffedd5 100%)",
+        primary: "#fb923c",
+        light: "#fed7aa",
+        shadow: "rgba(251, 146, 60, 0.3)"
+      },
+      gray: {
+        gradient: "linear-gradient(135deg, #e5e7eb 0%, #f3f4f6 100%)",
+        primary: "#9ca3af",
+        light: "#e5e7eb",
+        shadow: "rgba(156, 163, 175, 0.3)"
+      }
+    };
 
-        previewButton.addEventListener('click', () => {
-            if (!previewClicked) {
-                previewClicked = true;
-                previewButton.style.opacity = '0';
-                previewButton.style.transform = 'scale(0.8)';
-                setTimeout(() => {
-                    previewButton.style.display = 'none';
-                    previewContent.classList.add('show');
-                    resetPreviewBtn.style.display = 'block';
-                }, 300);
-            }
-        });
+    function updatePreviewTheme() {
+      const theme = colorThemes[selectedColor];
+      const container = document.getElementById('previewContainer');
+      container.style.background = theme.gradient;
 
-        resetPreviewBtn.addEventListener('click', () => {
-            previewClicked = false;
-            previewContent.classList.remove('show');
-            previewButton.style.display = 'block';
-            previewButton.style.opacity = '1';
-            previewButton.style.transform = 'scale(1)';
-            resetPreviewBtn.style.display = 'none';
-        });
+      const button = document.getElementById('previewButton');
+      button.style.background = theme.primary;
+      button.style.boxShadow = `0 8px 20px ${theme.shadow}`;
 
-        // Form submission
-        const form = document.getElementById('generatorForm');
+      const title = document.getElementById('previewTitle');
+      title.style.color = theme.primary;
 
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
+      const signature = document.querySelector('.preview-signature');
+      signature.style.color = theme.primary;
+    }
 
-            const folderName = document.getElementById('folderName').value;
-            const description = document.getElementById('description').value;
-            const title = document.getElementById('titleText').value;
-            const message = document.getElementById('messageContent').value;
-            const buttonText = document.getElementById('buttonText').value || `${folderName.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}, tekan tombol ini`;
+    function updatePreviewFont() {
+      const container = document.getElementById('previewContainer');
+      container.style.fontFamily = `'${selectedFont}', sans-serif`;
+    }
 
-            const theme = colorThemes[selectedColor];
-            const currentTime = new Date().toISOString().replace(/:/g, '.').split('.')[0];
+    // Live preview
+    const titleInput = document.getElementById('titleText');
+    const messageInput = document.getElementById('messageContent');
+    const buttonInput = document.getElementById('buttonText');
 
-            // Generate HTML
-            const html = generateHTML(folderName, title, message, buttonText, theme, selectedFont);
+    titleInput.addEventListener('input', () => {
+      const titleText = titleInput.value || 'Haii!!';
+      document.getElementById('previewTitle').textContent = titleText;
+      
+    });
 
-            // Generate config.json
-            const config = {
-                created_at: currentTime,
-                description: description,
-                last_modified: currentTime,
-                order: 999,
-                color_theme: selectedColor,
-                font_family: selectedFont
-            };
+    messageInput.addEventListener('input', () => {
+      const messageText = messageInput.value || 'Pesan akan muncul di sini...';
+      document.getElementById('previewMessage').textContent = messageText;
+      
+    });
 
-            // Download files
-            downloadFile(`${folderName}_index.html`, html);
-            downloadFile(`${folderName}_config.json`, JSON.stringify(config, null, 2));
+    buttonInput.addEventListener('input', () => {
+      document.getElementById('previewButton').textContent = buttonInput.value || 'Tekan tombol ini';
+      
+    });
 
-            alert(`✅ File berhasil di-generate!\n\n📁 Buat folder: foryou/${folderName}/\n📄 Upload kedua file ke folder tersebut\n\nFile yang di-download:\n- ${folderName}_index.html\n- ${folderName}_config.json`);
-        });
+    // Sender name live preview
+    const senderInput = document.getElementById('senderName');
+    senderInput.addEventListener('input', () => {
+      const senderName = senderInput.value || 'ajan';
+      document.getElementById('previewSignature').textContent = `~ ${senderName}`;
+      
+    });
 
-        function generateHTML(folderName, title, message, buttonText, theme, font) {
-            return `<!DOCTYPE html>
+    // Preview button interaction
+    const previewButton = document.getElementById('previewButton');
+    const previewContent = document.getElementById('previewContent');
+    const resetPreviewBtn = document.getElementById('resetPreview');
+    let previewClicked = false;
+
+    previewButton.addEventListener('click', () => {
+      if (!previewClicked) {
+        previewClicked = true;
+        previewButton.style.opacity = '0';
+        previewButton.style.transform = 'scale(0.8)';
+        setTimeout(() => {
+          previewButton.style.display = 'none';
+          previewContent.classList.add('show');
+          resetPreviewBtn.style.display = 'block';
+        }, 300);
+      }
+    });
+
+    resetPreviewBtn.addEventListener('click', () => {
+      previewClicked = false;
+      previewContent.classList.remove('show');
+      previewButton.style.display = 'block';
+      previewButton.style.opacity = '1';
+      previewButton.style.transform = 'scale(1)';
+      resetPreviewBtn.style.display = 'none';
+    });
+
+    // Form submission
+    const form = document.getElementById('generatorForm');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const folderName = document.getElementById('folderName').value;
+      const description = document.getElementById('description').value;
+      const title = document.getElementById('titleText').value;
+      const message = document.getElementById('messageContent').value;
+      const buttonText = document.getElementById('buttonText').value || `${folderName.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}, tekan tombol ini`;
+      const senderName = document.getElementById('senderName').value || 'ajan';
+
+      const theme = colorThemes[selectedColor];
+      const currentTime = new Date().toISOString().replace(/:/g, '.').split('.')[0];
+
+      // Generate HTML
+      const html = generateHTML(folderName, title, message, buttonText, senderName, theme, selectedFont);
+
+      // Generate config.json
+      const config = {
+        created_at: currentTime,
+        description: description,
+        last_modified: currentTime,
+        order: 999,
+        color_theme: selectedColor,
+        font_family: selectedFont
+      };
+
+      // Download files
+      downloadFile(`${folderName}_index.html`, html);
+      downloadFile(`${folderName}_config.json`, JSON.stringify(config, null, 2));
+
+      alert(`✅ File berhasil di-generate!\n\n📁 Buat folder: foryou/${folderName}/\n📄 Upload kedua file ke folder tersebut\n\nFile yang di-download:\n- ${folderName}_index.html\n- ${folderName}_config.json`);
+    });
+
+    function generateHTML(folderName, title, message, buttonText, senderName, theme, font) {
+      return `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -888,12 +938,13 @@
             <h1 class="title">${title}</h1>
             <div class="message">
                 <p>${message}</p>
-                <p class="signature">~ ajan</p>
+                <p class="signature">~ ${senderName}</p>
             </div>
         </div>
         <button class="main-button">${buttonText}</button>
     </div>
-    <script>
+  
+  <script>
         document.addEventListener('DOMContentLoaded', () => {
             const button = document.querySelector('.main-button');
             const content = document.querySelector('.content');
@@ -916,24 +967,24 @@
     <\/script>
 </body>
 </html>`;
-        }
+    }
 
-        function downloadFile(filename, content) {
-            const blob = new Blob([content], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
+    function downloadFile(filename, content) {
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
 
-        // Initialize preview
-        updatePreviewTheme();
-        updatePreviewFont();
-    </script>
+    // Initialize preview
+    updatePreviewTheme();
+    updatePreviewFont();
+  </script>
 </body>
 
 </html>
