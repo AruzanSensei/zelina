@@ -490,7 +490,6 @@
     .required {
       color: var(--primary);
     }
-
   </style>
 </head>
 
@@ -511,48 +510,13 @@
 
     <div class="hero">
       <h1>For You Page Generator ✨</h1>
-      <p>Buat halaman spesial untuk orang terkasih dengan mudah</p>
+      <p>Buat pesan untuk your someone special (blm finish btw)</p>
     </div>
 
     <div class="main-grid">
       <div class="form-section">
         <h2 class="section-title">📝 Isi Detail</h2>
-                <form id="generatorForm">
-          <div class="form-group">
-            <label for="buttonText">Teks Tombol <span class="required">*</span></label>
-            <input type="text" id="buttonText" required placeholder="[Nama], tekan tombol ini">
-            <div class="helper-text">*buat dia tertarik untuk menekan tombolnya!</div>
-          </div>
-
-          <div class="form-group">
-            <label for="titleText">Judul Halaman <span class="required">*</span></label>
-            <input type="text" id="titleText" required placeholder="Haii [Nama]!!">
-            <div class="helper-text">*Judul menentukan semuanya!</div>
-          </div>
-
-          <div class="form-group">
-            <label for="messageContent">Pesan <span class="required">*</span></label>
-            <textarea id="messageContent" required placeholder="Tulis pesan spesial untuk orang terkasih..."></textarea>
-            <div class="helper-text">*apa yang kamu rasakan?</div>
-          </div>
-
-          <div class="form-group">
-            <label for="senderName">Nama Pengirim <span class="required">*</span></label>
-            <input type="text" id="senderName" required placeholder="contoh: ajan" value="ajan">
-            <div class="helper-text">*nama yang akan muncul setelah pesan</div>
-          </div>
-
-          <div class="form-group">
-            <label for="folderName">Nama Penerima <span class="required">*</span></label>
-            <input type="text" id="folderName" required placeholder="contoh: nama-orang" pattern="[a-z0-9-]+" title="Gunakan huruf kecil, angka, dan tanda '-' saja">
-            <div class="helper-text">*untuk siapa kamu menulis ini semua?</div>
-          </div>
-
-          <div class="form-group">
-            <label for="description">Deskripsi Singkat <span class="required">*</span></label>
-            <input type="text" id="description" required placeholder="Halaman spesial untuk...">
-            <div class="helper-text">*teks ini akan muncul ketika kamu membagikan linknya di Whatsapp, tentukan dengan baik</div>
-          </div>
+        <form id="generatorForm">
 
           <div class="form-group">
             <label>Pilih Warna Tema <span class="required">*</span></label>
@@ -573,6 +537,44 @@
               <div class="font-option font-outfit" data-font="Outfit">Outfit</div>
               <div class="font-option font-quicksand" data-font="Quicksand">Quicksand</div>
             </div>
+          </div>
+
+          <div class="form-group">
+            <label for="buttonText">Teks Tombol <span class="required">*</span></label>
+            <input type="text" id="buttonText" required placeholder="[Nama], tekan tombol ini">
+            <!-- <div class="helper-text">*buat dia tertarik untuk menekan tombolnya!</div> -->
+          </div>
+
+          <div class="form-group">
+            <label for="titleText">Judul Halaman <span class="required">*</span></label>
+            <input type="text" id="titleText" required placeholder="Haii [Nama]!!">
+            <!-- <div class="helper-text">*Judul menentukan semuanya!</div> -->
+          </div>
+
+          <div class="form-group">
+            <label for="messageContent">Pesan <span class="required">*</span></label>
+            <textarea id="messageContent" required placeholder="Tulis pesan spesial untuk orang terkasih..."></textarea>
+            <!-- <div class="helper-text">*apa yang kamu rasakan?</div> -->
+          </div>
+
+          <div class="form-group">
+            <label for="senderName">Nama Pengirim <span class="required">*</span></label>
+            <input type="text" id="senderName" required placeholder="contoh: ajan" value="ajan">
+            <div class="helper-text">*nama yang akan muncul setelah pesan</div>
+          </div>
+
+          <div class="form-group">
+            <label for="folderName">Nama Penerima <span class="required">*</span></label>
+            <input type="text" id="folderName" required placeholder="contoh: nama-orang" pattern="[a-z0-9-]+"
+              title="Gunakan huruf kecil, angka, dan tanda '-' saja">
+            <!-- <div class="helper-text">*untuk siapa kamu menulis ini semua?</div> -->
+          </div>
+
+          <div class="form-group">
+            <label for="description">Deskripsi Singkat <span class="required">*</span></label>
+            <input type="text" id="description" required placeholder="Halaman spesial untuk...">
+            <div class="helper-text">*teks ini akan muncul ketika kamu membagikan linknya di Whatsapp, tentukan dengan
+              baik</div>
           </div>
 
           <button type="submit" class="btn btn-primary">
@@ -629,7 +631,7 @@
         option.classList.add('active');
         selectedColor = option.dataset.color;
         updatePreviewTheme();
-        
+
       });
     });
 
@@ -643,7 +645,7 @@
         option.classList.add('active');
         selectedFont = option.dataset.font;
         updatePreviewFont();
-        
+
       });
     });
 
@@ -710,26 +712,26 @@
     titleInput.addEventListener('input', () => {
       const titleText = titleInput.value || 'Haii!!';
       document.getElementById('previewTitle').textContent = titleText;
-      
+
     });
 
     messageInput.addEventListener('input', () => {
       const messageText = messageInput.value || 'Pesan akan muncul di sini...';
       document.getElementById('previewMessage').textContent = messageText;
-      
+
     });
 
     buttonInput.addEventListener('input', () => {
       document.getElementById('previewButton').textContent = buttonInput.value || 'Tekan tombol ini';
-      
+
     });
 
     // Sender name live preview
     const senderInput = document.getElementById('senderName');
     senderInput.addEventListener('input', () => {
-      const senderName = senderInput.value || 'ajan';
+      const senderName = senderInput.value || 'kamu';
       document.getElementById('previewSignature').textContent = `~ ${senderName}`;
-      
+
     });
 
     // Preview button interaction
