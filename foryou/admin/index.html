@@ -1,29 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>For You Pages</title>
-  <link rel="stylesheet" href="../../assets/css/global.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #2563eb;
+      --bg: #f8fafc;
+      --text: #0f172a;
+      --card-bg: #ffffff;
+      --gray-400: #94a3b8;
+      --dot-color: rgba(77, 37, 235, 0.075);
+      --dot-size: 1.5px;
+      --dot-space: 22px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .dots-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      background-image:
+        radial-gradient(var(--dot-color) var(--dot-size), transparent var(--dot-size)),
+        radial-gradient(var(--dot-color) var(--dot-size), transparent var(--dot-size));
+      background-position: 0 0, calc(var(--dot-space) / 2) calc(var(--dot-space) / 2);
+      background-size: var(--dot-space) var(--dot-space);
+      mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+      -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 1rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+      color: var(--gray-400);
+    }
+
+    .breadcrumb a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .breadcrumb a:hover {
+      color: #1d4ed8;
+    }
+
+    .breadcrumb span {
+      color: #4c586a;
+    }
+
     .header {
       text-align: center;
       margin-bottom: 1rem;
       padding: 1rem 0;
     }
+
     h1 {
       font-size: 2.5rem;
       font-weight: 700;
       color: var(--text);
       margin-bottom: 0.5rem;
     }
-    
+
     .subtitle {
       font-size: 1.1rem;
       color: #64748b;
       margin-bottom: 1.5rem;
+      font-weight: 400;
     }
-    
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -31,7 +103,7 @@
       padding: 0;
       list-style: none;
     }
-    
+
     .card {
       background: var(--card-bg);
       border-radius: 1rem;
@@ -39,12 +111,12 @@
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       overflow: hidden;
     }
-    
+
     .card:hover {
       transform: translateY(-4px);
       box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     }
-    
+
     .card a {
       display: block;
       padding: 1rem;
@@ -57,7 +129,7 @@
       align-items: center;
       gap: 0.5rem;
       font-size: 1.1rem;
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .card-title::before {
@@ -69,8 +141,9 @@
       font-size: 0.9rem;
       color: var(--gray-400);
       margin-left: 0.5rem;
+      font-weight: 400;
     }
-    
+
     @media (max-width: 640px) {
       body {
         padding: 0.75rem;
@@ -79,12 +152,12 @@
       .breadcrumb {
         margin-bottom: 0.5rem;
       }
-      
+
       .header {
         margin-bottom: 1.5rem;
         padding: 0.8rem;
       }
-      
+
       h1 {
         font-size: 1.75rem;
         margin-bottom: 0rem;
@@ -94,7 +167,7 @@
         font-size: 0.9rem;
         margin-bottom: 0.5rem;
       }
-      
+
       .grid {
         grid-template-columns: 1fr;
         gap: 0.75rem;
@@ -119,14 +192,13 @@
     }
   </style>
 </head>
+
 <body>
   <div class="dots-background"></div>
   <nav class="breadcrumb">
-    <a href="../../"><img src="../../assets/icon/zanxa-mini.ico" alt="Home" class="breadcrumb-icon"></a>
+    <a href="../">🏠</a>
     <span>/</span>
-    <a href="../"><span>foryou</span></a>
-    <span>/</span>
-    <span>admin</span>
+    <span>foryou</span>
   </nav>
   <header class="header">
     <h1>For You Pages</h1>
@@ -134,90 +206,96 @@
   </header>
   <ul class="grid">
     <li class="card">
-      <a href="../ayu/">
+      <a href="./ayu/">
         <div class="card-title">Ayu</div>
         <div class="card-description">Spesial untuk Ayu tersayang </div>
       </a>
     </li>
     <li class="card">
-      <a href="../forbie/">
-        <div class="card-title">Forbieyang</div>
-        <div class="card-description">For my special one, Bie Yang </div>
-      </a>
-    </li>
-    </li>
-    <li class="card">
-      <a href="../forBieYang/">
+      <a href="./forBieYang/">
         <div class="card-title">Forbieyang</div>
         <div class="card-description">For my special one, Bie Yang </div>
       </a>
     </li>
     <li class="card">
-      <a href="../hbd-sahabat/">
+      <a href="./hbd-sahabat/">
         <div class="card-title">Hbd Sahabat</div>
         <div class="card-description">Ucapan ulang tahun untuk sahabat </div>
       </a>
     </li>
     <li class="card">
-      <a href="../ira/">
+      <a href="./ira/">
         <div class="card-title">Ira</div>
         <div class="card-description">Halaman spesial untuk Ira </div>
       </a>
     </li>
     <li class="card">
-      <a href="../joan/">
+      <a href="./joan/">
         <div class="card-title">Joan</div>
         <div class="card-description">Untuk Joan yang baik hati </div>
       </a>
     </li>
     <li class="card">
-      <a href="../kak-alfi/">
+      <a href="./kak-alfi/">
         <div class="card-title">Kak Alfi</div>
         <div class="card-description">Untuk Kak Alfi yang selalu support </div>
       </a>
     </li>
     <li class="card">
-      <a href="../kak-alzan/">
+      <a href="./kak-alzan/">
         <div class="card-title">Kak Alzan</div>
         <div class="card-description">Untuk Kak Alzan yang hebat </div>
       </a>
     </li>
     <li class="card">
-      <a href="../la/">
+      <a href="./la/">
         <div class="card-title">La</div>
         <div class="card-description">Untuk La yang misterius </div>
       </a>
     </li>
     <li class="card">
-      <a href="../lala/">
+      <a href="./lala/">
         <div class="card-title">Lala</div>
         <div class="card-description">Halaman spesial untuk Lala </div>
       </a>
     </li>
     <li class="card">
-      <a href="../ricka/">
+      <a href="./ricka/">
         <div class="card-title">Ricka</div>
         <div class="card-description">Untuk Ricka yang penuh semangat </div>
       </a>
     </li>
     <li class="card">
-      <a href="../sample/">
+      <a href="./sample/">
         <div class="card-title">Sample</div>
         <div class="card-description">Template halaman for you </div>
       </a>
     </li>
     <li class="card">
-      <a href="../sya/">
+      <a href="./sya/">
         <div class="card-title">Sya</div>
         <div class="card-description">Untuk Sya yang selalu ceria </div>
       </a>
     </li>
     <li class="card">
-      <a href="../aa-zeze/">
+      <a href="./aa-zeze/">
         <div class="card-title">Aa Zeze</div>
         <div class="card-description">Halaman spesial untuk Aa Zeze 💖</div>
       </a>
     </li>
+    <li class="card">
+      <a href="./admin/">
+        <div class="card-title">Admin</div>
+        <div class="card-description">Halaman spesial untuk Admin 💖</div>
+      </a>
+    </li>
+    <li class="card">
+      <a href="./forbie/">
+        <div class="card-title">Forbie</div>
+        <div class="card-description">Halaman spesial untuk Forbie 💖</div>
+      </a>
+    </li>
   </ul>
 </body>
+
 </html>
