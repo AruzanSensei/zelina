@@ -782,20 +782,20 @@
       const html = generateHTML(folderName, title, message, buttonText, senderName, theme, selectedFont);
 
       // Generate config.json
-      const config = {
-        created_at: currentTime,
-        description: description,
-        last_modified: currentTime,
-        order: 999,
-        color_theme: selectedColor,
-        font_family: selectedFont
-      };
+      // const config = {
+      //   created_at: currentTime,
+      //   description: description,
+      //   last_modified: currentTime,
+      //   order: 999,
+      //   color_theme: selectedColor,
+      //   font_family: selectedFont
+      // };
 
       // Download files
       downloadFile(`${folderName}_index.html`, html);
-      downloadFile(`${folderName}_config.json`, JSON.stringify(config, null, 2));
+      // downloadFile(`${folderName}_config.json`, JSON.stringify(config, null, 2));
 
-      alert(`✅ File berhasil di-generate!\n\n📁 Buat folder: foryou/${folderName}/\n📄 Upload kedua file ke folder tersebut\n\nFile yang di-download:\n- ${folderName}_index.html\n- ${folderName}_config.json`);
+      alert(`✅ File berhasil di-generate!\n\n📁 Buat folder: foryou/${folderName}/\n📄 Upload kedua file ke folder tersebut\n\nFile yang di-download:\n- ${folderName}_index.html`);
     });
 
     function generateHTML(folderName, title, message, buttonText, senderName, theme, font) {
