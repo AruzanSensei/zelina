@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joki Mancing Pro - Layanan Joki Mancing Profesional</title>
+  <meta name="description" content="Platform joki mancing profesional dengan layanan terpercaya dan berkualitas">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+          </svg>
+        </div>
+        <span class="sidebar-brand">Joki Mancing</span>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <ul class="nav-menu">
+          <li class="nav-item">
+            <a href="#" class="nav-link active" data-page="dashboard">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+              <span class="nav-text">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-page="services">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span class="nav-text">Layanan Joki</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-page="cart">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+              </svg>
+              <span class="nav-text">Cart</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-page="orders">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              <span class="nav-text">Riwayat Order</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-page="settings">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M12 1v6m0 6v6m5.2-13.2l-4.2 4.2m0 6l4.2 4.2M23 12h-6m-6 0H1m18.2 5.2l-4.2-4.2m0-6l4.2-4.2"></path>
+              </svg>
+              <span class="nav-text">Settings</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+    
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="sidebar-toggle" id="sidebarToggle">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          
+          <div class="search-bar">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" class="search-input" id="searchInput" placeholder="Cari layanan joki...">
+          </div>
+        </div>
+        
+        <div class="topbar-right">
+          <button class="theme-toggle" id="themeToggle">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+          
+          <div class="user-avatar">
+            <span>JM</span>
+          </div>
+        </div>
+      </header>
+      
+      <!-- CONTENT WRAPPER -->
+      <div class="content-wrapper">
+        
+        <!-- DASHBOARD PAGE -->
+        <section class="page active" id="dashboard">
+          <div class="page-header">
+            <h1 class="page-title">Dashboard</h1>
+            <p class="page-subtitle">Selamat datang di Joki Mancing Pro</p>
+          </div>
+          
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-header">
+                <div>
+                  <div class="stat-value">24</div>
+                  <div class="stat-label">Total Order</div>
+                </div>
+                <div class="stat-icon blue">📦</div>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-header">
+                <div>
+                  <div class="stat-value">5</div>
+                  <div class="stat-label">Joki Aktif</div>
+                </div>
+                <div class="stat-icon green">🎣</div>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-header">
+                <div>
+                  <div class="stat-value">4.9</div>
+                  <div class="stat-label">Rating</div>
+                </div>
+                <div class="stat-icon orange">⭐</div>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-header">
+                <div>
+                  <div class="stat-value">3</div>
+                  <div class="stat-label">Promo Aktif</div>
+                </div>
+                <div class="stat-icon purple">🎁</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="promo-banner">
+            <div class="promo-content">
+              <h2 class="promo-title">🎉 Promo Spesial Akhir Tahun!</h2>
+              <p class="promo-text">Dapatkan diskon hingga 30% untuk semua layanan joki mancing. Buruan order sebelum promo berakhir!</p>
+              <a href="#" class="promo-button" data-page="services">Lihat Layanan</a>
+            </div>
+          </div>
+        </section>
+        
+        <!-- SERVICES PAGE -->
+        <section class="page" id="services">
+          <div class="page-header">
+            <h1 class="page-title">Layanan Joki Mancing</h1>
+            <p class="page-subtitle">Pilih paket joki mancing sesuai kebutuhan Anda</p>
+          </div>
+          
+          <div class="services-grid" id="servicesGrid">
+            <!-- Services will be rendered here by JavaScript -->
+          </div>
+        </section>
+        
+        <!-- CART PAGE -->
+        <section class="page" id="cart">
+          <div class="page-header">
+            <h1 class="page-title">Keranjang Belanja</h1>
+            <p class="page-subtitle">Review layanan yang akan Anda pesan</p>
+          </div>
+          
+          <div class="cart-container">
+            <div id="cartContent">
+              <!-- Cart content will be rendered here -->
+            </div>
+          </div>
+        </section>
+        
+        <!-- ORDERS PAGE -->
+        <section class="page" id="orders">
+          <div class="page-header">
+            <h1 class="page-title">Riwayat Order</h1>
+            <p class="page-subtitle">Lihat semua order Anda</p>
+          </div>
+          
+          <div class="order-list" id="orderList">
+            <!-- Orders will be rendered here -->
+          </div>
+        </section>
+        
+        <!-- SETTINGS PAGE -->
+        <section class="page" id="settings">
+          <div class="page-header">
+            <h1 class="page-title">Pengaturan</h1>
+            <p class="page-subtitle">Kelola preferensi aplikasi Anda</p>
+          </div>
+          
+          <div class="settings-section">
+            <h3 class="settings-title">Tampilan</h3>
+            
+            <div class="setting-item">
+              <div class="setting-info">
+                <h4>Mode Gelap</h4>
+                <p>Aktifkan tema gelap untuk kenyamanan mata</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="darkModeToggle">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="setting-item">
+              <div class="setting-info">
+                <h4>Sidebar Collapsed</h4>
+                <p>Tampilkan sidebar dalam mode minimalis</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" id="sidebarCollapsedToggle">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="settings-section">
+            <h3 class="settings-title">Notifikasi</h3>
+            
+            <div class="setting-item">
+              <div class="setting-info">
+                <h4>Notifikasi Order</h4>
+                <p>Terima notifikasi untuk update order</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            
+            <div class="setting-item">
+              <div class="setting-info">
+                <h4>Notifikasi Promo</h4>
+                <p>Terima informasi promo dan penawaran spesial</p>
+              </div>
+              <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </section>
+        
+      </div>
+    </main>
+  </div>
+  
+  <!-- CHECKOUT MODAL -->
+  <div class="modal" id="checkoutModal">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">Konfirmasi Checkout</h2>
+      </div>
+      <div class="modal-body">
+        <p>Apakah Anda yakin ingin melanjutkan checkout?</p>
+        <p style="margin-top: 1rem; color: var(--text-secondary); font-size: var(--text-sm);">
+          Order Anda akan diproses dan ditambahkan ke riwayat order.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="cancelCheckout">Batal</button>
+        <button class="btn btn-primary" id="confirmCheckout">Konfirmasi</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- JavaScript -->
+  <script src="js/theme.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
