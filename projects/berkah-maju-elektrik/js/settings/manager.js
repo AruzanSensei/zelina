@@ -69,10 +69,6 @@ export function initSettings() {
                 document.documentElement.setAttribute('data-theme', theme);
                 appState.updateSettings({ theme });
             }
-            if (e.target.dataset.lang) {
-                const lang = e.target.dataset.lang;
-                appState.updateSettings({ language: lang });
-            }
         });
     });
 
@@ -82,7 +78,7 @@ export function initSettings() {
     document.querySelector(`[data-theme="${currentTheme}"]`).classList.add('active');
 
     // ===================================
-    // TEMPLATE MANAGEMENT
+    // TEMPLATE MANAGEMENT (FULL INVOICE)
     // ===================================
 
     // Helper to format currency
@@ -102,16 +98,18 @@ export function initSettings() {
             div.className = 'item-card';
             div.style.padding = '10px';
             div.style.marginBottom = '8px';
+            div.style.display = 'flex';
+            div.style.justifyContent = 'space-between';
+            div.style.alignItems = 'center';
+
             div.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div>
-                        <div style="font-weight:600;">${t.name}</div>
-                        <div style="font-size:0.8rem; color:var(--text-muted);">${t.items.length} Items</div>
-                    </div>
-                    <div>
-                        <button class="btn btn-sm btn-outline use-template" data-index="${i}">Pakai</button>
-                        <button class="btn btn-sm btn-outline delete-template" data-index="${i}" style="color:red; border-color:red; margin-left:4px;"><i class="fa-solid fa-trash"></i></button>
-                    </div>
+                <div>
+                    <div style="font-weight:600;">${t.name}</div>
+                    <div style="font-size:0.8rem; color:var(--text-muted);">${t.items.length} Items</div>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-outline use-template" data-index="${i}" title="Pakai Template">Pakai</button>
+                    <button class="btn btn-sm btn-outline delete-template" data-index="${i}" style="color:red; border-color:red; margin-left:4px;" title="Hapus"><i class="fa-solid fa-trash"></i></button>
                 </div>
             `;
             templateList.appendChild(div);
@@ -126,7 +124,6 @@ export function initSettings() {
         if (btnUse) {
             const idx = btnUse.dataset.index;
             const template = appState.state.templates[idx];
-            // Dispatch to manual mode
             document.dispatchEvent(new CustomEvent('template-selected', { detail: { items: template.items } }));
             toggleModal(false);
         }
@@ -134,7 +131,7 @@ export function initSettings() {
         if (btnDel) {
             if (confirm("Hapus template ini?")) {
                 appState.state.templates.splice(btnDel.dataset.index, 1);
-                appState.save('bme_templates', appState.state.templates); // Direct save for now
+                appState.save('bme_templates', appState.state.templates);
                 renderTemplates();
             }
         }
@@ -142,7 +139,7 @@ export function initSettings() {
 
     // Add Template (Full List)
     btnAddTemplate.addEventListener('click', () => {
-        const name = prompt("Nama Template Baru:");
+        const name = prompt("Nama Template Baru (menyimpan item saat ini):");
         if (name) {
             const newTemplate = {
                 id: Date.now(),
@@ -156,18 +153,8 @@ export function initSettings() {
 
 
     // ===================================
-    // TEMPLATE PICKER UI (For Single Item)
+    // TEMPLATE PICKER UI (SINGLE ITEM)
     // ===================================
-
-    // We create a simpler "Item Template" concept? 
-    // Wait, the prompt says "Template Item contains Nama Barang, Harga".
-    // This implies there are "Single Item Templates" separate from "Full Invoice Templates".
-    // My previous implementation assumed "Template" = "Whole Invoice".
-    // "Template Item" seems to be a new data structure.
-
-    // Let's modify AppState to have `itemTemplates` or just piggyback.
-    // Prompt: "Template Item ... daftar Template Item ... Setiap Template Item berisi Nama Barang, Harga."
-    // OK, let's create a new storage for this: `bme_item_templates`
 
     // Load Item Templates
     let itemTemplates = localStorage.getItem('bme_item_templates');
@@ -181,67 +168,104 @@ export function initSettings() {
         localStorage.setItem('bme_item_templates', JSON.stringify(itemTemplates));
     };
 
-    // Handler for "request-template-picker"
-    document.addEventListener('request-template-picker', (e) => {
+    // Handler for "request-item-picker"
+    document.addEventListener('request-item-picker', (e) => {
         const callback = e.detail.callback;
 
-        // Create Modal UI dynamically
+        // Dynamic Modal Creation
         const pickerOverlay = document.createElement('div');
         pickerOverlay.className = 'modal active';
-        pickerOverlay.style.zIndex = '300'; // Above settings
+        pickerOverlay.style.zIndex = '300';
 
-        const content = `
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2>Pilih Barang</h2>
-                    <button class="close-picker"><i class="fa-solid fa-times"></i></button>
-                </div>
-                <div class="modal-body">
-                    <div id="picker-list" style="max-height: 50vh; overflow-y: auto;">
-                        ${itemTemplates.map((t, idx) => `
-                            <div class="item-card picker-item" data-index="${idx}" style="padding:10px; margin-bottom:8px; display:flex; justify-content:space-between; cursor:pointer;">
-                                <span>${t.name}</span>
-                                <span style="font-weight:600;">${formatCurrency(t.price)}</span>
+        // Initial HTML
+        const renderPickerContent = (isAdding = false) => {
+            if (isAdding) {
+                return `
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Tambah Item Baru</h2>
+                            <button class="close-picker"><i class="fa-solid fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group">
+                                <label class="field-label">Nama Barang</label>
+                                <input type="text" id="new-item-name" class="form-input" placeholder="Contoh: Kabel Audio">
                             </div>
-                        `).join('')}
+                            <div class="input-group">
+                                <label class="field-label">Harga (Rp)</label>
+                                <input type="number" id="new-item-price" class="form-input" placeholder="0">
+                            </div>
+                            <button id="btn-save-new-item" class="btn btn-primary btn-full" style="margin-top:10px;">Simpan & Pilih</button>
+                            <button id="btn-back-picker" class="btn btn-outline btn-full" style="margin-top:8px;">Kembali</button>
+                        </div>
                     </div>
-                    <button id="btn-add-item-template" class="btn btn-outline btn-full" style="margin-top:10px;">
-                        <i class="fa-solid fa-plus"></i> Tambah Item Baru
-                    </button>
-                </div>
-            </div>
-        `;
-        pickerOverlay.innerHTML = content;
+                `;
+            } else {
+                return `
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Pilih Barang</h2>
+                            <button class="close-picker"><i class="fa-solid fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div id="picker-list" style="max-height: 50vh; overflow-y: auto;">
+                                ${itemTemplates.map((t, idx) => `
+                                    <div class="item-card picker-item" data-index="${idx}" style="padding:12px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border:1px solid var(--border-color);">
+                                        <div style="font-weight:500;">${t.name}</div>
+                                        <div style="font-weight:600; color:var(--primary);">${formatCurrency(t.price)}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <button id="btn-to-add-view" class="btn btn-outline btn-full" style="margin-top:10px;">
+                                <i class="fa-solid fa-plus"></i> Tambah Item Baru
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        };
+
+        pickerOverlay.innerHTML = renderPickerContent(false);
         document.body.appendChild(pickerOverlay);
 
-        // Events
+        // Interaction Logic
         pickerOverlay.addEventListener('click', (evt) => {
+            const target = evt.target;
+
             // Close
-            if (evt.target === pickerOverlay || evt.target.closest('.close-picker')) {
+            if (target === pickerOverlay || target.closest('.close-picker')) {
                 pickerOverlay.remove();
             }
 
-            // Select
-            const itemEl = evt.target.closest('.picker-item');
+            // Select Item
+            const itemEl = target.closest('.picker-item');
             if (itemEl) {
                 const idx = itemEl.dataset.index;
                 callback(itemTemplates[idx]);
                 pickerOverlay.remove();
             }
 
-            // Add New
-            if (evt.target.closest('#btn-add-item-template')) {
-                const name = prompt("Nama Barang:");
-                if (!name) return;
-                const price = prompt("Harga:");
-                if (!price) return;
+            // Switch to Add View
+            if (target.closest('#btn-to-add-view')) {
+                pickerOverlay.innerHTML = renderPickerContent(true);
+            }
+
+            // Back to List
+            if (target.id === 'btn-back-picker') {
+                pickerOverlay.innerHTML = renderPickerContent(false);
+            }
+
+            // Save New Item
+            if (target.id === 'btn-save-new-item') {
+                const name = document.getElementById('new-item-name').value;
+                const price = document.getElementById('new-item-price').value;
+
+                if (!name) return alert("Nama harus diisi");
 
                 const newItem = { name, price: parseInt(price) || 0 };
                 itemTemplates.push(newItem);
                 saveItemTemplates();
 
-                // Select immediately? "Template Item langsung tersedia di choices".
-                // Yes, logic says "Select it".
                 callback(newItem);
                 pickerOverlay.remove();
             }

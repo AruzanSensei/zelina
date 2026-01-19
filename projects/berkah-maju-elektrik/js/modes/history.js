@@ -21,6 +21,22 @@ export function initHistoryMode() {
     let detailViewMode = 'form'; // 'form' | 'table'
 
     // ===================================
+    // TIME HELPERS
+    // ===================================
+    const getTimeClass = (timestamp) => {
+        if (!timestamp) return '';
+        const now = new Date();
+        const itemDate = new Date(timestamp);
+        const diffDays = Math.floor((now - itemDate) / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 0) return 'history-today';
+        if (diffDays === 1) return 'history-yesterday';
+        if (diffDays <= 7) return 'history-week';
+        if (diffDays <= 30) return 'history-month';
+        return 'history-year';
+    };
+
+    // ===================================
     // RENDER LIST
     // ===================================
     const render = (history) => {
@@ -31,21 +47,36 @@ export function initHistoryMode() {
             return;
         }
 
-        history.forEach((entry, index) => {
+        // Sort new to old
+        const sortedHistory = [...history].sort((a, b) => b.timestamp - a.timestamp);
+
+        sortedHistory.forEach((entry, index) => {
+            // Find original index in state to map actions back correctly
+            // Or easier: use ID? State uses array index. 
+            // Let's use ID if available, otherwise fallback to finding index in original array.
+            // For simplicity in this vanilla app, we'll map back to the real index in appState.state.history
+            const realIndex = appState.state.history.findIndex(h => h.id === entry.id || h.timestamp === entry.timestamp);
+
             const div = document.createElement('div');
-            div.className = 'history-item';
-            div.style.cursor = 'pointer'; // Indicate clickable
-            div.dataset.index = index;
+            const timeClass = getTimeClass(entry.timestamp);
+
+            div.className = `history-item ${timeClass}`;
+            div.style.cursor = 'pointer';
+            div.dataset.index = realIndex;
+
             div.innerHTML = `
                 <div class="history-info" style="pointer-events:none;">
                     <h4>${entry.title || 'Tanpa Judul'}</h4>
                     <p><small>${entry.date} | ${entry.items.length} Item</small></p>
                 </div>
+                <!-- Removed actions from main list as per request (edit inside detail), but kept download? 
+                     Request: "Edit History (Inside Detail View)... Jangan tambahkan tombol baru di list history utama"
+                     So we should remove Copy/Edit from here. Maybe keep download for convenience? 
+                     User said "Item bisa diedit langsung", implied from Detail View. 
+                     Let's keep Download here for quick access, but remove Copy.
+                -->
                 <div class="history-actions">
-                    <button class="icon-btn btn-copy" data-index="${index}" title="Edit / Copy">
-                        <i class="fa-regular fa-copy"></i>
-                    </button>
-                    <button class="icon-btn btn-download" data-index="${index}" title="Download PDF">
+                    <button class="icon-btn btn-download" data-index="${realIndex}" title="Download PDF">
                         <i class="fa-solid fa-download"></i>
                     </button>
                 </div>
@@ -66,8 +97,34 @@ export function initHistoryMode() {
 
         detailContent.innerHTML = '';
 
+        // Inject Edit Button into Header dynamically (only when open)
+        // Check if button exists, if not create
+        let btnEdit = document.getElementById('btn-detail-edit');
+        if (!btnEdit) {
+            btnEdit = document.createElement('button');
+            btnEdit.id = 'btn-detail-edit';
+            btnEdit.className = 'icon-btn';
+            btnEdit.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
+            btnEdit.style.marginRight = '10px';
+            btnEdit.title = "Edit Invoice";
+            // Insert before close button
+            btnCloseDetail.parentNode.insertBefore(btnEdit, btnCloseDetail);
+
+            btnEdit.addEventListener('click', () => {
+                if (!currentDetailItem) return;
+
+                // Restore logic
+                document.dispatchEvent(new CustomEvent('template-selected', { detail: { items: currentDetailItem.items } }));
+                document.getElementById('manual-title').value = currentDetailItem.title;
+
+                // Switch to Manual
+                document.querySelector('[data-tab="manual"]').click();
+
+                closeDetail();
+            });
+        }
+
         if (detailViewMode === 'table') {
-            // Table View
             const table = document.createElement('table');
             table.className = 'item-table';
             table.innerHTML = `
@@ -95,7 +152,6 @@ export function initHistoryMode() {
             div.appendChild(table);
             detailContent.appendChild(div);
         } else {
-            // Form View (Read Only Cards)
             items.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'item-card';
@@ -124,6 +180,10 @@ export function initHistoryMode() {
     const closeDetail = () => {
         detailSheet.classList.remove('active');
         currentDetailItem = null;
+
+        // Remove edit button to clean up
+        const btnEdit = document.getElementById('btn-detail-edit');
+        if (btnEdit) btnEdit.remove();
     };
 
     // Toggle Handlers
@@ -147,19 +207,7 @@ export function initHistoryMode() {
     // EVENTS
     // ===================================
     container.addEventListener('click', (e) => {
-        // Handle Buttons first
-        const btnCopy = e.target.closest('.btn-copy');
         const btnDownload = e.target.closest('.btn-download');
-
-        if (btnCopy) {
-            e.stopPropagation();
-            const index = btnCopy.dataset.index;
-            const entry = appState.state.history[index];
-            document.dispatchEvent(new CustomEvent('template-selected', { detail: { items: entry.items } }));
-            document.getElementById('manual-title').value = entry.title;
-            document.querySelector('[data-tab="manual"]').click();
-            return;
-        }
 
         if (btnDownload) {
             e.stopPropagation();

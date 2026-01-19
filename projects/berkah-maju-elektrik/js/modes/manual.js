@@ -167,10 +167,11 @@ export function initManualMode() {
         if (pickerBtn) {
             const idx = parseInt(pickerBtn.dataset.index);
 
-            // Dispatch event to open picker
-            const event = new CustomEvent('request-template-picker', {
+            // Dispatch event to open enhanced picker
+            const event = new CustomEvent('request-item-picker', {
                 detail: {
                     callback: (templateItem) => {
+                        // Update item fields
                         items[idx].name = templateItem.name;
                         items[idx].price = templateItem.price;
                         render();
@@ -181,7 +182,7 @@ export function initManualMode() {
             return;
         }
 
-        // Qty Buttons (Only in Card View usually, but let's support generic)
+        // Qty Buttons
         if (target.classList.contains('qty-btn')) {
             const index = parseInt(target.dataset.index);
             if (target.classList.contains('plus')) items[index].qty++;
@@ -202,7 +203,7 @@ export function initManualMode() {
             if (target.classList.contains('item-qty')) items[index].qty = parseInt(val) || 1;
             if (target.classList.contains('item-note')) items[index].note = val;
 
-            // Recalc Total without full render (if possible) to keep focus
+            // Recalc Total
             const total = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
             document.getElementById('grand-total').textContent = formatCurrency(total);
 

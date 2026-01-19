@@ -40,10 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
             appState.state.currentMode = target; // Simplified, not persisting mode for now
 
             // Preview Section Visibility
-            // Preview should be visible in Manual and AI, but hidden in History?
-            // Requirement says "History stores files...". The layout shows preview at bottom.
-            // Let's hide Preview section in History mode to be cleaner, or keep it?
-            // "History" mode list takes up space. Let's hide preview in history.
             if (target === 'history') {
                 previewSection.style.display = 'none';
             } else {
@@ -54,10 +50,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Check for "Logo" existence (Visual fix)
     const logoImg = document.querySelector('.app-logo');
-    logoImg.onerror = function () {
-        this.style.display = 'none';
-        // Add a text fallback if needed, or just leave text header
-    };
+    if (logoImg) {
+        logoImg.onerror = function () {
+            this.style.display = 'none';
+        };
+    }
+
+    // ============================================
+    // INIT SETTINGS (Visuals)
+    // ============================================
+    // Theme
+    const currentTheme = appState.state.settings.theme;
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    document.querySelector(`[data-theme="${currentTheme}"]`).classList.add('active');
+
+    // ============================================
+    // PWA Check
+    // ============================================
+    if ('serviceWorker' in navigator) {
+        console.log("PWA Ready");
+    }
 
     // ============================================
     // SMART UI: Header & Footer
@@ -67,33 +79,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const footer = document.querySelector('.action-bar-sticky');
 
     // Header Logic
-    window.addEventListener('scroll', () => {
-        const currentScrollY = window.scrollY;
+    if (header) {
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
 
-        if (currentScrollY > lastScrollY && currentScrollY > 50) {
-            // Scroll Down
-            header.classList.add('hide');
-        } else {
-            // Scroll Up
-            header.classList.remove('hide');
-        }
-        lastScrollY = currentScrollY;
-    });
+            if (currentScrollY > lastScrollY && currentScrollY > 50) {
+                // Scroll Down
+                header.classList.add('hide');
+            } else {
+                // Scroll Up
+                header.classList.remove('hide');
+            }
+            lastScrollY = currentScrollY;
+        });
+    }
 
     // Footer Logic (Idle Detection)
     let idleTimer;
 
     const showFooter = () => {
+        if (!footer) return;
         footer.classList.remove('hide');
         clearTimeout(idleTimer);
         // Hide again after 2s
         idleTimer = setTimeout(() => {
-            // Only hide if we have content that scrolls, or maybe always?
-            // User requested: "Footer otomatis tersembunyi jika Tidak ada interaksi user selama 2 detik"
-            // "Footer muncul kembali jika User melakukan aksi apa pun"
-            // Let's hide it.
             footer.classList.add('hide');
-        }, 3000); // 3 seconds feels safer so it doesn't flicker too much
+        }, 2000);
     };
 
     const resetIdleTimer = () => {
