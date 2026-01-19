@@ -1,0 +1,52 @@
+:root {
+    /* Colors - Light Mode (Default) */
+    --primary: #4A90E2;
+    /* Blue like the reference */
+    --primary-dark: #357ABD;
+    --secondary: #9B51E0;
+    /* Purple for AI accent */
+
+    --bg-body: #F5F7FA;
+    --bg-card: #FFFFFF;
+    --bg-input: #FFFFFF;
+
+    --text-main: #333333;
+    --text-muted: #888888;
+
+    --border-color: #E1E4E8;
+
+    --invoice-bg: #FFD1D1;
+    /* Light red/pinkish from reference */
+    --letter-bg: #D1EAFF;
+    /* Light blue from reference */
+
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+}
+
+[data-theme="dark"] {
+    --bg-body: #121212;
+    --bg-card: #1E1E1E;
+    --bg-input: #2C2C2C;
+
+    --text-main: #E0E0E0;
+    --text-muted: #A0A0A0;
+
+    --border-color: #333333;
+
+    --primary: #5B9FE2;
+    --secondary: #AF71E6;
+
+    --invoice-bg: #4A2C2C;
+    /* Darker muted red */
+    --letter-bg: #2C3A4A;
+    /* Darker muted blue */
+}

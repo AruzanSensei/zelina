@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Berkah Maju Elektrik - Generator</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- PDF Libs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- App Header -->
+    <header class="app-header">
+        <div class="brand">
+            <div class="logo-container">
+                <!-- Placeholder for logo, will be set via JS or CSS if file exists -->
+                <img src="Deployment/Logo berkah maju elektrik.png" alt="Logo" class="app-logo"
+                    onerror="this.style.display='none'">
+            </div>
+            <div class="brand-text">
+                <h1>BERKAH MAJU ELEKTRIK</h1>
+                <p>Invoice & Surat Jalan Generator</p>
+            </div>
+        </div>
+        <button id="btn-settings" class="icon-btn">
+            <i class="fa-solid fa-cog"></i>
+        </button>
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="tab-nav">
+        <button class="tab-btn active" data-tab="manual">Manual</button>
+        <button class="tab-btn" data-tab="ai">AI <i class="fa-solid fa-lock"
+                style="font-size: 0.7em; opacity: 0.5;"></i></button>
+        <button class="tab-btn" data-tab="history">History <i class="fa-solid fa-lock"
+                style="font-size: 0.7em; opacity: 0.5;"></i></button>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main id="app-content">
+
+        <!-- MODE 1: MANUAL -->
+        <section id="manual-view" class="view client-view active">
+            <div class="input-group">
+                <input type="text" id="manual-title" class="form-input" placeholder="Judul Invoice"
+                    value="Invoice Baru">
+            </div>
+
+            <div id="manual-items-container">
+                <!-- Items will be injected here -->
+            </div>
+
+            <button id="btn-add-item" class="btn btn-outline btn-full">
+                <i class="fa-solid fa-plus"></i> Tambah Item
+            </button>
+        </section>
+
+        <!-- MODE 2: AI -->
+        <section id="ai-view" class="view hidden">
+            <div class="input-group">
+                <input type="text" id="ai-title" class="form-input" placeholder="Judul Invoice">
+            </div>
+            <div class="input-group">
+                <textarea id="ai-prompt" class="form-textarea"
+                    placeholder="Contoh: Kabel NYM 50 meter harga 15rb, MCB 10 pcs harga 50rb..."></textarea>
+            </div>
+            <div class="ai-actions">
+                <button id="btn-ai-generate" class="btn btn-primary btn-icon-right">
+                    Generate <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- MODE 3: HISTORY -->
+        <section id="history-view" class="view hidden">
+            <div id="history-list" class="history-list">
+                <!-- History items will be injected here -->
+            </div>
+        </section>
+
+        <!-- PREVIEW & DOWNLOAD BAR -->
+        <!-- Visible in Manual and AI modes -->
+        <section id="preview-section" class="preview-section">
+            <div class="preview-header">
+                <h3>Preview</h3>
+            </div>
+            <div class="preview-cards">
+                <div class="preview-card invoice-preview">
+                    <div class="preview-content">
+                        <span>Invoice</span>
+                    </div>
+                </div>
+                <div class="preview-card letter-preview">
+                    <div class="preview-content">
+                        <span>Surat Jalan</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-bar-sticky">
+                <div class="total-display">
+                    <small>Total</small>
+                    <span id="grand-total">Rp 0</span>
+                </div>
+                <button id="btn-download" class="btn btn-primary btn-lg">
+                    Unduh
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        Powered By <strong>Zanxa Studio</strong>
+    </footer>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Pengaturan</h2>
+                <button class="close-modal"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-item">
+                    <label>Bahasa / Language</label>
+                    <div class="toggle-group">
+                        <button class="toggle-btn active" data-lang="id">ID</button>
+                        <button class="toggle-btn" data-lang="en">EN</button>
+                    </div>
+                </div>
+                <div class="setting-item">
+                    <label>Tema / Theme</label>
+                    <div class="toggle-group">
+                        <button class="toggle-btn active" data-theme="light">Light</button>
+                        <button class="toggle-btn" data-theme="dark">Dark</button>
+                    </div>
+                </div>
+
+                <div class="setting-section">
+                    <h3>Template</h3>
+                    <div id="template-list">
+                        <!-- Templates -->
+                    </div>
+                    <button id="btn-add-template" class="btn btn-sm btn-outline">+ Template Baru</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/app.js"></script>
+</body>
+
+</html>
