@@ -58,8 +58,18 @@
         <!-- MODE 1: MANUAL -->
         <section id="manual-view" class="view client-view active">
             <div class="input-group">
-                <input type="text" id="manual-title" class="form-input" placeholder="Judul Invoice"
+                <label class="field-label">Judul Invoice</label>
+                <input type="text" id="manual-title" class="form-input" placeholder="Contoh: Invoice #001"
                     value="Invoice Baru">
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+                <div class="toggle-group">
+                    <button class="toggle-btn active" id="view-card-btn" title="Card View"><i
+                            class="fa-solid fa-list"></i></button>
+                    <button class="toggle-btn" id="view-table-btn" title="Table View"><i
+                            class="fa-solid fa-table"></i></button>
+                </div>
             </div>
 
             <div id="manual-items-container">
@@ -139,28 +149,70 @@
                 <button class="close-modal"><i class="fa-solid fa-times"></i></button>
             </div>
             <div class="modal-body">
-                <div class="setting-item">
-                    <label>Bahasa / Language</label>
-                    <div class="toggle-group">
-                        <button class="toggle-btn active" data-lang="id">ID</button>
-                        <button class="toggle-btn" data-lang="en">EN</button>
-                    </div>
+                <!-- Settings Tabs -->
+                <div class="toggle-group" style="margin-bottom: 20px;">
+                    <button class="toggle-btn active" id="tab-general">Umum</button>
+                    <button class="toggle-btn" id="tab-templates">Templates</button>
                 </div>
-                <div class="setting-item">
-                    <label>Tema / Theme</label>
-                    <div class="toggle-group">
-                        <button class="toggle-btn active" data-theme="light">Light</button>
-                        <button class="toggle-btn" data-theme="dark">Dark</button>
+
+                <div id="settings-general">
+                    <div class="setting-item">
+                        <label>Bahasa / Language</label>
+                        <div class="toggle-group">
+                            <button class="toggle-btn active" data-lang="id">ID</button>
+                            <button class="toggle-btn" data-lang="en">EN</button>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <label>Tema / Theme</label>
+                        <div class="toggle-group">
+                            <button class="toggle-btn active" data-theme="light">Light</button>
+                            <button class="toggle-btn" data-theme="dark">Dark</button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="setting-section">
-                    <h3>Template</h3>
-                    <div id="template-list">
-                        <!-- Templates -->
+                <div id="settings-templates" class="hidden" style="display:none;">
+                    <div class="setting-section">
+                        <h3>Kelola Template</h3>
+                        <p><small>Buat template untuk item yang sering digunakan.</small></p>
+                        <div id="template-list" style="max-height: 300px; overflow-y: auto; margin: 10px 0;">
+                            <!-- Templates Rendered Here -->
+                        </div>
+                        <button id="btn-add-template" class="btn btn-sm btn-outline btn-full">+ Tambah Template
+                            Baru</button>
                     </div>
-                    <button id="btn-add-template" class="btn btn-sm btn-outline">+ Template Baru</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Preview Modal -->
+    <div id="preview-modal" class="modal hidden">
+        <div class="modal-content" style="height: 90vh;">
+            <div class="modal-header">
+                <h2 id="preview-title">Preview</h2>
+                <button class="close-modal-preview"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="modal-body" style="height: calc(100% - 60px);">
+                <iframe id="pdf-preview-frame" style="width:100%; height:100%; border:none;"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Sheet for History Details -->
+    <div id="detail-sheet" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="detail-title">Detail Invoice</h2>
+                <button class="close-detail"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="toggle-group" style="margin-bottom:10px; width: fit-content;">
+                <button class="toggle-btn active" id="detail-form-view">Form</button>
+                <button class="toggle-btn" id="detail-table-view">Table</button>
+            </div>
+            <div id="detail-content" class="modal-body">
+                <!-- Content injected via JS -->
             </div>
         </div>
     </div>

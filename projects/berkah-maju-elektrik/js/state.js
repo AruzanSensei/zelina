@@ -31,6 +31,7 @@ class StateManager {
     constructor() {
         this.state = {
             currentMode: 'manual', // manual, ai, history
+            manualViewMode: 'card', // card, table
             invoiceItems: [],
             settings: this.load(STORAGE_KEYS.SETTINGS, DEFAULTS.settings),
             history: this.load(STORAGE_KEYS.HISTORY, []),

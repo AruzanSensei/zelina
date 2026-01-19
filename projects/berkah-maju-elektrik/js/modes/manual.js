@@ -3,62 +3,120 @@
  */
 import { appState } from '../state.js';
 
+// Helper to format currency
+const formatCurrency = (num) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
+};
+
 export function initManualMode() {
     const container = document.getElementById('manual-items-container');
     const addBtn = document.getElementById('btn-add-item');
     const titleInput = document.getElementById('manual-title');
 
+    // View Toggles
+    const btnCardView = document.getElementById('view-card-btn');
+    const btnTableView = document.getElementById('view-table-btn');
+
     let items = [];
 
-    // Helper to format currency
-    const formatCurrency = (num) => {
-        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
-    };
+    // ============================================
+    // RENDER LOGIC
+    // ============================================
 
-    // Render a single item card
-    const createItemCard = (item, index) => {
-        const div = document.createElement('div');
-        div.className = 'item-card';
-        div.innerHTML = `
-            <button class="remove-item-btn" data-index="${index}"><i class="fa-solid fa-trash"></i></button>
-            
-            <div class="input-group" style="margin-bottom: 8px;">
-                <label><small>Barang</small></label>
-                <input type="text" class="form-input item-name" value="${item.name}" data-index="${index}" placeholder="Nama Barang">
-            </div>
-            
-            <div class="item-row">
-                <div style="flex: 2;">
-                    <label><small>Harga</small></label>
-                    <input type="number" class="form-input item-price" value="${item.price}" data-index="${index}" placeholder="Rp 0">
-                </div>
-                <div style="flex: 1;">
-                    <label><small>Pcs</small></label>
-                    <div class="qty-control">
-                        <button class="qty-btn minus" data-index="${index}">-</button>
-                        <input type="number" class="qty-input item-qty" value="${item.qty}" data-index="${index}" min="1">
-                        <button class="qty-btn plus" data-index="${index}">+</button>
+    const renderCardView = () => {
+        container.innerHTML = '';
+        container.classList.remove('table-view-container');
+
+        items.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'item-card';
+            div.innerHTML = `
+                <button class="remove-item-btn" data-index="${index}"><i class="fa-solid fa-trash"></i></button>
+                
+                <div class="input-group" style="margin-bottom: 8px;">
+                    <label class="field-label">Barang</label>
+                    <div class="input-with-icon">
+                        <input type="text" class="form-input item-name" value="${item.name}" data-index="${index}" placeholder="Nama Barang">
+                        <button class="input-icon-btn template-picker-btn" data-index="${index}"><i class="fa-solid fa-list-ul"></i></button>
                     </div>
                 </div>
-            </div>
+                
+                <div class="item-row">
+                    <div style="flex: 2;">
+                        <label class="field-label">Harga</label>
+                        <input type="number" class="form-input item-price" value="${item.price}" data-index="${index}" placeholder="Rp 0">
+                    </div>
+                    <div style="flex: 1;">
+                        <label class="field-label">Pcs</label>
+                        <div class="qty-control">
+                            <button class="qty-btn minus" data-index="${index}">-</button>
+                            <input type="number" class="qty-input item-qty" value="${item.qty}" data-index="${index}" min="1">
+                            <button class="qty-btn plus" data-index="${index}">+</button>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="input-group" style="margin-bottom: 0;">
-                <input type="text" class="form-input item-note" value="${item.note || ''}" data-index="${index}" placeholder="Catatan (opsional)">
-            </div>
-            
-            <div style="text-align: right; margin-top: 8px; font-weight: 600; color: var(--primary);">
-                ${formatCurrency(item.price * item.qty)}
-            </div>
-        `;
-        return div;
+                <div class="input-group" style="margin-bottom: 0;">
+                    <input type="text" class="form-input item-note" value="${item.note || ''}" data-index="${index}" placeholder="Catatan (opsional)">
+                </div>
+                
+                <div style="text-align: right; margin-top: 8px; font-weight: 600; color: var(--primary);">
+                    ${formatCurrency(item.price * item.qty)}
+                </div>
+            `;
+            container.appendChild(div);
+        });
     };
 
-    // Render loop
-    const render = () => {
+    const renderTableView = () => {
         container.innerHTML = '';
-        items.forEach((item, index) => {
-            container.appendChild(createItemCard(item, index));
-        });
+        container.classList.add('table-view-container');
+
+        const table = document.createElement('table');
+        table.className = 'item-table';
+
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th style="width: 35%;">Barang</th>
+                    <th style="width: 25%;">Harga</th>
+                    <th style="width: 15%;">Pcs</th>
+                    <th style="width: 20%;">Note</th>
+                    <th style="width: 5%;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                ${items.map((item, index) => `
+                <tr>
+                    <td>
+                        <div class="input-with-icon">
+                            <input type="text" class="item-name" value="${item.name}" data-index="${index}" placeholder="Item">
+                            <button class="input-icon-btn template-picker-btn" data-index="${index}" style="right:0;"><i class="fa-solid fa-list-ul"></i></button>
+                        </div>
+                    </td>
+                    <td><input type="number" class="item-price" value="${item.price}" data-index="${index}" placeholder="0"></td>
+                    <td><input type="number" class="item-qty" value="${item.qty}" data-index="${index}" min="1"></td>
+                    <td><input type="text" class="item-note" value="${item.note || ''}" data-index="${index}" placeholder="..."></td>
+                    <td>
+                        <button class="remove-item-btn" data-index="${index}" style="position:static; color: #ff4d4f; background:none; border:none;"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+                `).join('')}
+            </tbody>
+        `;
+        container.appendChild(table);
+    };
+
+    const render = () => {
+        if (appState.state.manualViewMode === 'table') {
+            renderTableView();
+            btnCardView.classList.remove('active');
+            btnTableView.classList.add('active');
+        } else {
+            renderCardView();
+            btnCardView.classList.add('active');
+            btnTableView.classList.remove('active');
+        }
 
         // Calculate Total
         const total = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
@@ -69,79 +127,111 @@ export function initManualMode() {
         appState.state.manualTitle = titleInput.value;
     };
 
-    // Add new item
+    // ============================================
+    // EVENTS
+    // ============================================
+
+    // View Switching
+    btnCardView.addEventListener('click', () => {
+        appState.state.manualViewMode = 'card';
+        render();
+    });
+
+    btnTableView.addEventListener('click', () => {
+        appState.state.manualViewMode = 'table';
+        render();
+    });
+
+    // Add Item
     const addItem = () => {
         items.push({ name: '', price: 0, qty: 1, note: '' });
         render();
     };
+    addBtn.addEventListener('click', addItem);
 
-    // Event Delegation
+    // Container Interactions (Delegation)
     container.addEventListener('click', (e) => {
-        const index = parseInt(e.target.dataset.index);
+        const target = e.target; // Clicked element
 
         // Remove
-        if (e.target.closest('.remove-item-btn')) {
-            const btn = e.target.closest('.remove-item-btn');
-            const idx = parseInt(btn.dataset.index);
+        const removeBtn = target.closest('.remove-item-btn');
+        if (removeBtn) {
+            const idx = parseInt(removeBtn.dataset.index);
             items.splice(idx, 1);
             render();
+            return;
         }
 
-        // Qty Buttons
-        if (e.target.classList.contains('qty-btn')) {
-            if (e.target.classList.contains('plus')) {
-                items[index].qty++;
-            } else {
-                if (items[index].qty > 1) items[index].qty--;
-            }
+        // Template Picker
+        const pickerBtn = target.closest('.template-picker-btn');
+        if (pickerBtn) {
+            const idx = parseInt(pickerBtn.dataset.index);
+
+            // Dispatch event to open picker
+            const event = new CustomEvent('request-template-picker', {
+                detail: {
+                    callback: (templateItem) => {
+                        items[idx].name = templateItem.name;
+                        items[idx].price = templateItem.price;
+                        render();
+                    }
+                }
+            });
+            document.dispatchEvent(event);
+            return;
+        }
+
+        // Qty Buttons (Only in Card View usually, but let's support generic)
+        if (target.classList.contains('qty-btn')) {
+            const index = parseInt(target.dataset.index);
+            if (target.classList.contains('plus')) items[index].qty++;
+            else if (items[index].qty > 1) items[index].qty--;
             render();
         }
     });
 
+    // Input Handling
     container.addEventListener('input', (e) => {
-        if (e.target.dataset.index !== undefined) {
-            const index = parseInt(e.target.dataset.index);
-            const val = e.target.value;
+        const target = e.target;
+        if (target.dataset.index !== undefined) {
+            const index = parseInt(target.dataset.index);
+            const val = target.value;
 
-            if (e.target.classList.contains('item-name')) items[index].name = val;
-            if (e.target.classList.contains('item-price')) items[index].price = parseInt(val) || 0;
-            if (e.target.classList.contains('item-qty')) items[index].qty = parseInt(val) || 1;
-            if (e.target.classList.contains('item-note')) items[index].note = val;
+            if (target.classList.contains('item-name')) items[index].name = val;
+            if (target.classList.contains('item-price')) items[index].price = parseInt(val) || 0;
+            if (target.classList.contains('item-qty')) items[index].qty = parseInt(val) || 1;
+            if (target.classList.contains('item-note')) items[index].note = val;
 
-            // Only re-render if it affects totals (price/qty), otherwise just update value logic to avoid focus loss
-            // Actually, for simplicity on mobile, let's just update the specific total display relative to this card
-            // But to keep total sync, we update state.
-            // Full render causes focus loss.
-
+            // Recalc Total without full render (if possible) to keep focus
             const total = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
             document.getElementById('grand-total').textContent = formatCurrency(total);
 
-            // Update individual subtotal display without full re-render
-            const card = e.target.closest('.item-card');
-            const subtotalDisplay = card.querySelector('div[style*="text-align: right"]');
-            if (subtotalDisplay) {
-                subtotalDisplay.textContent = formatCurrency(items[index].price * items[index].qty);
+            // If in Card View, update subtotal
+            if (appState.state.manualViewMode === 'card') {
+                const card = target.closest('.item-card');
+                if (card) {
+                    const subtotalDisplay = card.querySelector('div[style*="text-align: right"]');
+                    if (subtotalDisplay) subtotalDisplay.textContent = formatCurrency(items[index].price * items[index].qty);
+                }
             }
 
             appState.updateItems(items);
         }
     });
 
-    addBtn.addEventListener('click', addItem);
-
-    // Initial Item
-    if (items.length === 0) addItem();
-
-    // Listen for template selection to populate items
+    // External Event Listeners
     document.addEventListener('template-selected', (e) => {
-        items = JSON.parse(JSON.stringify(e.detail.items)); // Deep copy
+        // Full template load
+        items = JSON.parse(JSON.stringify(e.detail.items));
         render();
     });
 
-    // Listen for AI generation
     document.addEventListener('ai-generated', (e) => {
         titleInput.value = e.detail.title;
         items = JSON.parse(JSON.stringify(e.detail.items));
         render();
     });
+
+    // Initial
+    if (items.length === 0) addItem(); // Ensure one item
 }

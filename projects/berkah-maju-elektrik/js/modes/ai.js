@@ -7,6 +7,13 @@ export function initAIMode() {
     const promptInput = document.getElementById('ai-prompt');
     const titleInput = document.getElementById('ai-title');
 
+    // Auto-resize Textarea
+    const autoResize = () => {
+        promptInput.style.height = 'auto';
+        promptInput.style.height = promptInput.scrollHeight + 'px';
+    };
+    promptInput.addEventListener('input', autoResize);
+
     const mockAIParser = (text) => {
         const lines = text.split(/\n|,/).filter(line => line.trim().length > 0);
         const items = [];
@@ -28,26 +35,20 @@ export function initAIMode() {
                 } else {
                     p = parseInt(p);
                 }
-
-                // If the number is suspiciously small (like dates or qty), maybe it's not price
-                // unless explicitly stated? For now assume > 500 is price.
                 if (p > 500) {
                     price = p;
-                    // remove price from name
                     name = name.replace(priceMatch[0], '').trim();
                 }
             }
 
-            // Extract Qty (e.g., 5pcs, 10x, 5 buah)
+            // Extract Qty
             const qtyMatch = line.match(/(\d+)\s*(pcs|bh|buah|x|batang|btn|lembar)/i);
             if (qtyMatch) {
                 qty = parseInt(qtyMatch[1]);
                 name = name.replace(qtyMatch[0], '').trim();
             } else {
-                // Check for just numbers at start
                 const startNum = line.match(/^(\d+)\s+/);
-                if (startNum && !price) { // if price was found, this might be price? No, price logic is separate
-                    // It's ambiguous. Let's assume if < 100 it's qty
+                if (startNum && !price) {
                     if (parseInt(startNum[1]) < 100) {
                         qty = parseInt(startNum[1]);
                         name = name.replace(startNum[0], '').trim();
@@ -55,12 +56,9 @@ export function initAIMode() {
                 }
             }
 
-            // Cleanup name
             name = name.replace(/harga|rp|@/gi, '').trim();
 
-            // Fallback dummy price if 0 (Simulating AI "guessing" price)
             if (price === 0) {
-                // Random realistic price between 10k and 100k
                 price = (Math.floor(Math.random() * 90) + 10) * 1000;
                 note = "Estimasi Harga AI";
             }
@@ -82,7 +80,7 @@ export function initAIMode() {
         setTimeout(() => {
             const items = mockAIParser(prompt);
 
-            // Fire event to switch to Manual mode with data
+            // Fire event
             const event = new CustomEvent('ai-generated', {
                 detail: {
                     items: items,
@@ -91,11 +89,11 @@ export function initAIMode() {
             });
             document.dispatchEvent(event);
 
-            // Switch tab UI to manual
             document.querySelector('[data-tab="manual"]').click();
 
             btnGenerate.innerHTML = 'Generate <i class="fa-solid fa-wand-magic-sparkles"></i>';
-            promptInput.value = ''; // Clear
-        }, 1500); // Fake delay
+            promptInput.value = '';
+            promptInput.style.height = 'auto'; // Reset
+        }, 1500);
     });
 }
