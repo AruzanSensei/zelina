@@ -1,9 +1,17 @@
 /**
- * Manual Mode Logic
+ * Manual Mode Logic with Micro UX & Swipe Actions
  */
 import { appState } from '../state.js';
 
-// Helper to format currency
+// Helper to format currency string (e.g. "10000" -> "10.000")
+const formatNumberStr = (str) => {
+    if (!str) return '';
+    const num = parseInt(str.replace(/\D/g, ''));
+    if (isNaN(num)) return '';
+    return new Intl.NumberFormat('id-ID').format(num);
+};
+
+// Helper for raw number
 const formatCurrency = (num) => {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num);
 };
@@ -20,6 +28,24 @@ export function initManualMode() {
     let items = [];
 
     // ============================================
+    // MICRO UX HANDLERS
+    // ============================================
+
+    // Auto-resize textarea
+    const autoResize = (el) => {
+        el.style.height = 'auto';
+        el.style.height = el.scrollHeight + 'px';
+    };
+
+    // Copy Text
+    const copyText = (text, btn) => {
+        navigator.clipboard.writeText(text).then(() => {
+            btn.classList.add('copied');
+            setTimeout(() => btn.classList.remove('copied'), 1500);
+        });
+    };
+
+    // ============================================
     // RENDER LOGIC
     // ============================================
 
@@ -29,42 +55,57 @@ export function initManualMode() {
 
         items.forEach((item, index) => {
             const div = document.createElement('div');
-            div.className = 'item-card';
+            div.className = 'item-swipe-container'; // Wrapper for swipe
             div.innerHTML = `
-                <button class="remove-item-btn" data-index="${index}"><i class="fa-solid fa-trash"></i></button>
-                
-                <div class="input-group" style="margin-bottom: 8px;">
-                    <label class="field-label">Barang</label>
-                    <div class="input-with-icon">
-                        <input type="text" class="form-input item-name" value="${item.name}" data-index="${index}" placeholder="Nama Barang">
-                        <button class="input-icon-btn template-picker-btn" data-index="${index}"><i class="fa-solid fa-list-ul"></i></button>
-                    </div>
+                <div class="swipe-actions">
+                    <button class="swipe-btn swipe-edit" data-index="${index}"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button class="swipe-btn swipe-delete" data-index="${index}"><i class="fa-solid fa-trash"></i></button>
                 </div>
                 
-                <div class="item-row">
-                    <div style="flex: 2;">
-                        <label class="field-label">Harga</label>
-                        <input type="number" class="form-input item-price" value="${item.price}" data-index="${index}" placeholder="Rp 0">
-                    </div>
-                    <div style="flex: 1;">
-                        <label class="field-label">Pcs</label>
-                        <div class="qty-control">
-                            <button class="qty-btn minus" data-index="${index}">-</button>
-                            <input type="number" class="qty-input item-qty" value="${item.qty}" data-index="${index}" min="1">
-                            <button class="qty-btn plus" data-index="${index}">+</button>
+                <div class="item-card" data-index="${index}">
+                    <!-- Regular Card Content -->
+                    <button class="remove-item-btn" data-index="${index}" style="right: 12px; top: 12px;"><i class="fa-solid fa-trash"></i></button>
+                    
+                    <div class="input-group" style="margin-bottom: 8px;">
+                        <label class="field-label">Barang</label>
+                        <div class="input-with-icon">
+                            <input type="text" class="form-input item-name" value="${item.name}" data-index="${index}" placeholder="Nama Barang">
+                            <button class="input-icon-btn template-picker-btn" data-index="${index}"><i class="fa-solid fa-list-ul"></i></button>
                         </div>
                     </div>
-                </div>
+                    
+                    <div class="item-row">
+                        <div style="flex: 2;">
+                            <label class="field-label">Harga</label>
+                            <input type="text" class="form-input item-price-format" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="0" inputmode="numeric">
+                        </div>
+                        <div style="flex: 1;">
+                            <label class="field-label">Pcs</label>
+                            <div class="qty-control">
+                                <button class="qty-btn minus" data-index="${index}">-</button>
+                                <input type="number" class="qty-input item-qty" value="${item.qty}" data-index="${index}" min="1">
+                                <button class="qty-btn plus" data-index="${index}">+</button>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="input-group" style="margin-bottom: 0;">
-                    <input type="text" class="form-input item-note" value="${item.note || ''}" data-index="${index}" placeholder="Catatan (opsional)">
-                </div>
-                
-                <div style="text-align: right; margin-top: 8px; font-weight: 600; color: var(--primary);">
-                    ${formatCurrency(item.price * item.qty)}
+                    <div class="input-group" style="margin-bottom: 0;">
+                        <div class="input-wrapper">
+                            <textarea class="form-textarea item-note" data-index="${index}" placeholder="Catatan (opsional)" rows="1" style="padding-right: 30px; overflow:hidden;">${item.note || ''}</textarea>
+                            <button class="copy-icon-btn" data-index="${index}" title="Copy Note"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: right; margin-top: 8px; font-weight: 600; color: var(--primary);">
+                        ${formatCurrency(item.price * item.qty)}
+                    </div>
                 </div>
             `;
             container.appendChild(div);
+
+            // Init resize for this item's textarea
+            const textarea = div.querySelector('.item-note');
+            if (textarea) autoResize(textarea);
         });
     };
 
@@ -78,11 +119,11 @@ export function initManualMode() {
         table.innerHTML = `
             <thead>
                 <tr>
-                    <th style="width: 35%;">Barang</th>
-                    <th style="width: 25%;">Harga</th>
-                    <th style="width: 15%;">Pcs</th>
-                    <th style="width: 20%;">Note</th>
-                    <th style="width: 5%;"></th>
+                    <th>Barang</th>
+                    <th>Harga</th>
+                    <th>Pcs</th>
+                    <th style="padding-right:20px;">Total</th>
+                    <th style="width:40px;"></th>
                 </tr>
             </thead>
             <tbody>
@@ -91,12 +132,14 @@ export function initManualMode() {
                     <td>
                         <div class="input-with-icon">
                             <input type="text" class="item-name" value="${item.name}" data-index="${index}" placeholder="Item">
-                            <button class="input-icon-btn template-picker-btn" data-index="${index}" style="right:0;"><i class="fa-solid fa-list-ul"></i></button>
+                            <!-- Helper icon for table view too -->
+                            <button class="input-icon-btn template-picker-btn" data-index="${index}" style="right:0; padding:2px;"><i class="fa-solid fa-list-ul" style="font-size:0.8rem;"></i></button>
                         </div>
+                        <input type="text" class="item-note" value="${item.note || ''}" data-index="${index}" placeholder="Note..." style="font-size:0.8rem; color:#888; margin-top:2px;">
                     </td>
-                    <td><input type="number" class="item-price" value="${item.price}" data-index="${index}" placeholder="0"></td>
-                    <td><input type="number" class="item-qty" value="${item.qty}" data-index="${index}" min="1"></td>
-                    <td><input type="text" class="item-note" value="${item.note || ''}" data-index="${index}" placeholder="..."></td>
+                    <td><input type="text" class="item-price-format" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="0" inputmode="numeric"></td>
+                    <td><input type="number" class="item-qty" value="${item.qty}" data-index="${index}" min="1" style="width:40px;"></td>
+                    <td style="text-align:right;">${formatNumberStr(String(item.price * item.qty))}</td>
                     <td>
                         <button class="remove-item-btn" data-index="${index}" style="position:static; color: #ff4d4f; background:none; border:none;"><i class="fa-solid fa-trash"></i></button>
                     </td>
@@ -132,15 +175,8 @@ export function initManualMode() {
     // ============================================
 
     // View Switching
-    btnCardView.addEventListener('click', () => {
-        appState.state.manualViewMode = 'card';
-        render();
-    });
-
-    btnTableView.addEventListener('click', () => {
-        appState.state.manualViewMode = 'table';
-        render();
-    });
+    btnCardView.addEventListener('click', () => { appState.state.manualViewMode = 'card'; render(); });
+    btnTableView.addEventListener('click', () => { appState.state.manualViewMode = 'table'; render(); });
 
     // Add Item
     const addItem = () => {
@@ -149,12 +185,12 @@ export function initManualMode() {
     };
     addBtn.addEventListener('click', addItem);
 
-    // Container Interactions (Delegation)
+    // Container Interactions
     container.addEventListener('click', (e) => {
-        const target = e.target; // Clicked element
+        const target = e.target;
 
-        // Remove
-        const removeBtn = target.closest('.remove-item-btn');
+        // Remove Item
+        const removeBtn = target.closest('.remove-item-btn') || target.closest('.swipe-delete');
         if (removeBtn) {
             const idx = parseInt(removeBtn.dataset.index);
             items.splice(idx, 1);
@@ -162,16 +198,37 @@ export function initManualMode() {
             return;
         }
 
+        // Edit via Swipe (Just focus name for now)
+        const editBtn = target.closest('.swipe-edit');
+        if (editBtn) {
+            const idx = parseInt(editBtn.dataset.index);
+            // Logic to just focus the field or open modal if needed? 
+            // Requirement says: "Edit (orange)". Usually implies specific action, but here fields are inline.
+            // Maybe it just closes swipe and focuses name?
+            const card = container.children[idx].querySelector('.item-card');
+            if (card) {
+                card.classList.remove('swiped-left');
+                const nameInput = card.querySelector('.item-name');
+                if (nameInput) nameInput.focus();
+            }
+            return;
+        }
+
+        // Copy Note
+        const copyBtn = target.closest('.copy-icon-btn');
+        if (copyBtn) {
+            const idx = parseInt(copyBtn.dataset.index);
+            copyText(items[idx].note || '', copyBtn);
+            return;
+        }
+
         // Template Picker
         const pickerBtn = target.closest('.template-picker-btn');
         if (pickerBtn) {
             const idx = parseInt(pickerBtn.dataset.index);
-
-            // Dispatch event to open enhanced picker
             const event = new CustomEvent('request-item-picker', {
                 detail: {
                     callback: (templateItem) => {
-                        // Update item fields
                         items[idx].name = templateItem.name;
                         items[idx].price = templateItem.price;
                         render();
@@ -199,15 +256,35 @@ export function initManualMode() {
             const val = target.value;
 
             if (target.classList.contains('item-name')) items[index].name = val;
-            if (target.classList.contains('item-price')) items[index].price = parseInt(val) || 0;
-            if (target.classList.contains('item-qty')) items[index].qty = parseInt(val) || 1;
-            if (target.classList.contains('item-note')) items[index].note = val;
 
-            // Recalc Total
+            // Currency Auto-Format logic
+            if (target.classList.contains('item-price-format')) {
+                // Strip non digits
+                const raw = val.replace(/\D/g, '');
+                const num = parseInt(raw) || 0;
+                items[index].price = num;
+
+                // Only format if not empty to allow deleting everything
+                if (raw === '') target.value = '';
+                else target.value = formatNumberStr(raw);
+            }
+
+            if (target.classList.contains('item-qty')) items[index].qty = parseInt(val) || 1;
+
+            if (target.classList.contains('item-note')) {
+                items[index].note = val;
+                autoResize(target);
+            }
+
+            // Subtotal Update (Micro Optimization to avoid full rerender on keystroke)
+            // But we must support global totals too. 
+            // Let's just update the specific text elements if possible, or simple re-render triggered lazily?
+            // "Real-time HTML Preview WAJIB ... Setiap perubahan data 1 huruf ... HARUS langsung mengubah preview"
+            // So we MUST update state immediately.
+
             const total = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
             document.getElementById('grand-total').textContent = formatCurrency(total);
 
-            // If in Card View, update subtotal
             if (appState.state.manualViewMode === 'card') {
                 const card = target.closest('.item-card');
                 if (card) {
@@ -220,19 +297,76 @@ export function initManualMode() {
         }
     });
 
+    // SWIPE LOGIC (Touch Events)
+    let touchStartX = 0;
+    let activeCard = null;
+
+    container.addEventListener('touchstart', (e) => {
+        const card = e.target.closest('.item-card');
+        if (!card) return;
+        touchStartX = e.touches[0].clientX;
+        activeCard = card;
+    }, { passive: true });
+
+    container.addEventListener('touchmove', (e) => {
+        if (!activeCard) return;
+        // Optional: Follow finger logic? For simplicity, we trigger on end.
+        // But "Swipe Action" usually implies visual feedback.
+        // Let's rely on simple end detection or CSS scroll snap? No, implementation plan said JS logic.
+        const touchCurrentX = e.touches[0].clientX;
+        const diff = touchCurrentX - touchStartX;
+
+        // Simple slide visual
+        if (diff < 0 && diff > -150) {
+            activeCard.style.transform = `translateX(${diff}px)`;
+        }
+    }, { passive: true });
+
+    container.addEventListener('touchend', (e) => {
+        if (!activeCard) return;
+        const touchEndX = e.changedTouches[0].clientX;
+        const diff = touchEndX - touchStartX;
+
+        // Reset transform style to allow class-based transition
+        activeCard.style.transform = '';
+
+        // Threshold to open
+        if (diff < -80) { // Swiped Left
+            // Close others first (Lock state)
+            const openCards = container.querySelectorAll('.item-card.swiped-left');
+            openCards.forEach(c => {
+                if (c !== activeCard) c.classList.remove('swiped-left');
+            });
+            activeCard.classList.add('swiped-left');
+        } else if (diff > 50) { // Swiped Right
+            activeCard.classList.remove('swiped-left');
+        }
+
+        activeCard = null;
+    });
+
+
     // External Event Listeners
     document.addEventListener('template-selected', (e) => {
-        // Full template load
+        // Warning if data exists? "Peringatan Penggantian Data"
+        if (items.length > 0 && (items[0].name !== '' || items.length > 1)) {
+            if (!confirm("Data saat ini akan digantikan. Lanjutkan?")) return;
+        }
+
         items = JSON.parse(JSON.stringify(e.detail.items));
         render();
     });
 
     document.addEventListener('ai-generated', (e) => {
+        if (items.length > 0 && (items[0].name !== '' || items.length > 1)) {
+            if (!confirm("Data saat ini akan digantikan dengan hasil AI. Lanjutkan?")) return;
+        }
+
         titleInput.value = e.detail.title;
         items = JSON.parse(JSON.stringify(e.detail.items));
         render();
     });
 
     // Initial
-    if (items.length === 0) addItem(); // Ensure one item
+    if (items.length === 0) addItem();
 }

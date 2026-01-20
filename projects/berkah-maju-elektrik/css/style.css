@@ -190,14 +190,17 @@ small {
     0% {
         box-shadow: 0 0 5px rgba(155, 81, 224, 0.2);
     }
-
     50% {
         box-shadow: 0 0 15px rgba(155, 81, 224, 0.5);
     }
-
     100% {
         box-shadow: 0 0 5px rgba(155, 81, 224, 0.2);
     }
+}
+
+/* AI Button Polish - Consistent Shape */
+.tab-btn[data-tab="ai"] {
+    border-radius: var(--radius-sm) !important; /* Ensure consistency */
 }
 
 .tab-btn[data-tab="history"].active {
@@ -551,39 +554,51 @@ small {
     margin-bottom: 20px;
 }
 
+/* Responsive Table */
 .item-table {
     width: 100%;
     border-collapse: collapse;
     min-width: 600px;
-    /* Explicit widen */
+    table-layout: fixed; /* Force column widths */
 }
 
-.item-table th,
-.item-table td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
-}
-
-/* Widen columns */
+/* Widen columns with Limits */
 .item-table th:nth-child(1),
 .item-table td:nth-child(1) {
-    min-width: 250px;
+    width: 40%;
+    min-width: 150px;
 }
 
 .item-table th:nth-child(2),
 .item-table td:nth-child(2) {
-    min-width: 150px;
+    width: 25%;
+    min-width: 120px;
 }
 
 .item-table th:nth-child(3),
 .item-table td:nth-child(3) {
-    min-width: 80px;
+    width: 10%;
+    min-width: 60px;
+    text-align: center;
 }
 
 .item-table th:nth-child(4),
 .item-table td:nth-child(4) {
-    min-width: 150px;
+    width: 25%;
+    min-width: 120px;
+    text-align: right;
+}
+
+/* Ellipsis for long text */
+.item-table td input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 
@@ -663,11 +678,97 @@ small {
     color: var(--text-muted);
 }
 
-.toggle-btn.active {
+/* View Toggle Container */
+.view-toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-body);
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+}
+
+.view-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    opacity: 0.6;
+    margin-right: 4px;
+}
+
+/* Orange Theme for Toggles */
+.toggle-group.orange-theme .toggle-btn.active {
     background: var(--bg-card);
-    color: var(--primary);
+    color: #F5A623; /* Orange */
     box-shadow: var(--shadow-sm);
+}
+
+/* Copy Icon */
+.input-wrapper { position: relative; width: 100%; }
+.copy-icon-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(255,255,255,0.8);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.2s;
+    opacity: 0.6;
+}
+.copy-icon-btn:hover { opacity: 1; color: var(--primary); }
+.copy-icon-btn.copied { color: #27AE60; transform: scale(1.1); }
+
+/* Swipe Actions */
+.item-swipe-container {
+    position: relative;
+    overflow: hidden; /* Hide actions until swiped */
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--spacing-sm);
+}
+
+.swipe-actions {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 100%;
+    z-index: 1; /* Behind card */
+    padding-right: 1px;
+}
+
+.swipe-btn {
+    height: 100%;
+    border: none;
+    color: white;
     font-weight: 600;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition:width 0.2s;
+}
+
+.swipe-edit { background-color: #F5A623; }
+.swipe-delete { background-color: #ff4d4f; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+
+/* Move Card on Swipe */
+.item-card {
+    transition: transform 0.2s ease-out;
+    background: var(--bg-card); /* Ensure opaque */
+    z-index: 2; /* Full front */
+    margin-bottom: 0; /* Container handles margin */
+}
+
+.item-card.swiped-left {
+    transform: translateX(-120px); /* Reveal buttons */
 }
 
 /* Footer */

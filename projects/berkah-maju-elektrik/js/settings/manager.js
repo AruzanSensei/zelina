@@ -89,31 +89,44 @@ export function initSettings() {
         const templates = appState.state.templates;
 
         if (templates.length === 0) {
-            templateList.innerHTML = '<p style="text-align:center; color:var(--text-muted);">Belum ada template.</p>';
+            templateList.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">Belum ada template.</p>';
             return;
         }
 
         templates.forEach((t, i) => {
             const div = document.createElement('div');
-            div.className = 'item-card';
-            div.style.padding = '10px';
+            div.className = 'item-card template-card'; // Added class for drag logic
+            div.dataset.index = i;
+            div.style.padding = '12px';
             div.style.marginBottom = '8px';
             div.style.display = 'flex';
             div.style.justifyContent = 'space-between';
             div.style.alignItems = 'center';
+            div.style.transition = 'transform 0.2s, box-shadow 0.2s';
+            // User-select none for touch logic
+            div.style.userSelect = 'none';
 
             div.innerHTML = `
-                <div>
-                    <div style="font-weight:600;">${t.name}</div>
-                    <div style="font-size:0.8rem; color:var(--text-muted);">${t.items.length} Items</div>
+                <div style="pointer-events:none;">
+                    <div style="font-weight:600; font-size:0.95rem;">${t.name}</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
+                        ${t.items.length} Barang &bull; ${formatCurrency(t.items.reduce((s, x) => s + (x.price * x.qty), 0))}
+                    </div>
                 </div>
-                <div>
-                    <button class="btn btn-sm btn-outline use-template" data-index="${i}" title="Pakai Template">Pakai</button>
-                    <button class="btn btn-sm btn-outline delete-template" data-index="${i}" style="color:red; border-color:red; margin-left:4px;" title="Hapus"><i class="fa-solid fa-trash"></i></button>
+                <div class="template-actions">
+                    <button class="btn btn-sm btn-outline use-template" data-index="${i}" title="Pakai">
+                        <i class="fa-solid fa-check"></i> 
+                    </button>
+                    <button class="btn btn-sm btn-outline delete-template" data-index="${i}" style="color:#ff4d4f; border-color:#ff4d4f; margin-left:4px;">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
                 </div>
             `;
             templateList.appendChild(div);
         });
+
+        // Init Drag Logic after render
+        initDragAndDrop();
     }
 
     // Actions in List
@@ -124,6 +137,11 @@ export function initSettings() {
         if (btnUse) {
             const idx = btnUse.dataset.index;
             const template = appState.state.templates[idx];
+
+            if (appState.state.invoiceItems.length > 0 && appState.state.invoiceItems[0].name) {
+                if (!confirm("Ganti data saat ini dengan template?")) return;
+            }
+
             document.dispatchEvent(new CustomEvent('template-selected', { detail: { items: template.items } }));
             toggleModal(false);
         }
@@ -137,10 +155,37 @@ export function initSettings() {
         }
     });
 
-    // Add Template (Full List)
+    // Add Template (Custom Modal)
     btnAddTemplate.addEventListener('click', () => {
-        const name = prompt("Nama Template Baru (menyimpan item saat ini):");
-        if (name) {
+        // Show overlay input
+        const overlay = document.createElement('div');
+        overlay.className = 'modal active';
+        overlay.style.zIndex = '300';
+        overlay.innerHTML = `
+            <div class="modal-content" style="max-width:300px;">
+                <h3>Nama Template</h3>
+                <input type="text" id="new-template-name" class="form-input" placeholder="Misal: Paket Rumah Tipe 36" style="margin:15px 0;" autofocus>
+                <div style="display:flex; gap:10px;">
+                    <button id="btn-cancel-tpl" class="btn btn-outline" style="flex:1;">Batal</button>
+                    <button id="btn-save-tpl" class="btn btn-primary" style="flex:1;">Simpan</button>
+                </div>
+                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:10px; text-align:center;">
+                    Menyimpan ${appState.state.invoiceItems.length} item dari Manual Mode.
+                </p>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+
+        const input = overlay.querySelector('input');
+        input.focus();
+
+        const close = () => overlay.remove();
+
+        overlay.querySelector('#btn-cancel-tpl').addEventListener('click', close);
+        overlay.querySelector('#btn-save-tpl').addEventListener('click', () => {
+            const name = input.value.trim();
+            if (!name) return alert("Nama wajib diisi!");
+
             const newTemplate = {
                 id: Date.now(),
                 name: name,
@@ -148,8 +193,140 @@ export function initSettings() {
             };
             appState.addTemplate(newTemplate);
             renderTemplates();
-        }
+            close();
+        });
     });
+
+
+    // ===================================
+    // DRAG & DROP LOGIC (Long Press)
+    // ===================================
+    function initDragAndDrop() {
+        let dragSrcEl = null;
+        let pressTimer = null;
+        let isDragging = false;
+        let startY = 0;
+        let clone = null;
+        let finalIndex = -1;
+
+        const cards = templateList.querySelectorAll('.template-card');
+
+        cards.forEach(card => {
+
+            // Touch Start -> Wait 500ms -> Start Drag
+            card.addEventListener('touchstart', (e) => {
+                if (e.target.closest('button')) return; // Ignore buttons
+
+                startY = e.touches[0].clientY;
+                pressTimer = setTimeout(() => {
+                    isDragging = true;
+                    dragSrcEl = card;
+                    finalIndex = parseInt(card.dataset.index);
+
+                    // Visual Feedback
+                    // card.style.opacity = '0.5';
+                    navigator.vibrate?.(50); // Haptic
+
+                    // Create Floating Clone
+                    clone = card.cloneNode(true);
+                    clone.style.position = 'fixed';
+                    clone.style.zIndex = '999';
+                    clone.style.width = card.offsetWidth + 'px';
+                    clone.style.opacity = '0.9';
+                    clone.style.boxShadow = '0 10px 20px rgba(0,0,0,0.2)';
+                    clone.style.background = 'var(--bg-card)';
+                    clone.style.transform = `translateY(${e.touches[0].clientY - 30}px)`; // Offset slightly
+                    clone.style.left = card.getBoundingClientRect().left + 'px';
+                    clone.style.pointerEvents = 'none'; // Pass through to underlying elements
+                    document.body.appendChild(clone);
+
+                    card.style.opacity = '0'; // Hide original placeholder
+
+                }, 500); // 0.5s hold
+            }, { passive: false });
+
+            // Touch Move (Prevent scroll if dragging)
+            card.addEventListener('touchmove', (e) => {
+                if (isDragging && clone) {
+                    e.preventDefault(); // Stop scrolling
+                    const touchY = e.touches[0].clientY;
+                    clone.style.top = (touchY - 20) + 'px'; // Move clone
+
+                    // Detect underlying element to swap
+                    const elBelow = document.elementFromPoint(e.touches[0].clientX, touchY);
+                    const targetCard = elBelow?.closest('.template-card');
+
+                    if (targetCard && targetCard !== dragSrcEl) {
+                        // Swap logic in DOM
+                        // Determining insert before or after is tricky, simple swap is easier
+                        // Let's just swap the Placeholder (invisible original)
+                        const items = Array.from(templateList.children);
+                        const srcIdx = items.indexOf(dragSrcEl);
+                        const tgtIdx = items.indexOf(targetCard);
+
+                        if (srcIdx < tgtIdx) {
+                            templateList.insertBefore(dragSrcEl, targetCard.nextSibling);
+                        } else {
+                            templateList.insertBefore(dragSrcEl, targetCard);
+                        }
+
+                        finalIndex = tgtIdx; // Updates roughly
+                        // Note: Animation logic for others would be nice but complex for Vanilla.
+                        // We rely on "Jump" swap which is functional.
+                    }
+                } else {
+                    // Start Scroll detection - if moved too much, cancel timer
+                    const moveY = e.touches[0].clientY;
+                    if (Math.abs(moveY - startY) > 10) {
+                        clearTimeout(pressTimer);
+                    }
+                }
+            }, { passive: false });
+
+            const endDrag = () => {
+                clearTimeout(pressTimer);
+                if (isDragging) {
+                    isDragging = false;
+                    if (clone) clone.remove();
+                    if (dragSrcEl) dragSrcEl.style.opacity = '1';
+
+                    // Reorder State
+                    const newOrder = Array.from(templateList.querySelectorAll('.template-card')).map(c =>
+                        appState.state.templates[parseInt(c.dataset.index)]
+                    );
+
+                    // Actually, dataset index is stale. We need to map by ID or content.
+                    // But wait, the DOM has moved. The datasets are old.
+                    // We must rebuild the array based on DOM order using unique properties? 
+                    // Or... simple re-render.
+                    // Let's map DOM elements back to state objects.
+                    // Accessing state by OLD index is risky if we swapped DOMs.
+                    // A better way: Store IDs in dataset?
+
+                    // The 'templates' array in renders is the source of truth.
+                    // We need to re-sort it based on the new DOM order.
+                    // But we don't have IDs on DOM elements.
+                    // Let's rely on the fact that we moved the DOM nodes.
+                    // We can just iterate the DOM, grab the OLD index, and build a new array.
+
+                    const reorderedTemplates = [];
+                    templateList.querySelectorAll('.template-card').forEach(el => {
+                        const originalIndex = parseInt(el.dataset.index);
+                        reorderedTemplates.push(appState.state.templates[originalIndex]);
+                    });
+
+                    appState.state.templates = reorderedTemplates;
+                    appState.save('bme_templates', reorderedTemplates);
+                    renderTemplates(); // Re-render to fix indices
+                }
+                dragSrcEl = null;
+                clone = null;
+            };
+
+            card.addEventListener('touchend', endDrag);
+            card.addEventListener('touchcancel', endDrag);
+        });
+    }
 
 
     // ===================================

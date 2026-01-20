@@ -47,14 +47,9 @@ export function initHistoryMode() {
             return;
         }
 
-        // Sort new to old
         const sortedHistory = [...history].sort((a, b) => b.timestamp - a.timestamp);
 
         sortedHistory.forEach((entry, index) => {
-            // Find original index in state to map actions back correctly
-            // Or easier: use ID? State uses array index. 
-            // Let's use ID if available, otherwise fallback to finding index in original array.
-            // For simplicity in this vanilla app, we'll map back to the real index in appState.state.history
             const realIndex = appState.state.history.findIndex(h => h.id === entry.id || h.timestamp === entry.timestamp);
 
             const div = document.createElement('div');
@@ -69,12 +64,6 @@ export function initHistoryMode() {
                     <h4>${entry.title || 'Tanpa Judul'}</h4>
                     <p><small>${entry.date} | ${entry.items.length} Item</small></p>
                 </div>
-                <!-- Removed actions from main list as per request (edit inside detail), but kept download? 
-                     Request: "Edit History (Inside Detail View)... Jangan tambahkan tombol baru di list history utama"
-                     So we should remove Copy/Edit from here. Maybe keep download for convenience? 
-                     User said "Item bisa diedit langsung", implied from Detail View. 
-                     Let's keep Download here for quick access, but remove Copy.
-                -->
                 <div class="history-actions">
                     <button class="icon-btn btn-download" data-index="${realIndex}" title="Download PDF">
                         <i class="fa-solid fa-download"></i>
@@ -97,8 +86,7 @@ export function initHistoryMode() {
 
         detailContent.innerHTML = '';
 
-        // Inject Edit Button into Header dynamically (only when open)
-        // Check if button exists, if not create
+        // Inject "Edit Back in Manual" Button into Header
         let btnEdit = document.getElementById('btn-detail-edit');
         if (!btnEdit) {
             btnEdit = document.createElement('button');
@@ -106,17 +94,26 @@ export function initHistoryMode() {
             btnEdit.className = 'icon-btn';
             btnEdit.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
             btnEdit.style.marginRight = '10px';
-            btnEdit.title = "Edit Invoice";
+            btnEdit.style.color = '#F5A623'; // Orange
+            btnEdit.title = "Edit di Mode Manual/Pindah ke Manual";
+
             // Insert before close button
             btnCloseDetail.parentNode.insertBefore(btnEdit, btnCloseDetail);
 
             btnEdit.addEventListener('click', () => {
                 if (!currentDetailItem) return;
 
+                // Confirm Overwrite?
+                if (!confirm("Pindah ke Mode Manual untuk mengedit? Data yang sedang aktif di Manual (jika ada) akan digantikan.")) return;
+
                 // Restore logic
                 document.dispatchEvent(new CustomEvent('template-selected', { detail: { items: currentDetailItem.items } }));
-                document.getElementById('manual-title').value = currentDetailItem.title;
 
+                // Use explicit DOM manipulation for Title as event only passes items usually
+                const manualTitle = document.getElementById('manual-title');
+                if (manualTitle) manualTitle.value = currentDetailItem.title;
+
+                // Update State Manual Title
                 // Switch to Manual
                 document.querySelector('[data-tab="manual"]').click();
 
@@ -124,6 +121,7 @@ export function initHistoryMode() {
             });
         }
 
+        // Render content
         if (detailViewMode === 'table') {
             const table = document.createElement('table');
             table.className = 'item-table';

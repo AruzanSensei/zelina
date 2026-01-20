@@ -66,12 +66,15 @@
                     value="Invoice Baru">
             </div>
 
-            <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
-                <div class="toggle-group">
-                    <button class="toggle-btn active" id="view-card-btn" title="Card View"><i
-                            class="fa-solid fa-list"></i></button>
-                    <button class="toggle-btn" id="view-table-btn" title="Table View"><i
-                            class="fa-solid fa-table"></i></button>
+            <div style="display:flex; justify-content:flex-end; margin-bottom:10px; align-items: center;">
+                <div class="view-toggle-container">
+                    <span class="view-label">Tampilan</span>
+                    <div class="toggle-group orange-theme">
+                        <button class="toggle-btn active" id="view-card-btn" title="Card View"><i
+                                class="fa-solid fa-list"></i></button>
+                        <button class="toggle-btn" id="view-table-btn" title="Table View"><i
+                                class="fa-solid fa-table"></i></button>
+                    </div>
                 </div>
             </div>
 
@@ -131,9 +134,14 @@
                     <small>Total</small>
                     <span id="grand-total">Rp 0</span>
                 </div>
-                <button id="btn-download" class="btn btn-primary btn-lg">
-                    Unduh
-                </button>
+                <div style="display:flex; gap:10px;">
+                    <button id="btn-save-only" class="btn btn-outline" style="border-width:2px; font-weight:600;">
+                        Simpan
+                    </button>
+                    <button id="btn-download" class="btn btn-primary btn-lg">
+                        Unduh
+                    </button>
+                </div>
             </div>
         </section>
 
