@@ -26,10 +26,12 @@ export function initManualMode() {
     const btnTableView = document.getElementById('view-table-btn');
 
     let items = appState.state.invoiceItems || [];
-
-    // Sync title from state
     if (titleInput) {
         titleInput.value = appState.state.manualTitle || '';
+        titleInput.addEventListener('input', (e) => {
+            appState.updateManualTitle(e.target.value);
+            render();
+        });
     }
 
     // ============================================
@@ -167,7 +169,7 @@ export function initManualMode() {
 
         // Update State
         appState.updateItems(items);
-        appState.updateManualTitle(titleInput.value);
+        // manualTitle is updated via its own listener
     };
 
     // ============================================
@@ -288,7 +290,7 @@ export function initManualMode() {
             if (appState.state.manualViewMode === 'card') {
                 const card = target.closest('.item-card');
                 if (card) {
-                    const subtotalDisplay = card.querySelectorAll('div[style*="font-weight: 600"]')[1];
+                    const subtotalDisplay = card.querySelector('div[style*="text-align: right"]');
                     if (subtotalDisplay) subtotalDisplay.textContent = formatCurrency(items[index].price * items[index].qty);
                 }
             }
@@ -297,11 +299,8 @@ export function initManualMode() {
         }
     });
 
-    titleInput.addEventListener('input', (e) => {
-        appState.updateManualTitle(e.target.value);
-    });
 
-    render(); // Initial load based on state
+    // External Event Listeners
     document.addEventListener('template-selected', (e) => {
         // Warning if data exists? "Peringatan Penggantian Data"
         if (items.length > 0 && (items[0].name !== '' || items.length > 1)) {
@@ -323,5 +322,9 @@ export function initManualMode() {
     });
 
     // Initial
-    if (items.length === 0) addItem();
+    if (items.length === 0) {
+        addItem();
+    } else {
+        render();
+    }
 }

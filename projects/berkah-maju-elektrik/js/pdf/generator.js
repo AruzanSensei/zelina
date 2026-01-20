@@ -2,7 +2,6 @@
  * PDF Generator & HTML Previewer
  */
 import { appState } from '../state.js';
-import { showAlert, showToast } from '../utils/ui.js';
 
 export function initPDFGenerator() {
 
@@ -137,6 +136,25 @@ export function initPDFGenerator() {
 
     renderHTML(); // Initial
 
+    // Custom Alert System
+    const showAlert = (message, isSuccess = false) => {
+        const alertEl = document.getElementById('custom-alert');
+        const messageEl = document.getElementById('alert-message');
+        if (!alertEl || !messageEl) return;
+
+        messageEl.innerHTML = isSuccess ? `${message} <i class="fa-solid fa-circle-check" style="color:#2ecc71;"></i>` : message;
+        alertEl.classList.remove('hidden');
+        alertEl.style.animation = 'alert-in 0.3s ease-out forwards';
+
+        // Auto hide after 2 seconds
+        setTimeout(() => {
+            alertEl.style.animation = 'alert-out 0.3s ease-in forwards';
+            setTimeout(() => {
+                alertEl.classList.add('hidden');
+            }, 300);
+        }, 2000);
+    };
+
     // ============================================
     // ACTIONS
     // ============================================
@@ -172,7 +190,7 @@ export function initPDFGenerator() {
             if (items.length === 0) return showAlert("Belum ada item!");
 
             saveToHistory(items, title);
-            showToast("Berhasil di Simpan");
+            showAlert("Berhasil disimpan", true);
         });
     }
 
@@ -188,7 +206,7 @@ export function initPDFGenerator() {
 
             saveToHistory(items, title);
             generatePDFs(items, title);
-            showToast("Berhasil di Unduh");
+            showAlert("Berhasil diunduh", true);
         });
     }
 }

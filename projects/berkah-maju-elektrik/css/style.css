@@ -186,6 +186,59 @@ small {
     }
 }
 
+/* Custom Alert UI */
+.custom-alert {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    background: white;
+    padding: 15px 30px;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: alert-in 0.3s ease-out forwards;
+}
+
+.custom-alert.hidden {
+    display: none;
+}
+
+.alert-content {
+    color: var(--text-color);
+    font-weight: 600;
+    font-size: 1rem;
+    text-align: center;
+}
+
+@keyframes alert-in {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -40%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@keyframes alert-out {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+}
+
 /* Tab Specific Active States */
 .tab-btn[data-tab="manual"].active {
     background: var(--bg-card);

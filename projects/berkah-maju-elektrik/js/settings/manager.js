@@ -2,9 +2,8 @@
  * Settings & Template Logic
  */
 import { appState } from '../state.js';
-import { showAlert } from '../utils/ui.js';
 
-export function initSettingsManager() {
+export function initSettings() {
     // ===================================
     // DOM Elements
     // ===================================
@@ -185,7 +184,7 @@ export function initSettingsManager() {
         overlay.querySelector('#btn-cancel-tpl').addEventListener('click', close);
         overlay.querySelector('#btn-save-tpl').addEventListener('click', () => {
             const name = input.value.trim();
-            if (!name) return showAlert("Nama wajib diisi!");
+            if (!name) return alert("Nama wajib diisi!");
 
             const newTemplate = {
                 id: Date.now(),
@@ -534,7 +533,7 @@ export function initSettingsManager() {
                 const name = document.getElementById('new-item-name').value;
                 const price = document.getElementById('new-item-price').value;
 
-                if (!name) return showAlert("Nama harus diisi");
+                if (!name) return alert("Nama harus diisi");
 
                 const newItem = { name, price: parseInt(price) || 0 };
                 itemTemplates.push(newItem);
@@ -550,7 +549,7 @@ export function initSettingsManager() {
                 const name = document.getElementById('edit-item-name').value;
                 const price = document.getElementById('edit-item-price').value;
 
-                if (!name) return showAlert("Nama harus diisi");
+                if (!name) return alert("Nama harus diisi");
 
                 itemTemplates[idx] = { name, price: parseInt(price) || 0 };
                 saveItemTemplates();
