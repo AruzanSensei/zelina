@@ -175,20 +175,19 @@ small {
 }
 
 /* Pseudo-element for Gradient Border */
-.tab-btn[data-tab="ai"].active {
-    position: relative;
-    background: var(--bg-card);
-    /* Keep background separate */
-    background-clip: padding-box;
-    /* To show gradient border */
-    border: 2px solid transparent;
-    /* Hide actual border */
-    border-radius: var(--radius-sm);
-    /* Keep radius */
-    color: var(--secondary);
-    font-weight: 700;
-    animation: glow-pulse 3s infinite;
-    box-shadow: 0 0 10px rgba(155, 81, 224, 0.3);
+position: relative;
+background: var(--bg-card);
+/* Keep background separate */
+background-clip: padding-box;
+/* To show gradient border */
+border: 2px solid transparent;
+/* Hide actual border */
+border-radius: var(--radius-sm);
+/* Keep radius */
+color: var(--secondary);
+font-weight: 700;
+animation: glow-pulse 3s infinite;
+box-shadow: 0 0 10px rgba(155, 81, 224, 0.3);
 }
 
 /* Gradient Stroke Hack with Radius */
@@ -850,20 +849,4 @@ small {
     .modal.active .modal-content {
         transform: scale(1);
     }
-}
-
-/* Specific Tweaks for Manual View Spacing */
-#manual-view .input-group {
-    margin-bottom: 4px;
-}
-
-#manual-items-container {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 20px;
-}
-
-#manual-items-container .item-card {
-    margin-bottom: 0;
 }

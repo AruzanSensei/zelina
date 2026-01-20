@@ -17,12 +17,35 @@ document.addEventListener('DOMContentLoaded', () => {
     initSettings();
     initPDFGenerator();
 
-    // Tab Switching Logic handled in index.html for file:// compatibility
+    // Tab Switching Logic
     const tabs = document.querySelectorAll('.tab-btn');
+    const views = document.querySelectorAll('.view');
+    const previewSection = document.getElementById('preview-section');
 
-    // Sync state if needed
-    document.addEventListener('mode-changed', (e) => {
-        appState.state.currentMode = e.detail.mode;
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // UI Toggle
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            const target = tab.dataset.tab;
+
+            // View Toggle
+            views.forEach(v => {
+                if (v.id === `${target}-view`) v.classList.remove('hidden');
+                else v.classList.add('hidden');
+            });
+
+            // Handle Global Mode State
+            appState.state.currentMode = target; // Simplified, not persisting mode for now
+
+            // Preview Section Visibility
+            if (target === 'history') {
+                previewSection.style.display = 'none';
+            } else {
+                previewSection.style.display = 'block';
+            }
+        });
     });
 
     // Check for "Logo" existence (Visual fix)

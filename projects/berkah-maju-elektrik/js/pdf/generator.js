@@ -114,9 +114,6 @@ export function initPDFGenerator() {
                 </div>
             </div>
         `;
-
-        // Trigger Scaling (Fix 28)
-        setTimeout(scalePreview, 0);
     };
 
     // Helper
@@ -126,46 +123,11 @@ export function initPDFGenerator() {
     // LISTENERS
     // ============================================
 
-    appState.subscribe('items', renderHTML);
+    appState.subscribe('invoiceItems', renderHTML);
     const titleInput = document.getElementById('manual-title');
-    if (titleInput) {
-        titleInput.addEventListener('input', renderHTML);
-        titleInput.placeholder = ""; // Remove placeholder (Fix 30)
-    }
+    if (titleInput) titleInput.addEventListener('input', renderHTML);
 
-    // Initial & Scaling Logic
-    renderHTML();
-
-    // Scale on Resize
-    const scalePreview = () => {
-        // Logic: Parent Width / 210mm (converted to px)
-        // A4 in px at 96dpi is ~794px width.
-        // But we used 210mm width in CSS.
-        // Let's measure the actual container size.
-        const parent1 = invoicePreviewContainer.parentElement;
-        const parent2 = letterPreviewContainer.parentElement;
-
-        if (parent1) {
-            const availableWidth = parent1.offsetWidth;
-            const targetWidth = 794; // approx A4 width at standard DPI
-            const scale = Math.min(availableWidth / targetWidth, 1); // Max scale 1
-
-            // Apply to child
-            const child1 = invoicePreviewContainer.querySelector('.html-preview-container');
-            if (child1) child1.style.transform = `scale(${scale})`;
-        }
-
-        if (parent2) {
-            const availableWidth = parent2.offsetWidth;
-            const targetWidth = 794;
-            const scale = Math.min(availableWidth / targetWidth, 1);
-            const child2 = letterPreviewContainer.querySelector('.html-preview-container');
-            if (child2) child2.style.transform = `scale(${scale})`;
-        }
-    };
-
-    // Observer for resize? Or window resize?
-    window.addEventListener('resize', scalePreview);
+    renderHTML(); // Initial
 
     // ============================================
     // ACTIONS

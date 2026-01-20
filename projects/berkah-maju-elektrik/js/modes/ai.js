@@ -80,16 +80,6 @@ export function initAIMode() {
         setTimeout(() => {
             const items = mockAIParser(prompt);
 
-            // Overwrite Warning
-            // Check state directly
-            const currentItems = appState.state.invoiceItems;
-            if (currentItems.length > 0 && (currentItems[0].name || currentItems.length > 1)) {
-                if (!confirm("Hasil AI akan menggantikan data manual saat ini. Lanjutkan?")) {
-                    btnGenerate.innerHTML = 'Generate <i class="fa-solid fa-wand-magic-sparkles"></i>';
-                    return;
-                }
-            }
-
             // Fire event
             const event = new CustomEvent('ai-generated', {
                 detail: {
