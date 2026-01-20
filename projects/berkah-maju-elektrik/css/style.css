@@ -851,3 +851,19 @@ small {
         transform: scale(1);
     }
 }
+
+/* Specific Tweaks for Manual View Spacing */
+#manual-view .input-group {
+    margin-bottom: 4px;
+}
+
+#manual-items-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+#manual-items-container .item-card {
+    margin-bottom: 0;
+}
