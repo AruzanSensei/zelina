@@ -175,47 +175,51 @@ small {
 }
 
 /* Pseudo-element for Gradient Border */
+/* Pseudo-element for Gradient Border */
 .tab-btn[data-tab="ai"].active {
     position: relative;
-    background: var(--bg-card);
-    /* Keep background separate */
-    background-clip: padding-box;
-    /* To show gradient border */
-    border: 2px solid transparent;
-    /* Hide actual border */
+    background: transparent;
+    border: none;
     border-radius: var(--radius-sm);
-    /* Keep radius */
-    color: var(--secondary);
+    color: #9B51E0;
+    /* Purple Text */
     font-weight: 700;
-    animation: glow-pulse 3s infinite;
-    box-shadow: 0 0 10px rgba(155, 81, 224, 0.3);
+    overflow: hidden;
+    z-index: 1;
+    box-shadow: 0 4px 15px rgba(155, 81, 224, 0.4);
 }
 
-/* Gradient Stroke Hack with Radius */
+/* The Spinning Gradient */
 .tab-btn[data-tab="ai"].active::before {
     content: '';
     position: absolute;
-    top: -2px;
-    bottom: -2px;
-    left: -2px;
-    right: -2px;
-    background: linear-gradient(45deg, #9B51E0, #4A90E2);
-    z-index: -1;
-    border-radius: var(--radius-sm);
-    /* Same radius */
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent 0%, #9B51E0 50%, #4A90E2 100%);
+    animation: spin-ai 2s linear infinite;
+    z-index: -2;
 }
 
-@keyframes glow-pulse {
-    0% {
-        box-shadow: 0 0 5px rgba(155, 81, 224, 0.2);
+/* The Background Cover (creates the "border" gap) */
+.tab-btn[data-tab="ai"].active::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    /* Border thickness */
+    background: var(--bg-card);
+    border-radius: calc(var(--radius-sm) - 1px);
+    z-index: -1;
+}
+
+@keyframes spin-ai {
+    from {
+        transform: rotate(0deg);
     }
 
-    50% {
-        box-shadow: 0 0 15px rgba(155, 81, 224, 0.5);
-    }
-
-    100% {
-        box-shadow: 0 0 5px rgba(155, 81, 224, 0.2);
+    to {
+        transform: rotate(360deg);
     }
 }
 
