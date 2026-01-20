@@ -166,6 +166,26 @@ small {
     box-shadow: 0 2px 4px rgba(74, 144, 226, 0.1);
 }
 
+
+/* Validation Feedback */
+.blink-error {
+    animation: border-blink 0.5s step-end infinite;
+    border-color: #ff4d4f !important;
+    box-shadow: 0 0 5px rgba(255, 77, 79, 0.5) !important;
+}
+
+@keyframes border-blink {
+
+    0%,
+    100% {
+        border-color: #ff4d4f;
+    }
+
+    50% {
+        border-color: transparent;
+    }
+}
+
 /* Tab Specific Active States */
 .tab-btn[data-tab="manual"].active {
     background: var(--bg-card);
@@ -174,34 +194,48 @@ small {
     font-weight: 600;
 }
 
-/* Pseudo-element for Gradient Border */
-position: relative;
-background: var(--bg-card);
-/* Keep background separate */
-background-clip: padding-box;
-/* To show gradient border */
-border: 2px solid transparent;
-/* Hide actual border */
-border-radius: var(--radius-sm);
-/* Keep radius */
-color: var(--secondary);
-font-weight: 700;
-animation: glow-pulse 3s infinite;
-box-shadow: 0 0 10px rgba(155, 81, 224, 0.3);
+.tab-btn[data-tab="ai"].active {
+    position: relative;
+    background: var(--bg-card);
+    background-clip: padding-box;
+    border: 3px solid;
+    border-radius: var(--radius-sm);
+    color: var(--secondary);
+    font-weight: 700;
+    animation: glow-pulse 3s infinite;
+    box-shadow: 0 0 10px rgba(155, 81, 224, 0.3);
+    overflow: hidden;
 }
 
-/* Gradient Stroke Hack with Radius */
+/* Animated rotating gradient border using ::before pseudo-element */
 .tab-btn[data-tab="ai"].active::before {
     content: '';
     position: absolute;
-    top: -2px;
-    bottom: -2px;
-    left: -2px;
-    right: -2px;
-    background: linear-gradient(45deg, #9B51E0, #4A90E2);
+    top: -50%;
+    bottom: -50%;
+    left: -50%;
+    right: -50%;
+    background: conic-gradient(from 0deg,
+            transparent 0deg,
+            transparent 90deg,
+            #9B51E0 100deg,
+            #4A90E2 180deg,
+            #5DD5D5 240deg,
+            #9B51E0 300deg,
+            transparent 340deg,
+            transparent 360deg);
     z-index: -1;
-    border-radius: var(--radius-sm);
-    /* Same radius */
+    animation: rotate-border 3s linear infinite;
+}
+
+@keyframes rotate-border {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes glow-pulse {
@@ -280,6 +314,15 @@ box-shadow: 0 0 10px rgba(155, 81, 224, 0.3);
     position: relative;
 }
 
+/* Reduce spacing in Manual View */
+#manual-view .input-group {
+    margin-bottom: 4px;
+}
+
+#manual-view .view-toggle-container {
+    margin-bottom: 4px;
+}
+
 /* Item Input with Icon */
 .input-with-icon {
     position: relative;
@@ -303,13 +346,20 @@ box-shadow: 0 0 10px rgba(155, 81, 224, 0.3);
 }
 
 
+#manual-items-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
 /* Item Card */
 .item-card {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     padding: var(--spacing-md);
-    margin-bottom: var(--spacing-sm);
+    /* margin-bottom: 12px; REMOVED in favor of gap */
     box-shadow: var(--shadow-sm);
     position: relative;
 }
@@ -399,32 +449,34 @@ box-shadow: 0 0 10px rgba(155, 81, 224, 0.3);
 
 .preview-content {
     background: white;
-    width: 70%;
-    height: 80%;
-    display: flex;
-    flex-direction: column;
-    padding: 5px;
+    width: 90%;
+    /* Increased for better visibility */
+    height: 90%;
+    display: block;
+    /* Changed from flex to block */
+    padding: 0;
     box-shadow: var(--shadow-sm);
-    font-size: 0.5rem;
     overflow: hidden;
-    align-items: flex-start;
-    justify-content: flex-start;
+    position: relative;
 }
 
 /* HTML Render Styles */
 .html-preview-container {
-    width: 210mm;
-    /* A4 Width */
-    height: 297mm;
-    /* A4 Height */
+    width: 794px;
+    /* Fixed A4 pixel width at 96 DPI */
+    height: 1123px;
+    /* Fixed A4 pixel height at 96 DPI */
     transform-origin: top left;
-    /* JS will handle Scale */
     background: white;
-    padding: 20px;
+    padding: 40px;
+    /* Standard A4 padding */
     font-family: 'Helvetica', sans-serif;
     color: #000;
-    position: relative;
-    overflow: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    /* Disable interaction in preview */
 }
 
 .html-preview-header {
@@ -586,46 +638,101 @@ box-shadow: 0 0 10px rgba(155, 81, 224, 0.3);
     width: 100%;
     border-collapse: collapse;
     min-width: 600px;
-    /* table-layout: fixed; REMOVED per user request */
+    /* Removed table-layout: fixed for better flexibility */
 }
 
-/* Widen columns with Limits */
+.item-table th,
+.item-table td {
+    padding: 10px;
+    text-align: left;
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
+    /* Transparent border for Excel look */
+}
+
+.item-table th:last-child,
+.item-table td:last-child {
+    border-right: none;
+    /* No border on last column */
+}
+
+.item-table thead {
+    background: var(--bg-body);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.item-table tbody tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    /* Subtle row separator */
+}
+
+.item-table tbody tr:hover {
+    background: rgba(0, 0, 0, 0.02);
+    /* Excel-like hover */
+}
+
+/* Column Widths */
 .item-table th:nth-child(1),
 .item-table td:nth-child(1) {
-    /* width: 40%; REMOVED */
-    min-width: 150px;
+    /* Barang */
+    min-width: 200px;
+    width: 35%;
 }
 
 .item-table th:nth-child(2),
 .item-table td:nth-child(2) {
-    /* width: 25%; REMOVED */
+    /* Harga */
     min-width: 120px;
+    width: 20%;
 }
 
 .item-table th:nth-child(3),
 .item-table td:nth-child(3) {
-    width: 10%;
-    min-width: 60px;
+    /* Pcs */
+    width: 60px;
     text-align: center;
 }
 
 .item-table th:nth-child(4),
 .item-table td:nth-child(4) {
-    /* width: 25%; REMOVED */
-    min-width: 120px;
-    text-align: right;
+    /* Note */
+    min-width: 150px;
+    width: 30%;
 }
 
-/* Ellipsis for long text */
+.item-table th:nth-child(5),
+.item-table td:nth-child(5) {
+    /* Delete */
+    width: 40px;
+}
+
+/* Table Inputs */
 .item-table td input {
     width: 100%;
     border: none;
     background: transparent;
     font-size: 0.9rem;
     color: var(--text-main);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    padding: 4px;
+}
+
+.item-table td input:focus {
+    outline: none;
+    background: rgba(74, 144, 226, 0.05);
+    border-radius: 3px;
+}
+
+/* Hide spinners for text-based qty input in table view */
+.table-qty-input::-webkit-outer-spin-button,
+.table-qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.table-qty-input[type="text"] {
+    -moz-appearance: textfield;
+    /* Firefox */
+    text-align: center;
+    font-weight: 600;
 }
 
 
@@ -821,6 +928,11 @@ box-shadow: 0 0 10px rgba(155, 81, 224, 0.3);
 .item-card.swiped-left {
     transform: translateX(-120px);
     /* Reveal buttons */
+}
+
+/* Picker Item Swipe */
+.picker-item.swiped-left {
+    transform: translateX(-120px);
 }
 
 /* Footer */

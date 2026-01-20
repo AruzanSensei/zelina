@@ -25,7 +25,12 @@ export function initManualMode() {
     const btnCardView = document.getElementById('view-card-btn');
     const btnTableView = document.getElementById('view-table-btn');
 
-    let items = [];
+    let items = appState.state.invoiceItems || [];
+
+    // Sync title from state
+    if (titleInput) {
+        titleInput.value = appState.state.manualTitle || '';
+    }
 
     // ============================================
     // MICRO UX HANDLERS
@@ -55,16 +60,9 @@ export function initManualMode() {
 
         items.forEach((item, index) => {
             const div = document.createElement('div');
-            div.className = 'item-swipe-container'; // Wrapper for swipe
+            div.className = 'item-card';
             div.innerHTML = `
-                <div class="swipe-actions">
-                    <button class="swipe-btn swipe-edit" data-index="${index}"><i class="fa-solid fa-pen-to-square"></i></button>
-                    <button class="swipe-btn swipe-delete" data-index="${index}"><i class="fa-solid fa-trash"></i></button>
-                </div>
-                
-                <div class="item-card" data-index="${index}">
-                    <!-- Regular Card Content -->
-                    <button class="remove-item-btn" data-index="${index}" style="right: 12px; top: 12px;"><i class="fa-solid fa-trash"></i></button>
+                <button class="remove-item-btn" data-index="${index}"><i class="fa-solid fa-trash"></i></button>
                     
                     <div class="input-group" style="margin-bottom: 8px;">
                         <label class="field-label">Barang</label>
@@ -96,10 +94,14 @@ export function initManualMode() {
                         </div>
                     </div>
                     
-                    <div style="text-align: right; margin-top: 8px; font-weight: 600; color: var(--primary);">
-                        ${formatCurrency(item.price * item.qty)}
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+                        <div style="font-size: 0.85rem; color: var(--tertiary); font-weight: 600;">
+                            ${index + 1}
+                        </div>
+                        <div style="font-weight: 600; color: var(--primary);">
+                            ${formatCurrency(item.price * item.qty)}
+                        </div>
                     </div>
-                </div>
             `;
             container.appendChild(div);
 
@@ -122,7 +124,7 @@ export function initManualMode() {
                     <th>Barang</th>
                     <th>Harga</th>
                     <th>Pcs</th>
-                    <th style="padding-right:20px;">Total</th>
+                    <th>Note</th>
                     <th style="width:40px;"></th>
                 </tr>
             </thead>
@@ -131,17 +133,15 @@ export function initManualMode() {
                 <tr>
                     <td>
                         <div class="input-with-icon">
-                            <input type="text" class="item-name" value="${item.name}" data-index="${index}" placeholder="Item">
-                            <!-- Helper icon for table view too -->
+                            <input type="text" class="item-name" value="${item.name}" data-index="${index}" placeholder="Nama Barang">
                             <button class="input-icon-btn template-picker-btn" data-index="${index}" style="right:0; padding:2px;"><i class="fa-solid fa-list-ul" style="font-size:0.8rem;"></i></button>
                         </div>
-                        <input type="text" class="item-note" value="${item.note || ''}" data-index="${index}" placeholder="Note..." style="font-size:0.8rem; color:#888; margin-top:2px;">
                     </td>
                     <td><input type="text" class="item-price-format" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="0" inputmode="numeric"></td>
-                    <td><input type="number" class="item-qty" value="${item.qty}" data-index="${index}" min="1" style="width:40px;"></td>
-                    <td style="text-align:right;">${formatNumberStr(String(item.price * item.qty))}</td>
+                    <td><input type="text" class="item-qty table-qty-input" value="${item.qty}" data-index="${index}" inputmode="numeric"></td>
+                    <td><input type="text" class="item-note" value="${item.note || ''}" data-index="${index}" placeholder="Catatan..."></td>
                     <td>
-                        <button class="remove-item-btn" data-index="${index}" style="position:static; color: #ff4d4f; background:none; border:none;"><i class="fa-solid fa-trash"></i></button>
+                        <button class="remove-item-btn" data-index="${index}" style="position:static; color:#ff4d4f; background:none; border:none; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
                     </td>
                 </tr>
                 `).join('')}
@@ -167,7 +167,7 @@ export function initManualMode() {
 
         // Update State
         appState.updateItems(items);
-        appState.state.manualTitle = titleInput.value;
+        appState.updateManualTitle(titleInput.value);
     };
 
     // ============================================
@@ -288,7 +288,7 @@ export function initManualMode() {
             if (appState.state.manualViewMode === 'card') {
                 const card = target.closest('.item-card');
                 if (card) {
-                    const subtotalDisplay = card.querySelector('div[style*="text-align: right"]');
+                    const subtotalDisplay = card.querySelectorAll('div[style*="font-weight: 600"]')[1];
                     if (subtotalDisplay) subtotalDisplay.textContent = formatCurrency(items[index].price * items[index].qty);
                 }
             }
@@ -297,56 +297,11 @@ export function initManualMode() {
         }
     });
 
-    // SWIPE LOGIC (Touch Events)
-    let touchStartX = 0;
-    let activeCard = null;
-
-    container.addEventListener('touchstart', (e) => {
-        const card = e.target.closest('.item-card');
-        if (!card) return;
-        touchStartX = e.touches[0].clientX;
-        activeCard = card;
-    }, { passive: true });
-
-    container.addEventListener('touchmove', (e) => {
-        if (!activeCard) return;
-        // Optional: Follow finger logic? For simplicity, we trigger on end.
-        // But "Swipe Action" usually implies visual feedback.
-        // Let's rely on simple end detection or CSS scroll snap? No, implementation plan said JS logic.
-        const touchCurrentX = e.touches[0].clientX;
-        const diff = touchCurrentX - touchStartX;
-
-        // Simple slide visual
-        if (diff < 0 && diff > -150) {
-            activeCard.style.transform = `translateX(${diff}px)`;
-        }
-    }, { passive: true });
-
-    container.addEventListener('touchend', (e) => {
-        if (!activeCard) return;
-        const touchEndX = e.changedTouches[0].clientX;
-        const diff = touchEndX - touchStartX;
-
-        // Reset transform style to allow class-based transition
-        activeCard.style.transform = '';
-
-        // Threshold to open
-        if (diff < -80) { // Swiped Left
-            // Close others first (Lock state)
-            const openCards = container.querySelectorAll('.item-card.swiped-left');
-            openCards.forEach(c => {
-                if (c !== activeCard) c.classList.remove('swiped-left');
-            });
-            activeCard.classList.add('swiped-left');
-        } else if (diff > 50) { // Swiped Right
-            activeCard.classList.remove('swiped-left');
-        }
-
-        activeCard = null;
+    titleInput.addEventListener('input', (e) => {
+        appState.updateManualTitle(e.target.value);
     });
 
-
-    // External Event Listeners
+    render(); // Initial load based on state
     document.addEventListener('template-selected', (e) => {
         // Warning if data exists? "Peringatan Penggantian Data"
         if (items.length > 0 && (items[0].name !== '' || items.length > 1)) {

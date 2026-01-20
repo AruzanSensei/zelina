@@ -1,6 +1,4 @@
-/**
- * AI Mode Logic (Simulated)
- */
+import { showAlert } from '../utils/ui.js';
 
 export function initAIMode() {
     const btnGenerate = document.getElementById('btn-ai-generate');
@@ -73,7 +71,7 @@ export function initAIMode() {
 
     btnGenerate.addEventListener('click', () => {
         const prompt = promptInput.value;
-        if (!prompt) return alert("Isi prompt terlebih dahulu!");
+        if (!prompt) return showAlert("Isi prompt terlebih dahulu!");
 
         btnGenerate.innerHTML = 'Thinking... <i class="fa-solid fa-spinner fa-spin"></i>';
 

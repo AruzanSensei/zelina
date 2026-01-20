@@ -6,7 +6,9 @@
 const STORAGE_KEYS = {
     SETTINGS: 'bme_settings',
     HISTORY: 'bme_history',
-    TEMPLATES: 'bme_templates'
+    TEMPLATES: 'bme_templates',
+    MANUAL_ITEMS: 'bme_manual_items',
+    MANUAL_TITLE: 'bme_manual_title'
 };
 
 const DEFAULTS = {
@@ -14,6 +16,8 @@ const DEFAULTS = {
         language: 'id',
         theme: 'light'
     },
+    manualItems: [],
+    manualTitle: '',
     templates: [
         {
             id: 1,
@@ -32,7 +36,8 @@ class StateManager {
         this.state = {
             currentMode: 'manual', // manual, ai, history
             manualViewMode: 'card', // card, table
-            invoiceItems: [],
+            invoiceItems: this.load(STORAGE_KEYS.MANUAL_ITEMS, DEFAULTS.manualItems),
+            manualTitle: this.load(STORAGE_KEYS.MANUAL_TITLE, DEFAULTS.manualTitle),
             settings: this.load(STORAGE_KEYS.SETTINGS, DEFAULTS.settings),
             history: this.load(STORAGE_KEYS.HISTORY, []),
             templates: this.load(STORAGE_KEYS.TEMPLATES, DEFAULTS.templates)
@@ -74,7 +79,14 @@ class StateManager {
 
     updateItems(items) {
         this.state.invoiceItems = items;
+        this.save(STORAGE_KEYS.MANUAL_ITEMS, items);
         this.notify('items', this.state.invoiceItems);
+    }
+
+    updateManualTitle(title) {
+        this.state.manualTitle = title;
+        this.save(STORAGE_KEYS.MANUAL_TITLE, title);
+        this.notify('manualTitle', title);
     }
 
     addTemplate(template) {

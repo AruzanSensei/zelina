@@ -2,6 +2,7 @@
  * PDF Generator & HTML Previewer
  */
 import { appState } from '../state.js';
+import { showAlert, showToast } from '../utils/ui.js';
 
 export function initPDFGenerator() {
 
@@ -10,7 +11,7 @@ export function initPDFGenerator() {
     const letterPreviewContainer = document.getElementById('letter-preview-container');
 
     // ============================================
-    // HTML RENDERER (Real-time)
+    // HTML RENDERER (Real-time with Scaling)
     // ============================================
     const renderHTML = () => {
         const items = appState.state.invoiceItems;
@@ -19,15 +20,19 @@ export function initPDFGenerator() {
 
         if (!invoicePreviewContainer || !letterPreviewContainer) return;
 
+        // Calculate Scale dynamically based on container width
+        // A4 width is 210mm. At 96 DPI, 1mm = 3.78px. 210 * 3.78 = ~794px.
+        // We use a reference width of 800px for the "Original" size.
+        const refWidth = 794;
+        const parentWidth = invoicePreviewContainer.parentElement.clientWidth;
+        const scale = parentWidth / refWidth;
+
         // Calculate Totals
         const total = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
-        // Helper for styling to match PDF exact look (Zoomed out handled by CSS zoom/transform)
-        // PDF Font 18 for Header -> ~24px HTML
-        // PDF Font 10 -> ~13px HTML
-
+        // Render Invoice
         invoicePreviewContainer.innerHTML = `
-            <div class="html-preview-container">
+            <div class="html-preview-container" style="transform: scale(${scale});">
                 <div class="html-preview-header">
                     <div>
                         <div style="font-weight:bold; font-size:18px;">BERKAH MAJU ELEKTRIK</div>
@@ -73,7 +78,7 @@ export function initPDFGenerator() {
 
         // Render Surat Jalan
         letterPreviewContainer.innerHTML = `
-            <div class="html-preview-container">
+            <div class="html-preview-container" style="transform: scale(${scale});">
                 <div class="html-preview-header">
                     <div>
                         <div style="font-weight:bold; font-size:18px;">BERKAH MAJU ELEKTRIK</div>
@@ -123,9 +128,12 @@ export function initPDFGenerator() {
     // LISTENERS
     // ============================================
 
-    appState.subscribe('invoiceItems', renderHTML);
+    appState.subscribe('items', renderHTML);
     const titleInput = document.getElementById('manual-title');
     if (titleInput) titleInput.addEventListener('input', renderHTML);
+
+    // Add window resize listener to update scaling
+    window.addEventListener('resize', renderHTML);
 
     renderHTML(); // Initial
 
@@ -137,8 +145,17 @@ export function initPDFGenerator() {
     const validate = () => {
         const title = titleInput?.value.trim();
         if (!title) {
-            alert("Harap isi Judul Invoice terlebih dahulu!");
+            // Visual Feedback
+            titleInput?.classList.add('blink-error');
             titleInput?.focus();
+
+            showAlert("Harap isi Judul Invoice terlebih dahulu!");
+
+            // Remove blink after 1.5s
+            setTimeout(() => {
+                titleInput?.classList.remove('blink-error');
+            }, 1500);
+
             return false;
         }
         return title;
@@ -152,11 +169,10 @@ export function initPDFGenerator() {
             if (!title) return;
 
             const items = appState.state.invoiceItems;
-            if (items.length === 0) return alert("Belum ada item!");
+            if (items.length === 0) return showAlert("Belum ada item!");
 
             saveToHistory(items, title);
-            alert("Data berhasil disimpan ke History.");
-            // Optional: Clear form? No, request didn't say.
+            showToast("Berhasil di Simpan");
         });
     }
 
@@ -168,10 +184,11 @@ export function initPDFGenerator() {
             if (!title) return;
 
             const items = appState.state.invoiceItems;
-            if (items.length === 0) return alert("Belum ada item!");
+            if (items.length === 0) return showAlert("Belum ada item!");
 
             saveToHistory(items, title);
             generatePDFs(items, title);
+            showToast("Berhasil di Unduh");
         });
     }
 }

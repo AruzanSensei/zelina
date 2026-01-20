@@ -2,8 +2,9 @@
  * Settings & Template Logic
  */
 import { appState } from '../state.js';
+import { showAlert } from '../utils/ui.js';
 
-export function initSettings() {
+export function initSettingsManager() {
     // ===================================
     // DOM Elements
     // ===================================
@@ -184,7 +185,7 @@ export function initSettings() {
         overlay.querySelector('#btn-cancel-tpl').addEventListener('click', close);
         overlay.querySelector('#btn-save-tpl').addEventListener('click', () => {
             const name = input.value.trim();
-            if (!name) return alert("Nama wajib diisi!");
+            if (!name) return showAlert("Nama wajib diisi!");
 
             const newTemplate = {
                 id: Date.now(),
@@ -355,8 +356,31 @@ export function initSettings() {
         pickerOverlay.style.zIndex = '300';
 
         // Initial HTML
-        const renderPickerContent = (isAdding = false) => {
-            if (isAdding) {
+        const renderPickerContent = (isAdding = false, editItem = null) => {
+            if (editItem !== null) {
+                // Edit Mode
+                const item = itemTemplates[editItem];
+                return `
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2>Edit Item</h2>
+                            <button class="close-picker"><i class="fa-solid fa-times"></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="input-group">
+                                <label class="field-label">Nama Barang</label>
+                                <input type="text" id="edit-item-name" class="form-input" value="${item.name}">
+                            </div>
+                            <div class="input-group">
+                                <label class="field-label">Harga (Rp)</label>
+                                <input type="number" id="edit-item-price" class="form-input" value="${item.price}">
+                            </div>
+                            <button id="btn-save-edit-item" data-index="${editItem}" class="btn btn-primary btn-full" style="margin-top:10px;">Simpan Perubahan</button>
+                            <button id="btn-back-picker" class="btn btn-outline btn-full" style="margin-top:8px;">Batal</button>
+                        </div>
+                    </div>
+                `;
+            } else if (isAdding) {
                 return `
                     <div class="modal-content">
                         <div class="modal-header">
@@ -387,9 +411,15 @@ export function initSettings() {
                         <div class="modal-body">
                             <div id="picker-list" style="max-height: 50vh; overflow-y: auto;">
                                 ${itemTemplates.map((t, idx) => `
-                                    <div class="item-card picker-item" data-index="${idx}" style="padding:12px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border:1px solid var(--border-color);">
-                                        <div style="font-weight:500;">${t.name}</div>
-                                        <div style="font-weight:600; color:var(--primary);">${formatCurrency(t.price)}</div>
+                                    <div class="item-swipe-container" style="position:relative; overflow:hidden; border-radius:var(--radius-sm); margin-bottom:8px;">
+                                        <div class="swipe-actions" style="position:absolute; top:0; bottom:0; right:0; display:flex; z-index:1;">
+                                            <button class="swipe-btn swipe-edit" data-index="${idx}" style="background-color:#F5A623; border:none; color:white; padding:0 20px; cursor:pointer;"><i class="fa-solid fa-pen-to-square"></i></button>
+                                            <button class="swipe-btn swipe-delete" data-index="${idx}" style="background-color:#ff4d4f; border:none; color:white; padding:0 20px; cursor:pointer; border-radius:0 var(--radius-sm) var(--radius-sm) 0;"><i class="fa-solid fa-trash"></i></button>
+                                        </div>
+                                        <div class="item-card picker-item" data-index="${idx}" style="padding:12px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border:1px solid var(--border-color); background:var(--bg-card); z-index:2; position:relative; transition:transform 0.2s;">
+                                            <div style="font-weight:500; pointer-events:none;">${t.name}</div>
+                                            <div style="font-weight:600; color:var(--primary); pointer-events:none;">${formatCurrency(t.price)}</div>
+                                        </div>
                                     </div>
                                 `).join('')}
                             </div>
@@ -405,6 +435,51 @@ export function initSettings() {
         pickerOverlay.innerHTML = renderPickerContent(false);
         document.body.appendChild(pickerOverlay);
 
+        // Swipe Logic for Picker Items
+        let touchStartX = 0;
+        let activePickerCard = null;
+
+        const initPickerSwipe = () => {
+            const pickerList = document.getElementById('picker-list');
+            if (!pickerList) return;
+
+            pickerList.addEventListener('touchstart', (e) => {
+                const card = e.target.closest('.picker-item');
+                if (!card) return;
+                touchStartX = e.touches[0].clientX;
+                activePickerCard = card;
+            }, { passive: true });
+
+            pickerList.addEventListener('touchmove', (e) => {
+                if (!activePickerCard) return;
+                const touchCurrentX = e.touches[0].clientX;
+                const diff = touchCurrentX - touchStartX;
+                if (diff < 0 && diff > -150) {
+                    activePickerCard.style.transform = `translateX(${diff}px)`;
+                }
+            }, { passive: true });
+
+            pickerList.addEventListener('touchend', (e) => {
+                if (!activePickerCard) return;
+                const touchEndX = e.changedTouches[0].clientX;
+                const diff = touchEndX - touchStartX;
+                activePickerCard.style.transform = '';
+
+                if (diff < -80) {
+                    const openCards = pickerList.querySelectorAll('.picker-item.swiped-left');
+                    openCards.forEach(c => {
+                        if (c !== activePickerCard) c.classList.remove('swiped-left');
+                    });
+                    activePickerCard.classList.add('swiped-left');
+                } else if (diff > 50) {
+                    activePickerCard.classList.remove('swiped-left');
+                }
+                activePickerCard = null;
+            });
+        };
+
+        initPickerSwipe();
+
         // Interaction Logic
         pickerOverlay.addEventListener('click', (evt) => {
             const target = evt.target;
@@ -414,9 +489,30 @@ export function initSettings() {
                 pickerOverlay.remove();
             }
 
+            // Swipe Edit Button
+            const editBtn = target.closest('.swipe-edit');
+            if (editBtn) {
+                const idx = parseInt(editBtn.dataset.index);
+                pickerOverlay.innerHTML = renderPickerContent(false, idx);
+                return;
+            }
+
+            // Swipe Delete Button
+            const deleteBtn = target.closest('.swipe-delete');
+            if (deleteBtn) {
+                if (confirm('Hapus item ini dari template?')) {
+                    const idx = parseInt(deleteBtn.dataset.index);
+                    itemTemplates.splice(idx, 1);
+                    saveItemTemplates();
+                    pickerOverlay.innerHTML = renderPickerContent(false);
+                    initPickerSwipe();
+                }
+                return;
+            }
+
             // Select Item
             const itemEl = target.closest('.picker-item');
-            if (itemEl) {
+            if (itemEl && !target.closest('.swipe-btn')) {
                 const idx = itemEl.dataset.index;
                 callback(itemTemplates[idx]);
                 pickerOverlay.remove();
@@ -430,6 +526,7 @@ export function initSettings() {
             // Back to List
             if (target.id === 'btn-back-picker') {
                 pickerOverlay.innerHTML = renderPickerContent(false);
+                initPickerSwipe();
             }
 
             // Save New Item
@@ -437,7 +534,7 @@ export function initSettings() {
                 const name = document.getElementById('new-item-name').value;
                 const price = document.getElementById('new-item-price').value;
 
-                if (!name) return alert("Nama harus diisi");
+                if (!name) return showAlert("Nama harus diisi");
 
                 const newItem = { name, price: parseInt(price) || 0 };
                 itemTemplates.push(newItem);
@@ -445,6 +542,20 @@ export function initSettings() {
 
                 callback(newItem);
                 pickerOverlay.remove();
+            }
+
+            // Save Edit Item
+            if (target.id === 'btn-save-edit-item') {
+                const idx = parseInt(target.dataset.index);
+                const name = document.getElementById('edit-item-name').value;
+                const price = document.getElementById('edit-item-price').value;
+
+                if (!name) return showAlert("Nama harus diisi");
+
+                itemTemplates[idx] = { name, price: parseInt(price) || 0 };
+                saveItemTemplates();
+                pickerOverlay.innerHTML = renderPickerContent(false);
+                initPickerSwipe();
             }
         });
     });
