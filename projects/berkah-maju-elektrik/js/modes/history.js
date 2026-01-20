@@ -257,6 +257,7 @@ export function initHistoryMode() {
     // EVENTS
     // ===================================
     container.addEventListener('click', (e) => {
+        const btnDownload = e.target.closest('.btn-download');
         if (btnDownload) {
             e.stopPropagation();
             const index = btnDownload.dataset.index;

@@ -545,7 +545,7 @@ export function initSettings() {
 
         const renderEditor = () => {
             editor.innerHTML = `
-                    < div class="modal-content" >
+                    <div class="modal-content">
                     <div class="modal-header">
                         <h3>Edit Template: ${template.name}</h3>
                         <button class="close-editor"><i class="fa-solid fa-times"></i></button>

@@ -49,10 +49,8 @@
     <!-- Tab Navigation -->
     <nav class="tab-nav">
         <button class="tab-btn active" data-tab="manual">Manual</button>
-        <button class="tab-btn" data-tab="ai">AI <i class="fa-solid fa-lock"
-                style="font-size: 0.7em; opacity: 0.5;"></i></button>
-        <button class="tab-btn" data-tab="history">History <i class="fa-solid fa-lock"
-                style="font-size: 0.7em; opacity: 0.5;"></i></button>
+        <button class="tab-btn" data-tab="ai">AI</button>
+        <button class="tab-btn" data-tab="history">History</button>
     </nav>
 
     <!-- Main Content Area -->
@@ -234,6 +232,53 @@
                     });
             });
         }
+    </script>
+
+    <!-- Core Logic (No Module Fallback for file:// support) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Tab Switching Logic (Inlined for reliability)
+            const tabs = document.querySelectorAll('.tab-btn');
+            const views = document.querySelectorAll('.view');
+            const previewSection = document.getElementById('preview-section');
+
+            if (tabs.length > 0) {
+                console.log("Initializing Tabs...");
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        // UI Toggle
+                        tabs.forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+
+                        const target = tab.dataset.tab;
+                        console.log("Switching to:", target);
+
+                        // View Toggle
+                        views.forEach(v => {
+                            if (v.id === `${target}-view`) {
+                                v.classList.remove('hidden');
+                                v.style.display = 'block'; // Force override
+                            } else {
+                                v.classList.add('hidden');
+                                v.style.display = 'none';
+                            }
+                        });
+
+                        // Preview Section Visibility
+                        if (previewSection) {
+                            if (target === 'history') {
+                                previewSection.style.display = 'none';
+                            } else {
+                                previewSection.style.display = 'block';
+                            }
+                        }
+
+                        // Dispatch global event for modules to catch up if loaded
+                        document.dispatchEvent(new CustomEvent('mode-changed', { detail: { mode: target } }));
+                    });
+                });
+            }
+        });
     </script>
 
     <!-- Scripts -->

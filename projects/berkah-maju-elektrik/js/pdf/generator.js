@@ -114,6 +114,9 @@ export function initPDFGenerator() {
                 </div>
             </div>
         `;
+
+        // Trigger Scaling (Fix 28)
+        setTimeout(scalePreview, 0);
     };
 
     // Helper
@@ -123,7 +126,7 @@ export function initPDFGenerator() {
     // LISTENERS
     // ============================================
 
-    appState.subscribe('invoiceItems', renderHTML);
+    appState.subscribe('items', renderHTML);
     const titleInput = document.getElementById('manual-title');
     if (titleInput) {
         titleInput.addEventListener('input', renderHTML);
@@ -163,12 +166,6 @@ export function initPDFGenerator() {
 
     // Observer for resize? Or window resize?
     window.addEventListener('resize', scalePreview);
-    // Also call after Render
-    const originalRender = renderHTML;
-    renderHTML = () => {
-        originalRender();
-        setTimeout(scalePreview, 0); // Tick to allow DOM update
-    };
 
     // ============================================
     // ACTIONS

@@ -121,7 +121,7 @@ export function initManualMode() {
                     <th style="padding-right:20px;">Total</th>
                     <th style="width:40px;"></th>
                 </tr>
-            </thead >
+                </thead>
         <tbody>
             ${items.map((item, index) => `
                 <tr>
