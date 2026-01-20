@@ -65,6 +65,10 @@ export function initHistoryMode() {
                     <p><small>${entry.date} | ${entry.items.length} Item</small></p>
                 </div>
                 <div class="history-actions">
+                    <!-- FIX 33b: Move to Manual Button -->
+                    <button class="icon-btn btn-move-manual" data-index="${realIndex}" title="Edit/Pindah ke Manual" style="color:#F5A623;">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
                     <button class="icon-btn btn-download" data-index="${realIndex}" title="Download PDF">
                         <i class="fa-solid fa-download"></i>
                     </button>
@@ -150,21 +154,69 @@ export function initHistoryMode() {
             div.appendChild(table);
             detailContent.appendChild(div);
         } else {
-            items.forEach(item => {
+            // Form View - INLINE EDITING (Fix 33a)
+            items.forEach((item, i) => {
                 const div = document.createElement('div');
                 div.className = 'item-card';
                 div.style.padding = '10px';
+
+                // Editable Fields
                 div.innerHTML = `
-                    <div style="font-weight:600; margin-bottom:4px;">${item.name}</div>
-                    <div style="display:flex; gap:10px; font-size:0.9rem; color:var(--text-muted);">
-                        <span>${item.qty} pcs</span>
-                        <span>x</span>
-                        <span>${new Intl.NumberFormat('id-ID').format(item.price)}</span>
+                    <div style="margin-bottom:4px; display:flex; gap:5px;">
+                       <input type="text" class="form-input hist-edit-name" data-idx="${i}" value="${item.name}" style="font-weight:600; flex:2;">
                     </div>
-                    ${item.note ? `<div style="font-size:0.85rem; margin-top:4px; font-style:italic;">"${item.note}"</div>` : ''}
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <div style="display:flex; align-items:center;">
+                            <input type="number" class="form-input hist-edit-qty" data-idx="${i}" value="${item.qty}" style="width:50px; text-align:center;">
+                            <span style="margin-left:5px; font-size:0.9rem;">pcs</span>
+                        </div>
+                        <span style="color:var(--text-muted);">x</span>
+                        <div style="flex:1;">
+                            <input type="number" class="form-input hist-edit-price" data-idx="${i}" value="${item.price}">
+                        </div>
+                    </div>
+                    <div style="margin-top:5px;">
+                         <input type="text" class="form-input hist-edit-note" data-idx="${i}" value="${item.note || ''}" placeholder="Catatan (opsional)" style="font-size:0.85rem;">
+                    </div>
                 `;
                 detailContent.appendChild(div);
             });
+
+            // Add "Save Changes" Button for Inline Edits
+            const btnSave = document.createElement('button');
+            btnSave.className = 'btn btn-primary btn-full';
+            btnSave.style.marginTop = '15px';
+            btnSave.innerHTML = '<i class="fa-solid fa-save"></i> Simpan Perubahan';
+            btnSave.onclick = () => {
+                const names = detailContent.querySelectorAll('.hist-edit-name');
+                const qtys = detailContent.querySelectorAll('.hist-edit-qty');
+                const prices = detailContent.querySelectorAll('.hist-edit-price');
+                const notes = detailContent.querySelectorAll('.hist-edit-note');
+
+                const newItems = [];
+                names.forEach((el, i) => {
+                    newItems.push({
+                        name: el.value,
+                        qty: parseInt(qtys[i].value) || 0,
+                        price: parseInt(prices[i].value) || 0,
+                        note: notes[i].value
+                    });
+                });
+
+                // Update State
+                if (confirm("Simpan perubahan pada riwayat ini?")) {
+                    currentDetailItem.items = newItems;
+                    // Find and update in main array
+                    const realIdx = appState.state.history.findIndex(h => h.id === currentDetailItem.id);
+                    if (realIdx !== -1) {
+                        appState.state.history[realIdx] = currentDetailItem;
+                        appState.save('bme_history', appState.state.history);
+                        render(appState.state.history); // Refresh list
+                        alert("Perubahan disimpan.");
+                    }
+                }
+            };
+            detailContent.appendChild(btnSave);
         }
     };
 
@@ -205,13 +257,28 @@ export function initHistoryMode() {
     // EVENTS
     // ===================================
     container.addEventListener('click', (e) => {
-        const btnDownload = e.target.closest('.btn-download');
-
         if (btnDownload) {
             e.stopPropagation();
             const index = btnDownload.dataset.index;
             const entry = appState.state.history[index];
             generatePDFs(entry.items, entry.title);
+            return;
+        }
+
+        // Handle Move to Manual (Main Card)
+        const btnMove = e.target.closest('.btn-move-manual');
+        if (btnMove) {
+            e.stopPropagation();
+            if (!confirm("Pindah ke Mode Manual? Data saat ini akan diganti.")) return;
+
+            const index = btnMove.dataset.index;
+            const entry = appState.state.history[index];
+
+            document.dispatchEvent(new CustomEvent('template-selected', { detail: { items: entry.items } }));
+            const manualTitle = document.getElementById('manual-title');
+            if (manualTitle) manualTitle.value = entry.title || "";
+
+            document.querySelector('[data-tab="manual"]').click();
             return;
         }
 

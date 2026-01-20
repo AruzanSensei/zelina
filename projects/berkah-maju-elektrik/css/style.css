@@ -174,25 +174,46 @@ small {
     font-weight: 600;
 }
 
+/* Pseudo-element for Gradient Border */
 .tab-btn[data-tab="ai"].active {
+    position: relative;
     background: var(--bg-card);
-    border-width: 2px;
-    border-style: solid;
-    border-color: transparent;
-    border-image: linear-gradient(45deg, #9B51E0, #4A90E2) 1;
+    /* Keep background separate */
+    background-clip: padding-box;
+    /* To show gradient border */
+    border: 2px solid transparent;
+    /* Hide actual border */
+    border-radius: var(--radius-sm);
+    /* Keep radius */
     color: var(--secondary);
     font-weight: 700;
     animation: glow-pulse 3s infinite;
     box-shadow: 0 0 10px rgba(155, 81, 224, 0.3);
 }
 
+/* Gradient Stroke Hack with Radius */
+.tab-btn[data-tab="ai"].active::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    bottom: -2px;
+    left: -2px;
+    right: -2px;
+    background: linear-gradient(45deg, #9B51E0, #4A90E2);
+    z-index: -1;
+    border-radius: var(--radius-sm);
+    /* Same radius */
+}
+
 @keyframes glow-pulse {
     0% {
         box-shadow: 0 0 5px rgba(155, 81, 224, 0.2);
     }
+
     50% {
         box-shadow: 0 0 15px rgba(155, 81, 224, 0.5);
     }
+
     100% {
         box-shadow: 0 0 5px rgba(155, 81, 224, 0.2);
     }
@@ -200,7 +221,8 @@ small {
 
 /* AI Button Polish - Consistent Shape */
 .tab-btn[data-tab="ai"] {
-    border-radius: var(--radius-sm) !important; /* Ensure consistency */
+    border-radius: var(--radius-sm) !important;
+    /* Ensure consistency */
 }
 
 .tab-btn[data-tab="history"].active {
@@ -240,6 +262,8 @@ small {
     padding: 12px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
+    resize: none;
+    /* Fixed resize behavior */
     background-color: var(--bg-input);
     color: var(--text-main);
     font-size: 0.95rem;
@@ -390,8 +414,12 @@ small {
 
 /* HTML Render Styles */
 .html-preview-container {
-    width: 100%;
-    height: 100%;
+    width: 210mm;
+    /* A4 Width */
+    height: 297mm;
+    /* A4 Height */
+    transform-origin: top left;
+    /* JS will handle Scale */
     background: white;
     padding: 20px;
     font-family: 'Helvetica', sans-serif;
@@ -559,19 +587,19 @@ small {
     width: 100%;
     border-collapse: collapse;
     min-width: 600px;
-    table-layout: fixed; /* Force column widths */
+    /* table-layout: fixed; REMOVED per user request */
 }
 
 /* Widen columns with Limits */
 .item-table th:nth-child(1),
 .item-table td:nth-child(1) {
-    width: 40%;
+    /* width: 40%; REMOVED */
     min-width: 150px;
 }
 
 .item-table th:nth-child(2),
 .item-table td:nth-child(2) {
-    width: 25%;
+    /* width: 25%; REMOVED */
     min-width: 120px;
 }
 
@@ -584,7 +612,7 @@ small {
 
 .item-table th:nth-child(4),
 .item-table td:nth-child(4) {
-    width: 25%;
+    /* width: 25%; REMOVED */
     min-width: 120px;
     text-align: right;
 }
@@ -698,17 +726,22 @@ small {
 /* Orange Theme for Toggles */
 .toggle-group.orange-theme .toggle-btn.active {
     background: var(--bg-card);
-    color: #F5A623; /* Orange */
+    color: #F5A623;
+    /* Orange */
     box-shadow: var(--shadow-sm);
 }
 
 /* Copy Icon */
-.input-wrapper { position: relative; width: 100%; }
+.input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
 .copy-icon-btn {
     position: absolute;
     top: 8px;
     right: 8px;
-    background: rgba(255,255,255,0.8);
+    background: rgba(255, 255, 255, 0.8);
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 4px;
@@ -718,13 +751,22 @@ small {
     transition: all 0.2s;
     opacity: 0.6;
 }
-.copy-icon-btn:hover { opacity: 1; color: var(--primary); }
-.copy-icon-btn.copied { color: #27AE60; transform: scale(1.1); }
+
+.copy-icon-btn:hover {
+    opacity: 1;
+    color: var(--primary);
+}
+
+.copy-icon-btn.copied {
+    color: #27AE60;
+    transform: scale(1.1);
+}
 
 /* Swipe Actions */
 .item-swipe-container {
     position: relative;
-    overflow: hidden; /* Hide actions until swiped */
+    overflow: hidden;
+    /* Hide actions until swiped */
     border-radius: var(--radius-sm);
     margin-bottom: var(--spacing-sm);
 }
@@ -738,7 +780,8 @@ small {
     align-items: center;
     justify-content: flex-end;
     height: 100%;
-    z-index: 1; /* Behind card */
+    z-index: 1;
+    /* Behind card */
     padding-right: 1px;
 }
 
@@ -753,22 +796,32 @@ small {
     justify-content: center;
     cursor: pointer;
     font-size: 0.9rem;
-    transition:width 0.2s;
+    transition: width 0.2s;
 }
 
-.swipe-edit { background-color: #F5A623; }
-.swipe-delete { background-color: #ff4d4f; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.swipe-edit {
+    background-color: #F5A623;
+}
+
+.swipe-delete {
+    background-color: #ff4d4f;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
 
 /* Move Card on Swipe */
 .item-card {
     transition: transform 0.2s ease-out;
-    background: var(--bg-card); /* Ensure opaque */
-    z-index: 2; /* Full front */
-    margin-bottom: 0; /* Container handles margin */
+    background: var(--bg-card);
+    /* Ensure opaque */
+    z-index: 2;
+    /* Full front */
+    margin-bottom: 0;
+    /* Container handles margin */
 }
 
 .item-card.swiped-left {
-    transform: translateX(-120px); /* Reveal buttons */
+    transform: translateX(-120px);
+    /* Reveal buttons */
 }
 
 /* Footer */

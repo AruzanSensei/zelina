@@ -117,6 +117,10 @@ export function initSettings() {
                     <button class="btn btn-sm btn-outline use-template" data-index="${i}" title="Pakai">
                         <i class="fa-solid fa-check"></i> 
                     </button>
+                    <!-- NEW: Edit Button -->
+                    <button class="btn btn-sm btn-outline edit-template" data-index="${i}" title="Edit Template" style="margin-left:4px;">
+                        <i class="fa-solid fa-pen"></i> 
+                    </button>
                     <button class="btn btn-sm btn-outline delete-template" data-index="${i}" style="color:#ff4d4f; border-color:#ff4d4f; margin-left:4px;">
                         <i class="fa-solid fa-trash"></i>
                     </button>
@@ -138,12 +142,19 @@ export function initSettings() {
             const idx = btnUse.dataset.index;
             const template = appState.state.templates[idx];
 
-            if (appState.state.invoiceItems.length > 0 && appState.state.invoiceItems[0].name) {
+            if (appState.state.invoiceItems.length > 0 && (appState.state.invoiceItems[0].name || appState.state.invoiceItems.length > 1)) {
                 if (!confirm("Ganti data saat ini dengan template?")) return;
             }
 
             document.dispatchEvent(new CustomEvent('template-selected', { detail: { items: template.items } }));
             toggleModal(false);
+        }
+
+        // EDIT Full Template
+        const btnEditTpl = e.target.closest('.edit-template');
+        if (btnEditTpl) {
+            const idx = parseInt(btnEditTpl.dataset.index);
+            openTemplateEditor(idx);
         }
 
         if (btnDel) {
@@ -387,9 +398,15 @@ export function initSettings() {
                         <div class="modal-body">
                             <div id="picker-list" style="max-height: 50vh; overflow-y: auto;">
                                 ${itemTemplates.map((t, idx) => `
-                                    <div class="item-card picker-item" data-index="${idx}" style="padding:12px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border:1px solid var(--border-color);">
-                                        <div style="font-weight:500;">${t.name}</div>
-                                        <div style="font-weight:600; color:var(--primary);">${formatCurrency(t.price)}</div>
+                                    <div class="item-swipe-container" style="margin-bottom:8px;">
+                                        <div class="swipe-actions">
+                                            <button class="swipe-btn swipe-edit-picker" data-index="${idx}"><i class="fa-solid fa-pen"></i></button>
+                                            <button class="swipe-btn swipe-delete-picker" data-index="${idx}"><i class="fa-solid fa-trash"></i></button>
+                                        </div>
+                                        <div class="item-card picker-item" data-index="${idx}" style="padding:12px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border:1px solid var(--border-color); background:var(--bg-card); position:relative; z-index:2; transition:transform 0.2s;">
+                                            <div style="font-weight:500;">${t.name}</div>
+                                            <div style="font-weight:600; color:var(--primary);">${formatCurrency(t.price)}</div>
+                                        </div>
                                     </div>
                                 `).join('')}
                             </div>
@@ -414,13 +431,54 @@ export function initSettings() {
                 pickerOverlay.remove();
             }
 
-            // Select Item
+            // SWIPE / EDIT Actions (Fix 22/23)
+            // Edit Picker Item
+            const btnEdit = target.closest('.swipe-edit-picker');
+            if (btnEdit) {
+                const idx = btnEdit.dataset.index;
+                const item = itemTemplates[idx];
+                const newName = prompt("Edit Nama Barang:", item.name);
+                if (newName !== null) {
+                    const newPrice = prompt("Edit Harga:", item.price);
+                    if (newPrice !== null) {
+                        itemTemplates[idx].name = newName;
+                        itemTemplates[idx].price = parseInt(newPrice) || 0;
+                        saveItemTemplates();
+                        // Rerender list? Expensive to rerender whole overlay.
+                        // Simple: Just restart picker render
+                        pickerOverlay.innerHTML = renderPickerContent(false);
+                    }
+                }
+                return;
+            }
+
+            // Delete Picker Item
+            const btnDel = target.closest('.swipe-delete-picker');
+            if (btnDel) {
+                if (confirm("Hapus item ini dari daftar?")) {
+                    itemTemplates.splice(btnDel.dataset.index, 1);
+                    saveItemTemplates();
+                    pickerOverlay.innerHTML = renderPickerContent(false);
+                }
+                return;
+            }
+
+            // Select Item (if not swiping)
             const itemEl = target.closest('.picker-item');
-            if (itemEl) {
+            if (itemEl && !target.closest('.swipe-actions')) { // Avoid clicking actions
                 const idx = itemEl.dataset.index;
+                // Check if swiped open?
+                if (itemEl.classList.contains('swiped-left')) {
+                    // Close swipe
+                    itemEl.classList.remove('swiped-left');
+                    return;
+                }
+
                 callback(itemTemplates[idx]);
                 pickerOverlay.remove();
             }
+
+            // ... (rest of logic same)
 
             // Switch to Add View
             if (target.closest('#btn-to-add-view')) {
@@ -447,6 +505,113 @@ export function initSettings() {
                 pickerOverlay.remove();
             }
         });
+
+        // Touch events for Swipe on Picker Items
+        let startX = 0;
+        let activeItem = null;
+
+        pickerOverlay.addEventListener('touchstart', (e) => {
+            const card = e.target.closest('.picker-item');
+            if (!card) return;
+            startX = e.touches[0].clientX;
+            activeItem = card;
+        }, { passive: true });
+
+        pickerOverlay.addEventListener('touchend', (e) => {
+            if (!activeItem) return;
+            const diff = e.changedTouches[0].clientX - startX;
+            if (diff < -80) { // Open
+                pickerOverlay.querySelectorAll('.swiped-left').forEach(el => el.classList.remove('swiped-left'));
+                activeItem.classList.add('swiped-left');
+            } else if (diff > 50) { // Close
+                activeItem.classList.remove('swiped-left');
+            }
+            activeItem = null;
+        });
     });
+
+    // ===================================
+    // TEMPLATE EDITOR (FIX 25)
+    // ===================================
+    function openTemplateEditor(index) {
+        const template = appState.state.templates[index];
+        // Clone items to edit buffer
+        let bufferItems = JSON.parse(JSON.stringify(template.items));
+
+        // Create Editor Modal
+        const editor = document.createElement('div');
+        editor.className = 'modal active';
+        editor.style.zIndex = '310'; // Higher than settings
+
+        const renderEditor = () => {
+            editor.innerHTML = `
+                    < div class="modal-content" >
+                    <div class="modal-header">
+                        <h3>Edit Template: ${template.name}</h3>
+                        <button class="close-editor"><i class="fa-solid fa-times"></i></button>
+                    </div>
+                    <div class="modal-body">
+                         <div style="max-height:50vh; overflow-y:auto; margin-bottom:10px;">
+                            ${bufferItems.map((itm, i) => `
+                                <div style="display:flex; gap:5px; margin-bottom:5px; border-bottom:1px solid #eee; padding-bottom:5px;">
+                                    <input type="text" class="form-input edt-name" data-index="${i}" value="${itm.name}" placeholder="Item" style="flex:2;">
+                                    <input type="number" class="form-input edt-qty" data-index="${i}" value="${itm.qty}" style="width:50px;">
+                                    <input type="number" class="form-input edt-price" data-index="${i}" value="${itm.price}" style="flex:1;">
+                                    <button class="btn btn-sm btn-outline edt-del" data-index="${i}" style="color:red; border-color:red;">X</button>
+                                </div>
+                            `).join('')}
+                         </div>
+                         <button class="btn btn-outline btn-full" id="tpl-add-item">+ Tambah Item</button>
+                         <div style="margin-top:20px; display:flex; gap:10px;">
+                              <button class="btn btn-primary btn-full" id="tpl-save">Simpan Perubahan</button>
+                         </div>
+                    </div>
+                    </div>
+                </div>
+            `;
+        };
+        renderEditor();
+        document.body.appendChild(editor);
+
+        // Listeners
+        editor.addEventListener('click', (e) => {
+            if (e.target === editor || e.target.closest('.close-editor')) editor.remove();
+
+            // Add Item
+            if (e.target.id === 'tpl-add-item') {
+                bufferItems.push({ name: '', price: 0, qty: 1 });
+                renderEditor();
+            }
+
+            // Delete Item
+            if (e.target.classList.contains('edt-del')) {
+                bufferItems.splice(e.target.dataset.index, 1);
+                renderEditor();
+            }
+
+            // Save
+            if (e.target.id === 'tpl-save') {
+                // Capture inputs just in case? render updates values in input but not state instantly if we don't bind 'input' event.
+                // BETTER: Read inputs now.
+                const names = editor.querySelectorAll('.edt-name');
+                const qtys = editor.querySelectorAll('.edt-qty');
+                const prices = editor.querySelectorAll('.edt-price');
+
+                bufferItems = [];
+                names.forEach((el, i) => {
+                    bufferItems.push({
+                        name: el.value,
+                        qty: parseInt(qtys[i].value) || 1,
+                        price: parseInt(prices[i].value) || 0
+                    });
+                });
+
+                appState.state.templates[index].items = bufferItems;
+                appState.save('bme_templates', appState.state.templates);
+                renderTemplates();
+                editor.remove();
+            }
+        });
+    }
 
 }
