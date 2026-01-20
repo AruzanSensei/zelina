@@ -378,6 +378,71 @@
                 doc2.save(`SuratJalan-${titleName}.pdf`);
             }
 
+            function getTimeClass(timestamp) {
+                if (!timestamp) return '';
+                const now = new Date();
+                const itemDate = new Date(timestamp);
+                const diffDays = Math.floor((now - itemDate) / (1000 * 60 * 60 * 24));
+                if (diffDays === 0) return 'history-today';
+                if (diffDays === 1) return 'history-yesterday';
+                if (diffDays <= 7) return 'history-week';
+                if (diffDays <= 30) return 'history-month';
+                return 'history-year';
+            }
+
+            function renderHistoryInline() {
+                const historyContainer = document.getElementById('history-list');
+                if (!historyContainer) return;
+
+                const history = JSON.parse(localStorage.getItem('bme_history') || '[]');
+                historyContainer.innerHTML = '';
+
+                if (history.length === 0) {
+                    historyContainer.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted);">Belum ada riwayat.</div>';
+                    return;
+                }
+
+                const sortedHistory = [...history].sort((a, b) => b.timestamp - a.timestamp);
+
+                sortedHistory.forEach((entry, index) => {
+                    const div = document.createElement('div');
+                    const timeClass = getTimeClass(entry.timestamp);
+
+                    div.className = `history-item ${timeClass}`;
+                    div.style.cursor = 'pointer';
+                    // We don't have complex interactivity like edit detail here yet for inline safety, 
+                    // but we can at least show it.
+
+                    div.innerHTML = `
+                        <div class="history-info" style="pointer-events:none;">
+                            <h4>${entry.title || 'Tanpa Judul'}</h4>
+                            <p><small>${entry.date} | ${entry.items.length} Item</small></p>
+                        </div>
+                        <div class="history-actions">
+                             <button class="icon-btn" onclick="deleteHistoryItem(${entry.id}, event)" title="Hapus (Inline)">
+                                <i class="fa-solid fa-trash" style="color:red;"></i>
+                            </button>
+                        </div>
+                    `;
+                    historyContainer.appendChild(div);
+                });
+            }
+
+            // Global delete for inline mode
+            window.deleteHistoryItem = (id, e) => {
+                e.preventDefault(); e.stopPropagation();
+                if (!confirm("Hapus riwayat ini?")) return;
+
+                let history = JSON.parse(localStorage.getItem('bme_history') || '[]');
+                history = history.filter(h => h.id !== id);
+                localStorage.setItem('bme_history', JSON.stringify(history));
+                renderHistoryInline();
+            };
+
+            // Initial Render
+            renderHistoryInline();
+
+            // Hook into buttons
             if (btnSave) {
                 btnSave.addEventListener('click', () => {
                     const title = document.getElementById('manual-title').value || "Invoice Baru";
@@ -385,11 +450,9 @@
                     if (items.length === 0) return alert("Belum ada item!");
 
                     saveHistoryInline(items, title);
-                    alert("Data tersimpan di History (Mode Offline/File).");
+                    renderHistoryInline(); // <--- CRITICAL FIX: Re-render immediately
 
-                    // Reload history view if possible?
-                    // Since modules are broken, history view won't auto-update.
-                    // Ideally we'd re-render it here too, but let's stick to core request.
+                    alert("Data tersimpan dan History diperbarui.");
                 });
             }
 
@@ -400,8 +463,9 @@
                     if (items.length === 0) return alert("Belum ada item!");
 
                     saveHistoryInline(items, title);
+                    renderHistoryInline(); // <--- CRITICAL FIX: Re-render immediately
+
                     generatePDFInline(items, title);
-                    // alert("Download dimulai...");
                 });
             }
         });
