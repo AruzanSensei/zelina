@@ -1,0 +1,785 @@
+
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://naturechemsinergy.co.id/images/logo1.png" type="image/x-icon">
+    <title>Paket Pengujian - Nature Chem Synergy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        :target {
+            scroll-margin-top: 100px;
+        }
+
+        .mobile-menu-enter {
+            animation: slideDown 0.3s ease-out forwards;
+        }
+
+        @keyframes  slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        body.menu-open {
+            overflow: hidden;
+        }
+
+        .text-outline-white {
+            -webkit-text-stroke: 1px #fff;
+            text-stroke: 1px #fff;
+        }
+        
+        .hero-text {
+          pointer-events: none;
+        }
+        
+        .hero-text.active {
+          pointer-events: auto;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+
+    <!-- Navigation Header (partial only) -->
+<header class="fixed w-full top-0 left-0 z-50 py-6" role="banner">
+    <div class="container mx-auto px-4 sm:px-6">
+        <div class="bg-white rounded-full shadow-lg px-4 sm:px-6 py-3 flex justify-between items-center">
+
+            <!-- Logo -->
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <img src="https://naturechemsinergy.co.id/images/logo2.png" alt="Logo NCS" class="h-20 sm:h-27 w-auto -my-5">
+            </div>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden lg:flex items-center space-x-2 xl:space-x-4 text-sm font-medium" role="navigation"
+                aria-label="Main Navigation">
+                <a href="https://naturechemsinergy.co.id/home"
+                    class="nav-link flex items-center space-x-2 text-gray-700 hover:text-cyan-600 transition-all duration-300 px-3 xl:px-4 py-2 rounded-full hover:bg-cyan-50">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                    </svg>
+                    <span>Home</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/tentang"
+                    class="nav-link flex items-center space-x-2 text-gray-700 hover:text-cyan-600 transition-all duration-300 px-3 xl:px-4 py-2 rounded-full hover:bg-cyan-50">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+                    </svg>
+                    <span>Tentang Kami</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/filosofi"
+                    class="nav-link flex items-center space-x-2 text-gray-700 hover:text-cyan-600 transition-all duration-300 px-3 xl:px-4 py-2 rounded-full hover:bg-cyan-50">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
+                    </svg>
+                    <span>Filosofi Logo</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/paket-pengujian"
+                    class="nav-link flex items-center space-x-2 text-cyan-600 bg-cyan-50 server-active hover:text-cyan-600 transition-all duration-300 px-3 xl:px-4 py-2 rounded-full hover:bg-cyan-50">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                    </svg>
+                    <span>Paket Pengujian</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/faq"
+                    class="nav-link flex items-center space-x-2 text-gray-700 hover:text-cyan-600 transition-all duration-300 px-3 xl:px-4 py-2 rounded-full hover:bg-cyan-50">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span>FAQ</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/testimoni"
+                    class="nav-link flex items-center space-x-2 text-gray-700 hover:text-cyan-600 transition-all duration-300 px-3 xl:px-4 py-2 rounded-full hover:bg-cyan-50">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <span>Testimoni</span>
+                </a>
+
+                <a href="https://naturechemsinergy.co.id/kontak"
+                    class="flex items-center space-x-2 bg-cyan-500 text-white px-4 xl:px-6 py-2.5 rounded-full font-semibold shadow-md hover:bg-cyan-600 hover:shadow-lg hover:scale-105 transition-all duration-300">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                    </svg>
+                    <span>Kontak</span>
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="lg:hidden text-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-lg p-2"
+                id="mobileMenuBtn" aria-label="Toggle Menu" aria-expanded="false" aria-controls="mobileMenu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path id="menuIcon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden lg:hidden mt-2 bg-white rounded-3xl shadow-xl overflow-hidden"
+            role="navigation" aria-label="Mobile Navigation">
+            <nav class="flex flex-col p-4 space-y-2">
+                <a href="https://naturechemsinergy.co.id/home"
+                    class="mobile-link flex items-center space-x-3 text-gray-700 hover:text-cyan-600 hover:bg-cyan-50 py-3 px-4 rounded-xl transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                    </svg>
+                    <span class="font-medium">Home</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/tentang"
+                    class="mobile-link flex items-center space-x-3 text-gray-700 hover:text-cyan-600 hover:bg-cyan-50 py-3 px-4 rounded-xl transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+                    </svg>
+                    <span class="font-medium">Tentang Kami</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/filosofi"
+                    class="mobile-link flex items-center space-x-3 text-gray-700 hover:text-cyan-600 hover:bg-cyan-50 py-3 px-4 rounded-xl transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
+                    </svg>
+                    <span class="font-medium">Filosofi Logo</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/paket-pengujian"
+                    class="mobile-link flex items-center space-x-3 text-cyan-600 bg-cyan-50 server-active hover:text-cyan-600 hover:bg-cyan-50 py-3 px-4 rounded-xl transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                    </svg>
+                    <span class="font-medium">Paket Pengujian</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/faq"
+                    class="mobile-link flex items-center space-x-3 text-gray-700 hover:text-cyan-600 hover:bg-cyan-50 py-3 px-4 rounded-xl transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span class="font-medium">FAQ</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/testimoni"
+                    class="mobile-link flex items-center space-x-3 text-gray-700 hover:text-cyan-600 hover:bg-cyan-50 py-3 px-4 rounded-xl transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <span class="font-medium">Testimoni</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/kontak"
+                    class="flex items-center justify-center space-x-2 bg-cyan-500 text-white py-3 px-4 rounded-xl font-semibold shadow-md hover:bg-cyan-600 hover:shadow-lg transition-all duration-300 mt-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                    </svg>
+                    <span>Kontak</span>
+                </a>
+            </nav>
+        </div>
+</header>
+
+
+    <main class="pt-24">
+            <style>
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes  fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+
+    <section class="min-h-screen py-16 px-4 bg-gray-50">
+        <div class="max-w-7xl mx-auto">
+
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-5xl font-bold text-gray-900 mb-4 drop-shadow-lg"
+                    style="text-shadow: 2px 2px 4px rgba(255,255,255,0.3);">Paket Pengujian Laboratorium</h1>
+                <p class="text-gray-800 text-lg font-medium">Pilih parameter pengujian yang sesuai dengan kebutuhan Anda</p>
+            </div>
+
+            <!-- Toggle Buttons -->
+            <div class="flex flex-wrap justify-center gap-4 mb-8">
+                <button onclick="toggleView('list')" id="btnList"
+                    class="bg-white text-gray-700 hover:bg-cyan-500 hover:text-white font-semibold px-8 py-3 rounded-lg shadow-md transition-all flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
+                        </path>
+                    </svg>
+                    Cari Paket Pengujian
+                </button>
+                <button onclick="toggleView('gallery')" id="btnGallery"
+                    class="bg-white text-gray-700 hover:bg-cyan-500 hover:text-white font-semibold px-8 py-3 rounded-lg shadow-md transition-all flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z">
+                        </path>
+                    </svg>
+                    Gallery Laboratorium
+                </button>
+            </div>
+
+            <!-- Content Area -->
+            <div id="contentArea">
+
+                <!-- List View -->
+                <div id="listView" class="hidden fade-in">
+
+                    <!-- Category Filter -->
+                    <div class="bg-white/95 rounded-xl shadow-lg p-4 mb-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z">
+                                </path>
+                            </svg>
+                            <span class="font-semibold text-gray-700">Filter Kategori:</span>
+                        </div>
+                        <div class="flex flex-wrap gap-2" id="categoryFilter"></div>
+                    </div>
+
+                    <p class="text-sm text-white mb-4 font-medium" id="resultCount"></p>
+
+                    <!-- Test Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="testGrid"></div>
+                </div>
+
+                <!-- Gallery View -->
+                <div id="galleryView" class="hidden fade-in">
+                    <div class="bg-white/95 rounded-xl shadow-lg p-8 mb-8">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Gallery Laboratorium</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="galleryGrid">
+                            <!-- Gallery items will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Partner Section (Always Visible at Bottom) -->
+            <div class="mt-16 mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-10 text-center">Partner Kami</h2>
+                <div class="flex flex-wrap items-center justify-center gap-20 max-w-5xl mx-auto">
+                    <!-- Partner 1 -->
+                    <img src="https://naturechemsinergy.co.id/images/agro.png" alt="PT. Agro Apis Palacio"
+                        class="h-28 w-auto object-contain transition-transform hover:scale-110 duration-300 filter drop-shadow-lg"
+                        onerror="this.outerHTML='<span class=\'text-7xl\'>🐝</span>'">
+
+                    <!-- Partner 2 -->
+                    <img src="https://naturechemsinergy.co.id/images/ipb.png" alt="IPB University"
+                        class="h-28 w-auto object-contain transition-transform hover:scale-110 duration-300 filter drop-shadow-lg"
+                        onerror="this.outerHTML='<span class=\'text-7xl\'>🎓</span>'">
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        const waUrl = "https://wa.me/6285184542201?text=Halo%2C%20saya%20ingin%20konsultasi%20tentang%20layanan%20pengujian%20laboratorium.";
+
+        // Gallery images data
+        const galleryImages = [
+            { src: 'https://naturechemsinergy.co.id/images/foto.jpeg', emoji: '🔬' },
+            { src: 'https://naturechemsinergy.co.id/images/foto2.jpeg', emoji: '⚗️' },
+            { src: 'https://naturechemsinergy.co.id/images/foto3.jpeg', emoji: '🧪' }
+        ];
+
+        const testData = [
+            // Mikrobiologi
+            { cat: 'Mikrobiologi', name: 'Uji antimikroba E-coli', method: 'Difusi Cakram', price: 125000, unit: 'per sampel per konsentrasi' },
+            { cat: 'Mikrobiologi', name: 'Uji antimikroba Salmonella sp.', method: 'Difusi Cakram', price: 219000, unit: 'per sampel per konsentrasi' },
+            { cat: 'Mikrobiologi', name: 'Uji antimikroba S. aureus', method: 'Difusi Cakram', price: 156000, unit: 'per sampel per konsentrasi' },
+            { cat: 'Mikrobiologi', name: 'Identifikasi dan isolasi E-coli (Kualitatif)', method: '', price: 450000, unit: 'per sampel' },
+            { cat: 'Mikrobiologi', name: 'Identifikasi dan isolasi Salmonella sp. (Kualitatif)', method: '', price: 550000, unit: 'per sampel' },
+            { cat: 'Mikrobiologi', name: 'ALT/TPC', method: 'TPC', price: 115000, unit: 'per sampel' },
+            // Bahan Alam
+            { cat: 'Bahan Alam', name: 'Kualitatif fitokimia (paket 5 uji)', method: 'Kualitatif semimikro', price: 250000, unit: 'per sampel' },
+            { cat: 'Bahan Alam', name: 'Kualitatif fenol', method: 'Kualitatif semimikro', price: 60000, unit: 'per sampel' },
+            { cat: 'Bahan Alam', name: 'Kualitatif flavonoid', method: 'Kualitatif semimikro', price: 60000, unit: 'per sampel' },
+            { cat: 'Bahan Alam', name: 'Kualitatif alkaloid', method: 'Kualitatif semimikro', price: 60000, unit: 'per sampel' },
+            { cat: 'Bahan Alam', name: 'Kualitatif triterpenoid', method: 'Kualitatif semimikro', price: 60000, unit: 'per sampel' },
+            { cat: 'Bahan Alam', name: 'Kualitatif steroid', method: 'Kualitatif semimikro', price: 60000, unit: 'per sampel' },
+            { cat: 'Bahan Alam', name: 'Kualitatif saponin', method: 'Kualitatif semimikro', price: 60000, unit: 'per sampel' },
+            { cat: 'Bahan Alam', name: 'Kualitatif Tanin', method: 'Kualitatif semimikro', price: 60000, unit: 'per sampel' },
+            { cat: 'Bahan Alam', name: 'Penentuan total fenol', method: 'Spektrofotometer', price: 238000, unit: 'per sampel' },
+            { cat: 'Bahan Alam', name: 'Penentuan total flavonoid', method: 'Spektrofotometer', price: 238000, unit: 'per sampel' },
+            { cat: 'Bahan Alam', name: 'Penentuan aktivitas antioksidan Frap', method: 'Spektrofotometer', price: 313000, unit: 'per sampel' },
+            { cat: 'Bahan Alam', name: 'Penentuan aktivitas antioksidan DPPH', method: 'Spektrofotometer', price: 250000, unit: 'per sampel' },
+            { cat: 'Bahan Alam', name: 'Penentuan total tanin', method: 'Spektrofotometer', price: 375000, unit: 'per sampel' },
+            { cat: 'Bahan Alam', name: 'Penentuan tanin terkondensasi', method: 'Spektrofotometer', price: 313000, unit: 'per sampel' },
+            { cat: 'Bahan Alam', name: 'Penentuan tanin terhidrolis', method: 'By Diference', price: 625000, unit: 'Harga per sampel terhitung total tanin dan tanin terkondensasi' },
+            { cat: 'Bahan Alam', name: 'Penentuan total karotenoid', method: 'Spektrofotometer', price: 169000, unit: 'per sampel' },
+            { cat: 'Bahan Alam', name: 'Penentuan aktivitas antikolestrol (Inhibibisi)', method: 'Spektrofotometer', price: 263000, unit: 'per sampel' },
+            { cat: 'Bahan Alam', name: 'Penentuan aktivitas enzim proteolitik (papain)', method: 'Spektrofotometer', price: 169000, unit: 'per sampel' },
+            { cat: 'Bahan Alam', name: 'Pemekatan extrak (pelarut selain air)', method: 'Rotary evaporator', price: 4000, unit: 'per mili' },
+            { cat: 'Bahan Alam', name: 'Pengujian kekeruhan', method: 'Turbidimetri', price: 38000, unit: 'per sampel' },
+            // Lingkungan
+            { cat: 'Lingkungan', name: 'Penentuan TS', method: 'Gravimetri', price: 113000, unit: 'per sampel' },
+            { cat: 'Lingkungan', name: 'Penentuan TSS', method: 'Gravimetri', price: 113000, unit: 'per sampel' },
+            { cat: 'Lingkungan', name: 'Penentuan TDS', method: 'Gravimetri', price: 113000, unit: 'per sampel' },
+            { cat: 'Lingkungan', name: 'Pengujian pH', method: 'pH meter', price: 20000, unit: 'per sampel' },
+            { cat: 'Lingkungan', name: 'Penentuan kesadahan (CaCO3)', method: 'Titrimetri Kelatometri', price: 50000, unit: 'per sampel' },
+            { cat: 'Lingkungan', name: 'Penentuan kesadahan (Mg)', method: 'Titrimetri Kelatometri', price: 50000, unit: 'per sampel' },
+            { cat: 'Lingkungan', name: 'Penentuan kesadahan total', method: 'Titrimetri Kelatometri', price: 65000, unit: 'per sampel' },
+            { cat: 'Lingkungan', name: 'Pengujian Konduktivitas', method: 'Konduktometer', price: 22000, unit: 'per sampel' },
+            { cat: 'Lingkungan', name: 'Penentuan COD', method: 'Titrimetri Oksireduktometri', price: 144000, unit: 'per sampel' },
+            { cat: 'Lingkungan', name: 'Penentuan BOD', method: 'Winkler', price: 144000, unit: 'per sampel' },
+            { cat: 'Lingkungan', name: 'Penentuan DO', method: 'Winkler', price: 144000, unit: 'per sampel' },
+            { cat: 'Lingkungan', name: 'Penentuan DO', method: 'DO meter', price: 50000, unit: 'per sampel' },
+            { cat: 'Lingkungan', name: 'Penentuan amonia bebas', method: 'Spektrofotometer', price: 75000, unit: 'per sampel' },
+            { cat: 'Lingkungan', name: 'Penentuan Nitrat', method: 'Spektrofotometer', price: 75000, unit: 'per sampel' },
+            { cat: 'Lingkungan', name: 'Penentuan Nitrit', method: 'Spektrofotometer', price: 75000, unit: 'per sampel' },
+            { cat: 'Lingkungan', name: 'Penentuan fosfat total', method: 'Spektrofotometer', price: 75000, unit: 'per sampel' },
+            { cat: 'Lingkungan', name: 'Penentuan total fosfor', method: 'Spektrofotometer', price: 75000, unit: 'per sampel' },
+            { cat: 'Lingkungan', name: 'Penentuan sulfat', method: 'Spektrofotometer', price: 75000, unit: 'per sampel' },
+            { cat: 'Lingkungan', name: 'Penentuan klorida', method: 'Titrimetri', price: 75000, unit: 'per sampel' },
+            // Tanah dan Pupuk
+            { cat: 'Tanah dan Pupuk', name: 'Penentuan N-total', method: 'Kjeldahl', price: 125000, unit: 'per sampel' },
+            { cat: 'Tanah dan Pupuk', name: 'Penentuan fosfor', method: 'Spektrofotometer', price: 163000, unit: 'per sampel' },
+            { cat: 'Tanah dan Pupuk', name: 'Penentuan C-Organik (padat)', method: 'Gravimetri', price: 100000, unit: 'per sampel (sampel padat)' },
+            { cat: 'Tanah dan Pupuk', name: 'Penentuan C-Organik (cair)', method: 'Spektrofotometer', price: 150000, unit: 'per sampel (sampel cair)' },
+            { cat: 'Tanah dan Pupuk', name: 'Penentuan kalium', method: 'AAS', price: 163000, unit: 'per sampel' },
+            { cat: 'Tanah dan Pupuk', name: 'Penentuan nilai KTK', method: '', price: 150000, unit: 'per sampel' },
+            // Minyak
+            { cat: 'Minyak', name: 'Penentuan asam lemak bebas', method: 'Titrimetri', price: 81000, unit: 'per sampel' },
+            { cat: 'Minyak', name: 'Penentuan bilangan iodin', method: 'Titrimetri', price: 179000, unit: 'per sampel' },
+            { cat: 'Minyak', name: 'Penentuan bilangan penyabunan', method: 'Titrimetri', price: 131000, unit: 'per sampel' },
+            { cat: 'Minyak', name: 'Penentuan bilangan peroksida', method: 'Titrimetri', price: 144000, unit: 'per sampel' },
+            { cat: 'Minyak', name: 'Penentuan bilangan asam', method: 'Titrimetri', price: 63000, unit: 'per sampel' },
+            { cat: 'Minyak', name: 'Penguji densitas', method: 'Piknometer', price: 31000, unit: 'per sampel' },
+            { cat: 'Minyak', name: 'Pengujian viskositas', method: 'Ostwald', price: 38000, unit: 'per sampel' },
+            { cat: 'Minyak', name: 'Penentuan aktivitas antioksidan DPPH minyak', method: 'DPPH', price: 313000, unit: 'per sampel' },
+            // Proksimat
+            { cat: 'Proksimat', name: 'Proksimat Lengkap', method: '-', price: 400000, unit: 'per sampel' },
+            { cat: 'Proksimat', name: 'Penentuan kadar air', method: 'Gravimetri', price: 38000, unit: 'per sampel' },
+            { cat: 'Proksimat', name: 'Penentuan kadar abu', method: 'Gravimetri', price: 69000, unit: 'per sampel' },
+            { cat: 'Proksimat', name: 'Penentuan serat kasar', method: 'Gravimetri', price: 88000, unit: 'per sampel' },
+            { cat: 'Proksimat', name: 'Penentuan lemak kasar', method: 'Gravimetri', price: 100000, unit: 'per sampel' },
+            { cat: 'Proksimat', name: 'Penentuan protein kasar', method: 'Kjeldahl', price: 125000, unit: 'per sampel' },
+            { cat: 'Proksimat', name: 'Penentuan karbohidrat (BETN)', method: 'By Difference', price: 38000, unit: 'per sampel' },
+            { cat: 'Proksimat', name: 'Pengujian kadar Brix', method: 'Brix refractometer', price: 31000, unit: 'per sampel' },
+            // Mineral
+            { cat: 'Mineral', name: 'Penentuan kadar Ca', method: 'AAS', price: 105000, unit: 'per sampel' },
+            { cat: 'Mineral', name: 'Penentuan kadar Mg', method: 'AAS', price: 105000, unit: 'per sampel' },
+            { cat: 'Mineral', name: 'Penentuna kadar Cd', method: 'AAS', price: 150000, unit: 'per sampel' },
+            { cat: 'Mineral', name: 'Penentuan kadar Pb', method: 'AAS', price: 150000, unit: 'per sampel' },
+            // Lainnya (Konsultasi)
+            { cat: 'Lainnya', name: 'Ekstraksi & Lainnya', method: 'Konsultasi via WhatsApp', price: 0, unit: 'Hubungi kami untuk info lengkap', wa: waUrl }
+        ];
+
+        let currentCat = 'Semua';
+        const categories = ['Semua', ...new Set(testData.map(t => t.cat))];
+
+        function formatPrice(p) {
+            return p === 0 ? 'Konsultasi' : 'Rp ' + p.toLocaleString('id-ID');
+        }
+
+        function sendToWA(testName, category, price, unit) {
+            const message =
+                'Halo, saya tertarik dengan paket pengujian:\n\n' +
+                testName + '\n' +
+                'Kategori: ' + category + '\n' +
+                'Harga: ' + formatPrice(price) + '\n' +
+                'Unit: ' + unit + '\n\n' +
+                'Mohon info lebih lanjut. Terima kasih!';
+
+            const encodedMessage = encodeURIComponent(message);
+            const waLink = `https://api.whatsapp.com/send?phone=6285184542201&text=${encodedMessage}`;
+
+            // Gunakan nama window yang sama supaya reuse tab
+            window.open(waLink, 'whatsapp_window');
+        }
+
+        function renderCategories() {
+            const html = categories.map(c =>
+                `<button onclick="filterCategory('${c}')" class="category-btn px-4 py-2 rounded-lg text-sm font-medium transition-all ${c === currentCat ? 'bg-cyan-500 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}" data-cat="${c}">${c}</button>`
+            ).join('');
+            document.getElementById('categoryFilter').innerHTML = html;
+        }
+
+        function renderTests() {
+            const filtered = testData.filter(t => currentCat === 'Semua' || t.cat === currentCat);
+            document.getElementById('resultCount').textContent = `Menampilkan ${filtered.length} parameter pengujian`;
+
+            const html = filtered.map((t, index) => `
+            <div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-all p-5">
+                <div class="flex items-start justify-between mb-3">
+                    <span class="${t.wa ? 'bg-green-100 text-green-700' : 'bg-cyan-100 text-cyan-700'} text-xs font-semibold px-3 py-1 rounded-full">${t.cat}</span>
+                </div>
+                <h3 class="text-base font-bold text-gray-800 mb-2 min-h-[3rem] line-clamp-2">${t.name}</h3>
+                ${t.method ? `<p class="text-xs text-gray-600 mb-3"><span class="font-medium">Metode:</span> ${t.method}</p>` : ''}
+                <div class="border-t pt-3 mt-3">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="flex-1">
+                            <p class="text-xl font-bold ${t.wa ? 'text-green-600' : 'text-cyan-600'}">${formatPrice(t.price)}</p>
+                            <p class="text-xs text-gray-500">${t.unit}</p>
+                        </div>
+                        <div>
+                            ${t.wa ?
+                    `<a href="${t.wa}" target="_blank" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap inline-flex items-center gap-1">
+                                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                                    WA
+                                </a>` :
+                    `<button class="wa-button bg-cyan-500 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all" data-index="${index}">Pilih</button>`
+                }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+            document.getElementById('testGrid').innerHTML = html;
+
+            // Add click event listeners to all "Pilih" buttons using event delegation
+            document.getElementById('testGrid').querySelectorAll('.wa-button').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const idx = parseInt(this.getAttribute('data-index'));
+                    const filtered = testData.filter(t => currentCat === 'Semua' || t.cat === currentCat);
+                    const test = filtered[idx];
+                    sendToWA(test.name, test.cat, test.price, test.unit);
+                });
+            });
+        }
+
+        function filterCategory(cat) {
+            currentCat = cat;
+            renderCategories();
+            renderTests();
+        }
+
+        function toggleView(view) {
+            const listView = document.getElementById('listView');
+            const galleryView = document.getElementById('galleryView');
+            const btnList = document.getElementById('btnList');
+            const btnGallery = document.getElementById('btnGallery');
+
+            // Jika view yang sama sedang aktif, hide semuanya
+            if ((view === 'gallery' && !galleryView.classList.contains('hidden')) ||
+                (view === 'list' && !listView.classList.contains('hidden'))) {
+                listView.classList.add('hidden');
+                galleryView.classList.add('hidden');
+                btnList.classList.remove('bg-cyan-500', 'text-white');
+                btnList.classList.add('bg-white', 'text-gray-700');
+                btnGallery.classList.remove('bg-cyan-500', 'text-white');
+                btnGallery.classList.add('bg-white', 'text-gray-700');
+                return;
+            }
+
+            if (view === 'gallery') {
+                listView.classList.add('hidden');
+                galleryView.classList.remove('hidden');
+                btnList.classList.remove('bg-cyan-500', 'text-white');
+                btnList.classList.add('bg-white', 'text-gray-700');
+                btnGallery.classList.add('bg-cyan-500', 'text-white');
+                btnGallery.classList.remove('bg-white', 'text-gray-700');
+                renderGallery();
+            } else {
+                galleryView.classList.add('hidden');
+                listView.classList.remove('hidden');
+                btnGallery.classList.remove('bg-cyan-500', 'text-white');
+                btnGallery.classList.add('bg-white', 'text-gray-700');
+                btnList.classList.add('bg-cyan-500', 'text-white');
+                btnList.classList.remove('bg-white', 'text-gray-700');
+                renderCategories();
+                renderTests();
+            }
+        }
+
+        function renderGallery() {
+            const html = galleryImages.map(img => `
+            <div class="rounded-lg shadow-md hover:shadow-xl transition-all cursor-pointer overflow-hidden group">
+                <img src="${img.src}" alt="Laboratorium" class="w-full h-auto group-hover:scale-105 transition-transform duration-300" 
+                     onerror="this.outerHTML='<div class=\'w-full aspect-square bg-gradient-to-br from-cyan-100 to-green-100 flex items-center justify-center\'><span class=\'text-6xl\'>${img.emoji}</span></div>'">
+            </div>
+        `).join('');
+            document.getElementById('galleryGrid').innerHTML = html;
+        }
+    </script>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white py-14 px-6 md:px-12 lg:px-20 mt-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid md:grid-cols-3 gap-10 mb-12">
+      <div>
+       <h3 class="text-xl font-semibold mb-4" style="color: #42ADC4;">PT. Nature Chem Synergy</h3>
+        <p class="text-gray-400 text-sm leading-relaxed mb-5">
+          Perusahaan yang bergerak di bidang jasa analisis pengujian ilmiah 
+          dengan keahlian khusus pada penelitian bahan alam dan pengujian biologi.
+        </p>
+        <ul class="space-y-2 text-sm text-gray-300">
+          <li class="flex items-center gap-2"><span class="text-green-400">📞</span> (+62) 851-8454-2201</li>
+          <li class="flex items-center gap-2"><span class="text-purple-400">📧</span> naturechemlab@gmail.com</li>
+          <li class="flex items-center gap-2"><span style="color: #42ADC4;">📱</span> @naturechemlab_</li>
+        </ul>
+      </div>
+
+      <div class="flex flex-col md:pl-12">
+        <h4 class="font-semibold text-lg text-white mb-5">Website</h4>
+        <ul class="space-y-2 text-gray-300 text-sm">
+          <li><a href="https://naturechemsinergy.co.id/home" class="hover:text-cyan-400 transition">Home</a></li>
+          <li><a href="https://naturechemsinergy.co.id/tentang" class="hover:text-cyan-400 transition">Tentang Kami</a></li>
+          <li><a href="https://naturechemsinergy.co.id/filosofi" class="hover:text-cyan-400 transition">Filosofi Logo</a></li>
+          <li><a href="https://naturechemsinergy.co.id/paket-pengujian" class="hover:text-cyan-400 transition">Paket Pengujian</a></li>
+          <li><a href="https://naturechemsinergy.co.id/faq" class="hover:text-cyan-400 transition">FAQ</a></li>
+          <li><a href="https://naturechemsinergy.co.id/testimoni" class="hover:text-cyan-400 transition">Testimoni</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-semibold text-lg text-white mb-5">Ikuti Kami</h4>
+         <p class="text-gray-400 text-sm leading-relaxed mb-5">
+            Temukan Konten Menarik Yang Anda Cari
+        </p>  
+        <div class="flex gap-3">
+          <a href="https://instagram.com/naturechemlab_" target="_blank" class="w-10 h-10 border-2 border-gray-600 rounded-full flex items-center justify-center hover:border-pink-400 hover:bg-pink-400/10 transition group">
+            <svg class="w-5 h-5 text-gray-400 group-hover:text-pink-400 transition" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </a>
+          <a href="https://naturechemsinergy.co.id" target="_blank" class="w-10 h-10 border-2 border-gray-600 rounded-full flex items-center justify-center hover:border-cyan-400 hover:bg-cyan-400/10 transition group">
+            <svg class="w-5 h-5 text-gray-400 group-hover:text-cyan-400 transition" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+            </svg>
+          </a>
+          <a href="https://wa.me/6285184542201" target="_blank" class="w-10 h-10 border-2 border-gray-600 rounded-full flex items-center justify-center hover:border-green-400 hover:bg-green-400/10 transition group">
+            <svg class="w-5 h-5 text-gray-400 group-hover:text-green-400 transition" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="border-gray-700 mb-6">
+    <div class="text-center">
+      <p class="text-gray-400 text-sm">© 2025 PT. Nature Chem Synergy. All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>
+    </main>
+
+        <script>
+        (function () {
+            class NavigationController {
+                constructor() {
+                    this.mobileMenuBtn = document.getElementById('mobileMenuBtn');
+                    this.mobileMenu = document.getElementById('mobileMenu');
+                    this.menuIcon = document.getElementById('menuIcon');
+                    this.body = document.body;
+                    this.isOpen = false;
+                    this.init();
+                }
+
+                init() {
+                    this.setupMobileMenu();
+                    this.setupSmoothScroll();
+                    this.setupActiveMenuOnScroll();
+                }
+
+                setupMobileMenu() {
+                    if (!this.mobileMenuBtn || !this.mobileMenu) return;
+
+                    this.mobileMenuBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.toggleMobileMenu();
+                    });
+
+                    document.addEventListener('click', (e) => {
+                        if (this.isOpen &&
+                            !this.mobileMenuBtn.contains(e.target) &&
+                            !this.mobileMenu.contains(e.target)) {
+                            this.closeMobileMenu();
+                        }
+                    });
+
+                    // Close menu when clicking any link
+                    this.mobileMenu.querySelectorAll('a').forEach(link => {
+                        link.addEventListener('click', () => {
+                            this.closeMobileMenu();
+                        });
+                    });
+
+                    document.addEventListener('keydown', (e) => {
+                        if (e.key === 'Escape' && this.isOpen) {
+                            this.closeMobileMenu();
+                        }
+                    });
+                }
+
+                toggleMobileMenu() {
+                    if (this.isOpen) {
+                        this.closeMobileMenu();
+                    } else {
+                        this.openMobileMenu();
+                    }
+                }
+
+                openMobileMenu() {
+                    this.mobileMenu.classList.remove('hidden');
+                    this.mobileMenu.classList.add('mobile-menu-enter');
+                    if (this.menuIcon) this.menuIcon.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+                    if (this.mobileMenuBtn) this.mobileMenuBtn.setAttribute('aria-expanded', 'true');
+                    this.isOpen = true;
+                }
+
+                closeMobileMenu() {
+                    this.mobileMenu.classList.add('hidden');
+                    this.mobileMenu.classList.remove('mobile-menu-enter');
+                    if (this.menuIcon) this.menuIcon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+                    if (this.mobileMenuBtn) this.mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                    this.isOpen = false;
+                }
+
+                setupSmoothScroll() {
+                    // handle anchors that are same-page (href="#id") and anchors that include a hash
+                    document.querySelectorAll('a[href*="#"]').forEach(anchor => {
+                        anchor.addEventListener('click', (e) => {
+                            const href = anchor.getAttribute('href');
+                            if (!href || href === '#') return;
+
+                            try {
+                                const url = new URL(anchor.href, location.href);
+
+                                // If the clicked link points to the current page (same pathname + origin)
+                                // then prevent default navigation and smooth-scroll to the fragment.
+                                if (url.origin === location.origin && (url.pathname === location.pathname)) {
+                                    e.preventDefault();
+                                    const hash = url.hash;
+                                    const target = document.querySelector(hash);
+                                    if (target) {
+                                        const headerOffset = 100;
+                                        const elementPosition = target.getBoundingClientRect().top;
+                                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                                        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                                    }
+                                }
+                                // otherwise allow normal navigation (will load the other page)
+                            } catch (err) {
+                                // If URL parsing fails, fall back to simple hash-only behavior
+                                if (href.startsWith('#')) {
+                                    e.preventDefault();
+                                    const target = document.querySelector(href);
+                                    if (target) {
+                                        const headerOffset = 100;
+                                        const elementPosition = target.getBoundingClientRect().top;
+                                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                                        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                                    }
+                                }
+                            }
+                        });
+                    });
+
+                    // If the page was loaded with a hash (e.g., navigating from another page to route#section),
+                    // try to smooth scroll to that section after a short delay so the DOM/layout is ready.
+                    if (location.hash) {
+                        setTimeout(() => {
+                            const target = document.querySelector(location.hash);
+                            if (target) {
+                                const headerOffset = 100;
+                                const elementPosition = target.getBoundingClientRect().top;
+                                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                            }
+                        }, 250);
+                    }
+                }
+
+                setupActiveMenuOnScroll() {
+                    const sections = document.querySelectorAll('section[id]');
+
+                    const observerOptions = {
+                        root: null,
+                        rootMargin: '-100px 0px -60% 0px',
+                        threshold: 0
+                    };
+
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                const id = entry.target.getAttribute('id');
+                                this.updateActiveMenu(id);
+                            }
+                        });
+                    }, observerOptions);
+
+                    sections.forEach(section => observer.observe(section));
+                }
+
+                updateActiveMenu(activeId) {
+                    document.querySelectorAll('.nav-link, .mobile-link').forEach(link => {
+                        let linkHash = '';
+                        try {
+                            const url = new URL(link.href, location.href);
+                            linkHash = url.hash || '';
+                        } catch (err) {
+                            const href = link.getAttribute('href') || '';
+                            if (href.includes('#')) linkHash = `#${href.split('#').pop()}`;
+                        }
+
+                        if (linkHash === `#${activeId}`) {
+                            link.classList.add('text-cyan-600', 'bg-cyan-50');
+                            link.classList.remove('text-gray-700');
+                        } else {
+                            // Only reset links that are nav-links (do not override server-side active state for different pages)
+                            if (!link.classList.contains('server-active')) {
+                                link.classList.remove('text-cyan-600', 'bg-cyan-50');
+                                link.classList.add('text-gray-700');
+                            }
+                        }
+                    });
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                new NavigationController();
+            });
+        })();
+    </script>
+
+</body>
+
+</html>
