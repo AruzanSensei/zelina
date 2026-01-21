@@ -3,23 +3,24 @@
 
 <head>
   <meta charset="UTF-8">
+  <base href="/reference/naturechemsinergy.co.id/">
   <title>Redirecting...</title>
 
   <script>
     const basePath = "/reference/naturechemsinergy.co.id";
-    const homePath = basePath + "/home";
+    const homePath = "home"; // Relative to base
 
     // normalisasi path (hapus trailing slash)
     const currentPath = window.location.pathname.replace(/\/$/, "");
 
-    // redirect hanya jika user tepat di base path
-    if (currentPath === basePath) {
+    // redirect jika user di base path atau root (jika base path diset)
+    if (currentPath === basePath || currentPath === "" || currentPath === "/") {
       window.location.replace(homePath);
     }
   </script>
 
   <noscript>
-    <meta http-equiv="refresh" content="0; url=/reference/naturechemsinergy.co.id/home">
+    <meta http-equiv="refresh" content="0; url=home">
   </noscript>
 </head>
 
