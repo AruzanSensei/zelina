@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+
+  <script>
+    // Cek apakah user berada di root "/"
+    if (window.location.pathname === "/") {
+      window.location.replace("/home");
+    }
+  </script>
+
+  <!-- Fallback jika JS mati -->
+  <noscript>
+    <meta http-equiv="refresh" content="0; url=/home">
+  </noscript>
+</head>
+<body>
+  <p>Mengalihkan ke halaman utama...</p>
+</body>
+</html>

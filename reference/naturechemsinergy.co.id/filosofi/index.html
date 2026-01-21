@@ -1,0 +1,519 @@
+
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://naturechemsinergy.co.id/images/logo1.png" type="image/x-icon">
+    <title>Filosofi Logo - PT Nature Chem Synergy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        :target {
+            scroll-margin-top: 100px;
+        }
+
+        .mobile-menu-enter {
+            animation: slideDown 0.3s ease-out forwards;
+        }
+
+        @keyframes  slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        body.menu-open {
+            overflow: hidden;
+        }
+
+        .text-outline-white {
+            -webkit-text-stroke: 1px #fff;
+            text-stroke: 1px #fff;
+        }
+        
+        .hero-text {
+          pointer-events: none;
+        }
+        
+        .hero-text.active {
+          pointer-events: auto;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+
+    <!-- Navigation Header (partial only) -->
+<header class="fixed w-full top-0 left-0 z-50 py-6" role="banner">
+    <div class="container mx-auto px-4 sm:px-6">
+        <div class="bg-white rounded-full shadow-lg px-4 sm:px-6 py-3 flex justify-between items-center">
+
+            <!-- Logo -->
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <img src="https://naturechemsinergy.co.id/images/logo2.png" alt="Logo NCS" class="h-20 sm:h-27 w-auto -my-5">
+            </div>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden lg:flex items-center space-x-2 xl:space-x-4 text-sm font-medium" role="navigation"
+                aria-label="Main Navigation">
+                <a href="https://naturechemsinergy.co.id/home"
+                    class="nav-link flex items-center space-x-2 text-gray-700 hover:text-cyan-600 transition-all duration-300 px-3 xl:px-4 py-2 rounded-full hover:bg-cyan-50">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                    </svg>
+                    <span>Home</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/tentang"
+                    class="nav-link flex items-center space-x-2 text-gray-700 hover:text-cyan-600 transition-all duration-300 px-3 xl:px-4 py-2 rounded-full hover:bg-cyan-50">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+                    </svg>
+                    <span>Tentang Kami</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/filosofi"
+                    class="nav-link flex items-center space-x-2 text-cyan-600 bg-cyan-50 server-active hover:text-cyan-600 transition-all duration-300 px-3 xl:px-4 py-2 rounded-full hover:bg-cyan-50">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
+                    </svg>
+                    <span>Filosofi Logo</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/paket-pengujian"
+                    class="nav-link flex items-center space-x-2 text-gray-700 hover:text-cyan-600 transition-all duration-300 px-3 xl:px-4 py-2 rounded-full hover:bg-cyan-50">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                    </svg>
+                    <span>Paket Pengujian</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/faq"
+                    class="nav-link flex items-center space-x-2 text-gray-700 hover:text-cyan-600 transition-all duration-300 px-3 xl:px-4 py-2 rounded-full hover:bg-cyan-50">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span>FAQ</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/testimoni"
+                    class="nav-link flex items-center space-x-2 text-gray-700 hover:text-cyan-600 transition-all duration-300 px-3 xl:px-4 py-2 rounded-full hover:bg-cyan-50">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <span>Testimoni</span>
+                </a>
+
+                <a href="https://naturechemsinergy.co.id/kontak"
+                    class="flex items-center space-x-2 bg-cyan-500 text-white px-4 xl:px-6 py-2.5 rounded-full font-semibold shadow-md hover:bg-cyan-600 hover:shadow-lg hover:scale-105 transition-all duration-300">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                    </svg>
+                    <span>Kontak</span>
+                </a>
+            </nav>
+
+            <!-- Mobile Menu Button -->
+            <button class="lg:hidden text-gray-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 rounded-lg p-2"
+                id="mobileMenuBtn" aria-label="Toggle Menu" aria-expanded="false" aria-controls="mobileMenu">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path id="menuIcon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden lg:hidden mt-2 bg-white rounded-3xl shadow-xl overflow-hidden"
+            role="navigation" aria-label="Mobile Navigation">
+            <nav class="flex flex-col p-4 space-y-2">
+                <a href="https://naturechemsinergy.co.id/home"
+                    class="mobile-link flex items-center space-x-3 text-gray-700 hover:text-cyan-600 hover:bg-cyan-50 py-3 px-4 rounded-xl transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+                    </svg>
+                    <span class="font-medium">Home</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/tentang"
+                    class="mobile-link flex items-center space-x-3 text-gray-700 hover:text-cyan-600 hover:bg-cyan-50 py-3 px-4 rounded-xl transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+                    </svg>
+                    <span class="font-medium">Tentang Kami</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/filosofi"
+                    class="mobile-link flex items-center space-x-3 text-cyan-600 bg-cyan-50 server-active hover:text-cyan-600 hover:bg-cyan-50 py-3 px-4 rounded-xl transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
+                    </svg>
+                    <span class="font-medium">Filosofi Logo</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/paket-pengujian"
+                    class="mobile-link flex items-center space-x-3 text-gray-700 hover:text-cyan-600 hover:bg-cyan-50 py-3 px-4 rounded-xl transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                    </svg>
+                    <span class="font-medium">Paket Pengujian</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/faq"
+                    class="mobile-link flex items-center space-x-3 text-gray-700 hover:text-cyan-600 hover:bg-cyan-50 py-3 px-4 rounded-xl transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span class="font-medium">FAQ</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/testimoni"
+                    class="mobile-link flex items-center space-x-3 text-gray-700 hover:text-cyan-600 hover:bg-cyan-50 py-3 px-4 rounded-xl transition-all duration-300">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                    <span class="font-medium">Testimoni</span>
+                </a>
+                <a href="https://naturechemsinergy.co.id/kontak"
+                    class="flex items-center justify-center space-x-2 bg-cyan-500 text-white py-3 px-4 rounded-xl font-semibold shadow-md hover:bg-cyan-600 hover:shadow-lg transition-all duration-300 mt-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                        <path
+                            d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                    </svg>
+                    <span>Kontak</span>
+                </a>
+            </nav>
+        </div>
+</header>
+
+
+    <main class="pt-24">
+        <section id="filosofi" class="py-16 px-4 bg-gray-50">
+  <div class="max-w-6xl mx-auto">
+    
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-bold text-gray-900 mb-4 drop-shadow-lg" style="text-shadow: 2px 2px 4px rgba(255,255,255,0.3);">Filosofi Logo</h1>
+      <p class="text-gray-800 max-w-3xl mx-auto text-lg leading-relaxed font-medium">
+        Makna di balik identitas PT Nature Chem Synergy
+      </p>
+    </div>
+
+    <div class="flex justify-center mb-12">
+      <div class="bg-white/95 p-6 rounded-3xl shadow-2xl">
+        <div class="w-40 h-40 rounded-2xl flex items-center justify-center overflow-hidden">
+          <img src="https://naturechemsinergy.co.id/images/logo1.png" alt="Logo NCS" class="max-w-full max-h-full object-contain"
+               onerror="this.parentElement.innerHTML='<div class=\'w-full h-full bg-gray-100 rounded-2xl flex items-center justify-center\'><span class=\'text-gray-400 font-semibold\'>Logo NCS</span></div>'">
+        </div>
+      </div>
+    </div>
+
+    <!-- Philosophy Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+  <!-- Card 1: Daun dan Tikus -->
+<div class="group bg-white/95 rounded-2xl p-6 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 shadow-xl">
+  <div class="flex flex-col items-center text-center">
+    <div class="w-20 h-20 bg-gradient-to-br from-green-100 to-green-50 rounded-3xl flex items-center justify-center mb-4 shadow-sm">
+      <span class="text-4xl">🌿</span>
+    </div>
+    <h3 class="font-bold text-gray-900 text-lg mb-2 group-hover:text-cyan-600 transition-colors">Daun dan Tikus</h3>
+    <p class="text-gray-700 text-sm leading-relaxed">
+     Berkaitan dengan ketengan dan keseimbangan alam. Hewan dan Alam merupakan fokus utama Nature Chem Synergy sebagai jasa analis pengujian. Jumlah helai daun sebanyak 7 helai yang melambangkan 7 orang pendiri PT. Nature Chem Synergy
+    </p>
+  </div>
+</div>
+
+<!-- Card 2: Mikroskop dan Labu Bulat -->
+<div class="group bg-white/95 rounded-2xl p-6 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 shadow-xl">
+  <div class="flex flex-col items-center text-center">
+    <div class="w-20 h-20 bg-gradient-to-br from-cyan-100 to-cyan-50 rounded-3xl flex items-center justify-center mb-4 shadow-sm">
+      <span class="text-4xl">🔬</span>
+    </div>
+    <h3 class="font-bold text-gray-900 text-lg mb-2 group-hover:text-cyan-600 transition-colors">Mikroskop dan Labu Bulat</h3>
+    <p class="text-gray-700 text-sm leading-relaxed">
+     Berkaitan dengan alat dan laboratorium yang menandakan alat-alat yang digunakan ketika pengujian. Artinya Nature Chem Synergy berkomitmen menguji dengan teknologi dan metode baru dan terbarukan untuk mencapai cepat, tepat, dan akurat
+    </p>
+  </div>
+</div>
+
+<!-- Card 3: Keseluruhan -->
+<div class="group bg-white/95 rounded-2xl p-6 hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 shadow-xl">
+  <div class="flex flex-col items-center text-center">
+    <div class="w-20 h-20 bg-gradient-to-br from-purple-100 to-purple-50 rounded-3xl flex items-center justify-center mb-4 shadow-sm">
+      <span class="text-4xl">✨</span>
+    </div>
+    <h3 class="font-bold text-gray-900 text-lg mb-2 group-hover:text-cyan-600 transition-colors">Keseluruhan</h3>
+    <p class="text-gray-700 text-sm leading-relaxed">
+      Nature Chem Synergy berkomitmen untuk menjadi laboratorium yang mengintegrasikan keseimbangan alam dengan refleksi intelektual. Kami berupaya menciptakan harmoni melalui penerapan metode serta teknologi terbaru dan terbarukan, didukung oleh konsultan profesional dan ahli di bidangnya
+    </p>
+  </div>
+</div>
+
+    </div>
+
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 text-white py-14 px-6 md:px-12 lg:px-20 mt-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid md:grid-cols-3 gap-10 mb-12">
+      <div>
+       <h3 class="text-xl font-semibold mb-4" style="color: #42ADC4;">PT. Nature Chem Synergy</h3>
+        <p class="text-gray-400 text-sm leading-relaxed mb-5">
+          Perusahaan yang bergerak di bidang jasa analisis pengujian ilmiah 
+          dengan keahlian khusus pada penelitian bahan alam dan pengujian biologi.
+        </p>
+        <ul class="space-y-2 text-sm text-gray-300">
+          <li class="flex items-center gap-2"><span class="text-green-400">📞</span> (+62) 851-8454-2201</li>
+          <li class="flex items-center gap-2"><span class="text-purple-400">📧</span> naturechemlab@gmail.com</li>
+          <li class="flex items-center gap-2"><span style="color: #42ADC4;">📱</span> @naturechemlab_</li>
+        </ul>
+      </div>
+
+      <div class="flex flex-col md:pl-12">
+        <h4 class="font-semibold text-lg text-white mb-5">Website</h4>
+        <ul class="space-y-2 text-gray-300 text-sm">
+          <li><a href="https://naturechemsinergy.co.id/home" class="hover:text-cyan-400 transition">Home</a></li>
+          <li><a href="https://naturechemsinergy.co.id/tentang" class="hover:text-cyan-400 transition">Tentang Kami</a></li>
+          <li><a href="https://naturechemsinergy.co.id/filosofi" class="hover:text-cyan-400 transition">Filosofi Logo</a></li>
+          <li><a href="https://naturechemsinergy.co.id/paket-pengujian" class="hover:text-cyan-400 transition">Paket Pengujian</a></li>
+          <li><a href="https://naturechemsinergy.co.id/faq" class="hover:text-cyan-400 transition">FAQ</a></li>
+          <li><a href="https://naturechemsinergy.co.id/testimoni" class="hover:text-cyan-400 transition">Testimoni</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-semibold text-lg text-white mb-5">Ikuti Kami</h4>
+         <p class="text-gray-400 text-sm leading-relaxed mb-5">
+            Temukan Konten Menarik Yang Anda Cari
+        </p>  
+        <div class="flex gap-3">
+          <a href="https://instagram.com/naturechemlab_" target="_blank" class="w-10 h-10 border-2 border-gray-600 rounded-full flex items-center justify-center hover:border-pink-400 hover:bg-pink-400/10 transition group">
+            <svg class="w-5 h-5 text-gray-400 group-hover:text-pink-400 transition" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </a>
+          <a href="https://naturechemsinergy.co.id" target="_blank" class="w-10 h-10 border-2 border-gray-600 rounded-full flex items-center justify-center hover:border-cyan-400 hover:bg-cyan-400/10 transition group">
+            <svg class="w-5 h-5 text-gray-400 group-hover:text-cyan-400 transition" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+            </svg>
+          </a>
+          <a href="https://wa.me/6285184542201" target="_blank" class="w-10 h-10 border-2 border-gray-600 rounded-full flex items-center justify-center hover:border-green-400 hover:bg-green-400/10 transition group">
+            <svg class="w-5 h-5 text-gray-400 group-hover:text-green-400 transition" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="border-gray-700 mb-6">
+    <div class="text-center">
+      <p class="text-gray-400 text-sm">© 2025 PT. Nature Chem Synergy. All Rights Reserved.</p>
+    </div>
+  </div>
+</footer>
+    </main>
+
+        <script>
+        (function () {
+            class NavigationController {
+                constructor() {
+                    this.mobileMenuBtn = document.getElementById('mobileMenuBtn');
+                    this.mobileMenu = document.getElementById('mobileMenu');
+                    this.menuIcon = document.getElementById('menuIcon');
+                    this.body = document.body;
+                    this.isOpen = false;
+                    this.init();
+                }
+
+                init() {
+                    this.setupMobileMenu();
+                    this.setupSmoothScroll();
+                    this.setupActiveMenuOnScroll();
+                }
+
+                setupMobileMenu() {
+                    if (!this.mobileMenuBtn || !this.mobileMenu) return;
+
+                    this.mobileMenuBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.toggleMobileMenu();
+                    });
+
+                    document.addEventListener('click', (e) => {
+                        if (this.isOpen &&
+                            !this.mobileMenuBtn.contains(e.target) &&
+                            !this.mobileMenu.contains(e.target)) {
+                            this.closeMobileMenu();
+                        }
+                    });
+
+                    // Close menu when clicking any link
+                    this.mobileMenu.querySelectorAll('a').forEach(link => {
+                        link.addEventListener('click', () => {
+                            this.closeMobileMenu();
+                        });
+                    });
+
+                    document.addEventListener('keydown', (e) => {
+                        if (e.key === 'Escape' && this.isOpen) {
+                            this.closeMobileMenu();
+                        }
+                    });
+                }
+
+                toggleMobileMenu() {
+                    if (this.isOpen) {
+                        this.closeMobileMenu();
+                    } else {
+                        this.openMobileMenu();
+                    }
+                }
+
+                openMobileMenu() {
+                    this.mobileMenu.classList.remove('hidden');
+                    this.mobileMenu.classList.add('mobile-menu-enter');
+                    if (this.menuIcon) this.menuIcon.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+                    if (this.mobileMenuBtn) this.mobileMenuBtn.setAttribute('aria-expanded', 'true');
+                    this.isOpen = true;
+                }
+
+                closeMobileMenu() {
+                    this.mobileMenu.classList.add('hidden');
+                    this.mobileMenu.classList.remove('mobile-menu-enter');
+                    if (this.menuIcon) this.menuIcon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+                    if (this.mobileMenuBtn) this.mobileMenuBtn.setAttribute('aria-expanded', 'false');
+                    this.isOpen = false;
+                }
+
+                setupSmoothScroll() {
+                    // handle anchors that are same-page (href="#id") and anchors that include a hash
+                    document.querySelectorAll('a[href*="#"]').forEach(anchor => {
+                        anchor.addEventListener('click', (e) => {
+                            const href = anchor.getAttribute('href');
+                            if (!href || href === '#') return;
+
+                            try {
+                                const url = new URL(anchor.href, location.href);
+
+                                // If the clicked link points to the current page (same pathname + origin)
+                                // then prevent default navigation and smooth-scroll to the fragment.
+                                if (url.origin === location.origin && (url.pathname === location.pathname)) {
+                                    e.preventDefault();
+                                    const hash = url.hash;
+                                    const target = document.querySelector(hash);
+                                    if (target) {
+                                        const headerOffset = 100;
+                                        const elementPosition = target.getBoundingClientRect().top;
+                                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                                        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                                    }
+                                }
+                                // otherwise allow normal navigation (will load the other page)
+                            } catch (err) {
+                                // If URL parsing fails, fall back to simple hash-only behavior
+                                if (href.startsWith('#')) {
+                                    e.preventDefault();
+                                    const target = document.querySelector(href);
+                                    if (target) {
+                                        const headerOffset = 100;
+                                        const elementPosition = target.getBoundingClientRect().top;
+                                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                                        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                                    }
+                                }
+                            }
+                        });
+                    });
+
+                    // If the page was loaded with a hash (e.g., navigating from another page to route#section),
+                    // try to smooth scroll to that section after a short delay so the DOM/layout is ready.
+                    if (location.hash) {
+                        setTimeout(() => {
+                            const target = document.querySelector(location.hash);
+                            if (target) {
+                                const headerOffset = 100;
+                                const elementPosition = target.getBoundingClientRect().top;
+                                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+                                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                            }
+                        }, 250);
+                    }
+                }
+
+                setupActiveMenuOnScroll() {
+                    const sections = document.querySelectorAll('section[id]');
+
+                    const observerOptions = {
+                        root: null,
+                        rootMargin: '-100px 0px -60% 0px',
+                        threshold: 0
+                    };
+
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                const id = entry.target.getAttribute('id');
+                                this.updateActiveMenu(id);
+                            }
+                        });
+                    }, observerOptions);
+
+                    sections.forEach(section => observer.observe(section));
+                }
+
+                updateActiveMenu(activeId) {
+                    document.querySelectorAll('.nav-link, .mobile-link').forEach(link => {
+                        let linkHash = '';
+                        try {
+                            const url = new URL(link.href, location.href);
+                            linkHash = url.hash || '';
+                        } catch (err) {
+                            const href = link.getAttribute('href') || '';
+                            if (href.includes('#')) linkHash = `#${href.split('#').pop()}`;
+                        }
+
+                        if (linkHash === `#${activeId}`) {
+                            link.classList.add('text-cyan-600', 'bg-cyan-50');
+                            link.classList.remove('text-gray-700');
+                        } else {
+                            // Only reset links that are nav-links (do not override server-side active state for different pages)
+                            if (!link.classList.contains('server-active')) {
+                                link.classList.remove('text-cyan-600', 'bg-cyan-50');
+                                link.classList.add('text-gray-700');
+                            }
+                        }
+                    });
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                new NavigationController();
+            });
+        })();
+    </script>
+
+</body>
+
+</html>
