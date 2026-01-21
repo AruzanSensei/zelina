@@ -1,22 +1,30 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <title>Redirecting...</title>
 
   <script>
-    // Cek apakah user berada di root "/"
-    if (window.location.pathname === "/") {
-      window.location.replace("/home");
+    const basePath = "/reference/naturechemsinergy.co.id";
+    const homePath = basePath + "/home";
+
+    // normalisasi path (hapus trailing slash)
+    const currentPath = window.location.pathname.replace(/\/$/, "");
+
+    // redirect hanya jika user tepat di base path
+    if (currentPath === basePath) {
+      window.location.replace(homePath);
     }
   </script>
 
-  <!-- Fallback jika JS mati -->
   <noscript>
-    <meta http-equiv="refresh" content="0; url=/home">
+    <meta http-equiv="refresh" content="0; url=/reference/naturechemsinergy.co.id/home">
   </noscript>
 </head>
+
 <body>
   <p>Mengalihkan ke halaman utama...</p>
 </body>
+
 </html>
