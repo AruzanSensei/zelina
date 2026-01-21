@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wishlist Manager</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>WishManager</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-target="dashboard">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" data-target="wishlist">
+                    <i class="fa-solid fa-heart"></i>
+                    <span>Wishlist Saya</span>
+                </button>
+                <button class="nav-item" data-target="history">
+                    <i class="fa-solid fa-history"></i>
+                    <span>Riwayat Belanja</span>
+                </button>
+                <button class="nav-item" data-target="settings">
+                    <i class="fa-solid fa-cog"></i>
+                    <span>Pengaturan</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <p>&copy; 2025 WishManager</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Mobile Header -->
+            <header class="mobile-header">
+                <button id="menu-toggle"><i class="fa-solid fa-bars"></i></button>
+                <h2>WishManager</h2>
+            </header>
+
+            <!-- VIEW: DASHBOARD -->
+            <section id="dashboard-view" class="view-section active">
+                <div class="page-header">
+                    <h2>Dashboard Overview</h2>
+                    <p>Ringkasan status wishlist dan pengeluaran Anda.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card total-wishes">
+                        <div class="stat-icon"><i class="fa-solid fa-star"></i></div>
+                        <div class="stat-info">
+                            <h3>Total Item</h3>
+                            <span id="stat-total-items">0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card est-cost">
+                        <div class="stat-icon"><i class="fa-solid fa-money-bill-wave"></i></div>
+                        <div class="stat-info">
+                            <h3>Estimasi Biaya</h3>
+                            <span id="stat-total-cost">Rp 0</span>
+                        </div>
+                    </div>
+                    <div class="stat-card items-bought">
+                        <div class="stat-icon"><i class="fa-solid fa-shopping-bag"></i></div>
+                        <div class="stat-info">
+                            <h3>Sudah Dibeli</h3>
+                            <span id="stat-bought-items">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activity-container">
+                    <h3>Aktivitas Terbaru</h3>
+                    <div id="recent-activity-list" class="activity-list">
+                        <!-- Populated by JS -->
+                        <div class="empty-placeholder">Belum ada aktivitas.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: WISHLIST -->
+            <section id="wishlist-view" class="view-section">
+                <div class="page-header flex-between">
+                    <div>
+                        <h2>Wishlist Saya</h2>
+                        <p>Kelola barang impian Anda di sini.</p>
+                    </div>
+                    <div class="view-toggles">
+                        <button class="toggle-btn active" id="btn-view-card" title="Card View"><i
+                                class="fa-solid fa-border-all"></i></button>
+                        <button class="toggle-btn" id="btn-view-table" title="Table View"><i
+                                class="fa-solid fa-table-list"></i></button>
+                    </div>
+                </div>
+
+                <!-- Input Area (Collapsible or Always visible? Let's make it a nice card) -->
+                <div class="input-card">
+                    <div class="input-row">
+                        <div class="form-group grow">
+                            <label>Nama Barang</label>
+                            <input type="text" id="inp-name" placeholder="Nama barang...">
+                        </div>
+                        <div class="form-group">
+                            <label>Harga (Rp)</label>
+                            <input type="number" id="inp-price" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Kategori</label>
+                            <div class="select-group">
+                                <select id="inp-category">
+                                    <!-- Options JS -->
+                                </select>
+                                <button id="btn-add-cat-trigger" title="Kategori Baru"><i
+                                        class="fa-solid fa-plus"></i></button>
+                            </div>
+                        </div>
+                        <div class="form-group no-label">
+                            <button id="btn-add-item" class="btn-primary"><i class="fa-solid fa-plus"></i>
+                                Tambah</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wishlist Content -->
+                <div id="wishlist-content" class="wishlist-content grid-view">
+                    <!-- Rendered JS -->
+                </div>
+
+                <!-- Sticky Selection Bar -->
+                <div id="selection-bar" class="selection-bar">
+                    <div class="sel-info">
+                        <span id="sel-count">0</span> item terpilih
+                    </div>
+                    <div class="sel-total">
+                        Total: <span id="sel-total">Rp 0</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIEW: HISTORY -->
+            <section id="history-view" class="view-section">
+                <div class="page-header">
+                    <h2>Riwayat Belanja</h2>
+                    <p>Barang yang sudah berhasil Anda miliki.</p>
+                </div>
+
+                <div class="history-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Nama Barang</th>
+                                <th>Kategori</th>
+                                <th>Harga</th>
+                                <th>Tanggal Beli</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body">
+                            <!-- JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="empty-history" class="empty-placeholder hidden">Belum ada barang dibeli.</div>
+            </section>
+
+            <!-- VIEW: SETTINGS -->
+            <section id="settings-view" class="view-section">
+                <div class="page-header">
+                    <h2>Pengaturan</h2>
+                </div>
+                <div class="settings-card">
+                    <h3>Kelola Kategori</h3>
+                    <ul id="category-list" class="category-list">
+                        <!-- JS -->
+                    </ul>
+                    <div class="add-cat-inline">
+                        <input type="text" id="setting-new-cat" placeholder="Nama kategori baru">
+                        <button id="btn-setting-add-cat" class="btn-secondary">Tambah</button>
+                    </div>
+                </div>
+                <div class="settings-card">
+                    <h3>Data</h3>
+                    <button id="btn-clear-data" class="btn-danger">Hapus Semua Data</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-cat" class="modal hidden">
+        <div class="modal-box">
+            <h3>Tambah Kategori</h3>
+            <input type="text" id="modal-cat-input" placeholder="Nama Kategori">
+            <div class="modal-actions">
+                <button class="btn-text" id="modal-cat-cancel">Batal</button>
+                <button class="btn-primary" id="modal-cat-save">Simpan</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Notifikasi</div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
