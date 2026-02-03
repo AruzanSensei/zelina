@@ -9,13 +9,13 @@
 function formatTodayIndonesia() {
   const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
   const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-  
+
   const today = new Date();
   const dayName = days[today.getDay()];
   const date = today.getDate();
   const monthName = months[today.getMonth()];
   const year = today.getFullYear();
-  
+
   return `${date} ${monthName} ${year}`;
 }
 
@@ -38,12 +38,75 @@ function formatTime(date) {
 function getAutoTimeRange() {
   const now = new Date();
   const fiveMinutesAgo = new Date(now.getTime() - 5 * 60000);
-  
+
   const startTime = formatTime(fiveMinutesAgo);
   const endTime = formatTime(now);
-  
+
   return { startTime, endTime };
 }
+
+/**
+ * SoundEffects - Utiliti untuk memutar suara menggunakan Web Audio API
+ */
+const SoundEffects = {
+  audioCtx: null,
+
+  /**
+   * Inisialisasi AudioContext (panggil saat interaksi pertama)
+   */
+  init() {
+    if (!this.audioCtx) {
+      this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+  },
+
+  /**
+   * Main function untuk generate bunyi
+   */
+  playTone(freq, duration, type = 'sine', volume = 0.1) {
+    this.init();
+    const ctx = this.audioCtx;
+
+    const oscillator = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(freq, ctx.currentTime);
+
+    // Ramp volume untuk menghindari bunyi 'klik' tajam
+    gainNode.gain.setValueAtTime(volume, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+
+    oscillator.connect(gainNode);
+    gainNode.connect(ctx.destination);
+
+    oscillator.start();
+    oscillator.stop(ctx.currentTime + duration);
+  },
+
+  /**
+   * Suara copy (high blip)
+   */
+  playCopy() {
+    this.playTone(880, 0.1, 'sine', 0.1); // A5 note
+  },
+
+  /**
+   * Suara delete (low pop/thump)
+   */
+  playDelete() {
+    this.playTone(150, 0.15, 'square', 0.05); // Low square wave for thump
+  },
+
+  /**
+   * Suara warning (pulsed high-pitch alert)
+   */
+  playWarning() {
+    const playPulse = (v) => this.playTone(1200, 0.08, 'sine', v);
+    playPulse(0.1);
+    setTimeout(() => playPulse(0.08), 150);
+  }
+};
 
 /**
  * Auto-expand textarea berdasarkan content height

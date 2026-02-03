@@ -68,8 +68,8 @@ function handleEmptyInputs(template, emptyInputs) {
     firstEmptyInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  // Tampilkan warning
-  alert(`❌ Harap isi ${emptyInputs.map(input => `"${input.label}"`).join(', ')} terlebih dahulu`);
-  
+  // Tampilkan warning kustom
+  showCustomAlert(`Harap isi ${emptyInputs.map(input => `"${input.label}"`).join(', ')} terlebih dahulu`);
+
   return false; // Jangan copy
 }

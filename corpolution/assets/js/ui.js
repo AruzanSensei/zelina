@@ -211,7 +211,7 @@ function createCard(template) {
 
       // Load dari cache jika tersimpan
       let cached = getInputValue(inputConfig.id);
-      
+
       // Auto-fill waktu untuk Baca Buku
       if (template.id === 'bacabuku' && !cached) {
         const timeRange = getAutoTimeRange();
@@ -227,6 +227,10 @@ function createCard(template) {
       // Clear button functionality
       clearBtn.addEventListener('click', (e) => {
         e.preventDefault();
+
+        // Play delete sound
+        SoundEffects.playDelete();
+
         inputElement.value = '';
         if (inputConfig.cache) {
           removeInputValue(inputConfig.id);
@@ -281,7 +285,7 @@ function createCard(template) {
     output.className = 'card-output';
     output.setAttribute('data-template-id', template.id);
     const inputs = getInputValues(template);
-    
+
     if (template.isMultiCopy && template.copies) {
       // Untuk multi-copy, tampilkan copy pertama
       output.textContent = template.copies[0].template(userName, inputs);
@@ -292,15 +296,60 @@ function createCard(template) {
   }
 
   // Event listener untuk expand/collapse saat header diklik
-  header.addEventListener('click', (e) => {
-    if (e.target.closest('.copy-btn')) {
-      return;
-    }
-    content.classList.toggle('expanded');
-  });
+  // Hanya untuk card yang memiliki inputs
+  if (template.hasInputs) {
+    header.addEventListener('click', (e) => {
+      if (e.target.closest('.copy-btn')) {
+        return;
+      }
+      content.classList.toggle('expanded');
+    });
+
+    // Tambahkan class untuk styling cursor pointer
+    header.style.cursor = 'pointer';
+  } else {
+    // Untuk card tanpa inputs, tidak bisa di-expand
+    header.style.cursor = 'default';
+  }
 
   card.appendChild(header);
   card.appendChild(content);
 
   return card;
+}
+
+// ========== CUSTOM ALERT FUNCTIONS ==========
+
+/**
+ * Tampilkan alert kustom di tengah layar
+ * @param {string} message - Pesan yang ingin ditampilkan
+ */
+function showCustomAlert(message) {
+  const modal = document.getElementById('customAlert');
+  const messageEl = document.getElementById('alertMessage');
+
+  if (modal && messageEl) {
+    messageEl.textContent = message;
+    modal.classList.add('show');
+
+    // Play warning sound
+    if (typeof SoundEffects !== 'undefined') {
+      SoundEffects.playWarning();
+    }
+
+    // Auto hide after 2 seconds
+    setTimeout(() => {
+      closeCustomAlert();
+    }, 2000);
+  }
+}
+
+/**
+ * Tutup alert kustom
+ */
+function closeCustomAlert() {
+  const modal = document.getElementById('customAlert');
+  if (modal) {
+    modal.classList.remove('show');
+  }
 }

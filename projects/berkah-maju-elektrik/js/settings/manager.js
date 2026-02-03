@@ -336,9 +336,9 @@ export function initSettings() {
     // Load Item Templates
     let itemTemplates = localStorage.getItem('bme_item_templates');
     itemTemplates = itemTemplates ? JSON.parse(itemTemplates) : [
-        { name: "Kabel NYM 1.5mm", price: 5000 },
-        { name: "Lampu LED 10W", price: 35000 },
-        { name: "Saklar Single", price: 15000 }
+        { name: "Battery 12V9Ah", price: 295000 },
+        { name: "Battery 12V7Ah", price: 250000 },
+        { name: "Battery 12V5Ah", price: 220000 }
     ];
 
     const saveItemTemplates = () => {

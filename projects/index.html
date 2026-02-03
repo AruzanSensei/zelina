@@ -4,8 +4,69 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kumpulan Proyek Random</title>
-  <link rel="stylesheet" href="../assets/css/global.css">
   <style>
+    :root {
+      --primary: #2563eb;
+      --bg: #f8fafc;
+      --text: #0f172a;
+      --card-bg: #ffffff;
+      --gray-400: #94a3b8;
+      --dot-color: rgba(77, 37, 235, 0.075);
+      --dot-size: 1.5px;
+      --dot-space: 22px;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .dots-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      background-image: 
+        radial-gradient(var(--dot-color) var(--dot-size), transparent var(--dot-size)),
+        radial-gradient(var(--dot-color) var(--dot-size), transparent var(--dot-size));
+      background-position: 0 0, calc(var(--dot-space) / 2) calc(var(--dot-space) / 2);
+      background-size: var(--dot-space) var(--dot-space);
+      mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+      -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+    }
+    
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 1rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+      color: var(--gray-400);
+    }
+
+    .breadcrumb a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .breadcrumb span {
+      color: #4c586a;
+    }
+    
     .header {
       text-align: center;
       margin-bottom: 1rem;
@@ -39,11 +100,23 @@
       box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       overflow: hidden;
+      position: relative;
     }
     
     .card:hover {
       transform: translateY(-4px);
       box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    .card.best-project {
+      background: var(--card-bg);
+      border: 2px solid #fbbf24;
+      box-shadow: 0 4px 6px -1px rgb(251 191 36 / 0.3), 0 2px 4px -2px rgb(251 191 36 / 0.2), 0 0 20px rgb(251 191 36 / 0.15);
+    }
+
+    .card.best-project:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 15px -3px rgb(251 191 36 / 0.4), 0 4px 6px -4px rgb(251 191 36 / 0.3), 0 0 30px rgb(251 191 36 / 0.25);
     }
     
     .card a {
@@ -59,11 +132,6 @@
       gap: 0.5rem;
       font-size: 1.1rem;
       font-weight: 500;
-    }
-
-    .card-title::before {
-      content: "📂";
-      font-size: 1.2rem;
     }
 
     .card-description {
@@ -108,7 +176,7 @@
       .card a {
         padding: 0.5rem 1rem 0.8rem 1rem;
       }
-      
+
       .card-title {
         font-size: 1rem;
       }
@@ -123,7 +191,7 @@
 <body>
   <div class="dots-background"></div>
   <nav class="breadcrumb">
-    <a href="../"><img src="../assets/icon/zanxa-mini.ico" alt="Home" class="breadcrumb-icon"></a>
+    <a href="../">🏠</a>
     <span>/</span>
     <span>projects</span>
   </nav>
@@ -132,64 +200,76 @@
     <p class="subtitle">Koleksi proyek yang mungkin berguna ^_^</p>
   </header>
   <ul class="grid">
+    <li class="card best-project">
+      <a href="./berkah-maju-elektrik/">
+        <div class="card-title">⚡ Berkah Maju Elektrik</div>
+        <div class="card-description">[Tambahkan deskripsi proyek]</div>
+      </a>
+    </li>
     <li class="card">
       <a href="./AJI-Web/">
-        <div class="card-title">Aji Web</div>
+        <div class="card-title">🏢 AJI Web</div>
         <div class="card-description">my pertama bikin website perusahaan (tapi gagal awokawok)</div>
       </a>
     </li>
     <li class="card">
-      <a href="./QurbanKu/">
-        <div class="card-title">Qurbanku</div>
-        <div class="card-description">ada yang mau embe?</div>
+      <a href="./ayamdigital/">
+        <div class="card-title">🐔 Ayam Digital</div>
+        <div class="card-description">[Tambahkan deskripsi proyek]</div>
       </a>
     </li>
     <li class="card">
       <a href="./chatbot.zanxa/">
-        <div class="card-title">Chatbot.Zanxa</div>
+        <div class="card-title">🤖 Chatbot Zanxa</div>
         <div class="card-description">Iseng aja bikin chatbot ~_~</div>
       </a>
     </li>
     <li class="card">
       <a href="./contact/">
-        <div class="card-title">Contact</div>
+        <div class="card-title">📞 Contact</div>
         <div class="card-description">Kontak gweh ini cuy, mau tau? ada sandinya haha :P</div>
       </a>
     </li>
     <li class="card">
       <a href="./dairyMilk/">
-        <div class="card-title">Dairymilk</div>
+        <div class="card-title">🥛 Dairy Milk</div>
         <div class="card-description">Platform e-commerce untuk produk susu</div>
       </a>
     </li>
     <li class="card">
       <a href="./Kotoba-Minna-ni-Hongo/">
-        <div class="card-title">Kotoba Minna Ni Hongo</div>
-        <div class="card-description">Aplikasi belajar bahasa Jepang dengan fitur interaktif</div>
+        <div class="card-title">🇯🇵 Kotoba Minna ni Hongo</div>
+        <div class="card-description">[Tambahkan deskripsi proyek]</div>
       </a>
     </li>
     <li class="card">
       <a href="./lms-2023-2024/">
-        <div class="card-title">Lms 2023 2024</div>
+        <div class="card-title">🎓 LMS 2023-2024</div>
         <div class="card-description">Sistem Manajemen Pembelajaran dengan pelacakan lanjutan</div>
       </a>
     </li>
     <li class="card">
       <a href="./LMS2324/">
-        <div class="card-title">Lms2324</div>
+        <div class="card-title">📚 LMS2324</div>
         <div class="card-description">Versi terbaru dari Sistem Manajemen Pembelajaran</div>
       </a>
     </li>
     <li class="card">
       <a href="./otakuDownload/">
-        <div class="card-title">Otakudownload</div>
+        <div class="card-title">🎌 Otaku Download</div>
         <div class="card-description">Platform manajemen konten anime dan manga</div>
       </a>
     </li>
     <li class="card">
       <a href="./pixel-commerce-oasis/">
-        <div class="card-title">Pixel Commerce Oasis</div>
+        <div class="card-title">🛒 Pixel Commerce Oasis</div>
         <div class="card-description">Solusi e-commerce modern dengan desain pixel-perfect</div>
+      </a>
+    </li>
+    <li class="card">
+      <a href="./QurbanKu/">
+        <div class="card-title">🐐 QurbanKu</div>
+        <div class="card-description">ada yang mau embe?</div>
       </a>
     </li>
   </ul>

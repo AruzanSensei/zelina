@@ -62,16 +62,20 @@ async function handleCopy(template, copyIndex, button, inputs = null) {
   if (template.hasInputs) {
     const emptyInputs = validateInputs(template);
     if (!handleEmptyInputs(template, emptyInputs)) {
+      SoundEffects.playWarning();
       return; // Jangan copy jika ada input kosong
     }
   }
 
   let text;
-  
+
   if (template.hasInputs) {
     const inputValues = inputs || getInputValues(template);
     if (template.isMultiCopy && template.copies[copyIndex]) {
       text = template.copies[copyIndex].template(userName, inputValues);
+    } else if (template.template) {
+      // Untuk template dengan inputs tanpa multi-copy (seperti Baca Buku, Value Terapan)
+      text = template.template(userName, inputValues);
     } else if (template.copies) {
       text = template.copies[0].template(userName, inputValues);
     }
@@ -83,6 +87,9 @@ async function handleCopy(template, copyIndex, button, inputs = null) {
 
   try {
     await navigator.clipboard.writeText(text);
+
+    // Play copy sound
+    SoundEffects.playCopy();
 
     // Visual feedback
     const originalText = button.textContent;

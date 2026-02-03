@@ -1,5 +1,6 @@
 import os
 import webbrowser
+import json
 
 # Lokasi script
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -16,11 +17,45 @@ else:
 if not os.path.exists(PROJECTS_DIR):
     raise FileNotFoundError(f"Folder 'projects' tidak ditemukan di {BASE_PATH}")
 
-# Ambil daftar folder di projects/
-projects = [
-    d for d in os.listdir(PROJECTS_DIR)
-    if os.path.isdir(os.path.join(PROJECTS_DIR, d))
-]
+# Fungsi untuk membaca projects.json dari setiap folder
+def load_project_metadata(project_folder):
+    """Load metadata dari projects.json di folder proyek"""
+    json_path = os.path.join(PROJECTS_DIR, project_folder, "projects.json")
+    
+    # Default metadata jika file tidak ada
+    default_metadata = {
+        "name": project_folder.replace("-", " ").title(),
+        "description": "A web development project in progress",
+        "bestProject": False,
+        "icon": "📂"
+    }
+    
+    if os.path.exists(json_path):
+        try:
+            with open(json_path, "r", encoding="utf-8") as f:
+                metadata = json.load(f)
+                # Pastikan semua field ada
+                metadata.setdefault("name", default_metadata["name"])
+                metadata.setdefault("description", default_metadata["description"])
+                metadata.setdefault("bestProject", False)
+                metadata.setdefault("icon", "📂")
+                return metadata
+        except (json.JSONDecodeError, IOError) as e:
+            print(f"⚠️ Error reading {json_path}: {e}")
+            return default_metadata
+    
+    return default_metadata
+
+# Ambil daftar folder di projects/ dengan metadata
+project_data = []
+for d in os.listdir(PROJECTS_DIR):
+    if os.path.isdir(os.path.join(PROJECTS_DIR, d)):
+        metadata = load_project_metadata(d)
+        metadata["folder"] = d
+        project_data.append(metadata)
+
+# Sort: Best projects dulu, lalu alfabetis
+project_data.sort(key=lambda x: (not x["bestProject"], x["name"].lower()))
 
 # === Buat konten HTML ===
 html_content = """<!DOCTYPE html>
@@ -125,11 +160,23 @@ html_content = """<!DOCTYPE html>
       box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       overflow: hidden;
+      position: relative;
     }
     
     .card:hover {
       transform: translateY(-4px);
       box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+
+    .card.best-project {
+      background: var(--card-bg);
+      border: 2px solid #fbbf24;
+      box-shadow: 0 4px 6px -1px rgb(251 191 36 / 0.3), 0 2px 4px -2px rgb(251 191 36 / 0.2), 0 0 20px rgb(251 191 36 / 0.15);
+    }
+
+    .card.best-project:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 15px -3px rgb(251 191 36 / 0.4), 0 4px 6px -4px rgb(251 191 36 / 0.3), 0 0 30px rgb(251 191 36 / 0.25);
     }
     
     .card a {
@@ -145,11 +192,6 @@ html_content = """<!DOCTYPE html>
       gap: 0.5rem;
       font-size: 1.1rem;
       font-weight: 500;
-    }
-
-    .card-title::before {
-      content: "📂";
-      font-size: 1.2rem;
     }
 
     .card-description {
@@ -223,24 +265,20 @@ html_content = """<!DOCTYPE html>
 # Tentukan prefix link
 link_prefix = "./projects/" if os.path.basename(SCRIPT_DIR) != "projects" else "./"
 
-project_descriptions = {
-    'AJI-Web': 'my pertama bikin website perusahaan (tapi gagal awokawok)',
-    'chatbot.zanxa': 'Iseng aja bikin chatbot ~_~',
-    'contact': 'Kontak gweh ini cuy, mau tau? ada sandinya haha :P',
-    'dairyMilk': 'Platform e-commerce untuk produk susu',
-    'lms-2023-2024': 'Sistem Manajemen Pembelajaran dengan pelacakan lanjutan',
-    'LMS2324': 'Versi terbaru dari Sistem Manajemen Pembelajaran',
-    'otakuDownload': 'Platform manajemen konten anime dan manga',
-    'pixel-commerce-oasis': 'Solusi e-commerce modern dengan desain pixel-perfect',
-    'QurbanKu': 'ada yang mau embe?'
-}
-
-for project in projects:
-    title = project.replace("-", " ").title()
-    description = project_descriptions.get(project, "A web development project in progress")
-    html_content += f'''    <li class="card">
-      <a href="{link_prefix}{project}/">
-        <div class="card-title">{title}</div>
+# Generate card untuk setiap project
+for project in project_data:
+    folder = project["folder"]
+    name = project["name"]
+    description = project["description"]
+    is_best = project["bestProject"]
+    icon = project["icon"]
+    
+    # Tambahkan class best-project jika bestProject = true
+    card_class = "card best-project" if is_best else "card"
+    
+    html_content += f'''    <li class="{card_class}">
+      <a href="{link_prefix}{folder}/">
+        <div class="card-title">{icon} {name}</div>
         <div class="card-description">{description}</div>
       </a>
     </li>\n'''
@@ -255,7 +293,7 @@ OUTPUT_PATH = os.path.join(SCRIPT_DIR, "index.html")
 with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
     f.write(html_content)
 
-print(f"✅ index.html berhasil digenerate di {OUTPUT_PATH}")
+print(f"[OK] index.html berhasil digenerate di {OUTPUT_PATH}")
 
 # Buka otomatis di browser
 webbrowser.open("file://" + OUTPUT_PATH)

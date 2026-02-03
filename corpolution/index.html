@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,7 +26,7 @@
 
 <body>
   <div class="dots-background"></div>
-  
+
   <nav class="breadcrumb">
     <a href="../"><img src="../assets/icon/zanxa-mini.ico" alt="Home" class="breadcrumb-icon"></a>
     <span>/</span>
@@ -40,13 +41,28 @@
   <div class="input-section">
     <div class="input-group">
       <label for="fullName">Nama Lengkap</label>
-      <input 
-        type="text" 
-        id="fullName" 
-        class="input-field" 
-        placeholder="Masukkan nama lengkap Anda"
-        autocomplete="off"
-      >
+      <input type="text" id="fullName" class="input-field" placeholder="Masukkan nama lengkap Anda" autocomplete="off">
+    </div>
+  </div>
+
+  <div class="update-notification" onclick="this.classList.toggle('active')">
+    <div class="notification-top">
+      <div class="notification-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <div class="notification-header">
+        <strong>Update Terbaru:</strong> <span class="notification-badge">Klik untuk detail</span>
+      </div>
+    </div>
+    <div class="notification-body">
+      <p>• Card "Log In", "Tilawah", "Pause Time", dan "Logout" tidak bisa di-expand lagi</p>
+      <p>• Output dari card "Baca Buku" dan "Value Terapan" sudah diperbaiki</p>
+      <p>• Menambah audio effect saat menekan tombol copy, delete, dan warning</p>
     </div>
   </div>
 
@@ -55,6 +71,13 @@
   </div>
 
   <!-- Modular JavaScript Files (load in order) -->
+  <!-- Custom Alert Modal (Mini Toast) -->
+  <div id="customAlert" class="modal-overlay" onclick="closeCustomAlert()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div id="alertMessage">Pesan alert di sini</div>
+    </div>
+  </div>
+
   <script src="./assets/js/utils.js"></script>
   <script src="./assets/js/templates.js"></script>
   <script src="./assets/js/storage.js"></script>
@@ -62,4 +85,5 @@
   <script src="./assets/js/ui.js"></script>
   <script src="./assets/js/main.js"></script>
 </body>
+
 </html>
