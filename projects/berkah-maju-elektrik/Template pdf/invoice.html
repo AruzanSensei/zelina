@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - Berkah Maju Elektrik</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .page-container {
+            width: 210mm;
+            min-height: 297mm;
+            background: white;
+            margin: 0 auto;
+            padding: 28mm 20mm 25mm 25mm;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            color: #000;
+        }
+
+        .company-info {
+            font-family: 'Calibri', 'Candara', 'Segoe', 'Segoe UI', 'Optima', 'Arial', sans-serif;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2px;
+        }
+
+        .company-left {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .company-logo {
+            width: 60px;
+            height: auto;
+        }
+
+        .company-details {
+            text-align: left;
+        }
+
+        .company-details h2 {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .company-details p {
+            font-size: 13px;
+            line-height: 1;
+            margin: 1px 0;
+        }
+
+        .invoice-info-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .invoice-box {
+            border: 2px solid #000;
+            padding: 8px 10px;
+            min-width: 210px;
+            margin-right: 0px;
+        }
+
+        .invoice-box p {
+            font-size: 14px;
+            margin: 2px 0;
+            line-height: 1;
+        }
+
+        .invoice-box strong {
+            font-weight: bold;
+        }
+
+        .separator {
+            border-top: 2px solid #000;
+            margin: 14px 0 30px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 0;
+        }
+
+        table th {
+            background-color: #c0c0c0;
+            border: 1px solid #000;
+            padding: 8px 6px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        table td {
+            border: 1px solid #000;
+            padding: 6px 8px;
+            font-size: 16px;
+        }
+
+        table td:nth-child(1) {
+            text-align: center;
+            width: 50px;
+        }
+
+        table td:nth-child(2) {
+            text-align: left;
+            width: 180px;
+        }
+
+        table td:nth-child(3) {
+            text-align: center;
+            width: 70px;
+        }
+
+        table td:nth-child(4),
+        table td:nth-child(5) {
+            text-align: center;
+            width: 110px;
+        }
+
+        .total-section {
+            width: 100%;
+            margin-top: 0;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: flex-end;
+            border: 1px solid #000;
+            border-top: none;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .total-label {
+            padding: 6px 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+            border-right: 1px solid #000;
+            width: 120px;
+        }
+
+        .total-value {
+            padding: 6px 8px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #000;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            font-size: 16px;
+            width: 263px;
+        }
+
+        .payment-info {
+            font-size: 16px;
+            margin: 35px 0 65px 0;
+            text-align: left;
+        }
+
+        .footer {
+            margin-top: 35px;
+            text-align: right;
+        }
+
+        .footer p {
+            font-size: 16px;
+            margin: 4px 0;
+        }
+
+        .hormat-kami {
+            padding-right: 28px;
+        }
+
+        .signature-space {
+            margin-top: 80px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .page-container {
+                box-shadow: none;
+                margin: 0;
+                width: 210mm;
+                min-height: 297mm;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>INVOICE</h1>
+        </div>
+
+        <!-- Company Info and Invoice Details -->
+        <div class="company-info">
+            <div class="company-left">
+                <img src="../assets/Logo berkah maju elektrik.png" alt="Berkah Maju Elektrik Logo" class="company-logo">
+                <div class="company-details">
+                    <h2>BERKAH MAJU ELEKTRIK</h2>
+                    <p>Jl. Raya Karawaci, Parung Panjang Atas Lewuliang, Bogor</p>
+                    <p>085541743020 / 085312132030</p>
+                    <p>Salesdan Service Alat@lit Listrik, UPS, Stabilizer, Battery UPS</p>
+                </div>
+            </div>
+            <div class="invoice-info-container">
+                <div class="invoice-box">
+                    <p>Tanggal :</p>
+                </div>
+                <div class="invoice-box">
+                    <p>Kepada :</p>
+                    <p><strong>PT. SARASWANTI INDO GENETECH</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="separator"></div>
+
+        <!-- Invoice Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>NO</th>
+                    <th>KETERANGAN</th>
+                    <th>QTY</th>
+                    <th>HARGA<br>SATUAN</th>
+                    <th>JUMLAH</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Battery UPS 12V-9AH Prolink 3kva No. 4A 02, 4A 03, 4A 04 Ruang HPLC Lantai 4</td>
+                    <td>18 pcs</td>
+                    <td>Rp 295.000</td>
+                    <td>Rp 5.310.000</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Battery UPS 12V-9AH ICA 3kva No. 4A 01 Ruang HPLC Lantai 4</td>
+                    <td>8 pcs</td>
+                    <td>Rp 295.000</td>
+                    <td>Rp 2.360.000</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Total Section (outside table, right-aligned) -->
+        <div class="total-section">
+            <div class="total-row">
+                <div class="total-label">JUMLAH</div>
+                <div class="total-value">Rp 7.670.000</div>
+            </div>
+        </div>
+
+        <!-- Payment Information -->
+        <div class="payment-info">
+            <p>Pembayaran Bisa melalui rekening Bank <strong>BCA 5737162660</strong> a.n SAEPUL IMAN
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p class="hormat-kami">Hormat Kami</p>
+            <div class="signature-space"></div>
+            <p>Berkah Maju Elektrik</p>
+        </div>
+    </div>
+</body>
+
+</html>
