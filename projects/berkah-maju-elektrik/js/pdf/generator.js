@@ -424,7 +424,7 @@ const buildInvoiceHTML = (items, titleName) => {
     const rows = items.map((item, index) => `
                 <tr>
                     <td>${index + 1}</td>
-                    <td>Battery ${item.name || ''} ${item.tipe || ''} ${item.note || ''}</td>
+                    <td>${item.name || ''} ${item.tipe || ''} ${item.note || ''}</td>
                     <td>${item.qty} pcs</td>
                     <td>Rp ${formatNumber(item.price)}</td>
                     <td>Rp ${formatNumber(item.price * item.qty)}</td>
@@ -459,11 +459,11 @@ ${INVOICE_STYLE}
                     </div>
             <div class="invoice-info-container">
                 <div class="invoice-box">
-                    <p>Tanggal : ${dateStr}</p>
+                    <p>Tanggal :</p>
                         </div>
                 <div class="invoice-box">
                     <p>Kepada :</p>
-                    <p><strong>${titleName || 'PT. SARASWANTI INDO GENETECH'}</strong></p>
+                    <p><strong>PT. SARASWANTI INDO GENETECH</strong></p>
                         </div>
                     </div>
                 </div>
@@ -510,7 +510,7 @@ const buildSuratJalanHTML = (items) => {
     const rows = items.map((item, index) => `
                 <tr>
                     <td>${index + 1}</td>
-                    <td>Battery ${item.name || ''}</td>
+                    <td>${item.name || ''}</td>
                     <td>${item.qty} pcs</td>
                     <td>UPS ${item.tipe || ''} ${item.note || ''}</td>
                 </tr>
