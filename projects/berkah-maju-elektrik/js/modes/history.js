@@ -2,7 +2,7 @@
  * History Mode Logic
  */
 import { appState } from '../state.js';
-import { generatePDFs } from '../pdf/generator.js';
+import { printInvoicePDF } from '../pdf/generator.js';
 
 export function initHistoryMode() {
     const container = document.getElementById('history-list');
@@ -211,7 +211,7 @@ export function initHistoryMode() {
             e.stopPropagation();
             const index = btnDownload.dataset.index;
             const entry = appState.state.history[index];
-            generatePDFs(entry.items, entry.title);
+            printInvoicePDF(entry.items, entry.title);
             return;
         }
 

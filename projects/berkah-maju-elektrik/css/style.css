@@ -502,15 +502,37 @@ small {
 
 .preview-content {
     background: white;
-    width: 90%;
-    /* Increased for better visibility */
-    height: 90%;
-    display: block;
-    /* Changed from flex to block */
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
     padding: 0;
     box-shadow: var(--shadow-sm);
     overflow: hidden;
     position: relative;
+}
+
+/* A4 iframe preview wrapper & frame (preview only, not for print) */
+.a4-preview-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.a4-preview-frame {
+    width: 794px;
+    /* A4 width at ~96 DPI (intrinsic, before scale) */
+    height: 1123px;
+    /* A4 height at ~96 DPI (intrinsic, before scale) */
+    transform-origin: top center;
+    border: 0;
+    display: block;
+    flex: 0 0 auto;
 }
 
 /* HTML Render Styles */
