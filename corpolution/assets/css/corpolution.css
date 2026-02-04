@@ -333,9 +333,9 @@ label {
 }
 
 .copy-btn.copied {
-  background: #dcfce7;
-  border-color: #22c55e;
-  color: #16a34a;
+  background: #dbffe7;
+  border-color: hsl(142, 64%, 33%);
+  color: #176f44;
 }
 
 .card-content {
@@ -598,8 +598,8 @@ label {
   }
 
   .copy-btn {
-    background: #f8f8f8;
-    border-color: #c3c3c3;
+    background: #f8f8f8dc;
+    border-color: #c3c3c372;
     color: #2e2e2e;
   }
 
