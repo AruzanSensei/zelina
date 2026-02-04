@@ -1,0 +1,22 @@
+{
+  "name": "Berkah Maju Elektrik - Invoice Generator",
+  "short_name": "BM Elektrik",
+  "start_url": "/projects/berkah-maju-elektrik/",
+  "scope": "/projects/berkah-maju-elektrik/",
+  "display": "standalone",
+  "background_color": "#F5F7FA",
+  "theme_color": "#4A90E2",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/projects/berkah-maju-elektrik/assets/Logo berkah maju elektrik.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/projects/berkah-maju-elektrik/assets/Logo berkah maju elektrik.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
