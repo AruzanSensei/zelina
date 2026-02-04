@@ -23,9 +23,9 @@ const DEFAULTS = {
             id: 1,
             name: "Instalasi Listrik Rumah",
             items: [
-                { name: "Kabel NYM 3x2.5", price: 150000, qty: 10, note: "Eterna" },
-                { name: "MCB Schneider 16A", price: 85000, qty: 5, note: "" },
-                { name: "Stop Kontak Panasonic", price: 25000, qty: 8, note: "Tempel" }
+                { name: "Kabel NYM 3x2.5", price: 150000, qty: 10, note: "Eterna", tipe: "Prolink" },
+                { name: "MCB Schneider 16A", price: 85000, qty: 5, note: "", tipe: "Prolink" },
+                { name: "Stop Kontak Panasonic", price: 25000, qty: 8, note: "Tempel", tipe: "Prolink" }
             ]
         }
     ]

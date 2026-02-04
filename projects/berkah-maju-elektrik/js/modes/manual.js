@@ -79,6 +79,15 @@ export function initManualMode() {
                             <label class="field-label">Harga</label>
                             <input type="text" class="form-input item-price-format" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="0" inputmode="numeric">
                         </div>
+                        <div style="flex: 1.5;">
+                            <label class="field-label">Tipe</label>
+                            <select class="form-input item-tipe" data-index="${index}">
+                                <option value="ICA" ${item.tipe === 'ICA' ? 'selected' : ''}>ICA</option>
+                                <option value="Protecta" ${item.tipe === 'Protecta' ? 'selected' : ''}>Protecta</option>
+                                <option value="Prolink" ${item.tipe === 'Prolink' ? 'selected' : ''}>Prolink</option>
+                                <option value="APC" ${item.tipe === 'APC' ? 'selected' : ''}>APC</option>
+                            </select>
+                        </div>
                         <div style="flex: 1;">
                             <label class="field-label">Pcs</label>
                             <div class="qty-control">
@@ -125,6 +134,7 @@ export function initManualMode() {
                 <tr>
                     <th>Barang</th>
                     <th>Harga</th>
+                    <th>Tipe</th>
                     <th>Pcs</th>
                     <th>Note</th>
                     <th style="width:40px;"></th>
@@ -140,6 +150,14 @@ export function initManualMode() {
                         </div>
                     </td>
                     <td><input type="text" class="item-price-format" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="0" inputmode="numeric"></td>
+                    <td>
+                        <select class="item-tipe" data-index="${index}" style="width:100%; padding:4px; border:none; background:transparent;">
+                            <option value="ICA" ${item.tipe === 'ICA' ? 'selected' : ''}>ICA</option>
+                            <option value="Protecta" ${item.tipe === 'Protecta' ? 'selected' : ''}>Protecta</option>
+                            <option value="Prolink" ${item.tipe === 'Prolink' ? 'selected' : ''}>Prolink</option>
+                            <option value="APC" ${item.tipe === 'APC' ? 'selected' : ''}>APC</option>
+                        </select>
+                    </td>
                     <td><input type="text" class="item-qty table-qty-input" value="${item.qty}" data-index="${index}" inputmode="numeric"></td>
                     <td><input type="text" class="item-note" value="${item.note || ''}" data-index="${index}" placeholder="Catatan..."></td>
                     <td>
@@ -182,7 +200,7 @@ export function initManualMode() {
 
     // Add Item
     const addItem = () => {
-        items.push({ name: '', price: 0, qty: 1, note: '' });
+        items.push({ name: '', price: 0, qty: 1, note: '', tipe: 'Prolink' });
         render();
     };
     addBtn.addEventListener('click', addItem);
@@ -258,6 +276,8 @@ export function initManualMode() {
             const val = target.value;
 
             if (target.classList.contains('item-name')) items[index].name = val;
+
+            if (target.classList.contains('item-tipe')) items[index].tipe = val;
 
             // Currency Auto-Format logic
             if (target.classList.contains('item-price-format')) {
