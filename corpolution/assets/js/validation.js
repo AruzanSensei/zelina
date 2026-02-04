@@ -68,8 +68,10 @@ function handleEmptyInputs(template, emptyInputs) {
     firstEmptyInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  // Tampilkan warning kustom
-  showCustomAlert(`Harap isi ${emptyInputs.map(input => `"${input.label}"`).join(', ')} terlebih dahulu`);
+  // Tampilkan warning via suara & focus (Pop-up dihapus agar tidak menumpuk)
+  if (typeof SoundEffects !== 'undefined') {
+    SoundEffects.playWarning();
+  }
 
   return false; // Jangan copy
 }

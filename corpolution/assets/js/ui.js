@@ -318,38 +318,3 @@ function createCard(template) {
   return card;
 }
 
-// ========== CUSTOM ALERT FUNCTIONS ==========
-
-/**
- * Tampilkan alert kustom di tengah layar
- * @param {string} message - Pesan yang ingin ditampilkan
- */
-function showCustomAlert(message) {
-  const modal = document.getElementById('customAlert');
-  const messageEl = document.getElementById('alertMessage');
-
-  if (modal && messageEl) {
-    messageEl.textContent = message;
-    modal.classList.add('show');
-
-    // Play warning sound
-    if (typeof SoundEffects !== 'undefined') {
-      SoundEffects.playWarning();
-    }
-
-    // Auto hide after 2 seconds
-    setTimeout(() => {
-      closeCustomAlert();
-    }, 2000);
-  }
-}
-
-/**
- * Tutup alert kustom
- */
-function closeCustomAlert() {
-  const modal = document.getElementById('customAlert');
-  if (modal) {
-    modal.classList.remove('show');
-  }
-}
