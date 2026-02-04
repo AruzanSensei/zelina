@@ -600,13 +600,13 @@ label {
   .copy-btn {
     background: #f8f8f8;
     border-color: #c3c3c3;
-    color: #cbd5e1;
+    color: #2e2e2e;
   }
 
   .copy-btn:hover {
     background: #d5ffd6;
-    border-color: #60fa65;
-    color: #60fa65;
+    border-color: #319e35;
+    color: #1c591e;
   }
 }
 
