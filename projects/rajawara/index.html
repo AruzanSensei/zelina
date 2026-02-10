@@ -19,16 +19,53 @@
       </div>
       <div class="hud-right">
         <div class="level">Level <span id="level">1</span> · Usia <span id="age">Anak</span></div>
+        <div class="exp">
+          <div class="exp-bar"><div id="exp-fill" class="exp-fill"></div></div>
+          <div id="exp-text" class="exp-text">Exp 0/80 · Sisa 80</div>
+        </div>
         <div class="stats">
-          <div class="stat"><span>Lapar</span><div class="bar"><div id="hunger" class="fill"></div></div></div>
-          <div class="stat"><span>Haus</span><div class="bar"><div id="thirst" class="fill"></div></div></div>
-          <div class="stat"><span>Bosan</span><div class="bar"><div id="boredom" class="fill"></div></div></div>
-          <div class="stat"><span>Lelah</span><div class="bar"><div id="fatigue" class="fill"></div></div></div>
+          <div class="stat hunger">
+            <div id="hunger-ring" class="stat-ring">
+              <div class="stat-inner"><span class="stat-icon">🍖</span></div>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Lapar</div>
+              <div id="hunger-value" class="stat-value">100%</div>
+            </div>
+          </div>
+          <div class="stat thirst">
+            <div id="thirst-ring" class="stat-ring">
+              <div class="stat-inner"><span class="stat-icon">💧</span></div>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Haus</div>
+              <div id="thirst-value" class="stat-value">100%</div>
+            </div>
+          </div>
+          <div class="stat boredom">
+            <div id="boredom-ring" class="stat-ring">
+              <div class="stat-inner"><span class="stat-icon">🎯</span></div>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Bosan</div>
+              <div id="boredom-value" class="stat-value">40%</div>
+            </div>
+          </div>
+          <div class="stat fatigue">
+            <div id="fatigue-ring" class="stat-ring">
+              <div class="stat-inner"><span class="stat-icon">😴</span></div>
+            </div>
+            <div class="stat-info">
+              <div class="stat-label">Lelah</div>
+              <div id="fatigue-value" class="stat-value">20%</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
     <div id="toast"></div>
+    <div id="exp-pop"></div>
 
     <div id="minimap">
       <div class="label">Zona Aman</div>
@@ -68,6 +105,12 @@
   </div>
 
   <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-  <script src="main.js"></script>
+  <script src="core.js"></script>
+  <script src="environment.js"></script>
+  <script src="models.js"></script>
+  <script src="animals.js"></script>
+  <script src="controls.js"></script>
+  <script src="ui.js"></script>
+  <script src="game.js"></script>
 </body>
 </html>
