@@ -1,0 +1,73 @@
+﻿<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Raja Kecil 3D</title>
+  <meta name="theme-color" content="#2b6a4a" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <canvas id="game"></canvas>
+
+    <div id="hud">
+      <div class="hud-left">
+        <div class="title">Raja Kecil</div>
+        <div class="subtitle">Petualangan Singa Baru Lahir</div>
+      </div>
+      <div class="hud-right">
+        <div class="level">Level <span id="level">1</span> · Usia <span id="age">Anak</span></div>
+        <div class="stats">
+          <div class="stat"><span>Lapar</span><div class="bar"><div id="hunger" class="fill"></div></div></div>
+          <div class="stat"><span>Haus</span><div class="bar"><div id="thirst" class="fill"></div></div></div>
+          <div class="stat"><span>Bosan</span><div class="bar"><div id="boredom" class="fill"></div></div></div>
+          <div class="stat"><span>Lelah</span><div class="bar"><div id="fatigue" class="fill"></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast"></div>
+
+    <div id="minimap">
+      <div class="label">Zona Aman</div>
+      <div class="label open">Zona Terbuka</div>
+    </div>
+
+    <div id="mobile-controls">
+      <div class="joystick" id="joystick">
+        <div class="stick" id="stick"></div>
+      </div>
+      <div class="buttons">
+        <button id="btn-eat">Makan</button>
+        <button id="btn-drink">Minum</button>
+        <button id="btn-sleep">Tidur</button>
+        <button id="btn-hunt">Berburu</button>
+      </div>
+    </div>
+
+    <div id="help">
+      <div class="chip">WASD: Gerak</div>
+      <div class="chip">Mouse: Kamera</div>
+      <div class="chip">E: Interaksi</div>
+      <div class="chip">Shift: Lari</div>
+      <div class="chip">M: Peta</div>
+    </div>
+
+    <div id="menu">
+      <h1>Raja Kecil 3D</h1>
+      <p>
+        Singa kecilmu akan bertumbuh seiring makan, tidur, minum, dan berburu.
+        Hindari predator jika levelmu masih rendah. Jelajahi sabana: ada zona aman
+        untuk beristirahat dan zona terbuka penuh mangsa dan ancaman.
+      </p>
+      <button id="start">Mulai Petualangan</button>
+      <div class="note">Game berjalan 100% di client dan disimpan otomatis per perangkat.</div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

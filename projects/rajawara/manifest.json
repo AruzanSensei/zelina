@@ -1,0 +1,9 @@
+﻿{
+  "name": "Raja Kecil 3D",
+  "short_name": "Raja Kecil",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b1b14",
+  "theme_color": "#2b6a4a",
+  "description": "Game 3D singa kecil yang bertumbuh di sabana."
+}
