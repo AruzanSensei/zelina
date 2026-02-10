@@ -211,7 +211,10 @@
     Game.player.direction.set(0, 0, 0);
     Game.player.direction.addScaledVector(forward, moveY);
     Game.player.direction.addScaledVector(right, moveX);
-    if (Game.player.direction.lengthSq() > 0.001) {
+
+    const isMoving = Game.player.direction.lengthSq() > 0.001;
+
+    if (isMoving) {
       Game.player.direction.normalize();
       Game.player.velocity.copy(Game.player.direction).multiplyScalar(speed * delta);
       Game.player.mesh.position.add(Game.player.velocity);
@@ -221,6 +224,23 @@
         const desiredYaw = Math.atan2(Game.player.direction.x, Game.player.direction.z);
         const diff = Math.atan2(Math.sin(desiredYaw - controls.rotateY), Math.cos(desiredYaw - controls.rotateY));
         controls.rotateY += diff * 0.18;
+      }
+
+      // Trigger walk or run animation
+      if (Game.animations && Game.player.mesh) {
+        const currentAnim = Game.player.mesh.userData.currentAnim;
+        const targetAnim = controls.sprint ? 'run' : 'walk';
+        if (currentAnim !== targetAnim) {
+          Game.animations.play(Game.player.mesh, targetAnim);
+        }
+      }
+    } else {
+      // Trigger idle animation when not moving
+      if (Game.animations && Game.player.mesh) {
+        const currentAnim = Game.player.mesh.userData.currentAnim;
+        if (currentAnim !== 'idle' && currentAnim !== 'eat' && currentAnim !== 'drink' && currentAnim !== 'sleep' && currentAnim !== 'attack') {
+          Game.animations.play(Game.player.mesh, 'idle');
+        }
       }
     }
 

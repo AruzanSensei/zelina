@@ -109,6 +109,15 @@
       Game.state.boredom = Game.utils.clamp(Game.state.boredom - 6, 0, 100);
       gainExp(6);
       Game.audio.playDrink();
+      // Play drink animation
+      if (Game.animations && Game.player.mesh) {
+        Game.animations.play(Game.player.mesh, 'drink', false);
+        setTimeout(() => {
+          if (Game.animations && Game.player.mesh) {
+            Game.animations.play(Game.player.mesh, 'idle');
+          }
+        }, 1500);
+      }
       Game.ui.showToast('Minum di sumber air.');
       return;
     }
@@ -119,6 +128,15 @@
       Game.state.thirst = Game.utils.clamp(Game.state.thirst - 4, 0, 100);
       gainExp(7);
       Game.audio.playSleep();
+      // Play sleep animation
+      if (Game.animations && Game.player.mesh) {
+        Game.animations.play(Game.player.mesh, 'sleep', false);
+        setTimeout(() => {
+          if (Game.animations && Game.player.mesh) {
+            Game.animations.play(Game.player.mesh, 'idle');
+          }
+        }, 2000);
+      }
       Game.ui.showToast('Beristirahat di sarang.');
       return;
     }
@@ -132,7 +150,23 @@
       Game.models.tintMesh(nearbyAnimal.mesh, 0xb32020);
       killAnimal(nearbyAnimal);
       Game.audio.playAttack();
-      setTimeout(() => Game.audio.playEat(), 300);
+      // Play attack animation then eat
+      if (Game.animations && Game.player.mesh) {
+        Game.animations.play(Game.player.mesh, 'attack', false);
+        setTimeout(() => {
+          Game.audio.playEat();
+          if (Game.animations && Game.player.mesh) {
+            Game.animations.play(Game.player.mesh, 'eat', false);
+            setTimeout(() => {
+              if (Game.animations && Game.player.mesh) {
+                Game.animations.play(Game.player.mesh, 'idle');
+              }
+            }, 1500);
+          }
+        }, 500);
+      } else {
+        setTimeout(() => Game.audio.playEat(), 300);
+      }
       Game.state.hunger = Game.utils.clamp(Game.state.hunger + 35, 0, 100);
       Game.state.boredom = Game.utils.clamp(Game.state.boredom - 12, 0, 100);
       gainExp(10 + nearbyAnimal.level * 2);
@@ -186,7 +220,50 @@
     Game.ui.updateHUD();
     Game.ui.updateInteractionButtons();
 
+    // Update animations
+    if (Game.animations) {
+      Game.animations.update(delta);
+    }
+
+    // Animate water waves
+    const waterPos = env.water.geometry.attributes.position;
+    const originalPos = env.water.userData.originalPos;
+    if (originalPos) {
+      for (let i = 0; i < waterPos.count; i++) {
+        const x = originalPos[i * 3];
+        const z = originalPos[i * 3 + 2];
+        const wave = Math.sin(time * 0.001 + x * 0.5) * 0.08 + Math.cos(time * 0.0015 + z * 0.5) * 0.06;
+        waterPos.setY(i, wave);
+      }
+      waterPos.needsUpdate = true;
+    }
     env.water.position.y = env.waterBaseY + Math.sin(time * 0.001) * 0.06;
+
+    // Animate particles
+    if (env.particles) {
+      const particlePos = env.particles.geometry.attributes.position;
+      const velocities = env.particles.geometry.userData.velocities;
+      for (let i = 0; i < particlePos.count; i++) {
+        let x = particlePos.getX(i) + velocities[i * 3];
+        let y = particlePos.getY(i) + velocities[i * 3 + 1];
+        let z = particlePos.getZ(i) + velocities[i * 3 + 2];
+
+        // Wrap around boundaries
+        if (Math.abs(x) > 100) x = -x;
+        if (y > 25 || y < 1) velocities[i * 3 + 1] *= -1;
+        if (Math.abs(z) > 100) z = -z;
+
+        particlePos.setXYZ(i, x, y, z);
+      }
+      particlePos.needsUpdate = true;
+    }
+
+    // Animate grass sway
+    if (env.grassGroup) {
+      env.grassGroup.children.forEach((grass, i) => {
+        grass.rotation.z = Math.sin(time * 0.001 + i * 0.1) * 0.15;
+      });
+    }
 
     env.renderer.render(env.scene, env.camera);
     requestAnimationFrame(loop);

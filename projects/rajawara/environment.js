@@ -158,6 +158,69 @@
     }
     scene.add(trees);
 
+    // Grass patches scattered around
+    const grassGroup = new THREE.Group();
+    const grassMat = new THREE.MeshStandardMaterial({
+      color: 0x7a9b3f,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.8
+    });
+    for (let i = 0; i < 200; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 20 + Math.random() * 110;
+      const x = Math.cos(angle) * dist;
+      const z = Math.sin(angle) * dist;
+      const y = groundHeight(x, z);
+
+      const grassBlade = new THREE.Mesh(
+        new THREE.PlaneGeometry(0.4 + Math.random() * 0.3, 1.2 + Math.random() * 0.8),
+        grassMat
+      );
+      grassBlade.position.set(x, y + 0.6, z);
+      grassBlade.rotation.y = Math.random() * Math.PI;
+      grassBlade.rotation.x = (Math.random() - 0.5) * 0.2;
+      grassGroup.add(grassBlade);
+    }
+    scene.add(grassGroup);
+
+    // Ambient particles (dust/fireflies)
+    const particlesGeo = new THREE.BufferGeometry();
+    const particlePositions = [];
+    const particleVelocities = [];
+    for (let i = 0; i < 100; i++) {
+      particlePositions.push(
+        (Math.random() - 0.5) * 200,
+        Math.random() * 20 + 2,
+        (Math.random() - 0.5) * 200
+      );
+      particleVelocities.push(
+        (Math.random() - 0.5) * 0.02,
+        Math.random() * 0.01,
+        (Math.random() - 0.5) * 0.02
+      );
+    }
+    particlesGeo.setAttribute('position', new THREE.Float32BufferAttribute(particlePositions, 3));
+    particlesGeo.userData.velocities = particleVelocities;
+
+    const particlesMat = new THREE.PointsMaterial({
+      color: 0xffd700,
+      size: 0.3,
+      transparent: true,
+      opacity: 0.6
+    });
+    const particles = new THREE.Points(particlesGeo, particlesMat);
+    scene.add(particles);
+
+    // Water wave animation data
+    const waterPos = water.geometry.attributes.position;
+    const waterOriginalPos = [];
+    for (let i = 0; i < waterPos.count; i++) {
+      waterOriginalPos.push(waterPos.getX(i), waterPos.getY(i), waterPos.getZ(i));
+    }
+    water.userData.originalPos = waterOriginalPos;
+
+
     // Stars for night sky
     const starsGeo = new THREE.BufferGeometry();
     const starPositions = [];
@@ -259,6 +322,27 @@
 
       // Fog color matches sky
       scene.fog.color.copy(sky.material.color);
+
+      // Particle appearance (dust during day, fireflies at night)
+      if (hour >= 6 && hour < 18) {
+        // Day: dust particles (brown/tan)
+        particlesMat.color.setHex(0xd4a574);
+        particlesMat.size = 0.2;
+        particlesMat.opacity = 0.3;
+      } else if (hour >= 18 && hour < 19) {
+        // Dusk transition
+        const t = (hour - 18);
+        particlesMat.opacity = 0.3 + t * 0.4;
+      } else if (hour >= 5 && hour < 6) {
+        // Dawn transition
+        const t = (hour - 5);
+        particlesMat.opacity = 0.7 - t * 0.4;
+      } else {
+        // Night: fireflies (yellow/green glow)
+        particlesMat.color.setHex(0xd4ff00);
+        particlesMat.size = 0.4;
+        particlesMat.opacity = 0.7;
+      }
     };
 
     return {
@@ -270,7 +354,9 @@
       waterBaseY,
       den,
       sky,
-      updateDayNight
+      updateDayNight,
+      grassGroup,
+      particles
     };
   };
 })();
