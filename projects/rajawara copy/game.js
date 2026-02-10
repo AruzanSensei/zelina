@@ -71,7 +71,6 @@
       Game.state.exp -= needed;
       Game.state.level += 1;
       Game.ui.showToast('Level naik! Ukuran singa bertambah.');
-      Game.audio.playLevelUp();
       setLionMesh();
     }
   };
@@ -108,7 +107,6 @@
       Game.state.thirst = Game.utils.clamp(Game.state.thirst + 30, 0, 100);
       Game.state.boredom = Game.utils.clamp(Game.state.boredom - 6, 0, 100);
       gainExp(6);
-      Game.audio.playDrink();
       Game.ui.showToast('Minum di sumber air.');
       return;
     }
@@ -118,7 +116,6 @@
       Game.state.hunger = Game.utils.clamp(Game.state.hunger - 4, 0, 100);
       Game.state.thirst = Game.utils.clamp(Game.state.thirst - 4, 0, 100);
       gainExp(7);
-      Game.audio.playSleep();
       Game.ui.showToast('Beristirahat di sarang.');
       return;
     }
@@ -131,8 +128,6 @@
       nearbyAnimal.hitTimer = 0.6;
       Game.models.tintMesh(nearbyAnimal.mesh, 0xb32020);
       killAnimal(nearbyAnimal);
-      Game.audio.playAttack();
-      setTimeout(() => Game.audio.playEat(), 300);
       Game.state.hunger = Game.utils.clamp(Game.state.hunger + 35, 0, 100);
       Game.state.boredom = Game.utils.clamp(Game.state.boredom - 12, 0, 100);
       gainExp(10 + nearbyAnimal.level * 2);
@@ -173,11 +168,6 @@
     const delta = Math.min(0.033, (time - loop.last) / 1000 || 0.016);
     loop.last = time;
 
-    // Update time and day/night cycle
-    Game.time.current += delta * Game.time.speed;
-    if (Game.time.current >= 24) Game.time.current -= 24;
-    env.updateDayNight(Game.time);
-
     updateStats(delta);
     Game.controlsApi.updatePlayer(delta);
     Game.animals.update(delta);
@@ -187,6 +177,7 @@
     Game.ui.updateInteractionButtons();
 
     env.water.position.y = env.waterBaseY + Math.sin(time * 0.001) * 0.06;
+    env.sky.material.color.setHSL(0.36, 0.4, 0.24 + Math.sin(time * 0.0002) * 0.02);
 
     env.renderer.render(env.scene, env.camera);
     requestAnimationFrame(loop);
@@ -202,11 +193,6 @@
   const startGame = () => {
     Game.runtime.started = true;
     dom.menu.style.display = 'none';
-
-    // Initialize audio (requires user interaction)
-    Game.audio.init();
-    Game.audio.playMusic(Game.time.isDay ? 'day' : 'night');
-
     loadState();
     setLionMesh();
     Game.animals.setup();

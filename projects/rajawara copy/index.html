@@ -1,16 +1,13 @@
 ﻿<!doctype html>
 <html lang="id">
-
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
   <title>Raja Kecil 3D</title>
   <meta name="theme-color" content="#2b6a4a" />
   <link rel="manifest" href="manifest.json" />
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
   <div id="app">
     <canvas id="game"></canvas>
@@ -19,14 +16,11 @@
       <div class="hud-left">
         <div class="title">Raja Kecil</div>
         <div class="subtitle">Petualangan Singa Baru Lahir</div>
-        <div class="time-display">⏰ <span id="time">12:00</span></div>
       </div>
       <div class="hud-right">
         <div class="level">Level <span id="level">1</span> · Usia <span id="age">Anak</span></div>
         <div class="exp">
-          <div class="exp-bar">
-            <div id="exp-fill" class="exp-fill"></div>
-          </div>
+          <div class="exp-bar"><div id="exp-fill" class="exp-fill"></div></div>
           <div id="exp-text" class="exp-text">Exp 0/80 · Sisa 80</div>
         </div>
         <div class="stats">
@@ -70,8 +64,6 @@
       </div>
     </div>
 
-    <button id="audio-toggle" class="audio-toggle" title="Toggle Audio">🔊</button>
-
     <div id="toast"></div>
     <div id="exp-pop"></div>
 
@@ -114,7 +106,6 @@
 
   <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
   <script src="core.js"></script>
-  <script src="audio.js"></script>
   <script src="environment.js"></script>
   <script src="models.js"></script>
   <script src="animals.js"></script>
@@ -122,5 +113,4 @@
   <script src="ui.js"></script>
   <script src="game.js"></script>
 </body>
-
 </html>

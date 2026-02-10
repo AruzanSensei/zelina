@@ -44,19 +44,6 @@
       cameraDistance: 15,
       cameraMin: 9,
       cameraMax: 24
-    },
-    time: {
-      current: 12.0,      // 0-24 hours (start at noon)
-      speed: 0.02,        // Time passes slowly (1 real second = ~1.2 game minutes)
-      get isDay() { return this.current >= 6 && this.current < 18; },
-      get isNight() { return this.current < 6 || this.current >= 18; },
-      get isDusk() { return this.current >= 17 && this.current < 19; },
-      get isDawn() { return this.current >= 5 && this.current < 7; },
-      get timeString() {
-        const h = Math.floor(this.current);
-        const m = Math.floor((this.current - h) * 60);
-        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
-      }
     }
   };
 })();

@@ -22,10 +22,6 @@
     Game.dom.levelEl.textContent = state.level;
     Game.dom.ageEl.textContent = Game.utils.ageLabel(state.level);
 
-    // Update time display
-    const timeEl = document.getElementById('time');
-    if (timeEl) timeEl.textContent = Game.time.timeString;
-
     const needed = Game.utils.expNeeded(state.level);
     const expPct = Game.utils.clamp((state.exp / needed) * 100, 0, 100);
     Game.dom.expFill.style.width = `${expPct}%`;
@@ -62,16 +58,6 @@
     const anyVisible = actions.drink || actions.sleep || actions.hunt || true;
     buttonsWrap.classList.toggle('hidden', !anyVisible);
   };
-
-  // Setup audio toggle button
-  const audioToggle = document.getElementById('audio-toggle');
-  if (audioToggle) {
-    audioToggle.addEventListener('click', () => {
-      const muted = Game.audio.toggleMute();
-      audioToggle.classList.toggle('muted', muted);
-      audioToggle.textContent = muted ? '🔇' : '🔊';
-    });
-  }
 
   Game.ui = {
     showToast,

@@ -158,109 +158,6 @@
     }
     scene.add(trees);
 
-    // Stars for night sky
-    const starsGeo = new THREE.BufferGeometry();
-    const starPositions = [];
-    for (let i = 0; i < 800; i++) {
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.random() * Math.PI;
-      const r = 280;
-      starPositions.push(
-        r * Math.sin(phi) * Math.cos(theta),
-        r * Math.cos(phi),
-        r * Math.sin(phi) * Math.sin(theta)
-      );
-    }
-    starsGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPositions, 3));
-    const starsMat = new THREE.PointsMaterial({ color: 0xffffff, size: 1.2, transparent: true, opacity: 0 });
-    const stars = new THREE.Points(starsGeo, starsMat);
-    scene.add(stars);
-
-    // Moon
-    const moonGeo = new THREE.SphereGeometry(8, 16, 16);
-    const moonMat = new THREE.MeshBasicMaterial({ color: 0xf4f1e6, transparent: true, opacity: 0 });
-    const moon = new THREE.Mesh(moonGeo, moonMat);
-    moon.position.set(100, 80, -100);
-    scene.add(moon);
-
-    // Update day/night cycle
-    const updateDayNight = (time) => {
-      const hour = time.current;
-
-      // Sky color transitions
-      if (hour >= 6 && hour < 7) {
-        // Dawn (purple to orange)
-        const t = (hour - 6);
-        sky.material.color.setHSL(0.75 - t * 0.4, 0.5, 0.3 + t * 0.1);
-      } else if (hour >= 7 && hour < 12) {
-        // Morning to noon (orange to bright blue)
-        const t = (hour - 7) / 5;
-        sky.material.color.setHSL(0.55, 0.4 - t * 0.1, 0.4 + t * 0.15);
-      } else if (hour >= 12 && hour < 17) {
-        // Afternoon (bright blue)
-        sky.material.color.setHSL(0.55, 0.3, 0.55);
-      } else if (hour >= 17 && hour < 19) {
-        // Dusk (blue to orange/pink)
-        const t = (hour - 17) / 2;
-        sky.material.color.setHSL(0.55 - t * 0.5, 0.3 + t * 0.3, 0.55 - t * 0.25);
-      } else if (hour >= 19 || hour < 5) {
-        // Night (dark blue/purple)
-        sky.material.color.setHSL(0.65, 0.4, 0.15);
-      } else if (hour >= 5 && hour < 6) {
-        // Pre-dawn (dark to purple)
-        const t = (hour - 5);
-        sky.material.color.setHSL(0.65 + t * 0.1, 0.4 + t * 0.1, 0.15 + t * 0.15);
-      }
-
-      // Lighting intensity
-      if (hour >= 6 && hour < 18) {
-        // Day
-        dir.intensity = 1.0;
-        hemi.intensity = 0.9;
-        dir.color.setHex(0xffe3b3); // Warm sunlight
-      } else if (hour >= 18 && hour < 19) {
-        // Dusk transition
-        const t = (hour - 18);
-        dir.intensity = 1.0 - t * 0.5;
-        hemi.intensity = 0.9 - t * 0.4;
-      } else if (hour >= 5 && hour < 6) {
-        // Dawn transition
-        const t = (hour - 5);
-        dir.intensity = 0.5 + t * 0.5;
-        hemi.intensity = 0.5 + t * 0.4;
-      } else {
-        // Night
-        dir.intensity = 0.3;
-        hemi.intensity = 0.4;
-        dir.color.setHex(0xb3c9ff); // Cool moonlight
-      }
-
-      // Stars visibility
-      if (hour >= 19 || hour < 5) {
-        starsMat.opacity = 1;
-      } else if (hour >= 18 && hour < 19) {
-        starsMat.opacity = (hour - 18);
-      } else if (hour >= 5 && hour < 6) {
-        starsMat.opacity = 1 - (hour - 5);
-      } else {
-        starsMat.opacity = 0;
-      }
-
-      // Moon visibility
-      if (hour >= 19 || hour < 5) {
-        moonMat.opacity = 0.9;
-      } else if (hour >= 18 && hour < 19) {
-        moonMat.opacity = (hour - 18) * 0.9;
-      } else if (hour >= 5 && hour < 6) {
-        moonMat.opacity = (1 - (hour - 5)) * 0.9;
-      } else {
-        moonMat.opacity = 0;
-      }
-
-      // Fog color matches sky
-      scene.fog.color.copy(sky.material.color);
-    };
-
     return {
       renderer,
       scene,
@@ -269,8 +166,7 @@
       water,
       waterBaseY,
       den,
-      sky,
-      updateDayNight
+      sky
     };
   };
 })();

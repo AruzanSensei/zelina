@@ -62,16 +62,6 @@ body {
   color: var(--muted);
 }
 
-.hud-left .time-display {
-  margin-top: 8px;
-  font-size: 14px;
-  color: var(--accent);
-  background: rgba(0, 0, 0, 0.3);
-  padding: 4px 10px;
-  border-radius: 999px;
-  display: inline-block;
-}
-
 .hud-right {
   min-width: 220px;
   background: var(--panel);
@@ -180,31 +170,6 @@ body {
 
 .stat.fatigue {
   --color: #8ee08e;
-}
-
-.audio-toggle {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: none;
-  background: var(--panel);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 20px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  z-index: 5;
-}
-
-.audio-toggle:hover {
-  background: rgba(10, 30, 22, 0.95);
-  transform: scale(1.05);
-}
-
-.audio-toggle.muted {
-  opacity: 0.5;
 }
 
 

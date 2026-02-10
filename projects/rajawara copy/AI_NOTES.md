@@ -1,7 +1,5 @@
 AI Notes for Raja Kecil 3D
 
-jika membuat fungsi baru, dan itu cukup spesifik, maka buatkan file js baru yang sesuai. lebih baik membuat baru karena akan mudah untuk di maintain.
-
 File Responsibilities
 - `core.js`:
   Defines shared state, utilities, and config. Holds `Game.state`, `Game.controls`, and helper functions.
