@@ -454,14 +454,58 @@
     });
   };
 
+  // Build animal dispatcher
+  const buildAnimal = (type, level) => {
+    switch (type.name) {
+      case 'Singa Liar': return buildLion(level);
+      case 'Zebra': return buildZebra(level);
+      case 'Rusa': return buildGazelle(level); // Use Gazelle for Rusa
+      case 'Kerbau': return buildWarthog(level); // Use Warthog for Kerbau/Buffalo placeholder
+      case 'Hiena': return buildLion(level); // Placeholder: use Lion model for Hiena for now
+      default: return buildGazelle(level);
+    }
+  };
+
+  // Helper to store original materials for tinting
+  const storeMaterials = (mesh) => {
+    const materials = [];
+    mesh.traverse((child) => {
+      if (child.isMesh && child.material) {
+        materials.push({
+          mesh: child,
+          color: child.material.color.clone(),
+          emissive: child.material.emissive ? child.material.emissive.clone() : new THREE.Color(0, 0, 0),
+          emissiveIntensity: child.material.emissiveIntensity || 0
+        });
+      }
+    });
+    return materials;
+  };
+
+  // Helper to restore materials
+  const restoreMaterials = (stored) => {
+    stored.forEach((data) => {
+      if (data.mesh.material) {
+        data.mesh.material.color.copy(data.color);
+        if (data.mesh.material.emissive) {
+          data.mesh.material.emissive.copy(data.emissive);
+          data.mesh.material.emissiveIntensity = data.emissiveIntensity;
+        }
+      }
+    });
+  };
+
   // Export
   Game.models = {
     buildLion,
     buildGazelle,
     buildZebra,
     buildWarthog,
+    buildAnimal,      // Added
     createLabelSprite,
     tintMesh,
-    resetTint
+    resetTint,
+    storeMaterials,   // Added
+    restoreMaterials  // Added
   };
 })();
