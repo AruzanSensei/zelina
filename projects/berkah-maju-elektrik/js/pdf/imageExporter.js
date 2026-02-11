@@ -3,16 +3,25 @@
  * CRITICAL: Reuses the EXACT same HTML/CSS as PDF generation
  */
 
-// Wait for all fonts to be loaded
+// Wait for all fonts to be loaded (CRITICAL for Desktop-Android consistency)
 async function waitForFonts() {
     try {
+        // Wait for all fonts to be ready
         await document.fonts.ready;
-        // Extra delay to ensure fonts are fully rendered
+
+        // Additional check for Inter font specifically (our primary font)
+        const interLoaded = document.fonts.check('12px Inter');
+        if (!interLoaded) {
+            console.warn('Inter font not detected, waiting additional time...');
+            await new Promise(resolve => setTimeout(resolve, 500));
+        }
+
+        // Extra delay to ensure fonts are fully rendered and metrics stabilized
         await new Promise(resolve => setTimeout(resolve, 300));
     } catch (error) {
         console.warn('Font loading check failed:', error);
-        // Continue anyway after a delay
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // Fallback delay if font API fails
+        await new Promise(resolve => setTimeout(resolve, 800));
     }
 }
 
@@ -40,9 +49,9 @@ async function imageToDataURL(imagePath) {
     });
 }
 
-// Create off-screen clone with absolute logo path
-async function createOffscreenClone(htmlString) {
-    // Convert relative logo path to absolute or data URL
+// Create off-screen iframe with complete HTML (includes styles)
+async function createOffscreenIframe(htmlString) {
+    // Convert relative logo path to data URL
     const logoPath = 'assets/Logo berkah maju elektrik.png';
     let logoDataURL = '';
 
@@ -60,56 +69,58 @@ async function createOffscreenClone(htmlString) {
         );
     }
 
-    // Create off-screen container
-    const container = document.createElement('div');
-    container.style.position = 'fixed';
-    container.style.left = '-99999px';
-    container.style.top = '0';
-    container.style.zIndex = '-1';
-    container.style.width = '210mm'; // A4 width
-    container.style.height = '297mm'; // A4 height
+    // Create off-screen iframe (this properly renders complete HTML with styles)
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.left = '-99999px';
+    iframe.style.top = '0';
+    iframe.style.zIndex = '-1';
+    iframe.style.width = '210mm'; // A4 width
+    iframe.style.height = '297mm'; // A4 height
+    iframe.style.border = 'none';
 
-    // Parse HTML string and inject into container
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = htmlString;
+    document.body.appendChild(iframe);
 
-    // Find the body content
-    const bodyContent = tempDiv.querySelector('body');
-    if (bodyContent) {
-        container.innerHTML = bodyContent.innerHTML;
-    } else {
-        container.innerHTML = htmlString;
-    }
+    // Inject complete HTML into iframe (this preserves <style> tags)
+    iframe.srcdoc = htmlString;
 
-    document.body.appendChild(container);
+    // Wait for iframe to load
+    await new Promise((resolve) => {
+        iframe.onload = resolve;
+        // Fallback in case onload doesn't fire
+        setTimeout(resolve, 500);
+    });
 
-    return container;
+    return iframe;
 }
 
-// Remove off-screen element
-function removeOffscreenClone(element) {
-    if (element && element.parentNode) {
-        element.parentNode.removeChild(element);
+// Remove off-screen iframe
+function removeOffscreenIframe(iframe) {
+    if (iframe && iframe.parentNode) {
+        iframe.parentNode.removeChild(iframe);
     }
 }
 
 // Export to PNG
 export async function exportToPNG(htmlString, filename) {
-    let container = null;
+    let iframe = null;
 
     try {
         // Wait for fonts
         await waitForFonts();
 
-        // Create off-screen clone
-        container = await createOffscreenClone(htmlString);
+        // Create off-screen iframe with complete HTML
+        iframe = await createOffscreenIframe(htmlString);
+
+        // Get the document inside iframe
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
 
         // Find the page container (the actual A4 content)
-        const pageContainer = container.querySelector('.page-container');
-        const targetElement = pageContainer || container;
+        const pageContainer = iframeDoc.querySelector('.page-container');
+        const targetElement = pageContainer || iframeDoc.body;
 
-        // Wait for layout to stabilize
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // Wait for layout to stabilize and fonts to render
+        await new Promise(resolve => setTimeout(resolve, 500));
 
         // Convert to PNG using html-to-image
         const dataUrl = await htmlToImage.toPng(targetElement, {
@@ -131,30 +142,33 @@ export async function exportToPNG(htmlString, filename) {
         alert('Gagal mengekspor ke PNG. Silakan coba lagi.');
         return false;
     } finally {
-        // Clean up off-screen element
-        if (container) {
-            removeOffscreenClone(container);
+        // Clean up off-screen iframe
+        if (iframe) {
+            removeOffscreenIframe(iframe);
         }
     }
 }
 
 // Export to JPEG
 export async function exportToJPEG(htmlString, filename) {
-    let container = null;
+    let iframe = null;
 
     try {
         // Wait for fonts
         await waitForFonts();
 
-        // Create off-screen clone
-        container = await createOffscreenClone(htmlString);
+        // Create off-screen iframe with complete HTML
+        iframe = await createOffscreenIframe(htmlString);
+
+        // Get the document inside iframe
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
 
         // Find the page container (the actual A4 content)
-        const pageContainer = container.querySelector('.page-container');
-        const targetElement = pageContainer || container;
+        const pageContainer = iframeDoc.querySelector('.page-container');
+        const targetElement = pageContainer || iframeDoc.body;
 
-        // Wait for layout to stabilize
-        await new Promise(resolve => setTimeout(resolve, 100));
+        // Wait for layout to stabilize and fonts to render
+        await new Promise(resolve => setTimeout(resolve, 500));
 
         // Convert to JPEG using html-to-image
         const dataUrl = await htmlToImage.toJpeg(targetElement, {
@@ -176,9 +190,9 @@ export async function exportToJPEG(htmlString, filename) {
         alert('Gagal mengekspor ke JPEG. Silakan coba lagi.');
         return false;
     } finally {
-        // Clean up off-screen element
-        if (container) {
-            removeOffscreenClone(container);
+        // Clean up off-screen iframe
+        if (iframe) {
+            removeOffscreenIframe(iframe);
         }
     }
 }

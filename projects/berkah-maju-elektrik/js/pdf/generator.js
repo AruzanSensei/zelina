@@ -14,6 +14,12 @@ const getDateStr = () => {
 // TEMPLATE BUILDERS (HTML + CSS 1:1 dengan file referensi)
 // ============================================
 const INVOICE_STYLE = `
+        /* Font Rendering Stabilization - Desktop-Android Consistency */
+        html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -26,9 +32,13 @@ const INVOICE_STYLE = `
         }
 
         body {
-            font-family: 'Times New Roman', Times, serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
             background-color: #f5f5f5;
             padding: 20px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .page-container {
@@ -80,12 +90,13 @@ const INVOICE_STYLE = `
         .company-details h2 {
             font-size: 22px;
             font-weight: bold;
+            line-height: 1.2;
             margin-bottom: 3px;
         }
 
         .company-details p {
             font-size: 13px;
-            line-height: 1;
+            line-height: 1.2;
             margin: 1px 0;
         }
 
@@ -130,12 +141,14 @@ const INVOICE_STYLE = `
             text-align: center;
             font-size: 13px;
             font-weight: bold;
+            line-height: 1.2;
         }
 
         table td {
             border: 1px solid #000;
             padding: 6px 8px;
             font-size: 16px;
+            line-height: 1.3;
         }
 
         table td:nth-child(1) {
@@ -178,6 +191,7 @@ const INVOICE_STYLE = `
             text-align: center;
             font-weight: bold;
             font-size: 16px;
+            line-height: 1.3;
             border-right: 1px solid #000;
             width: 120px;
         }
@@ -234,6 +248,12 @@ const INVOICE_STYLE = `
 `;
 
 const SURAT_JALAN_STYLE = `
+        /* Font Rendering Stabilization - Desktop-Android Consistency */
+        html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -246,9 +266,13 @@ const SURAT_JALAN_STYLE = `
         }
 
         body {
-            font-family: 'Times New Roman', Times, serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            font-size: 12px;
+            line-height: 1.4;
             background-color: #f5f5f5;
             padding: 20px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .page-container {
@@ -285,6 +309,7 @@ const SURAT_JALAN_STYLE = `
         .company-details h2 {
             font-size: 24px;
             font-weight: bold;
+            line-height: 1.2;
             margin-bottom: 2px;
         }
 
@@ -309,6 +334,7 @@ const SURAT_JALAN_STYLE = `
         .document-title h1 {
             font-size: 36px;
             font-weight: bold;
+            line-height: 1.1;
             letter-spacing: 1px;
         }
 
@@ -354,12 +380,14 @@ const SURAT_JALAN_STYLE = `
             text-align: center;
             font-size: 16px;
             font-weight: bold;
+            line-height: 1.2;
         }
 
         table td {
             border: 1px solid #000;
             padding: 10px 8px;
             font-size: 16px;
+            line-height: 1.3;
             vertical-align: middle;
         }
 
@@ -1010,7 +1038,18 @@ function saveToHistory(items, title) {
 // ============================================
 // PRINT (Browser Engine)
 // ============================================
-export function printInvoicePDF(items, titleName) {
+export async function printInvoicePDF(items, titleName) {
+    // CRITICAL: Wait for fonts to load before printing (Desktop-Android consistency)
+    try {
+        await document.fonts.ready;
+        const interLoaded = document.fonts.check('12px Inter');
+        if (!interLoaded) {
+            await new Promise(resolve => setTimeout(resolve, 200));
+        }
+    } catch (error) {
+        console.warn('Font check before PDF failed:', error);
+    }
+
     const html = buildInvoiceHTML(items, titleName);
     const fileTitle = `Invoice-${titleName}`;
 
@@ -1027,7 +1066,7 @@ export function printInvoicePDF(items, titleName) {
         return;
     }
 
-    // Give the new window a short moment to finish layout before printing
+    // Give the new window time to load fonts and finish layout before printing
     setTimeout(() => {
         try {
             w.focus();
@@ -1039,5 +1078,5 @@ export function printInvoicePDF(items, titleName) {
                 w.document.title = originalTitle;
             } catch { }
         }
-    }, 150);
+    }, 300); // Increased from 150ms to 300ms for font rendering
 }
