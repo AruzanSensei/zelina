@@ -14,6 +14,9 @@
     <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- html-to-image Library -->
+    <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
+
     <!-- Styles -->
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/style.css">
@@ -177,6 +180,39 @@
                             <button class="toggle-btn" data-theme="dark">Dark</button>
                         </div>
                     </div>
+
+                    <div class="setting-item">
+                        <label>Format Download</label>
+                        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 8px;">
+                            <label class="format-checkbox"
+                                style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" id="enable-png" checked
+                                    style="width: 18px; height: 18px; cursor: pointer;">
+                                <span style="user-select: none;">PNG (Gambar tanpa kompresi)</span>
+                            </label>
+                            <label class="format-checkbox"
+                                style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" id="enable-jpeg" checked
+                                    style="width: 18px; height: 18px; cursor: pointer;">
+                                <span style="user-select: none;">JPEG (Gambar terkompresi)</span>
+                            </label>
+                            <label class="format-checkbox"
+                                style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="checkbox" id="enable-pdf" checked
+                                    style="width: 18px; height: 18px; cursor: pointer;">
+                                <span style="user-select: none;">PDF (Print to PDF)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="setting-item">
+                        <label>Metode Download Default</label>
+                        <select id="default-download-method" class="form-input" style="margin-top: 8px;">
+                            <option value="png">PNG</option>
+                            <option value="jpeg">JPEG</option>
+                            <option value="pdf" selected>PDF</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div id="settings-templates" class="hidden" style="display:none;">
@@ -199,7 +235,8 @@
         <div class="modal-content" style="height: 90vh;">
             <div class="modal-header">
                 <h2 id="preview-title">Preview</h2>
-                <button id="preview-download-btn" class="btn btn-primary" style="margin-left:auto; margin-right:8px; padding:6px 12px; font-size:0.85rem;">
+                <button id="preview-download-btn" class="btn btn-primary"
+                    style="margin-left:auto; margin-right:8px; padding:6px 12px; font-size:0.85rem;">
                     Unduh
                 </button>
                 <button class="close-modal-preview"><i class="fa-solid fa-times"></i></button>

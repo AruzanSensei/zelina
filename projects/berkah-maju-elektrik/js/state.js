@@ -14,7 +14,13 @@ const STORAGE_KEYS = {
 const DEFAULTS = {
     settings: {
         language: 'id',
-        theme: 'light'
+        theme: 'light',
+        downloadFormats: {
+            png: true,
+            jpeg: true,
+            pdf: true
+        },
+        defaultDownloadMethod: 'pdf'
     },
     manualItems: [],
     manualTitle: '',

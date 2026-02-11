@@ -1,4 +1,5 @@
 import { appState } from '../state.js';
+import { exportToPNG, exportToJPEG, exportBothDocuments } from './imageExporter.js';
 
 // ============================================
 // HELPERS
@@ -419,7 +420,7 @@ const SURAT_JALAN_STYLE = `
 
 const buildInvoiceHTML = (items, titleName) => {
     const dateStr = getDateStr();
-        const total = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
+    const total = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
     const rows = items.map((item, index) => `
                 <tr>
@@ -812,7 +813,104 @@ export function initPDFGenerator() {
     };
 
     // ============================================
-    // ACTIONS
+    // DOWNLOAD EXECUTION
+    // ============================================
+    const executeDownload = async (items, title, format) => {
+        if (format === 'pdf') {
+            printInvoicePDF(items, title);
+        } else if (format === 'png') {
+            await exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML, items, title, 'png');
+        } else if (format === 'jpeg') {
+            await exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML, items, title, 'jpeg');
+        }
+    };
+
+    // Show format selection menu
+    const showFormatMenu = () => {
+        const formats = appState.state.settings.downloadFormats || { png: true, jpeg: true, pdf: true };
+        const enabledFormats = Object.keys(formats).filter(f => formats[f]);
+
+        if (enabledFormats.length === 0) {
+            showAlert("Tidak ada format yang aktif! Silakan aktifkan di Pengaturan.");
+            return;
+        }
+
+        // Remove existing menu if any
+        const existingMenu = document.getElementById('format-menu');
+        if (existingMenu) existingMenu.remove();
+
+        // Create menu
+        const menu = document.createElement('div');
+        menu.id = 'format-menu';
+        menu.className = 'format-menu';
+        menu.style.cssText = `
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            z-index: 1000;
+            min-width: 200px;
+            animation: slideUp 0.2s ease-out;
+        `;
+
+        const formatLabels = {
+            png: 'PNG (Gambar)',
+            jpeg: 'JPEG (Gambar)',
+            pdf: 'PDF (Print)'
+        };
+
+        const formatIcons = {
+            png: 'fa-file-image',
+            jpeg: 'fa-file-image',
+            pdf: 'fa-file-pdf'
+        };
+
+        enabledFormats.forEach(format => {
+            const btn = document.createElement('button');
+            btn.className = 'btn btn-outline btn-full';
+            btn.style.cssText = 'margin-bottom: 4px; text-align: left; justify-content: flex-start; gap: 8px;';
+            btn.innerHTML = `<i class="fa-solid ${formatIcons[format]}"></i> ${formatLabels[format]}`;
+            btn.onclick = async () => {
+                menu.remove();
+                const title = validate();
+                if (!title) return;
+                const items = appState.state.invoiceItems;
+                if (items.length === 0) return showAlert("Belum ada item!");
+                saveToHistory(items, title);
+                await executeDownload(items, title, format);
+            };
+            menu.appendChild(btn);
+        });
+
+        // Add cancel button
+        const cancelBtn = document.createElement('button');
+        cancelBtn.className = 'btn btn-outline btn-full';
+        cancelBtn.style.cssText = 'margin-top: 4px; border-color: var(--text-muted);';
+        cancelBtn.textContent = 'Batal';
+        cancelBtn.onclick = () => menu.remove();
+        menu.appendChild(cancelBtn);
+
+        document.body.appendChild(menu);
+
+        // Close menu when clicking outside
+        setTimeout(() => {
+            const closeOnClickOutside = (e) => {
+                if (!menu.contains(e.target)) {
+                    menu.remove();
+                    document.removeEventListener('click', closeOnClickOutside);
+                }
+            };
+            document.addEventListener('click', closeOnClickOutside);
+        }, 100);
+    };
+
+    // ============================================
+    // VALIDATION
     // ============================================
     const validate = () => {
         const titleInput = document.getElementById('manual-title');
@@ -843,14 +941,55 @@ export function initPDFGenerator() {
 
     const btnDownload = document.getElementById('btn-download');
     if (btnDownload) {
-        btnDownload.addEventListener('click', () => {
+        let pressTimer = null;
+        let isLongPress = false;
+
+        // Long-press detection
+        const startPress = (e) => {
+            isLongPress = false;
+            pressTimer = setTimeout(() => {
+                isLongPress = true;
+                showFormatMenu();
+                // Haptic feedback if available
+                if (navigator.vibrate) navigator.vibrate(50);
+            }, 500); // 500ms for long press
+        };
+
+        const cancelPress = () => {
+            clearTimeout(pressTimer);
+        };
+
+        const handlePress = (e) => {
+            cancelPress();
+
+            // If it was a long press, menu already shown, do nothing
+            if (isLongPress) {
+                isLongPress = false;
+                return;
+            }
+
+            // Normal click - use default method
             const title = validate();
             if (!title) return;
             const items = appState.state.invoiceItems;
             if (items.length === 0) return showAlert("Belum ada item!");
+
             saveToHistory(items, title);
-            printInvoicePDF(items, title);
-        });
+
+            // Execute default download method
+            const defaultMethod = appState.state.settings.defaultDownloadMethod || 'pdf';
+            executeDownload(items, title, defaultMethod);
+        };
+
+        // Add event listeners for both touch and mouse
+        btnDownload.addEventListener('mousedown', startPress);
+        btnDownload.addEventListener('touchstart', startPress, { passive: true });
+
+        btnDownload.addEventListener('mouseup', handlePress);
+        btnDownload.addEventListener('touchend', handlePress);
+
+        btnDownload.addEventListener('mouseleave', cancelPress);
+        btnDownload.addEventListener('touchcancel', cancelPress);
     }
 }
 

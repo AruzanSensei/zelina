@@ -239,6 +239,18 @@ small {
     }
 }
 
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
 /* Tab Specific Active States */
 .tab-btn[data-tab="manual"].active {
     background: var(--bg-card);

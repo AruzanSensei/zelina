@@ -78,6 +78,89 @@ export function initSettings() {
     document.querySelector(`[data-theme="${currentTheme}"]`).classList.add('active');
 
     // ===================================
+    // DOWNLOAD FORMAT SETTINGS
+    // ===================================
+    const enablePNG = document.getElementById('enable-png');
+    const enableJPEG = document.getElementById('enable-jpeg');
+    const enablePDF = document.getElementById('enable-pdf');
+    const defaultMethodSelect = document.getElementById('default-download-method');
+
+    // Initialize from state
+    const formats = appState.state.settings.downloadFormats || { png: true, jpeg: true, pdf: true };
+    const defaultMethod = appState.state.settings.defaultDownloadMethod || 'pdf';
+
+    if (enablePNG) enablePNG.checked = formats.png;
+    if (enableJPEG) enableJPEG.checked = formats.jpeg;
+    if (enablePDF) enablePDF.checked = formats.pdf;
+    if (defaultMethodSelect) defaultMethodSelect.value = defaultMethod;
+
+    // Update default method options based on enabled formats
+    const updateDefaultMethodOptions = () => {
+        if (!defaultMethodSelect) return;
+
+        const formats = appState.state.settings.downloadFormats;
+        const options = defaultMethodSelect.querySelectorAll('option');
+
+        options.forEach(opt => {
+            const format = opt.value;
+            if (!formats[format]) {
+                opt.disabled = true;
+                opt.style.color = 'var(--text-muted)';
+            } else {
+                opt.disabled = false;
+                opt.style.color = '';
+            }
+        });
+
+        // If current default is disabled, auto-switch to first enabled
+        if (!formats[defaultMethodSelect.value]) {
+            const firstEnabled = ['png', 'jpeg', 'pdf'].find(f => formats[f]);
+            if (firstEnabled) {
+                defaultMethodSelect.value = firstEnabled;
+                appState.updateSettings({ defaultDownloadMethod: firstEnabled });
+            }
+        }
+    };
+
+    // Handle format toggle changes
+    const handleFormatToggle = (e) => {
+        const formatType = e.target.id.replace('enable-', '');
+        const isChecked = e.target.checked;
+
+        // Ensure at least one format is enabled
+        const currentFormats = appState.state.settings.downloadFormats;
+        const enabledCount = Object.values(currentFormats).filter(v => v).length;
+
+        if (!isChecked && enabledCount === 1) {
+            e.target.checked = true;
+            alert('Minimal satu format harus aktif!');
+            return;
+        }
+
+        // Update state
+        const newFormats = { ...currentFormats, [formatType]: isChecked };
+        appState.updateSettings({ downloadFormats: newFormats });
+
+        // Update default method options
+        updateDefaultMethodOptions();
+    };
+
+    if (enablePNG) enablePNG.addEventListener('change', handleFormatToggle);
+    if (enableJPEG) enableJPEG.addEventListener('change', handleFormatToggle);
+    if (enablePDF) enablePDF.addEventListener('change', handleFormatToggle);
+
+    // Handle default method change
+    if (defaultMethodSelect) {
+        defaultMethodSelect.addEventListener('change', (e) => {
+            appState.updateSettings({ defaultDownloadMethod: e.target.value });
+        });
+    }
+
+    // Initialize options state
+    updateDefaultMethodOptions();
+
+
+    // ===================================
     // TEMPLATE MANAGEMENT (FULL INVOICE)
     // ===================================
 
