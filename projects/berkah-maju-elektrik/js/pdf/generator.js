@@ -46,7 +46,7 @@ const INVOICE_STYLE = `
             min-height: 297mm;
             background: white;
             margin: 0 auto;
-            padding: 28mm 20mm 25mm 25mm;
+            padding: 28mm 18mm 25mm 18mm;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
@@ -74,12 +74,12 @@ const INVOICE_STYLE = `
         .company-left {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
+            gap: 3px;
             flex: 1;
         }
 
         .company-logo {
-            width: 60px;
+            width: 70px;
             height: auto;
         }
 
@@ -103,7 +103,7 @@ const INVOICE_STYLE = `
         .invoice-info-container {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
         .invoice-box {
@@ -205,7 +205,7 @@ const INVOICE_STYLE = `
             border-left: none;
             border-right: none;
             font-size: 16px;
-            width: 263px;
+            width: 277px;
         }
 
         .payment-info {
