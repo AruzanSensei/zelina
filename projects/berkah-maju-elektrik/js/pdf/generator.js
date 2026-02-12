@@ -244,6 +244,12 @@ const INVOICE_STYLE = `
                 width: 210mm;
                 min-height: 297mm;
             }
+
+            * {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                color-adjust: exact;
+            }
         }
 `;
 
@@ -442,6 +448,12 @@ const SURAT_JALAN_STYLE = `
                 margin: 0;
                 width: 210mm;
                 min-height: 297mm;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                color-adjust: exact;
             }
         }
 `;
