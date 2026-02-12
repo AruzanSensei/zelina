@@ -314,7 +314,7 @@ const SURAT_JALAN_STYLE = `
         }
 
         .company-details p {
-            font-size: 13px;
+            font-size: 12px;
             line-height: 1.1;
             margin: 0;
         }
