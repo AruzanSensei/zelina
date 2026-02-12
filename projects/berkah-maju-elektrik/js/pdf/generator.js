@@ -32,7 +32,7 @@ const INVOICE_STYLE = `
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            font-family: 'Times New Roman', Times, serif;
             font-size: 12px;
             line-height: 1.4;
             background-color: #f5f5f5;
@@ -266,7 +266,7 @@ const SURAT_JALAN_STYLE = `
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            font-family: 'Times New Roman', Times, serif;
             font-size: 12px;
             line-height: 1.4;
             background-color: #f5f5f5;
@@ -1042,8 +1042,8 @@ export async function printInvoicePDF(items, titleName) {
     // CRITICAL: Wait for fonts to load before printing (Desktop-Android consistency)
     try {
         await document.fonts.ready;
-        const interLoaded = document.fonts.check('12px Inter');
-        if (!interLoaded) {
+        const timesLoaded = document.fonts.check('12px "Times New Roman"');
+        if (!timesLoaded) {
             await new Promise(resolve => setTimeout(resolve, 200));
         }
     } catch (error) {

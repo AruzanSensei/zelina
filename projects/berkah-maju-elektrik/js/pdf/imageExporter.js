@@ -9,10 +9,10 @@ async function waitForFonts() {
         // Wait for all fonts to be ready
         await document.fonts.ready;
 
-        // Additional check for Inter font specifically (our primary font)
-        const interLoaded = document.fonts.check('12px Inter');
-        if (!interLoaded) {
-            console.warn('Inter font not detected, waiting additional time...');
+        // Additional check for Times New Roman (template's primary font)
+        const timesLoaded = document.fonts.check('12px "Times New Roman"');
+        if (!timesLoaded) {
+            console.warn('Times New Roman font not detected, waiting additional time...');
             await new Promise(resolve => setTimeout(resolve, 500));
         }
 
