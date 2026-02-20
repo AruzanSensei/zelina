@@ -452,8 +452,9 @@ h1.hero-name em {
 .pill {
   padding: .35rem .85rem;
   border-radius: 50px;
-  background: var(--bg3);
-  box-shadow: var(--neu-out-sm);
+  background: var(--bg2);
+  /* box-shadow: var(--neu-out-sm); */
+  outline: 1px solid var(--accent);
   font-size: .72rem;
   font-weight: 700;
   color: var(--text-muted);
@@ -496,9 +497,9 @@ h1.hero-name em {
 }
 
 .btn-primary {
-  background: var(--bg3);
+  background: var(--accent);
   box-shadow: var(--neu-out);
-  color: var(--accent);
+  color: var(--bg);
 }
 
 .btn-primary:hover {
@@ -685,6 +686,11 @@ h1.hero-name em {
   animation: scrollAnim 1.5s infinite;
 }
 
+/* Mobile-top hero block — hidden on desktop */
+.hero-mobile-top {
+  display: none;
+}
+
 /* ============================================
    SECTION SHARED
    ============================================ */
@@ -791,7 +797,8 @@ h1.hero-name em {
   padding: .55rem .9rem;
   border-radius: var(--radius-sm);
   background: var(--bg);
-  box-shadow: var(--neu-in-sm);
+  /* box-shadow: var(--neu-in-sm); */
+  outline: 1px solid var(--text-muted);
   font-size: .8rem;
   font-weight: 600;
   color: var(--text-muted);
@@ -888,7 +895,7 @@ h1.hero-name em {
   display: none;
   width: 100%;
   text-align: left;
-  padding: .85rem 0;
+  /* padding:  0 0 .85rem 0; */
   background: none;
   border: none;
   cursor: none;
@@ -912,6 +919,7 @@ h1.hero-name em {
 }
 
 .accordion-body {
+  padding-top: 0.8rem;
   display: block;
 }
 
@@ -1047,7 +1055,8 @@ h1.hero-name em {
   padding: .2rem .6rem;
   border-radius: 50px;
   background: var(--bg);
-  box-shadow: var(--neu-in-sm);
+  /* box-shadow: var(--neu-in-sm); */
+  outline: 1px solid var(--text-light);
   font-size: .62rem;
   font-weight: 700;
   color: var(--text-muted);
@@ -1121,7 +1130,7 @@ h1.hero-name em {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: var(--bg);
+  background: var(--accent);
   box-shadow: var(--neu-out-sm);
   display: flex;
   align-items: center;
@@ -1146,9 +1155,6 @@ h1.hero-name em {
   box-shadow: var(--neu-in);
 }
 
-.exp-item:hover .exp-dot {
-  box-shadow: var(--neu-in-sm);
-}
 
 .exp-meta {
   display: flex;
@@ -1200,7 +1206,7 @@ h1.hero-name em {
   padding: .25rem .7rem;
   border-radius: 50px;
   background: var(--bg);
-  box-shadow: var(--neu-in-sm);
+  box-shadow: 0 0 0 2px var(--accent-soft);
   font-size: .68rem;
   font-weight: 700;
   color: var(--text-light);
@@ -1222,8 +1228,9 @@ h1.hero-name em {
 
 .testi-track {
   display: flex;
+  padding: 1rem 0;
   gap: 1.2rem;
-  animation: scrollTrack 32s linear infinite;
+  animation: scrollTrack 60s linear infinite;
   width: max-content;
 }
 
@@ -1235,7 +1242,7 @@ h1.hero-name em {
   width: 280px;
   flex-shrink: 0;
   border-radius: var(--radius);
-  background: var(--bg);
+  background: var(--bg3);
   box-shadow: var(--neu-out);
   padding: 1.4rem;
   position: relative;
@@ -1421,7 +1428,7 @@ h1.hero-name em {
   border: none;
   outline: none;
   background: var(--bg);
-  box-shadow: var(--neu-in);
+  box-shadow: var(--neu-in-sm), 0 0 0 2px var(--accent-soft);
   font-family: 'Nunito', sans-serif;
   font-size: .85rem;
   font-weight: 500;
@@ -1536,7 +1543,7 @@ footer {
 #btt {
   position: fixed;
   bottom: 1.5rem;
-  left: 1.5rem;
+  right: 1.5rem;
   width: 42px;
   height: 42px;
   border-radius: 50%;
@@ -1727,5 +1734,61 @@ footer {
 
   .accordion-body.collapsed {
     display: none;
+  }
+
+  /* ---- Hero mobile-top: avatar + h1 side by side ---- */
+  .hero-mobile-top {
+    display: flex;
+    align-items: center;
+    height: auto;
+    gap: min(1rem);
+    margin-bottom: .9rem;
+  }
+
+  /* Hide standalone desktop-only h1 */
+  .hero-name--desktop {
+    display: none;
+  }
+
+  /* Hide avatar inside hero-right on mobile (it's now in mobile-top) */
+  .hero-right .avatar-card {
+    display: none;
+  }
+
+  /* Mobile avatar sizing */
+  .avatar-card--mobile {
+    flex-shrink: 0;
+    width: 120px;
+    height: 120px;
+    opacity: 1;
+    animation: none;
+  }
+
+  .avatar-card--mobile .avatar-inner {
+    width: 100px;
+    height: 100px;
+  }
+
+  .avatar-card--mobile .avatar-badge {
+    width: 26px;
+    height: 26px;
+    font-size: .75rem;
+  }
+
+  /* h1 inside mobile-top: slightly smaller */
+  .hero-mobile-top .hero-name {
+    font-size: 2rem;
+    opacity: 1;
+    animation: none;
+  }
+
+  /* ---- Disable custom cursor on mobile ---- */
+  body {
+    cursor: auto;
+  }
+
+  #cur,
+  #cur-trail {
+    display: none !important;
   }
 }
