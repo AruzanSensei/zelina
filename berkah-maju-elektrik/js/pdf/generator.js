@@ -385,7 +385,7 @@ export function getPDFDoc(type, items, titleName) {
         // Table
         const tableData = items.map((item, index) => [
             index + 1,
-            `Battery ${item.name || ''} ${item.tipe || ''} ${item.note || ''}`,
+            `Battery UPS ${item.name || ''} ${item.tipe || ''} ${item.note || ''}`,
             `${item.qty} pcs`,
             `Rp ${formatNumber(item.price)}`,
             `Rp ${formatNumber(item.price * item.qty)}`
