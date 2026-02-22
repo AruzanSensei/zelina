@@ -1250,7 +1250,7 @@ h1.hero-name em {
 }
 
 .testi-card:hover {
-  box-shadow: var(--neu-in);
+  box-shadow: var(--neu-in-sm);
   transform: translateY(-3px);
 }
 
@@ -1681,6 +1681,14 @@ footer {
     flex-wrap: wrap;
     justify-content: center;
     gap: 1rem;
+  }
+
+  .hero-left {
+    flex: none;
+  }
+
+  .hero-greeting {
+    margin-top: 2rem;
   }
 
   .avatar-card {
