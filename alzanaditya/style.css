@@ -575,20 +575,21 @@ h1.hero-name em {
 }
 
 .stat-cards {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: .8rem;
   opacity: 0;
   animation: slideIn .7s .65s forwards;
 }
 
 .stat-card {
-  flex: 1;
   padding: .8rem 1rem;
   border-radius: var(--radius-sm);
   background: var(--bg3);
   box-shadow: var(--neu-out-sm);
   text-align: center;
   transition: all .2s;
+  width: auto;
 }
 
 .stat-card:hover {
@@ -1670,7 +1671,8 @@ footer {
 @media (max-width: 768px) {
   .hero {
     flex-direction: column;
-    padding: 5rem 1.5rem 5rem;
+    min-height: auto;
+    /* padding: 5rem 1.5rem 5rem; */
     gap: 2rem;
   }
 
@@ -1699,6 +1701,10 @@ footer {
   .avatar-inner {
     width: 128px;
     height: 128px;
+  }
+
+  .scroll-ind {
+    display: none;
   }
 
   .section {
@@ -1769,7 +1775,6 @@ footer {
     width: 120px;
     height: 120px;
     opacity: 1;
-    animation: none;
   }
 
   .avatar-card--mobile .avatar-inner {
@@ -1787,7 +1792,7 @@ footer {
   .hero-mobile-top .hero-name {
     font-size: 2rem;
     opacity: 1;
-    animation: none;
+
   }
 
   /* ---- Disable custom cursor on mobile ---- */

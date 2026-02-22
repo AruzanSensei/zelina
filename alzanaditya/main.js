@@ -48,7 +48,7 @@
 /* ============================================
    CUSTOM CURSOR
    ============================================ */
-const cur   = document.getElementById('cur');
+const cur = document.getElementById('cur');
 const trail = document.getElementById('cur-trail');
 let mx = 0, my = 0, tx = 0, ty = 0;
 
@@ -72,9 +72,9 @@ document.querySelectorAll(hoverSel).forEach(el => {
 /* ============================================
    NAVBAR
    ============================================ */
-const navbar   = document.getElementById('navbar');
+const navbar = document.getElementById('navbar');
 const mobileMenu = document.getElementById('mobileMenu');
-const hamburger  = document.getElementById('hamburger');
+const hamburger = document.getElementById('hamburger');
 
 window.addEventListener('scroll', () => {
   navbar.style.boxShadow = window.scrollY > 20 ? '0 4px 20px rgba(0,0,0,.08)' : 'none';
@@ -95,7 +95,7 @@ document.querySelectorAll('.mobile-menu a').forEach(a => {
 });
 
 const allSections = document.querySelectorAll('section[id]');
-const navLinkEls  = document.querySelectorAll('.nav-link');
+const navLinkEls = document.querySelectorAll('.nav-link');
 
 function highlightNav() {
   let cur = '';
@@ -173,9 +173,9 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 document.querySelectorAll('.project-card,.testi-card').forEach(card => {
   card.addEventListener('mousemove', function (e) {
     const r = this.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width  - .5;
-    const y = (e.clientY - r.top)  / r.height - .5;
-    this.style.transform = `translateY(-3px) rotateX(${-y*5}deg) rotateY(${x*5}deg)`;
+    const x = (e.clientX - r.left) / r.width - .5;
+    const y = (e.clientY - r.top) / r.height - .5;
+    this.style.transform = `translateY(-3px) rotateX(${-y * 5}deg) rotateY(${x * 5}deg)`;
   });
   card.addEventListener('mouseleave', function () {
     this.style.transform = 'translateY(0) rotateX(0) rotateY(0)';
@@ -235,20 +235,20 @@ window.showToast = showToast;
   const ctx = canvas.getContext('2d');
   let W, H;
   function resize() {
-    W = canvas.width  = canvas.offsetWidth;
+    W = canvas.width = canvas.offsetWidth;
     H = canvas.height = canvas.offsetHeight;
   }
   window.addEventListener('resize', resize); resize();
 
   const circles = [
     // bottom-right corner (1/4 visible)
-    { cx: () => W,    cy: () => H,    r: 160, speed: .3,  dash: [12, 10] },
-    { cx: () => W,    cy: () => H,    r: 220, speed: -.2, dash: [6,  14] },
+    { cx: () => W, cy: () => H, r: 160, speed: .9, dash: [12, 10] },
+    { cx: () => W, cy: () => H, r: 220, speed: -.9, dash: [6, 14] },
     // top-left floating
-    { cx: () => 60,   cy: () => 120,  r: 90,  speed: .4,  dash: [8, 12] },
-    { cx: () => 60,   cy: () => 120,  r: 130, speed: -.25,dash: [4, 16] },
+    { cx: () => 60, cy: () => 120, r: 90, speed: .9, dash: [8, 12] },
+    { cx: () => 60, cy: () => 120, r: 130, speed: -.9, dash: [4, 16] },
     // mid-right loose
-    { cx: () => W*.75,cy: () => H*.4, r: 55,  speed: .5,  dash: [5, 10] },
+    { cx: () => W * .75, cy: () => H * .4, r: 55, speed: .9, dash: [5, 10] },
   ];
 
   let angle = 0;
@@ -260,7 +260,7 @@ window.showToast = showToast;
       ctx.translate(c.cx(), c.cy());
       ctx.rotate(angle * c.speed);
       ctx.setLineDash(c.dash);
-      ctx.strokeStyle = `rgba(193,127,90,0.13)`;
+      ctx.strokeStyle = `rgba(193,127,90,0.2)`;
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.arc(0, 0, c.r, 0, Math.PI * 2);
@@ -295,7 +295,7 @@ window.showToast = showToast;
         // wave pattern: diagonal wave
         const wave = Math.sin(t + c * .5 + r * .8);
         const radius = 2.5 + wave * 2.2;
-        const alpha  = .06 + (wave + 1) * .05;
+        const alpha = .06 + (wave + 1) * .05;
         ctx.beginPath();
         ctx.arc(x, y, Math.max(.5, radius), 0, Math.PI * 2);
         ctx.fillStyle = `rgba(193,127,90,${alpha})`;
@@ -436,7 +436,7 @@ window.showToast = showToast;
         th.phase = 'hold';
       } else {
         th.alpha = (1 - (progress - .7) / .3) * .18;
-        th.size  += .08; // grow before fade
+        th.size += .08; // grow before fade
         th.phase = 'out';
       }
 
@@ -487,7 +487,7 @@ window.showToast = showToast;
       const r = i % 2 === 0 ? size : inner;
       const a = (i / (pts * 2)) * Math.PI * 2 - Math.PI / 2;
       i === 0 ? ctx.moveTo(cx + r * Math.cos(a), cy + r * Math.sin(a))
-              : ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
+        : ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
     }
     ctx.closePath(); ctx.fill();
     ctx.restore();
@@ -500,9 +500,9 @@ window.showToast = showToast;
       s.life++;
       const progress = s.life / s.maxLife;
       let alpha, size = s.size;
-      if (progress < .3)      { alpha = progress / .3 * .15; }
+      if (progress < .3) { alpha = progress / .3 * .15; }
       else if (progress < .7) { alpha = .15; }
-      else                    { alpha = (1 - (progress-.7)/.3) * .15; size *= 1 + (progress-.7)/.3 * .5; }
+      else { alpha = (1 - (progress - .7) / .3) * .15; size *= 1 + (progress - .7) / .3 * .5; }
 
       drawStar(s.x, s.y, size, alpha);
       if (s.life >= s.maxLife) Object.assign(s, makeStar());
