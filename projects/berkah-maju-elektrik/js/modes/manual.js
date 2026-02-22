@@ -75,11 +75,11 @@ export function initManualMode() {
                     </div>
                     
                     <div class="item-row">
-                        <div style="flex: 2;">
+                        <div style="flex: 1.7;">
                             <label class="field-label">Harga</label>
                             <input type="text" class="form-input item-price-format" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="0" inputmode="numeric">
                         </div>
-                        <div style="flex: 1.5;">
+                        <div style="flex: 2.2;">
                             <label class="field-label">Tipe</label>
                             <select class="form-input item-tipe" data-index="${index}">
                                 <option value="ICA" ${item.tipe === 'ICA' ? 'selected' : ''}>ICA</option>
@@ -88,7 +88,7 @@ export function initManualMode() {
                                 <option value="APC" ${item.tipe === 'APC' ? 'selected' : ''}>APC</option>
                             </select>
                         </div>
-                        <div style="flex: 1;">
+                        <div style="flex: 0.7;">
                             <label class="field-label">Pcs</label>
                             <div class="qty-control">
                                 <button class="qty-btn minus" data-index="${index}">-</button>

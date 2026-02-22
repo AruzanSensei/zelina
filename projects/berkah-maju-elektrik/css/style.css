@@ -469,10 +469,13 @@ small {
 }
 
 .qty-input {
-    width: 50px;
+    width: 35px;
     text-align: center;
     border: none;
     -moz-appearance: textfield;
+    text-decoration: none;
+    -moz-text-decoration-style: none;
+    box-decoration-break: none;
 }
 
 /* Preview Section */
