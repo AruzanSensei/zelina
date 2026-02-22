@@ -77,13 +77,26 @@
                 </div>
             </div>
 
-            <div id="manual-items-container">
-                <!-- Items will be injected here -->
-            </div>
+            <div id="manual-items-wrapper" style="position:relative;">
+                <div id="manual-edit-overlay" class="hidden"
+                    style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:10; display:flex; flex-direction:column; justify-content:center; align-items:center; border:2px dashed #f39c12; border-radius:8px;">
+                    <i class="fa-solid fa-triangle-exclamation"
+                        style="font-size:3rem; color:#f39c12; margin-bottom:15px;"></i>
+                    <h3 style="color:#d35400;">Mode Edit Manual Aktif</h3>
+                    <p style="text-align:center; padding:10px; font-weight:600; color:#333;">Input otomatis
+                        dinonaktifkan<br>karena ada perubahan kustom.</p>
+                    <button id="btn-reset-manual-edit" class="btn btn-primary"
+                        style="background:#e67e22; border-color:#d35400; margin-top:10px;"><i
+                            class="fa-solid fa-rotate-left"></i> Reset & Lanjutkan Otomatis</button>
+                </div>
+                <div id="manual-items-container">
+                    <!-- Items will be injected here -->
+                </div>
 
-            <button id="btn-add-item" class="btn btn-outline btn-full">
-                <i class="fa-solid fa-plus"></i> Tambah Item
-            </button>
+                <button id="btn-add-item" class="btn btn-outline btn-full">
+                    <i class="fa-solid fa-plus"></i> Tambah Item
+                </button>
+            </div>
         </section>
 
         <!-- MODE 2: AI -->
@@ -195,10 +208,23 @@
         <div class="modal-content" style="height: 90vh;">
             <div class="modal-header">
                 <h2 id="preview-title">Preview</h2>
-                <button class="close-modal-preview"><i class="fa-solid fa-times"></i></button>
+                <div style="display:flex; gap:10px;">
+                    <button id="btn-modal-edit" class="icon-btn" title="Edit Manual (Format Bebas)"><i
+                            class="fa-solid fa-pen-to-square"></i></button>
+                    <button id="btn-modal-download" class="icon-btn" style="color:var(--primary-color);"
+                        title="Unduh"><i class="fa-solid fa-download"></i></button>
+                    <button class="close-modal-preview"><i class="fa-solid fa-times"></i></button>
+                </div>
             </div>
-            <div class="modal-body" style="height: calc(100% - 60px);">
+            <div class="modal-body" style="height: calc(100% - 60px); position:relative; background:#888;">
                 <iframe id="pdf-preview-frame" style="width:100%; height:100%; border:none;"></iframe>
+                <div id="html-edit-container" class="hidden"
+                    style="width:100%; height:100%; overflow:auto; padding:20mm;">
+                    <!-- A4 wrapper for editing -->
+                    <div id="html-edit-content" contenteditable="true"
+                        style="background:white; box-shadow:0 0 10px rgba(0,0,0,0.5); min-height:297mm; width:210mm; margin:0 auto; outline:none; position:relative;">
+                    </div>
+                </div>
             </div>
         </div>
     </div>

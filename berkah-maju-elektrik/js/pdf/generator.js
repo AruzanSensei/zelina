@@ -43,6 +43,17 @@ export function initPDFGenerator() {
 
     const previewModal = document.getElementById('preview-modal');
     const closePreviewBtn = document.querySelector('.close-modal-preview');
+    const btnModalEdit = document.getElementById('btn-modal-edit');
+    const btnModalDownload = document.getElementById('btn-modal-download');
+    const editContainer = document.getElementById('html-edit-container');
+    const editContent = document.getElementById('html-edit-content');
+    const pdfFrame = document.getElementById('pdf-preview-frame');
+
+    let manualEdits = {
+        invoice: null,
+        letter: null
+    };
+    let currentPreviewType = null;
 
     if (closePreviewBtn) {
         closePreviewBtn.addEventListener('click', () => {
@@ -53,20 +64,99 @@ export function initPDFGenerator() {
 
     const openFullScreen = (type) => {
         if (!previewModal) return;
+        currentPreviewType = type;
         const items = appState.state.invoiceItems;
         const title = document.getElementById('manual-title')?.value || "";
 
-        const doc = getPDFDoc(type, items, title);
-        const blobUrl = doc.output('bloburl');
+        document.getElementById('preview-title').textContent = type === 'invoice' ? 'Preview Invoice' : 'Preview Surat Jalan';
 
-        const frame = document.getElementById('pdf-preview-frame');
-        if (frame) {
-            frame.src = blobUrl;
-            document.getElementById('preview-title').textContent = type === 'invoice' ? 'Preview Invoice' : 'Preview Surat Jalan';
-            previewModal.classList.remove('hidden');
-            previewModal.classList.add('active');
+        if (manualEdits[type]) {
+            pdfFrame.classList.add('hidden');
+            editContainer.classList.remove('hidden');
+            editContent.innerHTML = manualEdits[type];
+            const child = editContent.firstElementChild;
+            if (child) child.style.transform = 'scale(1)';
+        } else {
+            editContainer.classList.add('hidden');
+            pdfFrame.classList.remove('hidden');
+            const doc = getPDFDoc(type, items, title);
+            const blobUrl = doc.output('bloburl');
+            pdfFrame.src = blobUrl;
         }
+
+        previewModal.classList.remove('hidden');
+        previewModal.classList.add('active');
     };
+
+    if (btnModalEdit) {
+        btnModalEdit.addEventListener('click', () => {
+            if (!editContainer.classList.contains('hidden')) return; // already editing
+
+            pdfFrame.classList.add('hidden');
+            editContainer.classList.remove('hidden');
+
+            if (!manualEdits[currentPreviewType]) {
+                const sourceContainer = currentPreviewType === 'invoice' ? invoicePreviewContainer : letterPreviewContainer;
+                editContent.innerHTML = sourceContainer.innerHTML;
+                manualEdits[currentPreviewType] = editContent.innerHTML;
+            } else {
+                editContent.innerHTML = manualEdits[currentPreviewType];
+            }
+
+            const child = editContent.firstElementChild;
+            if (child) child.style.transform = 'scale(1)';
+
+            updateManualEditOverlay();
+            renderHTML();
+        });
+    }
+
+    if (editContent) {
+        editContent.addEventListener('input', () => {
+            if (currentPreviewType && !editContainer.classList.contains('hidden')) {
+                manualEdits[currentPreviewType] = editContent.innerHTML;
+                updateManualEditOverlay();
+                renderHTML();
+            }
+        });
+    }
+
+    const printHTML = () => {
+        let printStyle = document.getElementById('print-style');
+        if (!printStyle) {
+            printStyle = document.createElement('style');
+            printStyle.id = 'print-style';
+            document.head.appendChild(printStyle);
+        }
+        printStyle.innerHTML = `
+            @media print {
+                body * { visibility: hidden !important; }
+                #html-edit-content, #html-edit-content * { visibility: visible !important; }
+                #html-edit-content {
+                    position: fixed !important;
+                    left: 0 !important;
+                    top: 0 !important;
+                    margin: 0 !important;
+                    box-shadow: none !important;
+                }
+                @page { size: auto; margin: 0mm; }
+            }
+        `;
+        window.print();
+    };
+
+    if (btnModalDownload) {
+        btnModalDownload.addEventListener('click', () => {
+            if (manualEdits[currentPreviewType]) {
+                printHTML();
+            } else {
+                const items = appState.state.invoiceItems;
+                const title = document.getElementById('manual-title')?.value || "";
+                const doc = getPDFDoc(currentPreviewType, items, title);
+                doc.save(`${currentPreviewType === 'invoice' ? 'Invoice' : 'SuratJalan'}-${title}.pdf`);
+            }
+        });
+    }
 
     if (invoicePreviewContainer) {
         invoicePreviewContainer.parentElement.style.cursor = 'zoom-in';
@@ -95,150 +185,158 @@ export function initPDFGenerator() {
         const total = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
         // Render Invoice (EXACT MATCH with invoice.html)
-        invoicePreviewContainer.innerHTML = `
-            <div class="html-preview-container" style="transform: scale(${scale}); transform-origin: top center; font-family: 'Times New Roman', Times, serif; width: 210mm; min-height: 297mm; background: white; padding: 28mm 20mm 25mm 25mm; position: relative; margin: 0 auto; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-                <div style="text-align: center; margin-bottom: 25px;">
-                    <h1 style="font-size: 28px; font-weight: bold; letter-spacing: 2px; margin-bottom: 30px; color: #000;">INVOICE</h1>
-                </div>
+        if (manualEdits['invoice']) {
+            invoicePreviewContainer.innerHTML = manualEdits['invoice'].replace(/transform:\s*scale\([^)]+\)/g, `transform: scale(${scale})`);
+        } else {
+            invoicePreviewContainer.innerHTML = `
+                <div class="html-preview-container" style="transform: scale(${scale}); transform-origin: top center; font-family: 'Times New Roman', Times, serif; width: 210mm; min-height: 297mm; background: white; padding: 28mm 20mm 25mm 25mm; position: relative; margin: 0 auto; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                    <div style="text-align: center; margin-bottom: 25px;">
+                        <h1 style="font-size: 28px; font-weight: bold; letter-spacing: 2px; margin-bottom: 30px; color: #000;">INVOICE</h1>
+                    </div>
 
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2px; font-family: Calibri, sans-serif;">
-                    <div style="display: flex; align-items: flex-start; gap: 12px; flex: 1;">
-                        <img src="${logoBase64 || 'assets/Logo%20berkah%20maju%20elektrik.png'}" style="width: 60px; height: auto;">
-                        <div style="text-align: left;">
-                            <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 3px 0;">BERKAH MAJU ELEKTRIK</h2>
-                            <p style="font-size: 13px; line-height: 1; margin: 1px 0;">Jl. Raya Karehkel, Parung Panjang Atas Leuwiliang, Bogor</p>
-                            <p style="font-size: 13px; line-height: 1; margin: 1px 0;">0855-9174-9020 / 0853-1212-2030</p>
-                            <p style="font-size: 13px; line-height: 1; margin: 1px 0;">Sales dan Service Alat-alat Listrik, UPS, Stabilizer, Battery UPS</p>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2px; font-family: Calibri, sans-serif;">
+                        <div style="display: flex; align-items: flex-start; gap: 12px; flex: 1;">
+                            <img src="${logoBase64 || 'assets/Logo%20berkah%20maju%20elektrik.png'}" style="width: 60px; height: auto;">
+                            <div style="text-align: left;">
+                                <h2 style="font-size: 22px; font-weight: bold; margin: 0 0 3px 0;">BERKAH MAJU ELEKTRIK</h2>
+                                <p style="font-size: 13px; line-height: 1; margin: 1px 0;">Jl. Raya Karehkel, Parung Panjang Atas Leuwiliang, Bogor</p>
+                                <p style="font-size: 13px; line-height: 1; margin: 1px 0;">0855-9174-9020 / 0853-1212-2030</p>
+                                <p style="font-size: 13px; line-height: 1; margin: 1px 0;">Sales dan Service Alat-alat Listrik, UPS, Stabilizer, Battery UPS</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <div style="border: 2px solid #000; padding: 8px 10px; min-width: 210px;">
+                                <p style="font-size: 14px; margin: 2px 0; line-height: 1;">Tanggal : ${dateStr}</p>
+                            </div>
+                            <div style="border: 2px solid #000; padding: 8px 10px; min-width: 210px;">
+                                <p style="font-size: 14px; margin: 2px 0; line-height: 1;">Kepada :</p>
+                                <p style="font-size: 14px; margin: 2px 0; line-height: 1; font-weight: bold;">${title || '(Tanpa Nama)'}</p>
+                            </div>
                         </div>
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <div style="border: 2px solid #000; padding: 8px 10px; min-width: 210px;">
-                            <p style="font-size: 14px; margin: 2px 0; line-height: 1;">Tanggal : ${dateStr}</p>
-                        </div>
-                        <div style="border: 2px solid #000; padding: 8px 10px; min-width: 210px;">
-                            <p style="font-size: 14px; margin: 2px 0; line-height: 1;">Kepada :</p>
-                            <p style="font-size: 14px; margin: 2px 0; line-height: 1; font-weight: bold;">${title || '(Tanpa Nama)'}</p>
+
+                    <div style="border-top: 2px solid #000; margin: 14px 0 30px 0;"></div>
+                    
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 0;">
+                        <thead>
+                            <tr>
+                                <th style="background:#c0c0c0; border: 1px solid #000; padding: 8px 6px; font-size: 13px; font-weight: bold; width: 50px; text-align: center;">NO</th>
+                                <th style="background:#c0c0c0; border: 1px solid #000; padding: 8px 6px; font-size: 13px; font-weight: bold; text-align: left; width: 180px;">KETERANGAN</th>
+                                <th style="background:#c0c0c0; border: 1px solid #000; padding: 8px 6px; font-size: 13px; font-weight: bold; width: 70px; text-align: center;">QTY</th>
+                                <th style="background:#c0c0c0; border: 1px solid #000; padding: 8px 6px; font-size: 13px; font-weight: bold; text-align: center; width: 110px;">HARGA<br>SATUAN</th>
+                                <th style="background:#c0c0c0; border: 1px solid #000; padding: 8px 6px; font-size: 13px; font-weight: bold; text-align: center; width: 110px;">JUMLAH</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${items.map((item, index) => `
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 6px 8px; text-align: center; font-size: 16px; width: 50px;">${index + 1}</td>
+                                <td style="border: 1px solid #000; padding: 6px 8px; font-size: 16px; width: 180px;">Battery ${item.name || ''} ${item.tipe || ''} ${item.note || ''}</td>
+                                <td style="border: 1px solid #000; padding: 6px 8px; text-align: center; font-size: 16px; width: 70px;">${item.qty} pcs</td>
+                                <td style="border: 1px solid #000; padding: 6px 8px; text-align: center; font-size: 16px; width: 110px;">Rp ${formatNumber(item.price)}</td>
+                                <td style="border: 1px solid #000; padding: 6px 8px; text-align: center; font-size: 16px; width: 110px;">Rp ${formatNumber(item.price * item.qty)}</td>
+                            </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    
+                    <div style="width: 100%; margin-top: 0;">
+                        <div style="display: flex; justify-content: flex-end; border: 1px solid #000; border-top: none; border-left: none; border-bottom: none;">
+                            <div style="padding: 6px 8px; text-align: center; font-weight: bold; font-size: 16px; border-right: 1px solid #000; width: 120px;">JUMLAH</div>
+                            <div style="padding: 6px 8px; text-align: center; font-weight: bold; font-size: 16px; width: 220px; border: 1px solid #000; border-top: none; border-left: none; border-right: none;">Rp ${formatNumber(total)}</div>
                         </div>
                     </div>
-                </div>
 
-                <div style="border-top: 2px solid #000; margin: 14px 0 30px 0;"></div>
-                
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 0;">
-                    <thead>
-                        <tr>
-                            <th style="background:#c0c0c0; border: 1px solid #000; padding: 8px 6px; font-size: 13px; font-weight: bold; width: 50px; text-align: center;">NO</th>
-                            <th style="background:#c0c0c0; border: 1px solid #000; padding: 8px 6px; font-size: 13px; font-weight: bold; text-align: left; width: 180px;">KETERANGAN</th>
-                            <th style="background:#c0c0c0; border: 1px solid #000; padding: 8px 6px; font-size: 13px; font-weight: bold; width: 70px; text-align: center;">QTY</th>
-                            <th style="background:#c0c0c0; border: 1px solid #000; padding: 8px 6px; font-size: 13px; font-weight: bold; text-align: center; width: 110px;">HARGA<br>SATUAN</th>
-                            <th style="background:#c0c0c0; border: 1px solid #000; padding: 8px 6px; font-size: 13px; font-weight: bold; text-align: center; width: 110px;">JUMLAH</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${items.map((item, index) => `
-                        <tr>
-                            <td style="border: 1px solid #000; padding: 6px 8px; text-align: center; font-size: 16px; width: 50px;">${index + 1}</td>
-                            <td style="border: 1px solid #000; padding: 6px 8px; font-size: 16px; width: 180px;">Battery ${item.name || ''} ${item.tipe || ''} ${item.note || ''}</td>
-                            <td style="border: 1px solid #000; padding: 6px 8px; text-align: center; font-size: 16px; width: 70px;">${item.qty} pcs</td>
-                            <td style="border: 1px solid #000; padding: 6px 8px; text-align: center; font-size: 16px; width: 110px;">Rp ${formatNumber(item.price)}</td>
-                            <td style="border: 1px solid #000; padding: 6px 8px; text-align: center; font-size: 16px; width: 110px;">Rp ${formatNumber(item.price * item.qty)}</td>
-                        </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-                
-                <div style="width: 100%; margin-top: 0;">
-                    <div style="display: flex; justify-content: flex-end; border: 1px solid #000; border-top: none; border-left: none; border-bottom: none;">
-                        <div style="padding: 6px 8px; text-align: center; font-weight: bold; font-size: 16px; border-right: 1px solid #000; width: 120px;">JUMLAH</div>
-                        <div style="padding: 6px 8px; text-align: center; font-weight: bold; font-size: 16px; width: 220px; border: 1px solid #000; border-top: none; border-left: none; border-right: none;">Rp ${formatNumber(total)}</div>
+                    <div style="font-size: 16px; margin: 35px 0 65px 0; text-align: left;">
+                        <p>Pembayaran Bisa melalui rekening Bank <strong>BCA 5737162660</strong> a.n SAEPUL IMAN</p>
+                    </div>
+                    
+                    <div style="margin-top: 35px; text-align: right;">
+                        <p style="padding-right: 28px; font-size: 16px; margin: 4px 0;">Hormat Kami</p>
+                        <div style="margin-top: 80px;"></div>
+                        <p style="font-size: 16px; margin: 4px 0;">Berkah Maju Elektrik</p>
                     </div>
                 </div>
-
-                <div style="font-size: 16px; margin: 35px 0 65px 0; text-align: left;">
-                    <p>Pembayaran Bisa melalui rekening Bank <strong>BCA 5737162660</strong> a.n SAEPUL IMAN</p>
-                </div>
-                
-                <div style="margin-top: 35px; text-align: right;">
-                    <p style="padding-right: 28px; font-size: 16px; margin: 4px 0;">Hormat Kami</p>
-                    <div style="margin-top: 80px;"></div>
-                    <p style="font-size: 16px; margin: 4px 0;">Berkah Maju Elektrik</p>
-                </div>
-            </div>
-        `;
+            `;
+        }
 
         // Render Surat Jalan (EXACT MATCH with surat-jalan.html)
-        letterPreviewContainer.innerHTML = `
-            <div class="html-preview-container" style="transform: scale(${scale}); transform-origin: top center; font-family: 'Times New Roman', Times, serif; width: 210mm; min-height: 297mm; background: white; padding: 28mm 20mm 25mm 25mm; position: relative; margin: 0 auto; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
-                <div style="font-family: Calibri, sans-serif; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 2px;">
-                    <div style="display: flex; align-items: center; gap: 7px; flex: 1;">
-                        <img src="${logoBase64 || 'assets/Logo%20berkah%20maju%20elektrik.png'}" style="width: 65px; height: auto;">
-                        <div style="text-align: left;">
-                            <h2 style="font-size: 24px; font-weight: bold; margin: 0 0 2px 0;">BERKAH MAJU ELEKTRIK</h2>
-                            <p style="font-size: 13px; line-height: 1.1; margin: 0;">Jl. Raya Karehkel, Parung Panjang Atas Leuwiliang, Bogor</p>
-                            <p style="font-size: 13px; line-height: 1.1; margin: 0;">0855-9174-9020 / 0853-1212-2030</p>
-                            <p style="font-size: 13px; line-height: 1.1; margin: 0;">Sales dan Service Alat-alat Listrik, UPS, Stabilizer, Battery UPS</p>
+        if (manualEdits['letter']) {
+            letterPreviewContainer.innerHTML = manualEdits['letter'].replace(/transform:\s*scale\([^)]+\)/g, `transform: scale(${scale})`);
+        } else {
+            letterPreviewContainer.innerHTML = `
+                <div class="html-preview-container" style="transform: scale(${scale}); transform-origin: top center; font-family: 'Times New Roman', Times, serif; width: 210mm; min-height: 297mm; background: white; padding: 28mm 20mm 25mm 25mm; position: relative; margin: 0 auto; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                    <div style="font-family: Calibri, sans-serif; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000; padding-bottom: 5px; margin-bottom: 2px;">
+                        <div style="display: flex; align-items: center; gap: 7px; flex: 1;">
+                            <img src="${logoBase64 || 'assets/Logo%20berkah%20maju%20elektrik.png'}" style="width: 65px; height: auto;">
+                            <div style="text-align: left;">
+                                <h2 style="font-size: 24px; font-weight: bold; margin: 0 0 2px 0;">BERKAH MAJU ELEKTRIK</h2>
+                                <p style="font-size: 13px; line-height: 1.1; margin: 0;">Jl. Raya Karehkel, Parung Panjang Atas Leuwiliang, Bogor</p>
+                                <p style="font-size: 13px; line-height: 1.1; margin: 0;">0855-9174-9020 / 0853-1212-2030</p>
+                                <p style="font-size: 13px; line-height: 1.1; margin: 0;">Sales dan Service Alat-alat Listrik, UPS, Stabilizer, Battery UPS</p>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="width: 5px; height: 75px; background-color: #000;"></div>
+                            <h1 style="font-size: 36px; font-weight: bold; letter-spacing: 1px; margin: 0;">SURAT JALAN</h1>
                         </div>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <div style="width: 5px; height: 75px; background-color: #000;"></div>
-                        <h1 style="font-size: 36px; font-weight: bold; letter-spacing: 1px; margin: 0;">SURAT JALAN</h1>
-                    </div>
-                </div>
-                <div style="border-bottom: 1px solid #000; margin-bottom: 35px;"></div>
+                    <div style="border-bottom: 1px solid #000; margin-bottom: 35px;"></div>
 
-                <div style="display: flex; justify-content: space-between; margin-bottom: 40px; font-size: 16px;">
-                    <div style="line-height: 1.3;">
-                        <p>Kepada Yth.</p>
-                        <p><strong style="font-size: 18px;">${title || '(Tanpa Nama)'}</strong></p>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 40px; font-size: 16px;">
+                        <div style="line-height: 1.3;">
+                            <p>Kepada Yth.</p>
+                            <p><strong style="font-size: 18px;">${title || '(Tanpa Nama)'}</strong></p>
+                        </div>
+                        <div style="text-align: right;">
+                            <p>Tanggal : ${dateStr}</p>
+                        </div>
                     </div>
-                    <div style="text-align: right;">
-                        <p>Tanggal : ${dateStr}</p>
-                    </div>
-                </div>
 
-                <div style="margin-bottom: 20px; font-size: 16px;">
-                    <p>Bersama dengan ini kami kirimkan sejumlah barang sebagai berikut:</p>
-                </div>
-               
-                <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px;">
-                    <thead>
-                        <tr>
-                            <th style="background:#c0c0c0; border: 1px solid #000; padding: 10px 8px; font-size: 16px; font-weight: bold; width: 50px; text-align: center;">No.</th>
-                            <th style="background:#c0c0c0; border: 1px solid #000; padding: 10px 8px; font-size: 16px; font-weight: bold; text-align: left; width: 230px;">Nama Barang</th>
-                            <th style="background:#c0c0c0; border: 1px solid #000; padding: 10px 8px; font-size: 16px; font-weight: bold; width: 100px; text-align: center;">Jumlah</th>
-                            <th style="background:#c0c0c0; border: 1px solid #000; padding: 10px 8px; font-size: 16px; font-weight: bold; text-align: center; width: 260px;">Keterangan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${items.map((item, index) => `
-                        <tr>
-                            <td style="border: 1px solid #000; padding: 10px 8px; text-align: center; font-size: 16px; width: 50px;">${index + 1}</td>
-                            <td style="border: 1px solid #000; padding: 10px 8px; font-size: 16px; width: 230px;">Battery ${item.name || ''}</td>
-                            <td style="border: 1px solid #000; padding: 10px 8px; text-align: center; font-size: 16px; width: 100px;">${item.qty} pcs</td>
-                            <td style="border: 1px solid #000; padding: 10px 8px; font-size: 16px; text-align: center; width: 260px;">UPS ${item.tipe || ''} ${item.note || ''}</td>
-                        </tr>
-                        `).join('')}
-                    </tbody>
-                </table>
-                
-                <div style="margin-bottom: 40px; font-size: 16px;">
-                    <p>Diterima Tanggal : .....................................</p>
-                </div>
+                    <div style="margin-bottom: 20px; font-size: 16px;">
+                        <p>Bersama dengan ini kami kirimkan sejumlah barang sebagai berikut:</p>
+                    </div>
+                   
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px;">
+                        <thead>
+                            <tr>
+                                <th style="background:#c0c0c0; border: 1px solid #000; padding: 10px 8px; font-size: 16px; font-weight: bold; width: 50px; text-align: center;">No.</th>
+                                <th style="background:#c0c0c0; border: 1px solid #000; padding: 10px 8px; font-size: 16px; font-weight: bold; text-align: left; width: 230px;">Nama Barang</th>
+                                <th style="background:#c0c0c0; border: 1px solid #000; padding: 10px 8px; font-size: 16px; font-weight: bold; width: 100px; text-align: center;">Jumlah</th>
+                                <th style="background:#c0c0c0; border: 1px solid #000; padding: 10px 8px; font-size: 16px; font-weight: bold; text-align: center; width: 260px;">Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${items.map((item, index) => `
+                            <tr>
+                                <td style="border: 1px solid #000; padding: 10px 8px; text-align: center; font-size: 16px; width: 50px;">${index + 1}</td>
+                                <td style="border: 1px solid #000; padding: 10px 8px; font-size: 16px; width: 230px;">Battery ${item.name || ''}</td>
+                                <td style="border: 1px solid #000; padding: 10px 8px; text-align: center; font-size: 16px; width: 100px;">${item.qty} pcs</td>
+                                <td style="border: 1px solid #000; padding: 10px 8px; font-size: 16px; text-align: center; width: 260px;">UPS ${item.tipe || ''} ${item.note || ''}</td>
+                            </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    
+                    <div style="margin-bottom: 40px; font-size: 16px;">
+                        <p>Diterima Tanggal : .....................................</p>
+                    </div>
 
-                <div style="display: flex; justify-content: space-around; text-align: center; font-size: 16px;">
-                    <div style="width: 200px;">
-                        <p>Penerima</p>
-                        <div style="margin-top: 100px;"></div>
-                        <p>(..................................... )</p>
-                    </div>
-                    <div style="width: 200px;">
-                        <p>Pengirim</p>
-                        <div style="margin-top: 100px;"></div>
-                        <p>(..................................... )</p>
+                    <div style="display: flex; justify-content: space-around; text-align: center; font-size: 16px;">
+                        <div style="width: 200px;">
+                            <p>Penerima</p>
+                            <div style="margin-top: 100px;"></div>
+                            <p>(..................................... )</p>
+                        </div>
+                        <div style="width: 200px;">
+                            <p>Pengirim</p>
+                            <div style="margin-top: 100px;"></div>
+                            <p>(..................................... )</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
+            `;
+        }
     };
 
     // ============================================
@@ -292,9 +390,36 @@ export function initPDFGenerator() {
             const title = validate();
             if (!title) return;
             const items = appState.state.invoiceItems;
-            if (items.length === 0) return showAlert("Belum ada item!");
+            if (items.length === 0 && !manualEdits.invoice && !manualEdits.letter) return showAlert("Belum ada item!");
+
             saveToHistory(items, title);
-            showAlert("Berhasil disimpan", true);
+
+            if (manualEdits.invoice || manualEdits.letter) {
+                showAlert("Disimpan di Riwayat (Kehilangan format kustom). Harap Unduh lewat Preview langsung!", false);
+            } else {
+                showAlert("Berhasil disimpan", true);
+            }
+        });
+    }
+
+    const updateManualEditOverlay = () => {
+        const overlay = document.getElementById('manual-edit-overlay');
+        if (overlay) {
+            if (manualEdits.invoice || manualEdits.letter) {
+                overlay.classList.remove('hidden');
+            } else {
+                overlay.classList.add('hidden');
+            }
+        }
+    };
+
+    const btnResetManual = document.getElementById('btn-reset-manual-edit');
+    if (btnResetManual) {
+        btnResetManual.addEventListener('click', () => {
+            manualEdits = { invoice: null, letter: null };
+            updateManualEditOverlay();
+            renderHTML();
+            showAlert("Berhasil dikembalikan ke Mode Otomatis");
         });
     }
 
@@ -304,10 +429,15 @@ export function initPDFGenerator() {
             const title = validate();
             if (!title) return;
             const items = appState.state.invoiceItems;
-            if (items.length === 0) return showAlert("Belum ada item!");
+            if (items.length === 0 && !manualEdits.invoice && !manualEdits.letter) return showAlert("Belum ada item!");
             saveToHistory(items, title);
-            generatePDFs(items, title);
-            showAlert("Berhasil diunduh", true);
+
+            if (manualEdits.invoice || manualEdits.letter) {
+                showAlert("File yang diedit manual harus diunduh satu-per-satu lewat Preview!", false);
+            } else {
+                generatePDFs(items, title);
+                showAlert("Berhasil diunduh semua file", true);
+            }
         });
     }
 }
