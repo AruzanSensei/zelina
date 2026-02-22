@@ -720,6 +720,9 @@ export function initPDFGenerator() {
     let lastInvoiceHTML = '';
     let lastSuratJalanHTML = '';
 
+    let manualEdits = { invoice: null, letter: null };
+    let currentPreviewType = null;
+
     // ============================================
     // HTML PREVIEW (gunakan HTML olahan dengan CSS template)
     // ============================================
@@ -729,8 +732,8 @@ export function initPDFGenerator() {
         const items = appState.state.invoiceItems;
         const title = document.getElementById('manual-title')?.value || '';
 
-        const invoiceHTML = buildInvoiceHTML(items, title);
-        const suratJalanHTML = buildSuratJalanHTML(items);
+        const invoiceHTML = manualEdits.invoice || buildInvoiceHTML(items, title);
+        const suratJalanHTML = manualEdits.letter || buildSuratJalanHTML(items);
         lastInvoiceHTML = invoiceHTML;
         lastSuratJalanHTML = suratJalanHTML;
 
@@ -787,26 +790,38 @@ export function initPDFGenerator() {
         previewFrame.dataset.zoom = '1';
         previewFrame.style.transform = 'scale(1)';
 
+        currentPreviewType = type;
+
         if (type === 'invoice') {
             previewTitle.textContent = 'Preview Invoice';
             previewFrame.srcdoc = lastInvoiceHTML;
-            previewDownloadBtn.onclick = () => {
-                const title = document.getElementById('manual-title')?.value || '';
-                const items = appState.state.invoiceItems;
-                if (!items || items.length === 0 || !title) return;
-                printInvoicePDF(items, title);
-            };
         } else {
             previewTitle.textContent = 'Preview Surat Jalan';
             previewFrame.srcdoc = lastSuratJalanHTML;
-            // Untuk saat ini, unduh tetap invoice; bisa di-nonaktifkan jika tidak diinginkan
-            previewDownloadBtn.onclick = () => {
-                const title = document.getElementById('manual-title')?.value || '';
-                const items = appState.state.invoiceItems;
-                if (!items || items.length === 0 || !title) return;
-                printInvoicePDF(items, title);
-            };
         }
+
+        previewDownloadBtn.onclick = () => {
+            const title = document.getElementById('manual-title')?.value || '';
+            const items = appState.state.invoiceItems;
+            if (!items || items.length === 0 || !title) return;
+
+            const editKey = type === 'surat' ? 'letter' : 'invoice';
+            if (manualEdits[editKey]) {
+                const w = window.open('', '_blank');
+                if (!w) return;
+                w.document.open();
+                w.document.write(manualEdits[editKey]);
+                w.document.close();
+                w.document.title = `Edited-${title}`;
+                setTimeout(() => { w.focus(); w.print(); }, 300);
+            } else {
+                if (type === 'invoice') {
+                    printInvoicePDF(items, title);
+                } else {
+                    printInvoicePDF(items, title); // preserving original fallback
+                }
+            }
+        };
 
         previewModal.classList.remove('hidden');
         previewModal.classList.add('active');
@@ -833,6 +848,106 @@ export function initPDFGenerator() {
             openFullPreview(type);
         });
     });
+
+    const btnModalEdit = document.getElementById('btn-modal-edit');
+    const editConfirmModal = document.getElementById('edit-confirm-modal');
+    const dontShowEditConfirm = document.getElementById('dont-show-edit-confirm');
+    const btnCancelEdit = document.getElementById('btn-cancel-edit');
+    const btnProceedEdit = document.getElementById('btn-proceed-edit');
+
+    const enableEditing = () => {
+        if (previewFrame && previewFrame.contentDocument) {
+            previewFrame.contentDocument.body.contentEditable = "true";
+            previewFrame.contentDocument.body.style.outline = "2px dashed #f39c12"; // visual feedback
+            previewFrame.contentDocument.body.focus();
+
+            const onInput = () => {
+                const editedHTML = "<!DOCTYPE html>\n<html lang=\"id\">\n" + previewFrame.contentDocument.documentElement.innerHTML + "\n</html>";
+                const editKey = currentPreviewType === 'surat' ? 'letter' : 'invoice';
+                manualEdits[editKey] = editedHTML;
+
+                updateManualEditOverlay();
+
+                const container = currentPreviewType === 'surat' ? letterPreviewContainer : invoicePreviewContainer;
+                const miniFrame = container.querySelector('iframe');
+                if (miniFrame) {
+                    miniFrame.srcdoc = editedHTML;
+                }
+            };
+
+            previewFrame.contentDocument.body.removeEventListener('input', onInput);
+            previewFrame.contentDocument.body.addEventListener('input', onInput);
+
+            // Immediately mark it as edited so the overlay shows up even without typing
+            const editKey = currentPreviewType === 'surat' ? 'letter' : 'invoice';
+            if (!manualEdits[editKey]) {
+                const editedHTML = "<!DOCTYPE html>\n<html lang=\"id\">\n" + previewFrame.contentDocument.documentElement.innerHTML + "\n</html>";
+                manualEdits[editKey] = editedHTML;
+                updateManualEditOverlay();
+            }
+        }
+    };
+
+    if (btnModalEdit) {
+        btnModalEdit.addEventListener('click', () => {
+            const editKey = currentPreviewType === 'surat' ? 'letter' : 'invoice';
+            if (manualEdits[editKey]) {
+                enableEditing();
+                return;
+            }
+
+            const skipConfirm = localStorage.getItem('skipEditConfirm') === 'true';
+            if (skipConfirm) {
+                enableEditing();
+            } else {
+                if (editConfirmModal) {
+                    editConfirmModal.classList.remove('hidden');
+                    editConfirmModal.classList.add('active');
+                } else {
+                    enableEditing(); // fallback if modal not found
+                }
+            }
+        });
+    }
+
+    if (btnCancelEdit && editConfirmModal) {
+        btnCancelEdit.addEventListener('click', () => {
+            editConfirmModal.classList.add('hidden');
+            editConfirmModal.classList.remove('active');
+        });
+    }
+
+    if (btnProceedEdit && editConfirmModal) {
+        btnProceedEdit.addEventListener('click', () => {
+            if (dontShowEditConfirm && dontShowEditConfirm.checked) {
+                localStorage.setItem('skipEditConfirm', 'true');
+            }
+            editConfirmModal.classList.add('hidden');
+            editConfirmModal.classList.remove('active');
+            enableEditing();
+        });
+    }
+
+    const updateManualEditOverlay = () => {
+        const overlay = document.getElementById('manual-edit-overlay');
+        if (overlay) {
+            if (manualEdits.invoice || manualEdits.letter) {
+                overlay.style.display = 'flex';
+            } else {
+                overlay.style.display = 'none';
+            }
+        }
+    };
+
+    const btnResetManual = document.getElementById('btn-reset-manual-edit');
+    if (btnResetManual) {
+        btnResetManual.addEventListener('click', () => {
+            manualEdits = { invoice: null, letter: null };
+            updateManualEditOverlay();
+            renderHTML();
+            showAlert("Berhasil dikembalikan ke Mode Otomatis");
+        });
+    }
 
     // Custom Alert System
     const showAlert = (message, isSuccess = false) => {
@@ -867,6 +982,11 @@ export function initPDFGenerator() {
 
     // Show format selection menu
     const showFormatMenu = () => {
+        if (manualEdits.invoice || manualEdits.letter) {
+            showAlert("File yang diedit manual harus diunduh satuan lewat Preview!", false);
+            return;
+        }
+
         const formats = appState.state.settings.downloadFormats || { png: true, jpeg: true, pdf: true };
         const enabledFormats = Object.keys(formats).filter(f => formats[f]);
 
@@ -973,9 +1093,14 @@ export function initPDFGenerator() {
             const title = validate();
             if (!title) return;
             const items = appState.state.invoiceItems;
-            if (items.length === 0) return showAlert("Belum ada item!");
+            if (items.length === 0 && !manualEdits.invoice && !manualEdits.letter) return showAlert("Belum ada item!");
             saveToHistory(items, title);
-            showAlert("Berhasil disimpan", true);
+
+            if (manualEdits.invoice || manualEdits.letter) {
+                showAlert("Disimpan di Riwayat (Kehilangan format kustom). Harap Unduh lewat Preview langsung!", false);
+            } else {
+                showAlert("Berhasil disimpan", true);
+            }
         });
     }
 
@@ -1009,6 +1134,10 @@ export function initPDFGenerator() {
             }
 
             // Normal click - use default method
+            if (manualEdits.invoice || manualEdits.letter) {
+                showAlert("File yang diedit manual harus diunduh satuan lewat Preview!", false);
+                return;
+            }
             const title = validate();
             if (!title) return;
             const items = appState.state.invoiceItems;

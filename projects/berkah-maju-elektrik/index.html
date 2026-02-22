@@ -76,13 +76,26 @@
                 </div>
             </div>
 
-            <div id="manual-items-container">
-                <!-- Items will be injected here -->
-            </div>
+            <div id="manual-items-wrapper" style="position:relative;">
+                <div id="manual-edit-overlay" class="hidden"
+                    style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:10; display:flex; flex-direction:column; justify-content:center; align-items:center; border:2px dashed #f39c12; border-radius:8px;">
+                    <i class="fa-solid fa-triangle-exclamation"
+                        style="font-size:3rem; color:#f39c12; margin-bottom:15px;"></i>
+                    <h3 style="color:#d35400;">Mode Edit Manual Aktif</h3>
+                    <p style="text-align:center; padding:10px; font-weight:600; color:#333;">Input otomatis
+                        dinonaktifkan<br>karena ada perubahan kustom.</p>
+                    <button id="btn-reset-manual-edit" class="btn btn-primary"
+                        style="background:#e67e22; border-color:#d35400; margin-top:10px;"><i
+                            class="fa-solid fa-rotate-left"></i> Reset & Lanjutkan Otomatis</button>
+                </div>
+                <div id="manual-items-container">
+                    <!-- Items will be injected here -->
+                </div>
 
-            <button id="btn-add-item" class="btn btn-outline btn-full">
-                <i class="fa-solid fa-plus"></i> Tambah Item
-            </button>
+                <button id="btn-add-item" class="btn btn-outline btn-full">
+                    <i class="fa-solid fa-plus"></i> Tambah Item
+                </button>
+            </div>
         </section>
 
         <!-- MODE 2: AI -->
@@ -235,14 +248,44 @@
         <div class="modal-content" style="height: 90vh;">
             <div class="modal-header">
                 <h2 id="preview-title">Preview</h2>
-                <button id="preview-download-btn" class="btn btn-primary"
-                    style="margin-left:auto; margin-right:8px; padding:6px 12px; font-size:0.85rem;">
-                    Unduh
-                </button>
+                <div style="display:flex; gap:10px; margin-left:auto; margin-right:8px;">
+                    <button id="btn-modal-edit" class="btn btn-outline" style="padding:6px 12px; font-size:0.85rem;"
+                        title="Edit Manual">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </button>
+                    <button id="preview-download-btn" class="btn btn-primary"
+                        style="padding:6px 12px; font-size:0.85rem;" title="Unduh">
+                        <i class="fa-solid fa-download"></i> Unduh
+                    </button>
+                </div>
                 <button class="close-modal-preview"><i class="fa-solid fa-times"></i></button>
             </div>
             <div class="modal-body" style="height: calc(100% - 60px);">
                 <iframe id="pdf-preview-frame" style="width:100%; height:100%; border:none;"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Confirm Modal -->
+    <div id="edit-confirm-modal" class="modal hidden">
+        <div class="modal-content" style="max-width: 400px; text-align: center; padding: 20px;">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size:3rem; color:#f39c12; margin-bottom:15px;"></i>
+            <h3 style="margin-bottom:10px;">Konfirmasi Edit Manual</h3>
+            <p style="margin-bottom:15px; font-size: 0.95rem; color: var(--text-muted); line-height: 1.4;">
+                Mengubah dokumen secara manual akan <strong>menonaktifkan</strong> otomatisasi input data di halaman
+                utama agar tidak tumpang tindih.<br><br>Apakah Anda yakin ingin melanjutkan?
+            </p>
+            <div style="text-align: left; margin-bottom: 20px;">
+                <label
+                    style="display: flex; align-items: center; gap: 8px; cursor: pointer; justify-content: center; font-size: 0.9rem;">
+                    <input type="checkbox" id="dont-show-edit-confirm" style="width: 16px; height: 16px;">
+                    Jangan tampilkan pesan ini lagi
+                </label>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button id="btn-cancel-edit" class="btn btn-outline" style="flex: 1;">Batal</button>
+                <button id="btn-proceed-edit" class="btn btn-primary"
+                    style="flex: 1; background: #e67e22; border-color: #d35400;">Lanjutkan</button>
             </div>
         </div>
     </div>
