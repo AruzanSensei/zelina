@@ -28,15 +28,12 @@ export function initManualMode() {
     let items = appState.state.invoiceItems || [];
     if (titleInput) {
         titleInput.value = appState.state.manualTitle || '';
-        // Show red outline if empty on load
-        if (!titleInput.value.trim()) titleInput.classList.add('required-empty-red');
-        else titleInput.classList.remove('required-empty-red');
-
+        // Set initial red outline if empty
+        titleInput.style.outline = titleInput.value.trim() ? '' : '2px solid red';
         titleInput.addEventListener('input', (e) => {
-            appState.updateManualTitle(e.target.value);
-            // Toggle red outline based on content
-            if (!e.target.value.trim()) e.target.classList.add('required-empty-red');
-            else e.target.classList.remove('required-empty-red');
+            const val = e.target.value;
+            e.target.style.outline = val.trim() ? '' : '2px solid red';
+            appState.updateManualTitle(val);
             render();
         });
     }
@@ -107,7 +104,7 @@ export function initManualMode() {
 
                     <div class="input-group" style="margin-bottom: 0;">
                         <div class="input-wrapper">
-                            <textarea class="form-textarea item-note ${!item.note ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Deskripsi Item (wajib)" rows="1" style="padding-right: 30px; overflow:hidden;">${item.note || ''}</textarea>
+                            <textarea class="form-textarea item-note" data-index="${index}" placeholder="Deskripsi Item (wajib)" rows="1" style="padding-right: 30px; overflow:hidden; ${!item.note ? 'outline: 2px solid orange;' : ''}">${item.note || ''}</textarea>
                             <button class="copy-icon-btn" data-index="${index}" title="Copy Note"><i class="fa-regular fa-copy"></i></button>
                         </div>
                     </div>
@@ -166,7 +163,7 @@ export function initManualMode() {
                         </select>
                     </td>
                     <td><input type="text" class="item-qty table-qty-input" value="${item.qty}" data-index="${index}" inputmode="numeric"></td>
-                    <td><input type="text" class="item-note ${!item.note ? 'required-empty-orange' : ''}" value="${item.note || ''}" data-index="${index}" placeholder="Deskripsi (wajib)"></td>
+                    <td><input type="text" class="item-note" value="${item.note || ''}" data-index="${index}" placeholder="Catatan..."></td>
                     <td>
                         <button class="remove-item-btn" data-index="${index}" style="position:static; color:#ff4d4f; background:none; border:none; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
                     </td>
@@ -302,10 +299,9 @@ export function initManualMode() {
 
             if (target.classList.contains('item-note')) {
                 items[index].note = val;
-                // Toggle orange outline based on content
-                if (!val.trim()) target.classList.add('required-empty-orange');
-                else target.classList.remove('required-empty-orange');
                 autoResize(target);
+                // Orange outline if empty (required)
+                target.style.outline = val.trim() ? '' : '2px solid orange';
             }
 
             // Subtotal Update (Micro Optimization to avoid full rerender on keystroke)

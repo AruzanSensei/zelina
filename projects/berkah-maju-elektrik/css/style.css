@@ -7,6 +7,19 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+/* Chrome, Edge, Safari */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+
 body {
     background-color: var(--bg-body);
     color: var(--text-main);
@@ -172,6 +185,17 @@ small {
     animation: border-blink 0.5s step-end infinite;
     border-color: #ff4d4f !important;
     box-shadow: 0 0 5px rgba(255, 77, 79, 0.5) !important;
+}
+
+/* Required field empty outlines */
+.required-empty-red {
+    outline: 1.5px solid #ff4d4f !important;
+    /* outline-offset: -1px; */
+}
+
+.required-empty-orange {
+    outline: 1.5px solid #f39c12 !important;
+    /* outline-offset: -1px; */
 }
 
 @keyframes border-blink {
@@ -526,6 +550,8 @@ small {
     box-shadow: var(--shadow-sm);
     overflow: hidden;
     position: relative;
+    touch-action: none;
+    -webkit-overflow-scrolling: auto;
 }
 
 /* A4 iframe preview wrapper & frame (preview only, not for print) */
@@ -969,11 +995,11 @@ small {
 
 .swipe-actions {
     position: absolute;
-    top: 0;
+    top: 1px !important;
     bottom: 0;
     right: 0;
     display: flex;
-    align-items: center;
+    /* align-items: center; */
     justify-content: flex-end;
     height: 100%;
     z-index: 1;
@@ -994,6 +1020,8 @@ small {
     font-size: 0.9rem;
     transition: width 0.2s;
 }
+
+
 
 .swipe-edit {
     background-color: #F5A623;
@@ -1033,6 +1061,95 @@ small {
     color: #fff;
     margin-top: auto;
     font-size: 0.8rem;
+}
+
+/* AI Locked Overlay */
+.ai-locked-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: var(--radius-sm);
+    backdrop-filter: blur(2px);
+}
+
+.ai-locked-overlay i {
+    font-size: 2.5rem;
+    color: #9B51E0;
+    margin-bottom: 12px;
+    opacity: 0.7;
+}
+
+.ai-locked-overlay p {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+}
+
+.ai-locked-overlay small {
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+/* History Swipe */
+.history-item.swiped-left {
+    transform: translateX(-120px);
+}
+
+/* Converter Popup Bubble */
+.converter-popup {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    background: #F5A623;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 20px 20px 4px 20px;
+    box-shadow: 0 4px 15px rgba(245, 166, 35, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    z-index: 2000;
+    cursor: pointer;
+    animation: slideUpScale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    text-decoration: none;
+    border: none;
+}
+
+.converter-popup:hover {
+    background: #e67e22;
+    transform: translateY(-2px);
+}
+
+.converter-popup i {
+    font-size: 1.1rem;
+}
+
+.converter-popup .close-popup {
+    margin-left: 4px;
+    opacity: 0.7;
+    font-size: 0.8rem;
+}
+
+@keyframes slideUpScale {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 @media (min-width: 600px) {

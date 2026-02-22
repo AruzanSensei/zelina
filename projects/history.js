@@ -1,5 +1,5 @@
 /**
- * History Mode Logic with Swipe Actions
+ * History Mode Logic
  */
 import { appState } from '../state.js';
 import { printInvoicePDF } from '../pdf/generator.js';
@@ -19,10 +19,6 @@ export function initHistoryMode() {
 
     let currentDetailItem = null;
     let detailViewMode = 'form'; // 'form' | 'table'
-
-    // Swipe state
-    let touchStartX = 0;
-    let activeSwipeCard = null;
 
     // ===================================
     // TIME HELPERS
@@ -55,19 +51,19 @@ export function initHistoryMode() {
 
         sortedHistory.forEach((entry, index) => {
             const realIndex = appState.state.history.findIndex(h => h.id === entry.id || h.timestamp === entry.timestamp);
-            const timeClass = getTimeClass(entry.timestamp);
 
-            // Swipe container wrapping each history item
             const swipeContainer = document.createElement('div');
             swipeContainer.className = 'item-swipe-container';
             swipeContainer.style.cssText = 'position:relative; overflow:hidden; border-radius:var(--radius-sm); margin-bottom:8px;';
 
+            const timeClass = getTimeClass(entry.timestamp);
+
             swipeContainer.innerHTML = `
                 <div class="swipe-actions" style="position:absolute; top:0; bottom:0; right:0; display:flex; z-index:1;">
-                    <button class="swipe-btn swipe-edit-history" data-index="${realIndex}" style="background-color:#F5A623; border:none; color:white; padding:0 20px; cursor:pointer;"><i class="fa-solid fa-pen-to-square"></i></button>
-                    <button class="swipe-btn swipe-delete-history" data-index="${realIndex}" style="background-color:#ff4d4f; border:none; color:white; padding:0 20px; cursor:pointer; border-radius:0 var(--radius-sm) var(--radius-sm) 0;"><i class="fa-solid fa-trash"></i></button>
+                    <button class="swipe-btn history-edit-btn" data-index="${realIndex}" style="background-color:#F5A623; border:none; color:white; padding:0 18px; cursor:pointer; font-size:1rem;"><i class="fa-solid fa-pen-to-square"></i></button>
+                    <button class="swipe-btn history-delete-btn" data-index="${realIndex}" style="background-color:#ff4d4f; border:none; color:white; padding:0 18px; cursor:pointer; border-radius:0 var(--radius-sm) var(--radius-sm) 0; font-size:1rem;"><i class="fa-solid fa-trash"></i></button>
                 </div>
-                <div class="history-item ${timeClass}" data-index="${realIndex}" style="cursor:pointer; transition:transform 0.2s; position:relative; z-index:2; background:var(--bg-card);">
+                <div class="history-item ${timeClass} history-swipe-card" data-index="${realIndex}" style="position:relative; z-index:2; transition:transform 0.2s; cursor:pointer; background:var(--bg-card);">
                     <div class="history-info" style="pointer-events:none;">
                         <h4>${entry.title || 'Tanpa Judul'}</h4>
                         <p><small>${entry.date} | ${entry.items.length} Item</small></p>
@@ -82,7 +78,7 @@ export function initHistoryMode() {
             container.appendChild(swipeContainer);
         });
 
-        // Init swipe after render
+        // Init swipe for all cards
         initHistorySwipe();
     };
 
@@ -92,43 +88,41 @@ export function initHistoryMode() {
     // ===================================
     // SWIPE LOGIC FOR HISTORY ITEMS
     // ===================================
-    function initHistorySwipe() {
+    let touchStartX = 0;
+    let activeHistoryCard = null;
+
+    const initHistorySwipe = () => {
         container.addEventListener('touchstart', (e) => {
-            const card = e.target.closest('.history-item');
+            const card = e.target.closest('.history-swipe-card');
             if (!card) return;
-            if (e.target.closest('button')) return; // Ignore button clicks
             touchStartX = e.touches[0].clientX;
-            activeSwipeCard = card;
+            activeHistoryCard = card;
         }, { passive: true });
 
         container.addEventListener('touchmove', (e) => {
-            if (!activeSwipeCard) return;
-            const touchCurrentX = e.touches[0].clientX;
-            const diff = touchCurrentX - touchStartX;
+            if (!activeHistoryCard) return;
+            const diff = e.touches[0].clientX - touchStartX;
             if (diff < 0 && diff > -150) {
-                activeSwipeCard.style.transform = `translateX(${diff}px)`;
+                activeHistoryCard.style.transform = `translateX(${diff}px)`;
             }
         }, { passive: true });
 
         container.addEventListener('touchend', (e) => {
-            if (!activeSwipeCard) return;
-            const touchEndX = e.changedTouches[0].clientX;
-            const diff = touchEndX - touchStartX;
-            activeSwipeCard.style.transform = '';
-
+            if (!activeHistoryCard) return;
+            const diff = e.changedTouches[0].clientX - touchStartX;
+            activeHistoryCard.style.transform = '';
             if (diff < -80) {
-                // Close other open cards
-                const openCards = container.querySelectorAll('.history-item.swiped-left');
-                openCards.forEach(c => {
-                    if (c !== activeSwipeCard) c.classList.remove('swiped-left');
+                // Close any other open cards
+                container.querySelectorAll('.history-swipe-card.swiped-left').forEach(c => {
+                    if (c !== activeHistoryCard) c.classList.remove('swiped-left');
                 });
-                activeSwipeCard.classList.add('swiped-left');
+                activeHistoryCard.classList.add('swiped-left');
             } else if (diff > 50) {
-                activeSwipeCard.classList.remove('swiped-left');
+                activeHistoryCard.classList.remove('swiped-left');
             }
-            activeSwipeCard = null;
+            activeHistoryCard = null;
         });
-    }
+    };
 
     // ===================================
     // DETAIL VIEW LOGIC
@@ -258,8 +252,8 @@ export function initHistoryMode() {
     // EVENTS
     // ===================================
     container.addEventListener('click', (e) => {
-        // Download button
         const btnDownload = e.target.closest('.btn-download');
+
         if (btnDownload) {
             e.stopPropagation();
             const index = btnDownload.dataset.index;
@@ -269,41 +263,36 @@ export function initHistoryMode() {
         }
 
         // Swipe Delete
-        const deleteBtn = e.target.closest('.swipe-delete-history');
+        const deleteBtn = e.target.closest('.history-delete-btn');
         if (deleteBtn) {
             e.stopPropagation();
-            const idx = parseInt(deleteBtn.dataset.index);
+            const index = parseInt(deleteBtn.dataset.index);
             if (confirm('Hapus riwayat ini?')) {
-                appState.removeFromHistory(idx);
+                appState.state.history.splice(index, 1);
+                appState.save('bme_history', appState.state.history);
+                appState.notify('history', appState.state.history);
             }
             return;
         }
 
-        // Swipe Edit (move to manual mode)
-        const editBtn = e.target.closest('.swipe-edit-history');
+        // Swipe Edit (rename title)
+        const editBtn = e.target.closest('.history-edit-btn');
         if (editBtn) {
             e.stopPropagation();
-            const idx = parseInt(editBtn.dataset.index);
-            const entry = appState.state.history[idx];
-            if (!entry) return;
-
-            if (!confirm("Pindah ke Mode Manual untuk mengedit? Data Manual saat ini akan digantikan.")) return;
-
-            document.dispatchEvent(new CustomEvent('template-selected', { detail: { items: entry.items } }));
-
-            const manualTitle = document.getElementById('manual-title');
-            if (manualTitle) {
-                manualTitle.value = entry.title || '';
-                appState.updateManualTitle(entry.title || '');
+            const index = parseInt(editBtn.dataset.index);
+            const entry = appState.state.history[index];
+            const newTitle = prompt('Edit judul riwayat:', entry.title || '');
+            if (newTitle !== null) {
+                entry.title = newTitle.trim() || entry.title;
+                appState.save('bme_history', appState.state.history);
+                appState.notify('history', appState.state.history);
             }
-
-            document.querySelector('[data-tab="manual"]').click();
             return;
         }
 
         // Handle Item Click (Detail)
-        const itemEl = e.target.closest('.history-item');
-        if (itemEl && !itemEl.classList.contains('swiped-left')) {
+        const itemEl = e.target.closest('.history-swipe-card');
+        if (itemEl) {
             const index = itemEl.dataset.index;
             openDetail(index);
         }

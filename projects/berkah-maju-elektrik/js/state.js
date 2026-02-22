@@ -95,6 +95,12 @@ class StateManager {
         this.notify('manualTitle', title);
     }
 
+    removeFromHistory(index) {
+        this.state.history.splice(index, 1);
+        this.save(STORAGE_KEYS.HISTORY, this.state.history);
+        this.notify('history', this.state.history);
+    }
+
     addTemplate(template) {
         this.state.templates.push(template);
         this.save(STORAGE_KEYS.TEMPLATES, this.state.templates);

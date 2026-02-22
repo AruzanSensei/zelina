@@ -683,7 +683,7 @@ function setupPinchZoom(wrapper, frame) {
             const dist = getDistance();
             if (!dist) return;
             let nextZoom = initialZoom * (dist / initialDistance);
-            nextZoom = Math.max(0.3, Math.min(1, nextZoom)); // Only allow zoom OUT (max 1 = 100%)
+            nextZoom = Math.max(0.5, Math.min(3, nextZoom));
             frame.dataset.zoom = String(nextZoom);
             updateTransform();
         }
@@ -723,6 +723,10 @@ export function initPDFGenerator() {
     let manualEdits = { invoice: null, letter: null };
     let currentPreviewType = null;
 
+    // Ensure overlay starts hidden on fresh load
+    const overlay = document.getElementById('manual-edit-overlay');
+    if (overlay) overlay.style.display = 'none';
+
     // ============================================
     // HTML PREVIEW (gunakan HTML olahan dengan CSS template)
     // ============================================
@@ -744,6 +748,8 @@ export function initPDFGenerator() {
             if (!wrapper) {
                 wrapper = document.createElement('div');
                 wrapper.className = 'a4-preview-wrapper';
+                // Make wrapper non-scrollable and pointer-events-none so preview is purely visual
+                wrapper.style.cssText = 'overflow:hidden; pointer-events:none; user-select:none;';
                 container.innerHTML = '';
                 container.appendChild(wrapper);
             }
@@ -754,6 +760,9 @@ export function initPDFGenerator() {
                 frame.setAttribute('data-template-frame', '1');
                 frame.title = titleText;
                 frame.loading = 'lazy';
+                // Disable all interaction on the mini-preview iframe
+                frame.style.pointerEvents = 'none';
+                frame.scrolling = 'no';
                 wrapper.appendChild(frame);
             }
 
@@ -761,11 +770,16 @@ export function initPDFGenerator() {
 
             const refWidth = 794;
             const refHeight = 1123;
-            const availableWidth = wrapper.clientWidth || refWidth;
-            const availableHeight = wrapper.clientHeight || refHeight;
+            const availableWidth = wrapper.clientWidth || container.clientWidth || refWidth;
+            const availableHeight = wrapper.clientHeight || container.clientHeight || refHeight;
             const scale = Math.min(availableWidth / refWidth, availableHeight / refHeight);
 
             frame.style.transform = `scale(${scale})`;
+            frame.style.transformOrigin = 'top left';
+            // Set iframe size to A4 reference then scale down
+            frame.style.width = refWidth + 'px';
+            frame.style.height = refHeight + 'px';
+            frame.style.border = 'none';
         };
 
         ensureFrame(invoicePreviewContainer, invoiceHTML, 'Preview Invoice');
@@ -785,11 +799,6 @@ export function initPDFGenerator() {
     const openFullPreview = (type) => {
         if (!previewModal || !previewFrame || !previewTitle || !previewDownloadBtn) return;
 
-        // reset zoom state for modal frame
-        previewFrame.dataset.baseScale = '1';
-        previewFrame.dataset.zoom = '1';
-        previewFrame.style.transform = 'scale(1)';
-
         currentPreviewType = type;
 
         if (type === 'invoice') {
@@ -799,6 +808,33 @@ export function initPDFGenerator() {
             previewTitle.textContent = 'Preview Surat Jalan';
             previewFrame.srcdoc = lastSuratJalanHTML;
         }
+
+        previewModal.classList.remove('hidden');
+        previewModal.classList.add('active');
+
+        // Compute fit-all base scale after modal is visible
+        requestAnimationFrame(() => {
+            const modalBody = previewModal.querySelector('.modal-body');
+            if (modalBody) {
+                const refWidth = 794;
+                const refHeight = 1123;
+                const availW = modalBody.clientWidth || refWidth;
+                const availH = modalBody.clientHeight || refHeight;
+                const baseScale = Math.min(availW / refWidth, availH / refHeight);
+
+                // Set iframe dimensions to A4 reference
+                previewFrame.style.width = refWidth + 'px';
+                previewFrame.style.height = refHeight + 'px';
+                previewFrame.style.border = 'none';
+                previewFrame.style.transformOrigin = 'top center';
+
+                previewFrame.dataset.baseScale = String(baseScale);
+                previewFrame.dataset.zoom = '1';
+                previewFrame.style.transform = `scale(${baseScale})`;
+
+                setupPinchZoom(modalBody, previewFrame);
+            }
+        });
 
         previewDownloadBtn.onclick = () => {
             const title = document.getElementById('manual-title')?.value || '';
@@ -818,18 +854,10 @@ export function initPDFGenerator() {
                 if (type === 'invoice') {
                     printInvoicePDF(items, title);
                 } else {
-                    printInvoicePDF(items, title); // preserving original fallback
+                    printInvoicePDF(items, title);
                 }
             }
         };
-
-        previewModal.classList.remove('hidden');
-        previewModal.classList.add('active');
-
-        const modalBody = previewModal.querySelector('.modal-body');
-        if (modalBody) {
-            setupPinchZoom(modalBody, previewFrame);
-        }
     };
 
     if (closePreviewBtn && previewModal) {
@@ -939,9 +967,6 @@ export function initPDFGenerator() {
         }
     };
 
-    // Ensure manual edit overlay is hidden on page load (manualEdits is always null on init)
-    updateManualEditOverlay();
-
     const btnResetManual = document.getElementById('btn-reset-manual-edit');
     if (btnResetManual) {
         btnResetManual.addEventListener('click', () => {
@@ -971,43 +996,6 @@ export function initPDFGenerator() {
     };
 
     // ============================================
-    // CONVERTER POPUP (ILOVEPDF)
-    // ============================================
-    const showConverterPopup = () => {
-        // Remove existing one if any
-        const existing = document.querySelector('.converter-popup');
-        if (existing) existing.remove();
-
-        const popup = document.createElement('a');
-        popup.className = 'converter-popup';
-        popup.href = 'https://www.ilovepdf.com/id/jpg-ke-pdf/';
-        popup.target = '_blank';
-        popup.innerHTML = `
-            <i class="fa-solid fa-file-pdf"></i>
-            <span>Jadikan PDF</span>
-            <i class="fa-solid fa-xmark close-popup" id="close-conv-popup"></i>
-        `;
-
-        document.body.appendChild(popup);
-
-        // Handle close button click
-        const closeBtn = popup.querySelector('#close-conv-popup');
-        closeBtn.onclick = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            popup.remove();
-        };
-
-        // Auto remove after 10 seconds
-        setTimeout(() => {
-            if (popup.parentNode) {
-                popup.style.animation = 'alert-out 0.3s ease-in forwards';
-                setTimeout(() => popup.remove(), 300);
-            }
-        }, 10000);
-    };
-
-    // ============================================
     // DOWNLOAD EXECUTION
     // ============================================
     const executeDownload = async (items, title, format) => {
@@ -1015,10 +1003,8 @@ export function initPDFGenerator() {
             printInvoicePDF(items, title);
         } else if (format === 'png') {
             await exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML, items, title, 'png');
-            showConverterPopup();
         } else if (format === 'jpeg') {
             await exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML, items, title, 'jpeg');
-            showConverterPopup();
         }
     };
 
@@ -1126,22 +1112,6 @@ export function initPDFGenerator() {
             }, 1500);
             return false;
         }
-
-        // Validate item descriptions are filled
-        const items = appState.state.invoiceItems;
-        for (let i = 0; i < items.length; i++) {
-            if (!items[i].note || !items[i].note.trim()) {
-                const noteFields = document.querySelectorAll('.item-note');
-                if (noteFields[i]) {
-                    noteFields[i].classList.add('blink-error');
-                    noteFields[i].focus();
-                    setTimeout(() => noteFields[i]?.classList.remove('blink-error'), 1500);
-                }
-                showAlert(`Deskripsi Item ${i + 1} wajib diisi!`);
-                return false;
-            }
-        }
-
         return title;
     };
 
