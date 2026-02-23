@@ -116,8 +116,24 @@
 
         <!-- MODE 3: HISTORY -->
         <section id="history-view" class="view hidden">
+            <div class="history-toolbar">
+                <div class="history-search-wrapper">
+                    <i class="fa-solid fa-search"
+                        style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:0.85rem;"></i>
+                    <input type="text" id="history-search" class="form-input" placeholder="Cari riwayat..."
+                        style="padding-left:36px; font-size:0.9rem;">
+                </div>
+                <button id="btn-multi-select" class="icon-btn" title="Pilih beberapa"><i
+                        class="fa-solid fa-check-double"></i></button>
+            </div>
             <div id="history-list" class="history-list">
                 <!-- History items will be injected here -->
+            </div>
+            <div id="batch-delete-bar" class="batch-delete-bar hidden">
+                <span id="batch-count">0 dipilih</span>
+                <button id="btn-batch-delete" class="btn btn-sm"
+                    style="background:#ff4d4f; color:white; border:none;"><i class="fa-solid fa-trash"></i>
+                    Hapus</button>
             </div>
         </section>
 
@@ -217,9 +233,10 @@
 
                             <label class="toggle-switch-wrapper"
                                 style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
-                                <span style="font-size: 0.95rem; user-select: none;">PDF (Print to PDF)</span>
+                                <span style="font-size: 0.95rem; user-select: none; color: var(--text-muted);">PDF
+                                    (Print to PDF) <small style="color:#f39c12;">(Segera)</small></span>
                                 <div class="ios-switch">
-                                    <input type="checkbox" id="enable-pdf" checked>
+                                    <input type="checkbox" id="enable-pdf" disabled>
                                     <span class="ios-slider"></span>
                                 </div>
                             </label>
@@ -231,8 +248,50 @@
                         <select id="default-download-method" class="form-input" style="margin-top: 8px;">
                             <option value="png">PNG</option>
                             <option value="jpeg">JPEG</option>
-                            <option value="pdf" selected>PDF</option>
+                            <option value="pdf" disabled>PDF (Segera)</option>
                         </select>
+                    </div>
+
+                    <div class="setting-item">
+                        <label class="toggle-switch-wrapper"
+                            style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+                            <span style="font-size: 0.95rem; user-select: none;">Judul Wajib Diisi</span>
+                            <div class="ios-switch">
+                                <input type="checkbox" id="setting-title-required" checked>
+                                <span class="ios-slider"></span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="setting-item">
+                        <label style="display:flex; align-items:center; gap:6px;">
+                            Format Nama File
+                            <button id="btn-format-help" class="icon-btn"
+                                style="font-size:0.85rem; width:24px; height:24px; border-radius:50%; background:var(--bg-body); border:1px solid var(--border-color);"
+                                title="Bantuan format">
+                                <i class="fa-solid fa-question"></i>
+                            </button>
+                        </label>
+                        <div style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
+                            <div>
+                                <small style="color:var(--text-muted); font-weight:500;">Invoice:</small>
+                                <input type="text" id="format-invoice" class="form-input" value="Invoice-{judul}"
+                                    style="margin-top:4px; font-size:0.9rem;">
+                            </div>
+                            <div>
+                                <small style="color:var(--text-muted); font-weight:500;">Surat Jalan:</small>
+                                <input type="text" id="format-surat-jalan" class="form-input"
+                                    value="Surat Jalan-{judul}" style="margin-top:4px; font-size:0.9rem;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="setting-item"
+                        style="border-top:1px solid var(--border-color); padding-top:16px; margin-top:8px;">
+                        <button id="btn-reset-settings" class="btn btn-outline btn-full"
+                            style="color:#ff4d4f; border-color:#ff4d4f;">
+                            <i class="fa-solid fa-rotate-left"></i> Reset Semua Pengaturan
+                        </button>
                     </div>
                 </div>
 
@@ -319,7 +378,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/projects/berkah-maju-elektrik/sw.js')
+                navigator.serviceWorker.register('./sw.js')
                     .then((registration) => {
                         console.log('Service Worker registered with scope:', registration.scope);
                     })

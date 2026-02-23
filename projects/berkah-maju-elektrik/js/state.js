@@ -18,9 +18,14 @@ const DEFAULTS = {
         downloadFormats: {
             png: true,
             jpeg: true,
-            pdf: true
+            pdf: false
         },
-        defaultDownloadMethod: 'pdf'
+        defaultDownloadMethod: 'png',
+        titleRequired: true,
+        fileNameFormat: {
+            invoice: 'Invoice-{judul}',
+            suratJalan: 'Surat Jalan-{judul}'
+        }
     },
     manualItems: [],
     manualTitle: '',
@@ -105,6 +110,20 @@ class StateManager {
         this.state.templates.push(template);
         this.save(STORAGE_KEYS.TEMPLATES, this.state.templates);
         this.notify('templates', this.state.templates);
+    }
+
+    removeMultipleFromHistory(indices) {
+        // Sort descending so splice doesn't shift indices
+        const sorted = [...indices].sort((a, b) => b - a);
+        sorted.forEach(i => this.state.history.splice(i, 1));
+        this.save(STORAGE_KEYS.HISTORY, this.state.history);
+        this.notify('history', this.state.history);
+    }
+
+    resetSettings() {
+        this.state.settings = JSON.parse(JSON.stringify(DEFAULTS.settings));
+        this.save(STORAGE_KEYS.SETTINGS, this.state.settings);
+        this.notify('settings', this.state.settings);
     }
 
     // Observer pattern simple implementation

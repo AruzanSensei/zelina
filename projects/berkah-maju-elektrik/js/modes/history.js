@@ -1,11 +1,16 @@
 /**
- * History Mode Logic with Swipe Actions
+ * History Mode Logic with Search, Multi-Select, Swipe, and Detail Preview
  */
 import { appState } from '../state.js';
-import { printInvoicePDF } from '../pdf/generator.js';
+import { printInvoicePDF, buildInvoiceHTML, buildSuratJalanHTML } from '../pdf/generator.js';
 
 export function initHistoryMode() {
     const container = document.getElementById('history-list');
+    const searchInput = document.getElementById('history-search');
+    const btnMultiSelect = document.getElementById('btn-multi-select');
+    const batchDeleteBar = document.getElementById('batch-delete-bar');
+    const batchCount = document.getElementById('batch-count');
+    const btnBatchDelete = document.getElementById('btn-batch-delete');
 
     // Bottom Sheet Elements
     const detailSheet = document.getElementById('detail-sheet');
@@ -18,11 +23,18 @@ export function initHistoryMode() {
     const btnTableView = document.getElementById('detail-table-view');
 
     let currentDetailItem = null;
-    let detailViewMode = 'form'; // 'form' | 'table'
+    let detailViewMode = 'form';
+
+    // Multi-select state
+    let isMultiSelectMode = false;
+    let selectedIndices = new Set();
 
     // Swipe state
     let touchStartX = 0;
     let activeSwipeCard = null;
+
+    // Search state
+    let searchQuery = '';
 
     // ===================================
     // TIME HELPERS
@@ -48,12 +60,26 @@ export function initHistoryMode() {
 
         if (history.length === 0) {
             container.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted);">Belum ada riwayat.</div>';
+            updateBatchBar();
             return;
         }
 
         const sortedHistory = [...history].sort((a, b) => b.timestamp - a.timestamp);
 
-        sortedHistory.forEach((entry, index) => {
+        // Apply search filter
+        const filtered = searchQuery
+            ? sortedHistory.filter(e =>
+                (e.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                (e.date || '').toLowerCase().includes(searchQuery.toLowerCase())
+            )
+            : sortedHistory;
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted);">Tidak ditemukan.</div>';
+            return;
+        }
+
+        filtered.forEach((entry) => {
             const realIndex = appState.state.history.findIndex(h => h.id === entry.id || h.timestamp === entry.timestamp);
             const timeClass = getTimeClass(entry.timestamp);
 
@@ -62,13 +88,18 @@ export function initHistoryMode() {
             swipeContainer.className = 'item-swipe-container';
             swipeContainer.style.cssText = 'position:relative; overflow:hidden; border-radius:var(--radius-sm); margin-bottom:8px;';
 
+            const checkboxHTML = isMultiSelectMode
+                ? `<input type="checkbox" class="history-checkbox" data-index="${realIndex}" ${selectedIndices.has(realIndex) ? 'checked' : ''} style="margin-right:10px;">`
+                : '';
+
             swipeContainer.innerHTML = `
                 <div class="swipe-actions" style="position:absolute; top:0; bottom:0; right:0; display:flex; z-index:1;">
                     <button class="swipe-btn swipe-edit-history" data-index="${realIndex}" style="background-color:#F5A623; border:none; color:white; padding:0 20px; cursor:pointer;"><i class="fa-solid fa-pen-to-square"></i></button>
                     <button class="swipe-btn swipe-delete-history" data-index="${realIndex}" style="background-color:#ff4d4f; border:none; color:white; padding:0 20px; cursor:pointer; border-radius:0 var(--radius-sm) var(--radius-sm) 0;"><i class="fa-solid fa-trash"></i></button>
                 </div>
-                <div class="history-item ${timeClass}" data-index="${realIndex}" style="cursor:pointer; transition:transform 0.2s; position:relative; z-index:2; background:var(--bg-card);">
-                    <div class="history-info" style="pointer-events:none;">
+                <div class="history-item ${timeClass}" data-index="${realIndex}" style="cursor:pointer; transition:transform 0.2s; position:relative; z-index:2; background:var(--bg-card); display:flex; align-items:center;">
+                    ${checkboxHTML}
+                    <div class="history-info" style="flex:1; pointer-events:none;">
                         <h4>${entry.title || 'Tanpa Judul'}</h4>
                         <p><small>${entry.date} | ${entry.items.length} Item</small></p>
                     </div>
@@ -82,21 +113,88 @@ export function initHistoryMode() {
             container.appendChild(swipeContainer);
         });
 
-        // Init swipe after render
-        initHistorySwipe();
+        if (!isMultiSelectMode) {
+            initHistorySwipe();
+        }
+        updateBatchBar();
     };
 
     render(appState.state.history);
     appState.subscribe('history', (data) => render(data));
 
     // ===================================
-    // SWIPE LOGIC FOR HISTORY ITEMS
+    // SEARCH
     // ===================================
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            render(appState.state.history);
+        });
+    }
+
+    // ===================================
+    // MULTI-SELECT
+    // ===================================
+    const toggleMultiSelect = () => {
+        isMultiSelectMode = !isMultiSelectMode;
+        selectedIndices.clear();
+        if (isMultiSelectMode) {
+            btnMultiSelect.style.color = '#F5A623';
+        } else {
+            btnMultiSelect.style.color = '';
+        }
+        render(appState.state.history);
+    };
+
+    function updateBatchBar() {
+        if (isMultiSelectMode && selectedIndices.size > 0) {
+            batchDeleteBar.classList.remove('hidden');
+            batchCount.textContent = `${selectedIndices.size} dipilih`;
+        } else {
+            batchDeleteBar.classList.add('hidden');
+        }
+    }
+
+    if (btnMultiSelect) {
+        btnMultiSelect.addEventListener('click', toggleMultiSelect);
+    }
+
+    if (btnBatchDelete) {
+        btnBatchDelete.addEventListener('click', () => {
+            if (selectedIndices.size === 0) return;
+            if (!confirm(`Hapus ${selectedIndices.size} riwayat?`)) return;
+            appState.removeMultipleFromHistory([...selectedIndices]);
+            selectedIndices.clear();
+            isMultiSelectMode = false;
+            btnMultiSelect.style.color = '';
+        });
+    }
+
+    // Handle checkbox clicks via delegation
+    container.addEventListener('change', (e) => {
+        if (e.target.classList.contains('history-checkbox')) {
+            const idx = parseInt(e.target.dataset.index);
+            if (e.target.checked) {
+                selectedIndices.add(idx);
+            } else {
+                selectedIndices.delete(idx);
+            }
+            updateBatchBar();
+        }
+    });
+
+    // ===================================
+    // SWIPE LOGIC
+    // ===================================
+    let swipeInitialized = false;
     function initHistorySwipe() {
+        if (swipeInitialized) return;
+        swipeInitialized = true;
+
         container.addEventListener('touchstart', (e) => {
             const card = e.target.closest('.history-item');
             if (!card) return;
-            if (e.target.closest('button')) return; // Ignore button clicks
+            if (e.target.closest('button') || e.target.closest('input')) return;
             touchStartX = e.touches[0].clientX;
             activeSwipeCard = card;
         }, { passive: true });
@@ -110,20 +208,20 @@ export function initHistoryMode() {
             }
         }, { passive: true });
 
-        container.addEventListener('touchend', (e) => {
+        container.addEventListener('touchend', () => {
             if (!activeSwipeCard) return;
-            const touchEndX = e.changedTouches[0].clientX;
-            const diff = touchEndX - touchStartX;
+            const transform = activeSwipeCard.style.transform;
+            const match = transform.match(/translateX\((-?\d+)/);
+            const diff = match ? parseInt(match[1]) : 0;
             activeSwipeCard.style.transform = '';
 
             if (diff < -80) {
-                // Close other open cards
                 const openCards = container.querySelectorAll('.history-item.swiped-left');
                 openCards.forEach(c => {
                     if (c !== activeSwipeCard) c.classList.remove('swiped-left');
                 });
                 activeSwipeCard.classList.add('swiped-left');
-            } else if (diff > 50) {
+            } else {
                 activeSwipeCard.classList.remove('swiped-left');
             }
             activeSwipeCard = null;
@@ -136,6 +234,7 @@ export function initHistoryMode() {
     const renderDetailContent = () => {
         if (!currentDetailItem) return;
         const items = currentDetailItem.items;
+        const title = currentDetailItem.title;
 
         detailContent.innerHTML = '';
 
@@ -147,45 +246,30 @@ export function initHistoryMode() {
             btnEdit.className = 'icon-btn';
             btnEdit.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
             btnEdit.style.marginRight = '10px';
-            btnEdit.style.color = '#F5A623'; // Orange
-            btnEdit.title = "Edit di Mode Manual/Pindah ke Manual";
+            btnEdit.style.color = '#F5A623';
+            btnEdit.title = "Edit di Mode Manual";
 
-            // Insert before close button
             btnCloseDetail.parentNode.insertBefore(btnEdit, btnCloseDetail);
 
             btnEdit.addEventListener('click', () => {
                 if (!currentDetailItem) return;
+                if (!confirm("Pindah ke Mode Manual untuk mengedit?")) return;
 
-                // Confirm Overwrite?
-                if (!confirm("Pindah ke Mode Manual untuk mengedit? Data yang sedang aktif di Manual (jika ada) akan digantikan.")) return;
-
-                // Restore logic
                 document.dispatchEvent(new CustomEvent('template-selected', { detail: { items: currentDetailItem.items } }));
-
-                // Use explicit DOM manipulation for Title as event only passes items usually
                 const manualTitle = document.getElementById('manual-title');
                 if (manualTitle) manualTitle.value = currentDetailItem.title;
-
-                // Update State Manual Title
-                // Switch to Manual
                 document.querySelector('[data-tab="manual"]').click();
-
                 closeDetail();
             });
         }
 
-        // Render content
+        // Render data content (form or table)
         if (detailViewMode === 'table') {
             const table = document.createElement('table');
             table.className = 'item-table';
             table.innerHTML = `
                 <thead>
-                    <tr>
-                        <th>Barang</th>
-                        <th>Harga</th>
-                        <th>Pcs</th>
-                        <th>Note</th>
-                    </tr>
+                    <tr><th>Barang</th><th>Harga</th><th>Pcs</th><th>Note</th></tr>
                 </thead>
                 <tbody>
                     ${items.map(item => `
@@ -219,6 +303,40 @@ export function initHistoryMode() {
                 detailContent.appendChild(div);
             });
         }
+
+        // ===================================
+        // PREVIEW RENDERING (Invoice + Surat Jalan)
+        // ===================================
+        const previewSection = document.createElement('div');
+        previewSection.style.cssText = 'margin-top:16px; border-top:1px solid var(--border-color); padding-top:16px;';
+        previewSection.innerHTML = `
+            <h4 style="margin-bottom:10px; font-size:0.9rem; color:var(--text-muted);">Preview Dokumen</h4>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <div style="border-radius:8px; overflow:hidden; border:1px solid var(--border-color); background:white;">
+                    <div style="padding:6px 10px; background:var(--bg-body); font-size:0.8rem; font-weight:600; color:var(--text-muted);">Invoice</div>
+                    <iframe id="detail-invoice-preview" style="width:100%; height:300px; border:none; pointer-events:none;"></iframe>
+                </div>
+                <div style="border-radius:8px; overflow:hidden; border:1px solid var(--border-color); background:white;">
+                    <div style="padding:6px 10px; background:var(--bg-body); font-size:0.8rem; font-weight:600; color:var(--text-muted);">Surat Jalan</div>
+                    <iframe id="detail-surat-preview" style="width:100%; height:300px; border:none; pointer-events:none;"></iframe>
+                </div>
+            </div>
+        `;
+        detailContent.appendChild(previewSection);
+
+        // Render previews into iframes
+        try {
+            const invoiceHTML = buildInvoiceHTML(items, title);
+            const suratJalanHTML = buildSuratJalanHTML(items);
+
+            const invoiceFrame = previewSection.querySelector('#detail-invoice-preview');
+            const suratFrame = previewSection.querySelector('#detail-surat-preview');
+
+            if (invoiceFrame) invoiceFrame.srcdoc = invoiceHTML;
+            if (suratFrame) suratFrame.srcdoc = suratJalanHTML;
+        } catch (err) {
+            console.warn('Could not render preview in detail:', err);
+        }
     };
 
     const openDetail = (index) => {
@@ -231,8 +349,6 @@ export function initHistoryMode() {
     const closeDetail = () => {
         detailSheet.classList.remove('active');
         currentDetailItem = null;
-
-        // Remove edit button to clean up
         const btnEdit = document.getElementById('btn-detail-edit');
         if (btnEdit) btnEdit.remove();
     };
@@ -259,10 +375,10 @@ export function initHistoryMode() {
     // ===================================
     container.addEventListener('click', (e) => {
         // Download button
-        const btnDownload = e.target.closest('.btn-download');
-        if (btnDownload) {
+        const btnDownloadEl = e.target.closest('.btn-download');
+        if (btnDownloadEl) {
             e.stopPropagation();
-            const index = btnDownload.dataset.index;
+            const index = btnDownloadEl.dataset.index;
             const entry = appState.state.history[index];
             printInvoicePDF(entry.items, entry.title);
             return;
@@ -286,24 +402,21 @@ export function initHistoryMode() {
             const idx = parseInt(editBtn.dataset.index);
             const entry = appState.state.history[idx];
             if (!entry) return;
-
-            if (!confirm("Pindah ke Mode Manual untuk mengedit? Data Manual saat ini akan digantikan.")) return;
+            if (!confirm("Pindah ke Mode Manual untuk mengedit?")) return;
 
             document.dispatchEvent(new CustomEvent('template-selected', { detail: { items: entry.items } }));
-
             const manualTitle = document.getElementById('manual-title');
             if (manualTitle) {
                 manualTitle.value = entry.title || '';
                 appState.updateManualTitle(entry.title || '');
             }
-
             document.querySelector('[data-tab="manual"]').click();
             return;
         }
 
-        // Handle Item Click (Detail)
+        // Handle Item Click (Detail) — only if not in multi-select mode
         const itemEl = e.target.closest('.history-item');
-        if (itemEl && !itemEl.classList.contains('swiped-left')) {
+        if (itemEl && !itemEl.classList.contains('swiped-left') && !isMultiSelectMode) {
             const index = itemEl.dataset.index;
             openDetail(index);
         }

@@ -147,7 +147,7 @@ export function initSettings() {
 
     if (enablePNG) enablePNG.addEventListener('change', handleFormatToggle);
     if (enableJPEG) enableJPEG.addEventListener('change', handleFormatToggle);
-    if (enablePDF) enablePDF.addEventListener('change', handleFormatToggle);
+    // PDF disabled - no listener
 
     // Handle default method change
     if (defaultMethodSelect) {
@@ -159,6 +159,115 @@ export function initSettings() {
     // Initialize options state
     updateDefaultMethodOptions();
 
+    // ===================================
+    // TITLE REQUIRED TOGGLE
+    // ===================================
+    const titleRequiredToggle = document.getElementById('setting-title-required');
+    if (titleRequiredToggle) {
+        titleRequiredToggle.checked = appState.state.settings.titleRequired !== false;
+        titleRequiredToggle.addEventListener('change', (e) => {
+            appState.updateSettings({ titleRequired: e.target.checked });
+        });
+    }
+
+    // ===================================
+    // FILE NAMING FORMAT
+    // ===================================
+    const formatInvoice = document.getElementById('format-invoice');
+    const formatSuratJalan = document.getElementById('format-surat-jalan');
+    const fileNameFormat = appState.state.settings.fileNameFormat || { invoice: 'Invoice-{judul}', suratJalan: 'Surat Jalan-{judul}' };
+
+    if (formatInvoice) {
+        formatInvoice.value = fileNameFormat.invoice;
+        formatInvoice.addEventListener('input', (e) => {
+            const current = appState.state.settings.fileNameFormat || { invoice: '', suratJalan: '' };
+            appState.updateSettings({ fileNameFormat: { ...current, invoice: e.target.value } });
+        });
+    }
+
+    if (formatSuratJalan) {
+        formatSuratJalan.value = fileNameFormat.suratJalan;
+        formatSuratJalan.addEventListener('input', (e) => {
+            const current = appState.state.settings.fileNameFormat || { invoice: '', suratJalan: '' };
+            appState.updateSettings({ fileNameFormat: { ...current, suratJalan: e.target.value } });
+        });
+    }
+
+    // Format Help Button
+    const btnFormatHelp = document.getElementById('btn-format-help');
+    if (btnFormatHelp) {
+        btnFormatHelp.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const existing = document.getElementById('format-help-tooltip');
+            if (existing) { existing.remove(); document.getElementById('format-help-backdrop')?.remove(); return; }
+
+            const tooltip = document.createElement('div');
+            tooltip.id = 'format-help-tooltip';
+            tooltip.style.cssText = `
+                position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                background: var(--bg-card); border: 1px solid var(--border-color);
+                border-radius: 12px; padding: 20px; z-index: 3000;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.2); max-width: 340px; width: 90%;
+                font-size: 0.9rem; line-height: 1.6;
+            `;
+            tooltip.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <strong>Format Token</strong>
+                    <button id="close-format-help" style="background:none; border:none; cursor:pointer; font-size:1.2rem; color:var(--text-muted);"><i class="fa-solid fa-times"></i></button>
+                </div>
+                <table style="width:100%; font-size:0.85rem; border-collapse:collapse;">
+                    <tr style="border-bottom:1px solid var(--border-color);"><td style="padding:6px 4px;"><code>{judul}</code></td><td>Judul invoice</td></tr>
+                    <tr style="border-bottom:1px solid var(--border-color);"><td style="padding:6px 4px;"><code>%YYYY</code></td><td>Tahun (2026)</td></tr>
+                    <tr style="border-bottom:1px solid var(--border-color);"><td style="padding:6px 4px;"><code>%MM</code></td><td>Bulan (01-12)</td></tr>
+                    <tr style="border-bottom:1px solid var(--border-color);"><td style="padding:6px 4px;"><code>%DD</code></td><td>Tanggal (01-31)</td></tr>
+                    <tr style="border-bottom:1px solid var(--border-color);"><td style="padding:6px 4px;"><code>%HH</code></td><td>Jam (00-23)</td></tr>
+                    <tr style="border-bottom:1px solid var(--border-color);"><td style="padding:6px 4px;"><code>%mm</code></td><td>Menit (00-59)</td></tr>
+                    <tr><td style="padding:6px 4px;"><code>%ss</code></td><td>Detik (00-59)</td></tr>
+                </table>
+                <div style="margin-top:10px; font-size:0.8rem; color:var(--text-muted);">
+                    <strong>Contoh:</strong> Invoice-{judul} %YYYY-%MM-%DD
+                </div>
+            `;
+            document.body.appendChild(tooltip);
+
+            const backdrop = document.createElement('div');
+            backdrop.id = 'format-help-backdrop';
+            backdrop.style.cssText = 'position:fixed; inset:0; background:rgba(0,0,0,0.3); z-index:2999;';
+            document.body.appendChild(backdrop);
+
+            const closeHelp = () => { tooltip.remove(); backdrop.remove(); };
+            backdrop.addEventListener('click', closeHelp);
+            tooltip.querySelector('#close-format-help').addEventListener('click', closeHelp);
+        });
+    }
+
+    // ===================================
+    // RESET SETTINGS
+    // ===================================
+    const btnResetSettings = document.getElementById('btn-reset-settings');
+    if (btnResetSettings) {
+        btnResetSettings.addEventListener('click', () => {
+            if (!confirm('Reset semua pengaturan ke default?')) return;
+            appState.resetSettings();
+
+            // Re-render UI
+            const s = appState.state.settings;
+            if (enablePNG) enablePNG.checked = s.downloadFormats.png;
+            if (enableJPEG) enableJPEG.checked = s.downloadFormats.jpeg;
+            if (enablePDF) enablePDF.checked = s.downloadFormats.pdf;
+            if (defaultMethodSelect) defaultMethodSelect.value = s.defaultDownloadMethod;
+            if (titleRequiredToggle) titleRequiredToggle.checked = s.titleRequired !== false;
+            if (formatInvoice) formatInvoice.value = (s.fileNameFormat || {}).invoice || 'Invoice-{judul}';
+            if (formatSuratJalan) formatSuratJalan.value = (s.fileNameFormat || {}).suratJalan || 'Surat Jalan-{judul}';
+
+            document.documentElement.setAttribute('data-theme', s.theme);
+            document.querySelectorAll('[data-theme]').forEach(b => b.classList.remove('active'));
+            document.querySelector(`[data-theme="${s.theme}"]`)?.classList.add('active');
+
+            updateDefaultMethodOptions();
+            alert('Pengaturan telah direset!');
+        });
+    }
 
     // ===================================
     // TEMPLATE MANAGEMENT (FULL INVOICE)

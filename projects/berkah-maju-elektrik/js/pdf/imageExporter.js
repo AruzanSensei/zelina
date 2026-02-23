@@ -2,7 +2,20 @@
  * Image Export Module for PNG/JPEG Downloads
  * CRITICAL: Reuses the EXACT same HTML/CSS as PDF generation
  */
+import { appState } from '../state.js';
 
+// Format filename using template tokens
+function formatFileName(template, title) {
+    const now = new Date();
+    return template
+        .replace(/\{judul\}/gi, title || 'Untitled')
+        .replace(/%YYYY/g, String(now.getFullYear()))
+        .replace(/%MM/g, String(now.getMonth() + 1).padStart(2, '0'))
+        .replace(/%DD/g, String(now.getDate()).padStart(2, '0'))
+        .replace(/%HH/g, String(now.getHours()).padStart(2, '0'))
+        .replace(/%mm/g, String(now.getMinutes()).padStart(2, '0'))
+        .replace(/%ss/g, String(now.getSeconds()).padStart(2, '0'));
+}
 // Wait for all fonts to be loaded (CRITICAL for Desktop-Android consistency)
 async function waitForFonts() {
     try {
@@ -202,8 +215,9 @@ export async function exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML,
     const invoiceHTML = buildInvoiceHTML(items, title);
     const suratJalanHTML = buildSuratJalanHTML(items);
 
-    const invoiceFilename = `Invoice-${title}`;
-    const suratJalanFilename = `Surat-Jalan-${title}`;
+    const formats = appState.state.settings.fileNameFormat || { invoice: 'Invoice-{judul}', suratJalan: 'Surat Jalan-{judul}' };
+    const invoiceFilename = formatFileName(formats.invoice, title);
+    const suratJalanFilename = formatFileName(formats.suratJalan, title);
 
     // Show loading indicator (reuse existing alert system)
     const alertEl = document.getElementById('custom-alert');

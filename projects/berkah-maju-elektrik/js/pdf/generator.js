@@ -458,7 +458,7 @@ const SURAT_JALAN_STYLE = `
         }
 `;
 
-const buildInvoiceHTML = (items, titleName) => {
+export const buildInvoiceHTML = (items, titleName) => {
     const dateStr = getDateStr();
     const total = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
@@ -547,7 +547,7 @@ ${rows}
 </html>`;
 };
 
-const buildSuratJalanHTML = (items) => {
+export const buildSuratJalanHTML = (items) => {
     const rows = items.map((item, index) => `
                 <tr>
                     <td>${index + 1}</td>
@@ -1117,7 +1117,9 @@ export function initPDFGenerator() {
     const validate = () => {
         const titleInput = document.getElementById('manual-title');
         const title = titleInput?.value.trim();
-        if (!title) {
+        const titleRequired = appState.state.settings.titleRequired !== false;
+
+        if (titleRequired && !title) {
             titleInput?.classList.add('blink-error');
             titleInput?.focus();
             showAlert("Harap isi Judul Invoice terlebih dahulu!");
@@ -1142,7 +1144,7 @@ export function initPDFGenerator() {
             }
         }
 
-        return title;
+        return title || 'Untitled';
     };
 
     const btnSave = document.getElementById('btn-save-only');
@@ -1166,32 +1168,35 @@ export function initPDFGenerator() {
     if (btnDownload) {
         let pressTimer = null;
         let isLongPress = false;
+        let isDownloading = false;
 
         // Long-press detection
         const startPress = (e) => {
+            if (isDownloading) return;
             isLongPress = false;
             pressTimer = setTimeout(() => {
                 isLongPress = true;
                 showFormatMenu();
-                // Haptic feedback if available
                 if (navigator.vibrate) navigator.vibrate(50);
-            }, 500); // 500ms for long press
+            }, 500);
         };
 
         const cancelPress = () => {
             clearTimeout(pressTimer);
         };
 
-        const handlePress = (e) => {
+        const handlePress = async (e) => {
             cancelPress();
+            if (isDownloading) return;
 
-            // If it was a long press, menu already shown, do nothing
             if (isLongPress) {
                 isLongPress = false;
                 return;
             }
 
-            // Normal click - use default method
+            // Prevent ghost click (touch fires both touchend + mouseup)
+            e.preventDefault();
+
             if (manualEdits.invoice || manualEdits.letter) {
                 showAlert("File yang diedit manual harus diunduh satuan lewat Preview!", false);
                 return;
@@ -1201,22 +1206,32 @@ export function initPDFGenerator() {
             const items = appState.state.invoiceItems;
             if (items.length === 0) return showAlert("Belum ada item!");
 
-            saveToHistory(items, title);
-
-            // Execute default download method
-            const defaultMethod = appState.state.settings.defaultDownloadMethod || 'pdf';
-            executeDownload(items, title, defaultMethod);
+            isDownloading = true;
+            try {
+                saveToHistory(items, title);
+                const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
+                await executeDownload(items, title, defaultMethod);
+            } finally {
+                isDownloading = false;
+            }
         };
 
-        // Add event listeners for both touch and mouse
-        btnDownload.addEventListener('mousedown', startPress);
+        // Touch events
         btnDownload.addEventListener('touchstart', startPress, { passive: true });
-
-        btnDownload.addEventListener('mouseup', handlePress);
         btnDownload.addEventListener('touchend', handlePress);
-
-        btnDownload.addEventListener('mouseleave', cancelPress);
         btnDownload.addEventListener('touchcancel', cancelPress);
+
+        // Mouse fallback (desktop)
+        btnDownload.addEventListener('mousedown', (e) => {
+            // Skip if touch already handled it
+            if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) return;
+            startPress(e);
+        });
+        btnDownload.addEventListener('mouseup', (e) => {
+            if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) return;
+            handlePress(e);
+        });
+        btnDownload.addEventListener('mouseleave', cancelPress);
     }
 }
 

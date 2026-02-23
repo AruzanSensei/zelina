@@ -1105,6 +1105,47 @@ small {
     transform: translateX(-120px);
 }
 
+/* History Toolbar */
+.history-toolbar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    align-items: center;
+}
+
+.history-search-wrapper {
+    flex: 1;
+    position: relative;
+}
+
+/* Batch Delete Bar */
+.batch-delete-bar {
+    position: sticky;
+    bottom: 0;
+    background: var(--bg-card);
+    padding: 10px 16px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.08);
+    z-index: 10;
+}
+
+.batch-delete-bar.hidden {
+    display: none;
+}
+
+/* Multi-select checkbox */
+.history-checkbox {
+    width: 20px;
+    height: 20px;
+    accent-color: #F5A623;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
 /* Converter Popup Bubble */
 .converter-popup {
     position: fixed;
