@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dokumentasi SMA Mandala</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fef9f4;
+    --brown: #7a5c45;
+    --brown-light: #b08870;
+    --shadow: rgba(120,80,50,0.11);
+    --tape: rgba(220,195,168,0.65);
+    --accent: #f0d9be;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--cream);
+    background-image:
+      radial-gradient(ellipse at 20% 15%, #fef3e8 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 85%, #faeee2 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg width='44' height='44' viewBox='0 0 44 44' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle fill='%23c9976018' cx='22' cy='22' r='1'/%3E%3C/svg%3E");
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    padding: 26px 20px 16px;
+  }
+
+  .header h1 {
+    font-family: 'Caveat', cursive;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--brown);
+    letter-spacing: 0.2px;
+    line-height: 1.1;
+  }
+
+  .header-rule {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 7px;
+  }
+
+  .header-rule::before,
+  .header-rule::after {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--accent);
+    border-radius: 1px;
+  }
+
+  .header-sub {
+    font-size: 0.68rem;
+    color: var(--brown-light);
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    opacity: 0.75;
+  }
+
+  /* ── GALLERY ── */
+  .gallery {
+    padding: 6px 16px 16px;
+    columns: 2;
+    column-gap: 16px;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 360px) {
+    .gallery { columns: 1; max-width: 300px; }
+  }
+
+  /* ── POLAROID ── */
+  .polaroid {
+    break-inside: avoid;
+    background: #fffefb;
+    padding: 9px 9px 0;
+    border-radius: 2px;
+    box-shadow: 2px 4px 16px var(--shadow), 0 1px 3px rgba(0,0,0,0.06);
+    margin-bottom: 18px;
+    cursor: pointer;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+
+    /* scroll-in pre-state */
+    opacity: 0;
+    transform: translateY(30px) rotate(var(--base-tilt, 0deg));
+    transition:
+      opacity 0.58s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.58s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.22s ease;
+  }
+
+  .polaroid.visible {
+    opacity: 1;
+    transform: translateY(0) rotate(var(--base-tilt, 0deg));
+  }
+
+  .polaroid.visible:hover {
+    transform: translateY(-5px) rotate(0deg) scale(1.04) !important;
+    box-shadow: 5px 10px 26px rgba(120,80,50,0.18);
+    z-index: 10;
+  }
+
+  /* Tape */
+  .polaroid.tape-top::before {
+    content: '';
+    position: absolute;
+    top: -11px; left: 50%;
+    transform: translateX(-50%) rotate(-1.5deg);
+    width: 46px; height: 20px;
+    background: var(--tape);
+    border-radius: 3px;
+    z-index: 2;
+  }
+
+  .polaroid.tape-left::before {
+    content: '';
+    position: absolute;
+    top: 8px; left: -11px;
+    transform: rotate(-45deg);
+    width: 44px; height: 18px;
+    background: var(--tape);
+    border-radius: 3px;
+    z-index: 2;
+  }
+
+  .polaroid .photo-wrap {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 1px;
+  }
+
+  .polaroid img,
+  .polaroid video {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  .polaroid video { pointer-events: none; }
+
+  .caption-area {
+    padding: 9px 5px 11px;
+    text-align: center;
+  }
+
+  .caption-area .caption {
+    font-family: 'Caveat', cursive;
+    font-size: 1.0rem;
+    color: var(--brown);
+    line-height: 1.3;
+  }
+
+  .video-badge {
+    position: absolute;
+    top: 13px; right: 13px;
+    background: var(--accent);
+    color: var(--brown);
+    font-size: 0.58rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 10px;
+    letter-spacing: 0.5px;
+    font-family: 'Nunito', sans-serif;
+    text-transform: uppercase;
+  }
+
+  /* ── LIGHTBOX ── */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(50,28,10,0.70);
+    backdrop-filter: blur(7px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .lightbox.active { display: flex; }
+
+  .lightbox-inner {
+    position: relative;
+    max-width: 90vw;
+    max-height: 88vh;
+    background: #fffefb;
+    padding: 12px 12px 0;
+    border-radius: 2px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.38);
+    animation: popIn 0.32s cubic-bezier(0.34,1.56,0.64,1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  @keyframes popIn {
+    from { transform: scale(0.72); opacity: 0; }
+    to   { transform: scale(1);    opacity: 1; }
+  }
+
+  .lightbox-inner img,
+  .lightbox-inner video {
+    max-width: 100%;
+    max-height: 70vh;
+    display: block;
+    object-fit: contain;
+  }
+
+  .lightbox-inner video { pointer-events: none; }
+
+  .lightbox-caption {
+    padding: 10px 8px 14px;
+    text-align: center;
+  }
+
+  .lightbox-caption .caption {
+    font-family: 'Caveat', cursive;
+    font-size: 1.25rem;
+    color: var(--brown);
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: -13px; right: -13px;
+    width: 32px; height: 32px;
+    background: var(--accent);
+    border: none;
+    border-radius: 50%;
+    font-size: 1rem;
+    cursor: pointer;
+    color: var(--brown);
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.18);
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.2s;
+  }
+
+  .lightbox-close:hover { transform: scale(1.15) rotate(10deg); }
+
+  /* ── FOOTER ── */
+  .footer-deco {
+    text-align: center;
+    padding: 18px 20px;
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    color: var(--brown-light);
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Dokumentasi SMA Mandala</h1>
+  <div class="header-rule">
+    <span class="header-sub">kenangan &amp; momen</span>
+  </div>
+</div>
+
+<div class="gallery" id="gallery"></div>
+
+<div class="footer-deco">✦ setiap momen berharga ✦</div>
+
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" id="lb-close">✕</button>
+    <div id="lightbox-media"></div>
+    <div class="lightbox-caption">
+      <div class="caption" id="lb-caption"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const tiltMap = {
+    'tilt-left':       '-2.5deg',
+    'tilt-right':      '1.8deg',
+    'tilt-mini-left':  '-1deg',
+    'tilt-mini-right': '0.8deg',
+  };
+
+  const items = [
+    { type:'image', src:'https://images.unsplash.com/photo-1516912481808-3406841bd33c?w=600&q=80', caption:'pagi yang tenang 🌤️', tilt:'tilt-left tape-top' },
+    { type:'image', src:'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=80', caption:'hijau menenangkan 🌿', tilt:'tilt-right tape-left' },
+    { type:'video', src:'https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_25fps.mp4', caption:'ombak sore hari 🌊', tilt:'tilt-mini-right tape-top' },
+    { type:'image', src:'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=600&q=80', caption:'petualangan kecil 🏔️', tilt:'tilt-left' },
+    { type:'image', src:'https://images.unsplash.com/photo-1490750967868-88df5691cc40?w=600&q=80', caption:'bunga musim semi 🌸', tilt:'tilt-right tape-top' },
+    { type:'video', src:'https://videos.pexels.com/video-files/856973/856973-hd_1280_720_30fps.mp4', caption:'kota di malam hari 🌃', tilt:'tilt-mini-left tape-left' },
+    { type:'image', src:'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80', caption:'di atas awan ☁️', tilt:'tilt-right' },
+    { type:'image', src:'https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&q=80', caption:'cahaya sunset 🌅', tilt:'tilt-left tape-top' },
+    { type:'image', src:'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?w=600&q=80', caption:'teman setia ☕', tilt:'tilt-mini-right tape-left' },
+    { type:'video', src:'https://videos.pexels.com/video-files/1409899/1409899-hd_1920_1080_30fps.mp4', caption:'hujan gerimis 🌧️', tilt:'tilt-right tape-top' },
+  ];
+
+  const gallery = document.getElementById('gallery');
+
+  items.forEach((item, i) => {
+    const card    = document.createElement('div');
+    const classes = item.tilt ? item.tilt.split(' ') : [];
+    const tiltCls = classes.find(c => tiltMap[c]) || '';
+    const tiltDeg = tiltMap[tiltCls] || '0deg';
+
+    card.className = `polaroid ${item.tilt || ''}`;
+    card.style.setProperty('--base-tilt', tiltDeg);
+    card.style.transitionDelay = `${(i % 2) * 75}ms`;
+
+    const badge     = item.type === 'video' ? `<div class="video-badge">▶ video</div>` : '';
+    const mediaHTML = item.type === 'video'
+      ? `<video src="${item.src}" autoplay muted loop playsinline></video>`
+      : `<img src="${item.src}" alt="${item.caption}" loading="lazy">`;
+
+    card.innerHTML = `${badge}<div class="photo-wrap">${mediaHTML}</div><div class="caption-area"><div class="caption">${item.caption}</div></div>`;
+    card.addEventListener('click', () => openLightbox(item));
+    gallery.appendChild(card);
+  });
+
+  // Scroll-in observer
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -14px 0px' });
+
+  document.querySelectorAll('.polaroid').forEach(el => observer.observe(el));
+
+  // Lightbox
+  function openLightbox(item) {
+    const mediaEl = document.getElementById('lightbox-media');
+    mediaEl.innerHTML = '';
+
+    if (item.type === 'video') {
+      const v = document.createElement('video');
+      Object.assign(v, { src: item.src, autoplay: true, muted: true, loop: true, playsInline: true });
+      v.style.pointerEvents = 'none';
+      mediaEl.appendChild(v);
+    } else {
+      const img = document.createElement('img');
+      img.src = item.src; img.alt = item.caption;
+      mediaEl.appendChild(img);
+    }
+
+    document.getElementById('lb-caption').textContent = item.caption;
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.getElementById('lightbox-media').innerHTML = '';
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('lb-close').addEventListener('click', closeLightbox);
+  document.getElementById('lightbox').addEventListener('click', e => { if (e.target === e.currentTarget) closeLightbox(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
+</body>
+</html>
