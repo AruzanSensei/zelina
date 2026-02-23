@@ -60,7 +60,21 @@ class StateManager {
     load(key, fallback) {
         try {
             const data = localStorage.getItem(key);
-            return data ? JSON.parse(data) : fallback;
+            if (!data) return fallback;
+
+            const parsed = JSON.parse(data);
+
+            // Safely merge old cache with new defaults to prevent missing properties (backward compatibility)
+            if (key === STORAGE_KEYS.SETTINGS && typeof parsed === 'object') {
+                return {
+                    ...fallback,
+                    ...parsed,
+                    downloadFormats: { ...fallback.downloadFormats, ...(parsed.downloadFormats || {}) },
+                    fileNameFormat: { ...fallback.fileNameFormat, ...(parsed.fileNameFormat || {}) }
+                };
+            }
+
+            return parsed;
         } catch (e) {
             console.error('Error loading state:', e);
             return fallback;

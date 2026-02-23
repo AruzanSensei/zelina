@@ -86,8 +86,8 @@ export function initSettings() {
     const defaultMethodSelect = document.getElementById('default-download-method');
 
     // Initialize from state
-    const formats = appState.state.settings.downloadFormats || { png: true, jpeg: true, pdf: true };
-    const defaultMethod = appState.state.settings.defaultDownloadMethod || 'pdf';
+    const formats = appState.state.settings.downloadFormats || { png: true, jpeg: true, pdf: false };
+    const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
 
     if (enablePNG) enablePNG.checked = formats.png;
     if (enableJPEG) enableJPEG.checked = formats.jpeg;
@@ -98,12 +98,12 @@ export function initSettings() {
     const updateDefaultMethodOptions = () => {
         if (!defaultMethodSelect) return;
 
-        const formats = appState.state.settings.downloadFormats;
+        const currentFormats = appState.state.settings.downloadFormats || { png: true, jpeg: true, pdf: false };
         const options = defaultMethodSelect.querySelectorAll('option');
 
         options.forEach(opt => {
             const format = opt.value;
-            if (!formats[format]) {
+            if (!currentFormats[format]) {
                 opt.disabled = true;
                 opt.style.color = 'var(--text-muted)';
             } else {
@@ -113,8 +113,8 @@ export function initSettings() {
         });
 
         // If current default is disabled, auto-switch to first enabled
-        if (!formats[defaultMethodSelect.value]) {
-            const firstEnabled = ['png', 'jpeg', 'pdf'].find(f => formats[f]);
+        if (!currentFormats[defaultMethodSelect.value]) {
+            const firstEnabled = ['png', 'jpeg', 'pdf'].find(f => currentFormats[f]);
             if (firstEnabled) {
                 defaultMethodSelect.value = firstEnabled;
                 appState.updateSettings({ defaultDownloadMethod: firstEnabled });
@@ -128,7 +128,7 @@ export function initSettings() {
         const isChecked = e.target.checked;
 
         // Ensure at least one format is enabled
-        const currentFormats = appState.state.settings.downloadFormats;
+        const currentFormats = appState.state.settings.downloadFormats || { png: true, jpeg: true, pdf: false };
         const enabledCount = Object.values(currentFormats).filter(v => v).length;
 
         if (!isChecked && enabledCount === 1) {
