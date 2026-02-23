@@ -10,12 +10,22 @@ import { initPDFGenerator } from './pdf/generator.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Initialize Modules
-    initManualMode();
-    initAIMode();
-    initHistoryMode();
-    initSettings();
-    initPDFGenerator();
+    // Initialize Modules safely
+    const initSafely = (name, fn) => {
+        try {
+            fn();
+            console.log(`[BME] Initialized ${name} successfully`);
+        } catch (e) {
+            console.error(`[BME] CRITICAL ERROR in ${name}:`, e);
+            document.body.insertAdjacentHTML('afterbegin', `<div style="background:red;color:white;padding:10px;z-index:9999;position:fixed;top:0;left:0;right:0;">Error in ${name}: ${e.message}</div>`);
+        }
+    };
+
+    initSafely('ManualMode', initManualMode);
+    initSafely('AIMode', initAIMode);
+    initSafely('HistoryMode', initHistoryMode);
+    initSafely('Settings', initSettings);
+    initSafely('PDFGenerator', initPDFGenerator);
 
     // Tab Switching Logic
     const tabs = document.querySelectorAll('.tab-btn');

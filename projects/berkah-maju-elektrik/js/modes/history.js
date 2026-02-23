@@ -32,6 +32,7 @@ export function initHistoryMode() {
     // Swipe state
     let touchStartX = 0;
     let activeSwipeCard = null;
+    let swipeInitialized = false;
 
     // Search state
     let searchQuery = '';
@@ -186,7 +187,6 @@ export function initHistoryMode() {
     // ===================================
     // SWIPE LOGIC
     // ===================================
-    let swipeInitialized = false;
     function initHistorySwipe() {
         if (swipeInitialized) return;
         swipeInitialized = true;
