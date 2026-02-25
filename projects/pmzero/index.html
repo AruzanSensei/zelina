@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+<<<<<<< HEAD
 
 <head>
   <meta charset="UTF-8">
@@ -390,3 +391,1955 @@
 </body>
 
 </html>
+=======
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>PMO Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =========================================
+   RESET & ROOT
+========================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0; padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+:root {
+  --blue-50:  #eff6ff;
+  --blue-100: #dbeafe;
+  --blue-200: #bfdbfe;
+  --blue-300: #93c5fd;
+  --blue-400: #60a5fa;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --blue-700: #1d4ed8;
+  --blue-800: #1e40af;
+  --blue-900: #1e3a8a;
+
+  --grad-hero:   linear-gradient(160deg, #c5deff 0%, #93c5fd 35%, #3b82f6 100%);
+  --grad-btn:    linear-gradient(135deg, #3b82f6, #1d4ed8);
+  --grad-danger: linear-gradient(135deg, #ef4444, #b91c1c);
+  --grad-card:   linear-gradient(145deg, #ffffff, #f0f7ff);
+
+  --pmo-0: #ffffff;  --pmo-0b: #bfdbfe;
+  --pmo-1: #fde047;  --pmo-1b: #eab308;
+  --pmo-2: #f87171;  --pmo-2b: #ef4444;
+  --pmo-3: #1e293b;  --pmo-3b: #0f172a;
+
+  --bg:      #edf4ff;
+  --surface: #ffffff;
+  --surf2:   #f4f9ff;
+  --border:  rgba(147, 197, 253, 0.45);
+
+  --text:    #0f172a;
+  --text2:   #475569;
+  --textm:   #94a3b8;
+
+  --sh-sm: 0 1px 6px rgba(30,64,175,.08);
+  --sh-md: 0 4px 18px rgba(30,64,175,.12);
+  --sh-lg: 0 10px 38px rgba(30,64,175,.18);
+
+  --ff: 'Sora', sans-serif;
+  --fb: 'DM Sans', sans-serif;
+
+  --nav-h: 72px;
+  --safe-b: env(safe-area-inset-bottom, 0px);
+}
+
+html {
+  height: 100%;
+  font-size: 16px;
+  background: var(--bg);
+}
+body {
+  font-family: var(--fb);
+  background: var(--bg);
+  color: var(--text);
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100%;
+  position: relative;
+}
+
+/* =========================================
+   PAGES — each page scrolls independently
+========================================= */
+.page {
+  display: none;
+  flex-direction: column;
+  min-height: 100vh;
+  padding-bottom: calc(var(--nav-h) + var(--safe-b) + 20px);
+}
+.page.active { display: flex; }
+
+/* =========================================
+   HERO HEADER
+========================================= */
+.hero {
+  background: var(--grad-hero);
+  padding: 22px 16px 20px;
+  border-radius: 0 0 26px 26px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 8px 30px rgba(37, 99, 235, .25);
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -35px; right: -35px;
+  width: 170px; height: 170px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.11);
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -55px; left: -25px;
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.07);
+}
+.hero-inner { position: relative; z-index: 1; }
+.hero-greet {
+  font-size: 12px; font-weight: 500;
+  color: rgba(255,255,255,.8);
+  letter-spacing: .03em;
+  margin-bottom: 1px;
+}
+.hero-date {
+  font-size: 16px; font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+}
+
+/* Stopwatch in hero */
+.sw-wrap { text-align: center; }
+.sw-caption {
+  font-size: 10px; font-weight: 600;
+  color: rgba(255,255,255,.72);
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  margin-bottom: 4px;
+}
+.sw-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.sw-unit { text-align: center; min-width: 54px; }
+.sw-num {
+  font-family: var(--ff);
+  font-size: 46px; font-weight: 800;
+  color: #fff;
+  line-height: 1;
+  text-shadow: 0 2px 10px rgba(0,0,0,.2);
+  letter-spacing: -1px;
+}
+.sw-lbl {
+  font-size: 9px; font-weight: 600;
+  color: rgba(255,255,255,.65);
+  text-transform: uppercase;
+  margin-top: 1px;
+}
+.sw-sep {
+  font-family: var(--ff);
+  font-size: 34px; font-weight: 800;
+  color: rgba(255,255,255,.45);
+  padding-bottom: 14px;
+  width: 18px; text-align: center;
+}
+.hero-since {
+  text-align: center;
+  font-size: 11px;
+  color: rgba(255,255,255,.7);
+  margin-top: 6px;
+  font-weight: 500;
+  min-height: 16px;
+}
+
+/* =========================================
+   CONTENT AREA
+========================================= */
+.content {
+  flex: 1;
+  padding: 14px 14px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+/* =========================================
+   CARD
+========================================= */
+.card {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 14px;
+  box-shadow: var(--sh-md);
+  border: 1px solid var(--border);
+}
+.card-hd {
+  font-family: var(--ff);
+  font-size: 13px; font-weight: 700;
+  color: var(--text);
+  margin-bottom: 11px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.chip {
+  font-size: 10px; font-weight: 600;
+  background: var(--blue-100); color: var(--blue-700);
+  padding: 3px 10px; border-radius: 999px;
+  border: none; cursor: pointer; font-family: var(--fb);
+}
+.chip:active { opacity: .7; }
+
+/* =========================================
+   WEEK STRIP
+========================================= */
+.wscroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.wscroll::-webkit-scrollbar { display: none; }
+.wstrip {
+  display: flex; gap: 4px;
+  width: max-content;
+  padding: 2px 2px 4px;
+}
+.dc {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  cursor: pointer; padding: 2px; min-width: 40px;
+}
+.dc:active { transform: scale(.88); }
+.dc-lbl {
+  font-size: 9px; font-weight: 700;
+  color: var(--textm); text-transform: uppercase;
+}
+.dc-box {
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--ff);
+  font-size: 13px; font-weight: 700;
+  border: 2px solid var(--pmo-0b);
+  background: var(--pmo-0);
+  color: var(--text);
+  transition: transform .12s;
+}
+.dc-box.p1 { background: var(--pmo-1); border-color: var(--pmo-1b); color: #713f12; }
+.dc-box.p2 { background: var(--pmo-2); border-color: var(--pmo-2b); color: #fff; }
+.dc-box.p3 { background: var(--pmo-3); border-color: var(--pmo-3b); color: #fff; }
+.dc.today .dc-box { border-color: var(--blue-500); box-shadow: 0 0 0 3px rgba(59,130,246,.2); }
+.dc.today .dc-lbl { color: var(--blue-600); font-weight: 800; }
+.dc-dot {
+  width: 4px; height: 4px;
+  border-radius: 50%; background: var(--blue-500);
+  opacity: 0;
+}
+.dc.today .dc-dot { opacity: 1; }
+.week-hint { font-size: 10px; color: var(--textm); text-align: center; margin-top: 7px; }
+
+/* =========================================
+   STATS ROW
+========================================= */
+.stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.stat-box {
+  background: var(--grad-card);
+  border-radius: 16px; padding: 14px;
+  border: 1px solid var(--border); text-align: center;
+  box-shadow: var(--sh-sm);
+}
+.stat-v {
+  font-family: var(--ff);
+  font-size: 32px; font-weight: 800;
+  color: var(--blue-700); line-height: 1;
+}
+.stat-l { font-size: 11px; color: var(--textm); margin-top: 4px; font-weight: 500; }
+
+/* =========================================
+   QUOTE CARD
+========================================= */
+.qcard {
+  background: linear-gradient(135deg, var(--blue-700), var(--blue-900));
+  border-radius: 20px; padding: 16px;
+  position: relative; overflow: hidden;
+}
+.qcard::before {
+  content: '"';
+  position: absolute; top: -16px; right: 10px;
+  font-size: 96px; font-family: Georgia;
+  color: rgba(255,255,255,.08); line-height: 1;
+}
+.q-text {
+  font-size: 13px; font-weight: 500;
+  color: rgba(255,255,255,.92);
+  line-height: 1.65; font-style: italic;
+  position: relative; z-index: 1;
+}
+.q-src {
+  font-size: 10px; color: rgba(255,255,255,.5);
+  margin-top: 6px; font-weight: 600;
+  position: relative; z-index: 1;
+}
+
+/* =========================================
+   INTENSITY LEGEND
+========================================= */
+.ileg { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.ileg-i { display: flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 600; color: var(--text2); }
+.ileg-d { width: 12px; height: 12px; border-radius: 3px; }
+.id-0 { background: #fff; border: 1px solid #bfdbfe; }
+.id-1 { background: var(--pmo-1); }
+.id-2 { background: var(--pmo-2); }
+.id-3 { background: var(--pmo-3); }
+
+/* =========================================
+   STOPWATCH PAGE
+========================================= */
+.sw-hero {
+  background: var(--grad-hero);
+  padding: 30px 16px 34px;
+  text-align: center;
+  border-radius: 0 0 26px 26px;
+  position: relative; overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 8px 30px rgba(37,99,235,.25);
+}
+.sw-hero::before {
+  content: '';
+  position: absolute; top: -50px; right: -50px;
+  width: 200px; height: 200px;
+  border-radius: 50%; background: rgba(255,255,255,.1);
+}
+.sw-hero-inner { position: relative; z-index: 1; }
+.sw-big-cap {
+  font-family: var(--ff);
+  font-size: 12px; font-weight: 600;
+  color: rgba(255,255,255,.75);
+  text-transform: uppercase; letter-spacing: .07em;
+  margin-bottom: 8px;
+}
+.sw-big-row {
+  display: flex; align-items: flex-end; justify-content: center;
+}
+.sw-big-unit { text-align: center; min-width: 66px; }
+.sw-big-num {
+  font-family: var(--ff);
+  font-size: 56px; font-weight: 800;
+  color: #fff; line-height: 1;
+  text-shadow: 0 3px 12px rgba(0,0,0,.2);
+  letter-spacing: -2px;
+}
+.sw-big-lbl {
+  font-size: 9px; font-weight: 600;
+  color: rgba(255,255,255,.65);
+  text-transform: uppercase; margin-top: 2px;
+}
+.sw-big-sep {
+  font-family: var(--ff);
+  font-size: 46px; font-weight: 800;
+  color: rgba(255,255,255,.4);
+  padding-bottom: 14px;
+  animation: swblink 1s step-end infinite;
+}
+@keyframes swblink { 0%,100% { opacity:1; } 50% { opacity:.2; } }
+
+.btn-relapse {
+  display: inline-block;
+  margin-top: 22px;
+  background: var(--grad-danger);
+  color: #fff;
+  font-family: var(--ff); font-size: 14px; font-weight: 700;
+  border: none; border-radius: 999px;
+  padding: 14px 36px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(239,68,68,.42);
+  letter-spacing: .04em;
+  transition: transform .15s, box-shadow .15s;
+}
+.btn-relapse:active {
+  transform: scale(.93);
+  box-shadow: 0 2px 8px rgba(239,68,68,.3);
+}
+
+/* =========================================
+   LOG CARDS
+========================================= */
+.log-list { display: flex; flex-direction: column; gap: 8px; }
+.lc {
+  background: var(--surface);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.lc-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 13px;
+  cursor: pointer;
+  user-select: none; -webkit-user-select: none;
+}
+.lc-hdr:active { background: var(--surf2); }
+.lc-date { font-family: var(--ff); font-size: 13px; font-weight: 700; color: var(--text); }
+.lc-time { font-size: 11px; color: var(--textm); margin-top: 1px; }
+.lc-chev {
+  font-size: 12px; color: var(--textm);
+  transition: transform .25s ease;
+  flex-shrink: 0;
+}
+.lc.open .lc-chev { transform: rotate(180deg); }
+.lc-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height .3s ease;
+}
+.lc.open .lc-body { max-height: 600px; border-top: 1px solid var(--border); }
+.lc-inner { padding: 11px 13px 13px; }
+.tags-wrap { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 9px; }
+.tag {
+  font-size: 11px; font-weight: 600;
+  padding: 3px 9px; border-radius: 999px;
+}
+.tag-t { background: var(--blue-100); color: var(--blue-800); }
+.tag-w { background: #f0fdf4; color: #166534; }
+.tag-m { background: #fff7ed; color: #9a3412; }
+.note-lbl {
+  font-size: 10px; font-weight: 700;
+  color: var(--textm);
+  text-transform: uppercase; letter-spacing: .05em;
+  margin-bottom: 4px;
+}
+.note-txt {
+  font-size: 12px; color: var(--text2);
+  line-height: 1.6; font-style: italic;
+  background: var(--surf2);
+  border-radius: 8px; padding: 8px 10px;
+}
+.lc-acts { display: flex; gap: 6px; margin-top: 10px; justify-content: flex-end; }
+.bxs {
+  font-size: 11px; font-weight: 600;
+  padding: 5px 11px; border-radius: 999px;
+  border: none; cursor: pointer;
+  font-family: var(--fb);
+  transition: transform .12s;
+}
+.bxs:active { transform: scale(.9); }
+.bedit { background: var(--blue-100); color: var(--blue-700); }
+.bdel  { background: #fee2e2; color: #991b1b; }
+
+.empty {
+  text-align: center; padding: 28px 12px; color: var(--textm);
+}
+.empty-ico { font-size: 36px; margin-bottom: 8px; }
+.empty-txt { font-size: 13px; font-weight: 500; line-height: 1.5; }
+
+/* =========================================
+   PAGE HEADER
+========================================= */
+.pg-hd {
+  padding: 22px 16px 12px;
+  font-family: var(--ff);
+  font-size: 22px; font-weight: 800;
+  color: var(--text);
+  flex-shrink: 0;
+}
+.pg-hd span { color: var(--blue-600); }
+
+/* =========================================
+   CALENDAR
+========================================= */
+.cal-card {
+  background: var(--surface);
+  border-radius: 20px; padding: 14px;
+  box-shadow: var(--sh-md); border: 1px solid var(--border);
+}
+.cal-nav-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.cal-arrow {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--blue-600);
+  transition: background .15s;
+}
+.cal-arrow:active { background: var(--blue-100); transform: scale(.9); }
+.cal-month {
+  font-family: var(--ff); font-size: 15px; font-weight: 700;
+  color: var(--text);
+}
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+.cal-dh {
+  text-align: center;
+  font-size: 9px; font-weight: 700;
+  color: var(--textm);
+  padding: 4px 0;
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.cal-d {
+  aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 7px;
+  font-family: var(--ff); font-size: 12px; font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid var(--pmo-0b);
+  background: var(--pmo-0);
+  color: var(--text2);
+  transition: transform .12s;
+}
+.cal-d:not(.ce):active { transform: scale(.88); }
+.cal-d.today { border-color: var(--blue-500) !important; box-shadow: 0 0 0 2px rgba(59,130,246,.18); }
+.cal-d.p1 { background: var(--pmo-1); border-color: var(--pmo-1b); color: #713f12; }
+.cal-d.p2 { background: var(--pmo-2); border-color: var(--pmo-2b); color: #fff; }
+.cal-d.p3 { background: var(--pmo-3); border-color: var(--pmo-3b); color: #fff; }
+.cal-d.ce { background: transparent; border-color: transparent; pointer-events: none; }
+
+/* =========================================
+   CHART TOGGLE
+========================================= */
+.tgl-grp {
+  display: flex; gap: 3px;
+  padding: 3px;
+  background: var(--blue-50); border-radius: 999px;
+  margin-bottom: 12px;
+}
+.tgl {
+  flex: 1; padding: 6px 4px;
+  border: none; border-radius: 999px;
+  font-family: var(--fb); font-size: 10px; font-weight: 700;
+  color: var(--textm); background: transparent;
+  cursor: pointer;
+  transition: all .15s;
+}
+.tgl.on {
+  background: #fff; color: var(--blue-700);
+  box-shadow: var(--sh-sm);
+}
+
+/* =========================================
+   BAR CHART
+========================================= */
+.bar-wrap {
+  height: 120px;
+  display: flex; align-items: flex-end; gap: 4px;
+  overflow-x: auto; -webkit-overflow-scrolling: touch;
+  padding: 2px 2px 0;
+}
+.bar-wrap::-webkit-scrollbar { display: none; }
+.bar-col {
+  flex: 0 0 auto;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  min-width: 28px;
+}
+.bar-fill {
+  width: 18px;
+  border-radius: 4px 4px 0 0;
+  background: var(--grad-btn);
+  min-height: 4px;
+}
+.bar-lbl {
+  font-size: 8px; color: var(--textm); font-weight: 600;
+  text-align: center; white-space: nowrap; line-height: 1.2;
+}
+
+/* =========================================
+   STREAK BARS
+========================================= */
+.srec { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
+.srank {
+  font-family: var(--ff); font-size: 12px; font-weight: 800;
+  color: var(--textm); width: 20px; text-align: center; flex-shrink: 0;
+}
+.srank.g { color: #f59e0b; }
+.srank.s { color: #94a3b8; }
+.srank.b { color: #cd7c3b; }
+.strack {
+  flex: 1; height: 26px;
+  background: var(--blue-50); border-radius: 999px; overflow: hidden;
+}
+.sfill {
+  height: 100%; border-radius: 999px;
+  background: var(--grad-btn);
+  display: flex; align-items: center;
+  padding-left: 10px; min-width: 38px;
+}
+.sfill span {
+  font-size: 10px; font-weight: 700; color: #fff;
+  white-space: nowrap; overflow: hidden;
+}
+
+/* =========================================
+   DONUT CHARTS
+========================================= */
+.donut-card {
+  background: var(--surface);
+  border-radius: 20px; padding: 15px;
+  box-shadow: var(--sh-md); border: 1px solid var(--border);
+}
+.donut-title {
+  font-family: var(--ff); font-size: 13px; font-weight: 700;
+  color: var(--text); margin-bottom: 12px;
+}
+.donut-layout { display: flex; gap: 13px; align-items: center; }
+.donut-svg { flex-shrink: 0; }
+.donut-leg { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.dl-row { display: flex; align-items: center; gap: 6px; }
+.dl-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dl-name {
+  font-size: 11px; font-weight: 600; color: var(--text);
+  flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.dl-cnt { font-family: var(--ff); font-size: 11px; font-weight: 700; color: var(--blue-600); flex-shrink: 0; }
+
+/* =========================================
+   SETTINGS
+========================================= */
+.set-label {
+  font-size: 10px; font-weight: 700;
+  color: var(--textm); letter-spacing: .08em; text-transform: uppercase;
+  margin: 10px 2px 7px;
+}
+.set-group {
+  background: var(--surface); border-radius: 20px;
+  overflow: hidden; box-shadow: var(--sh-md); border: 1px solid var(--border);
+}
+.set-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background .12s;
+}
+.set-row:last-child { border-bottom: none; }
+.set-row:active { background: var(--surf2); }
+.set-ico {
+  width: 38px; height: 38px;
+  border-radius: 12px; background: var(--blue-50);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.set-name { font-family: var(--ff); font-size: 13px; font-weight: 700; color: var(--text); }
+.set-desc { font-size: 11px; color: var(--textm); margin-top: 1px; }
+.set-arr { margin-left: auto; color: var(--textm); font-size: 15px; font-weight: 600; }
+.app-credit {
+  text-align: center; font-size: 11px;
+  color: var(--textm); padding: 18px 0 6px; line-height: 1.6;
+}
+
+/* =========================================
+   FAB
+========================================= */
+.fab {
+  position: fixed;
+  bottom: calc(var(--nav-h) + var(--safe-b) + 14px);
+  right: 18px;
+  width: 50px; height: 50px;
+  border-radius: 50%;
+  background: var(--grad-btn);
+  color: #fff;
+  font-size: 28px; line-height: 1;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--sh-lg), 0 0 0 3px rgba(59,130,246,.18);
+  z-index: 80;
+  transition: transform .15s;
+}
+.fab:active { transform: scale(.88); }
+
+/* =========================================
+   BOTTOM NAV
+========================================= */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 480px;
+  height: calc(var(--nav-h) + var(--safe-b));
+  padding: 0 12px calc(var(--safe-b) + 8px);
+  display: flex; align-items: flex-end;
+  background: linear-gradient(to top, #fff 56%, transparent);
+  z-index: 100;
+}
+.nav-inner {
+  width: 100%; height: 54px;
+  background: #fff;
+  border-radius: 27px;
+  display: flex; align-items: center; justify-content: space-around;
+  box-shadow: var(--sh-lg);
+  border: 1px solid var(--border);
+  padding: 0 4px;
+}
+.nav-btn {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; gap: 2px;
+  cursor: pointer; padding: 4px 2px;
+  border: none; background: transparent;
+  border-radius: 14px;
+  transition: transform .15s;
+  position: relative;
+}
+.nav-btn:active { transform: scale(.82); }
+.nav-ico {
+  font-size: 19px;
+  filter: grayscale(1) opacity(.4);
+  transition: all .2s;
+}
+.nav-lbl {
+  font-family: var(--fb); font-size: 9px; font-weight: 700;
+  color: var(--textm); text-transform: uppercase; letter-spacing: .02em;
+  transition: color .2s;
+}
+.nav-btn.on .nav-ico { filter: none; transform: scale(1.12) translateY(-2px); }
+.nav-btn.on .nav-lbl { color: var(--blue-600); font-weight: 800; }
+.nav-btn.on::after {
+  content: '';
+  position: absolute; bottom: 0;
+  width: 18px; height: 2px;
+  border-radius: 1px; background: var(--blue-500);
+}
+
+/* =========================================
+   MODAL / BOTTOM SHEET
+========================================= */
+.ov {
+  position: fixed; inset: 0;
+  background: rgba(10,20,50,.5);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex; align-items: flex-end; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity .22s ease;
+}
+.ov.show { opacity: 1; pointer-events: auto; }
+
+.sheet {
+  width: 100%; max-width: 480px;
+  background: #fff;
+  border-radius: 26px 26px 0 0;
+  max-height: 92vh;
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  padding-bottom: calc(var(--safe-b) + 4px);
+  transform: translateY(100%);
+  transition: transform .32s cubic-bezier(.34,1.2,.64,1);
+}
+.sheet::-webkit-scrollbar { display: none; }
+.ov.show .sheet { transform: translateY(0); }
+
+.sh-handle {
+  width: 40px; height: 4px;
+  border-radius: 2px; background: #e2e8f0;
+  margin: 11px auto 0;
+}
+.sh-title {
+  font-family: var(--ff); font-size: 16px; font-weight: 800;
+  color: var(--text);
+  padding: 13px 18px 11px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Form inside sheet */
+.sh-body { padding: 14px 18px 0; }
+.fg { margin-bottom: 12px; }
+.flbl {
+  display: block; margin-bottom: 5px;
+  font-size: 11px; font-weight: 700;
+  color: var(--text2);
+  text-transform: uppercase; letter-spacing: .04em;
+}
+.fi {
+  width: 100%;
+  background: var(--surf2);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-family: var(--fb); font-size: 14px; color: var(--text);
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+  -webkit-appearance: none; appearance: none;
+}
+.fi:focus {
+  border-color: var(--blue-400);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(59,130,246,.1);
+}
+textarea.fi { resize: none; min-height: 80px; line-height: 1.55; }
+.frow { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.sh-actions {
+  display: flex; gap: 9px;
+  padding: 12px 18px 24px;
+}
+.btn-pri {
+  flex: 1; background: var(--grad-btn); color: #fff;
+  border: none; border-radius: 999px; padding: 13px;
+  font-family: var(--ff); font-size: 13px; font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(37,99,235,.28);
+  transition: transform .12s;
+}
+.btn-pri:active { transform: scale(.95); }
+.btn-sec {
+  background: var(--surf2); color: var(--text2);
+  border: 1.5px solid var(--border); border-radius: 999px;
+  padding: 13px 18px;
+  font-family: var(--ff); font-size: 13px; font-weight: 600;
+  cursor: pointer;
+  transition: transform .12s;
+}
+.btn-sec:active { transform: scale(.95); }
+
+/* Date sheet */
+.dbar { display: flex; gap: 8px; padding: 12px 18px 4px; }
+.dbtn {
+  flex: 1; padding: 11px;
+  border-radius: 999px;
+  font-family: var(--ff); font-size: 12px; font-weight: 700;
+  border: none; cursor: pointer;
+  transition: transform .12s;
+}
+.dbtn:active { transform: scale(.93); }
+.dbtn-add { background: var(--grad-btn); color: #fff; box-shadow: 0 3px 10px rgba(37,99,235,.25); }
+.dlist { padding: 4px 18px 0; }
+.dempty {
+  text-align: center; padding: 22px;
+  color: var(--textm); font-size: 13px; font-style: italic;
+}
+
+/* =========================================
+   TOAST
+========================================= */
+.toast {
+  position: fixed;
+  top: 16px; left: 50%;
+  transform: translateX(-50%) translateY(calc(-100% - 20px));
+  background: #1e293b; color: #fff;
+  padding: 9px 20px; border-radius: 999px;
+  font-size: 13px; font-weight: 600;
+  z-index: 999; pointer-events: none;
+  box-shadow: var(--sh-lg);
+  white-space: nowrap;
+  transition: transform .35s cubic-bezier(.34,1.3,.64,1);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<!-- =============================================
+     PAGE 1 — HARI INI (DASHBOARD)
+============================================== -->
+<div class="page active" id="pg-dashboard">
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-greet" id="hgreet">Hari ini</div>
+      <div class="hero-date"  id="hdate">-</div>
+      <div class="sw-wrap">
+        <div class="sw-caption">⏱ Ketahanan sejak terakhir relaps</div>
+        <div class="sw-row">
+          <div class="sw-unit"><div class="sw-num" id="h-d">00</div><div class="sw-lbl">Hari</div></div>
+          <div class="sw-sep">:</div>
+          <div class="sw-unit"><div class="sw-num" id="h-h">00</div><div class="sw-lbl">Jam</div></div>
+          <div class="sw-sep">:</div>
+          <div class="sw-unit"><div class="sw-num" id="h-m">00</div><div class="sw-lbl">Mnt</div></div>
+          <div class="sw-sep">:</div>
+          <div class="sw-unit"><div class="sw-num" id="h-s">00</div><div class="sw-lbl">Dtk</div></div>
+        </div>
+        <div class="hero-since" id="h-since">Belum ada catatan relaps — tetap semangat! 💪</div>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <div class="card">
+      <div class="card-hd">
+        Kalender Minggu Ini
+        <div class="ileg">
+          <div class="ileg-i"><div class="ileg-d id-0"></div>0</div>
+          <div class="ileg-i"><div class="ileg-d id-1"></div>1</div>
+          <div class="ileg-i"><div class="ileg-d id-2"></div>2</div>
+          <div class="ileg-i"><div class="ileg-d id-3"></div>3+</div>
+        </div>
+      </div>
+      <div class="wscroll"><div class="wstrip" id="wstrip"></div></div>
+      <div class="week-hint">Ketuk tanggal untuk lihat / tambah catatan</div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-v" id="s-streak">0</div><div class="stat-l">🔥 Streak Kini (hari)</div></div>
+      <div class="stat-box"><div class="stat-v" id="s-month">0</div><div class="stat-l">📅 PMO Bulan Ini</div></div>
+    </div>
+    <div class="qcard"><div class="q-text" id="qtxt"></div><div class="q-src" id="qsrc"></div></div>
+  </div>
+</div>
+
+<!-- =============================================
+     PAGE 2 — STOPWATCH
+============================================== -->
+<div class="page" id="pg-stopwatch">
+  <div class="sw-hero">
+    <div class="sw-hero-inner">
+      <div class="sw-big-cap">⏱ Waktu Tahan PMO</div>
+      <div class="sw-big-row">
+        <div class="sw-big-unit"><div class="sw-big-num" id="sw-d">0</div><div class="sw-big-lbl">Hari</div></div>
+        <div class="sw-big-sep">:</div>
+        <div class="sw-big-unit"><div class="sw-big-num" id="sw-h">00</div><div class="sw-big-lbl">Jam</div></div>
+        <div class="sw-big-sep">:</div>
+        <div class="sw-big-unit"><div class="sw-big-num" id="sw-m">00</div><div class="sw-big-lbl">Menit</div></div>
+        <div class="sw-big-sep">:</div>
+        <div class="sw-big-unit"><div class="sw-big-num" id="sw-s">00</div><div class="sw-big-lbl">Detik</div></div>
+      </div>
+      <button class="btn-relapse" id="btn-relapse">⚡ RELAPS — Catat Sekarang</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="card">
+      <div class="card-hd">Riwayat Terakhir <button class="chip" id="sw-add">+ Tambah</button></div>
+      <div class="log-list" id="recent-logs"></div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     PAGE 3 — EVALUASI
+============================================== -->
+<div class="page" id="pg-evaluasi">
+  <div class="pg-hd">Evaluasi <span>Progress</span></div>
+  <div class="content">
+    <div class="cal-card">
+      <div class="cal-nav-row">
+        <button class="cal-arrow" id="cal-prev">‹</button>
+        <div class="cal-month" id="cal-month">-</div>
+        <button class="cal-arrow" id="cal-next">›</button>
+      </div>
+      <div class="cal-grid" id="cal-dh">
+        <div class="cal-dh">Min</div><div class="cal-dh">Sen</div><div class="cal-dh">Sel</div>
+        <div class="cal-dh">Rab</div><div class="cal-dh">Kam</div><div class="cal-dh">Jum</div><div class="cal-dh">Sab</div>
+      </div>
+      <div class="cal-grid" id="cal-grid" style="margin-top:3px"></div>
+      <div class="ileg" style="margin-top:11px;justify-content:center">
+        <div class="ileg-i"><div class="ileg-d id-0"></div>Bersih</div>
+        <div class="ileg-i"><div class="ileg-d id-1"></div>1x</div>
+        <div class="ileg-i"><div class="ileg-d id-2"></div>2x</div>
+        <div class="ileg-i"><div class="ileg-d id-3"></div>3x+</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd">Grafik PMO</div>
+      <div class="tgl-grp">
+        <button class="tgl on" data-mode="day">Harian</button>
+        <button class="tgl" data-mode="week">Mingguan</button>
+        <button class="tgl" data-mode="month">Bulanan</button>
+        <button class="tgl" data-mode="year">Tahunan</button>
+      </div>
+      <div class="bar-wrap" id="bar-chart"></div>
+    </div>
+    <div class="card">
+      <div class="card-hd">🏆 Rekor Streak Terpanjang</div>
+      <div id="streak-bars"></div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     PAGE 4 — CATATAN
+============================================== -->
+<div class="page" id="pg-catatan">
+  <div class="pg-hd">Analisis <span>Pola</span></div>
+  <div class="content">
+    <div class="donut-card">
+      <div class="donut-title">📍 Berdasarkan Tempat</div>
+      <div class="donut-layout">
+        <svg class="donut-svg" id="dsvg-t" viewBox="0 0 88 88" width="90" height="90"></svg>
+        <div class="donut-leg" id="dleg-t"></div>
+      </div>
+    </div>
+    <div class="donut-card">
+      <div class="donut-title">🕐 Berdasarkan Waktu</div>
+      <div class="donut-layout">
+        <svg class="donut-svg" id="dsvg-w" viewBox="0 0 88 88" width="90" height="90"></svg>
+        <div class="donut-leg" id="dleg-w"></div>
+      </div>
+    </div>
+    <div class="donut-card">
+      <div class="donut-title">📱 Berdasarkan Media</div>
+      <div class="donut-layout">
+        <svg class="donut-svg" id="dsvg-m" viewBox="0 0 88 88" width="90" height="90"></svg>
+        <div class="donut-leg" id="dleg-m"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =============================================
+     PAGE 5 — SETELAN
+============================================== -->
+<div class="page" id="pg-setting">
+  <div class="pg-hd">Pengaturan</div>
+  <div class="content">
+    <div class="set-label">DATA</div>
+    <div class="set-group">
+      <div class="set-row" id="do-export">
+        <div class="set-ico">📤</div>
+        <div><div class="set-name">Export Data</div><div class="set-desc">Unduh backup sebagai file JSON</div></div>
+        <span class="set-arr">›</span>
+      </div>
+      <div class="set-row" id="do-import">
+        <div class="set-ico">📥</div>
+        <div><div class="set-name">Import Data</div><div class="set-desc">Pulihkan data dari file backup</div></div>
+        <span class="set-arr">›</span>
+      </div>
+    </div>
+    <input type="file" id="imp-file" accept=".json" style="display:none">
+    <div class="set-label" style="margin-top:14px">TENTANG</div>
+    <div class="set-group">
+      <div class="set-row" style="cursor:default">
+        <div class="set-ico">🔵</div>
+        <div><div class="set-name">PMO Tracker</div><div class="set-desc">Versi 1.0 — Single-file app</div></div>
+      </div>
+    </div>
+    <div class="app-credit">
+      Semua data tersimpan lokal di perangkatmu.<br>
+      Tidak ada data yang dikirim ke server. 🔒
+    </div>
+  </div>
+</div>
+
+<!-- FAB -->
+<button class="fab" id="fab" title="Tambah catatan PMO">+</button>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav">
+  <div class="nav-inner">
+    <button class="nav-btn on" data-pg="dashboard"><span class="nav-ico">🏠</span><span class="nav-lbl">Hari Ini</span></button>
+    <button class="nav-btn"    data-pg="stopwatch"><span class="nav-ico">⏱</span><span class="nav-lbl">Stopwatch</span></button>
+    <button class="nav-btn"    data-pg="evaluasi"><span class="nav-ico">📊</span><span class="nav-lbl">Evaluasi</span></button>
+    <button class="nav-btn"    data-pg="catatan"><span class="nav-ico">📝</span><span class="nav-lbl">Catatan</span></button>
+    <button class="nav-btn"    data-pg="setting"><span class="nav-ico">⚙️</span><span class="nav-lbl">Setelan</span></button>
+  </div>
+</nav>
+
+<!-- Modal overlay (one instance, reused) -->
+<div class="ov" id="ov"><div class="sheet" id="sheet"></div></div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ====================================================
+   STORAGE
+==================================================== */
+const DB_KEY = 'pmotracker_v2';
+
+function dbLoad() {
+  try {
+    const raw = localStorage.getItem(DB_KEY);
+    if (!raw) return { records: [], createdAt: Date.now() };
+    return JSON.parse(raw);
+  } catch(e) {
+    return { records: [], createdAt: Date.now() };
+  }
+}
+
+function dbSave(db) {
+  try { localStorage.setItem(DB_KEY, JSON.stringify(db)); } catch(e) {}
+}
+
+const DB = {
+  add(data) {
+    const db = dbLoad();
+    const r = {
+      id:      Date.now().toString(36) + Math.random().toString(36).slice(2, 5),
+      date:    data.date,
+      time:    data.time,
+      tempat:  (data.tempat || '').trim(),
+      waktu:   (data.waktu  || '').trim(),
+      media:   (data.media  || '').trim(),
+      catatan: (data.catatan || '').trim(),
+      ts:      Date.now()
+    };
+    db.records.push(r);
+    db.records.sort((a, b) => (a.date + a.time).localeCompare(b.date + b.time));
+    dbSave(db);
+    return r;
+  },
+
+  edit(id, data) {
+    const db = dbLoad();
+    const i = db.records.findIndex(r => r.id === id);
+    if (i < 0) return null;
+    const o = db.records[i];
+    db.records[i] = {
+      ...o,
+      date:    data.date    !== undefined ? data.date    : o.date,
+      time:    data.time    !== undefined ? data.time    : o.time,
+      tempat:  data.tempat  !== undefined ? data.tempat.trim()  : o.tempat,
+      waktu:   data.waktu   !== undefined ? data.waktu.trim()   : o.waktu,
+      media:   data.media   !== undefined ? data.media.trim()   : o.media,
+      catatan: data.catatan !== undefined ? data.catatan.trim() : o.catatan,
+    };
+    dbSave(db);
+    return db.records[i];
+  },
+
+  del(id) {
+    const db = dbLoad();
+    db.records = db.records.filter(r => r.id !== id);
+    dbSave(db);
+  },
+
+  all()       { return dbLoad().records; },
+  byDate(d)   { return DB.all().filter(r => r.date === d); },
+  countOn(d)  { return DB.byDate(d).length; },
+  createdAt() { return dbLoad().createdAt || Date.now(); },
+
+  lastRelapsTs() {
+    const recs = DB.all();
+    if (!recs.length) return null;
+    const last = recs[recs.length - 1];
+    // Safari needs full ISO string — pad seconds
+    return new Date(last.date + 'T' + last.time + ':00').getTime();
+  },
+
+  streaks() {
+    const recs   = DB.all();
+    const created = new Date(DB.createdAt());
+    const now     = new Date();
+
+    if (!recs.length) {
+      const days = Math.max(0, Math.floor((now - created) / 86400000));
+      return [{ days, label: 'Streak saat ini (sejak mulai)' }];
+    }
+
+    const res   = [];
+    const dates = [...new Set(recs.map(r => r.date))].sort();
+
+    // streak before first relapse
+    const first = new Date(dates[0] + 'T00:00:00');
+    const dBefore = Math.floor((first - created) / 86400000);
+    if (dBefore > 0) res.push({ days: dBefore, label: 'Sebelum relaps pertama' });
+
+    // streaks between consecutive relapses
+    for (let i = 0; i < dates.length - 1; i++) {
+      const from = new Date(dates[i]   + 'T00:00:00'); from.setDate(from.getDate() + 1);
+      const to   = new Date(dates[i+1] + 'T00:00:00');
+      const d    = Math.floor((to - from) / 86400000);
+      if (d > 0) res.push({ days: d, label: fmtShort(from) + ' — ' + fmtShort(to) });
+    }
+
+    // current streak from last relapse date
+    const lastDate = new Date(dates[dates.length - 1] + 'T00:00:00');
+    lastDate.setDate(lastDate.getDate() + 1);
+    const cs = Math.max(0, Math.floor((now - lastDate) / 86400000));
+    res.push({ days: cs, label: 'Streak saat ini' });
+
+    return res.sort((a, b) => b.days - a.days).slice(0, 7);
+  },
+
+  chartData(mode) {
+    const MO = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+    const counts = {};
+    DB.all().forEach(r => {
+      const d = new Date(r.date + 'T00:00:00');
+      let k;
+      if      (mode === 'day')   { k = r.date; }
+      else if (mode === 'week')  {
+        const j1 = new Date(d.getFullYear(), 0, 1);
+        const wk = Math.ceil(((d - j1) / 86400000 + j1.getDay() + 1) / 7);
+        k = d.getFullYear() + '-W' + pad2(wk);
+      }
+      else if (mode === 'month') { k = d.getFullYear() + '-' + pad2(d.getMonth() + 1); }
+      else                       { k = String(d.getFullYear()); }
+      counts[k] = (counts[k] || 0) + 1;
+    });
+    return Object.keys(counts).sort().slice(-20).map(k => {
+      let lbl = k;
+      if (mode === 'day') {
+        const d = new Date(k + 'T00:00:00');
+        lbl = d.getDate() + '/' + (d.getMonth() + 1);
+      } else if (mode === 'month') {
+        lbl = MO[parseInt(k.split('-')[1]) - 1];
+      }
+      return { lbl, count: counts[k] };
+    });
+  },
+
+  tagFreq(field) {
+    const freq = {};
+    DB.all().forEach(r => {
+      const v = (r[field] || '').trim();
+      if (v) freq[v] = (freq[v] || 0) + 1;
+    });
+    return Object.entries(freq)
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 7);
+  },
+
+  exportBackup() {
+    const db  = dbLoad();
+    const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = 'pmo_backup_' + todayStr() + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  },
+
+  importBackup(file) {
+    return new Promise((resolve, reject) => {
+      const fr = new FileReader();
+      fr.onload = e => {
+        try {
+          const data = JSON.parse(e.target.result);
+          if (!Array.isArray(data.records)) throw new Error('bad format');
+          dbSave(data);
+          resolve();
+        } catch(err) { reject(err); }
+      };
+      fr.onerror = reject;
+      fr.readAsText(file);
+    });
+  }
+};
+
+/* ====================================================
+   HELPERS
+==================================================== */
+function pad2(n) { return String(n).padStart(2, '0'); }
+
+function todayStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+}
+
+function nowTimeStr() {
+  const d = new Date();
+  return pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+}
+
+function dateToStr(d) {
+  return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+}
+
+function fmtFull(ds) {
+  const DN = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const MO = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  const d  = new Date(ds + 'T00:00:00');
+  return DN[d.getDay()] + ', ' + d.getDate() + ' ' + MO[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function fmtShort(d) {
+  const MO = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+  return d.getDate() + ' ' + MO[d.getMonth()];
+}
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function pmoClass(n) {
+  if (n <= 0) return '';
+  if (n === 1) return 'p1';
+  if (n === 2) return 'p2';
+  return 'p3';
+}
+
+/* ====================================================
+   STOPWATCH ENGINE
+==================================================== */
+const SW = (() => {
+  let _tid    = null;
+  let _cbs    = [];
+  let _cached = 0;       // cached elapsed for current second
+
+  function calcMs() {
+    const ref = DB.lastRelapsTs() || DB.createdAt();
+    return Math.max(0, Date.now() - ref);
+  }
+
+  function decompose(ms) {
+    const totalSec = Math.floor(ms / 1000);
+    const sec      = totalSec % 60;
+    const totalMin = Math.floor(totalSec / 60);
+    const min      = totalMin % 60;
+    const totalHr  = Math.floor(totalMin / 60);
+    const hr       = totalHr % 24;
+    const days     = Math.floor(totalHr / 24);
+    return { days, hr, min, sec };
+  }
+
+  function tick() {
+    _cached = calcMs();
+    const p = decompose(_cached);
+    _cbs.forEach(fn => { try { fn(p); } catch(e) {} });
+  }
+
+  function start() {
+    if (_tid) return;
+    tick(); // immediate first tick
+    _tid = setInterval(tick, 1000);
+  }
+
+  function onTick(fn) { _cbs.push(fn); }
+
+  function getMs()     { return calcMs(); }
+  function getParts()  { return decompose(calcMs()); }
+
+  return { start, onTick, getMs, getParts };
+})();
+
+/* ====================================================
+   TOAST
+==================================================== */
+let _toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+/* ====================================================
+   MODAL / SHEET
+==================================================== */
+let _sheetOnClose = null;
+
+function openSheet(builder) {
+  const ov    = document.getElementById('ov');
+  const sheet = document.getElementById('sheet');
+  sheet.innerHTML = ''; // clear old
+  builder(sheet);       // populate new content
+  // force reflow then show (ensures CSS transition fires)
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => { ov.classList.add('show'); });
+  });
+  // backdrop close
+  ov.onclick = e => { if (e.target === ov) closeSheet(); };
+}
+
+function closeSheet(after) {
+  const ov = document.getElementById('ov');
+  ov.classList.remove('show');
+  _sheetOnClose = null;
+  if (typeof after === 'function') {
+    // wait for sheet animation to finish before callback
+    setTimeout(after, 350);
+  }
+}
+
+/* ====================================================
+   PMO FORM SHEET
+==================================================== */
+function openForm({ date, time, rec, onSave } = {}) {
+  date = date || todayStr();
+  time = time || nowTimeStr();
+  const isEdit = !!rec;
+  const r = rec || { tempat:'', waktu:'', media:'', catatan:'' };
+
+  openSheet(sh => {
+    sh.innerHTML = `
+      <div class="sh-handle"></div>
+      <div class="sh-title">${isEdit ? 'Edit Catatan PMO' : 'Tambah Catatan PMO'}</div>
+      <div class="sh-body">
+        <div class="frow">
+          <div class="fg">
+            <label class="flbl">📅 Tanggal</label>
+            <input class="fi" type="date" id="f-date" value="${esc(date)}">
+          </div>
+          <div class="fg">
+            <label class="flbl">🕐 Jam</label>
+            <input class="fi" type="time" id="f-time" value="${esc(time)}">
+          </div>
+        </div>
+        <div class="fg">
+          <label class="flbl">📍 Tempat</label>
+          <input class="fi" type="text" id="f-tempat" placeholder="Kamar Tidur, Kamar Mandi..." value="${esc(r.tempat)}">
+        </div>
+        <div class="fg">
+          <label class="flbl">🕐 Waktu</label>
+          <input class="fi" type="text" id="f-waktu" placeholder="Pagi, Siang, Sore, Malam..." value="${esc(r.waktu)}">
+        </div>
+        <div class="fg">
+          <label class="flbl">📱 Media</label>
+          <input class="fi" type="text" id="f-media" placeholder="YouTube, Instagram..." value="${esc(r.media)}">
+        </div>
+        <div class="fg">
+          <label class="flbl">📝 Catatan Evaluasi</label>
+          <textarea class="fi" id="f-cat" placeholder="Apa yang memicu? Bagaimana perasaanmu?">${esc(r.catatan)}</textarea>
+        </div>
+      </div>
+      <div class="sh-actions">
+        <button class="btn-sec" id="f-batal">Batal</button>
+        <button class="btn-pri" id="f-simpan">${isEdit ? 'Simpan Perubahan' : 'Simpan'}</button>
+      </div>`;
+
+    sh.querySelector('#f-batal').addEventListener('click', () => closeSheet());
+
+    sh.querySelector('#f-simpan').addEventListener('click', () => {
+      const dt  = sh.querySelector('#f-date').value;
+      const tm  = sh.querySelector('#f-time').value;
+      const tpt = sh.querySelector('#f-tempat').value;
+      const twk = sh.querySelector('#f-waktu').value;
+      const tmd = sh.querySelector('#f-media').value;
+      const cat = sh.querySelector('#f-cat').value;
+
+      if (!dt || !tm) {
+        showToast('⚠️ Tanggal dan jam wajib diisi!');
+        return;
+      }
+
+      let saved;
+      if (isEdit) {
+        saved = DB.edit(r.id, { date:dt, time:tm, tempat:tpt, waktu:twk, media:tmd, catatan:cat });
+        showToast('✅ Catatan diperbarui');
+      } else {
+        saved = DB.add({ date:dt, time:tm, tempat:tpt, waktu:twk, media:tmd, catatan:cat });
+        showToast('✅ Catatan ditambahkan');
+      }
+
+      closeSheet(() => { if (typeof onSave === 'function') onSave(saved); });
+    });
+  });
+}
+
+/* ====================================================
+   DATE SHEET
+==================================================== */
+function openDateSheet(ds, { onSave } = {}) {
+  openSheet(sh => {
+    const recs   = DB.byDate(ds);
+    const cnt    = recs.length;
+    const clrMap = { '':'#3b82f6', p1:'#ca8a04', p2:'#ef4444', p3:'#1e293b' };
+    const color  = clrMap[pmoClass(cnt)] || '#3b82f6';
+
+    sh.innerHTML = `
+      <div class="sh-handle"></div>
+      <div class="sh-title">
+        📅 ${fmtFull(ds)}
+        <span style="font-size:12px;font-weight:600;color:${color}"> · ${cnt}x PMO</span>
+      </div>
+      <div class="dbar">
+        <button class="dbtn dbtn-add" id="ds-add">+ Tambah Catatan</button>
+      </div>
+      <div class="dlist" id="ds-list"></div>
+      <div style="height:20px"></div>`;
+
+    const list = sh.querySelector('#ds-list');
+
+    if (!recs.length) {
+      list.innerHTML = '<div class="dempty">Tidak ada catatan PMO pada hari ini 🎉</div>';
+    } else {
+      recs.forEach(r => {
+        const card = buildLogCard(r, {
+          onDel: () => closeSheet(() => { if (onSave) onSave(); }),
+          onEdit: rec => closeSheet(() => {
+            setTimeout(() => openForm({
+              date: rec.date, time: rec.time, rec,
+              onSave: () => { if (onSave) onSave(); }
+            }), 50);
+          })
+        });
+        list.appendChild(card);
+      });
+    }
+
+    sh.querySelector('#ds-add').addEventListener('click', () => {
+      closeSheet(() => {
+        setTimeout(() => openForm({
+          date: ds, time: nowTimeStr(),
+          onSave: () => { if (onSave) onSave(); }
+        }), 50);
+      });
+    });
+  });
+}
+
+/* ====================================================
+   LOG CARD
+==================================================== */
+function buildLogCard(rec, { onDel, onEdit } = {}) {
+  const tagsHtml = [
+    rec.tempat ? `<span class="tag tag-t">📍 ${esc(rec.tempat)}</span>` : '',
+    rec.waktu  ? `<span class="tag tag-w">🕐 ${esc(rec.waktu)}</span>`  : '',
+    rec.media  ? `<span class="tag tag-m">📱 ${esc(rec.media)}</span>`  : '',
+  ].filter(Boolean).join('');
+
+  const el = document.createElement('div');
+  el.className = 'lc';
+  el.innerHTML = `
+    <div class="lc-hdr">
+      <div>
+        <div class="lc-date">${fmtFull(rec.date)}</div>
+        <div class="lc-time">Pukul ${esc(rec.time)}</div>
+      </div>
+      <span class="lc-chev">▾</span>
+    </div>
+    <div class="lc-body">
+      <div class="lc-inner">
+        <div class="tags-wrap">${tagsHtml || '<span style="font-size:11px;color:var(--textm)">Tidak ada tag</span>'}</div>
+        <div class="note-lbl">Catatan Evaluasi</div>
+        <div class="note-txt">${rec.catatan ? esc(rec.catatan) : '<em style="color:var(--textm)">Belum ada catatan</em>'}</div>
+        <div class="lc-acts">
+          <button class="bxs bedit">✏️ Edit</button>
+          <button class="bxs bdel">🗑 Hapus</button>
+        </div>
+      </div>
+    </div>`;
+
+  el.querySelector('.lc-hdr').addEventListener('click', () => el.classList.toggle('open'));
+  el.querySelector('.bedit').addEventListener('click', e => { e.stopPropagation(); if (onEdit) onEdit(rec); });
+  el.querySelector('.bdel').addEventListener('click', e => {
+    e.stopPropagation();
+    if (confirm('Hapus catatan ini?')) {
+      DB.del(rec.id);
+      el.style.opacity = '0';
+      el.style.transform = 'scale(.95)';
+      el.style.transition = 'all .2s';
+      setTimeout(() => { el.remove(); if (onDel) onDel(); }, 200);
+    }
+  });
+
+  return el;
+}
+
+/* ====================================================
+   CHARTS
+==================================================== */
+function renderBarChart(mode) {
+  const data = DB.chartData(mode);
+  const c    = document.getElementById('bar-chart');
+  if (!c) return;
+
+  if (!data.length) {
+    c.innerHTML = '<div style="color:var(--textm);font-size:12px;width:100%;text-align:center;padding:20px 0">Belum ada data</div>';
+    return;
+  }
+  const max = Math.max(...data.map(d => d.count), 1);
+  c.innerHTML = '';
+  data.forEach(item => {
+    const h   = Math.max(4, Math.round(item.count / max * 100));
+    const col = document.createElement('div');
+    col.className = 'bar-col';
+    col.innerHTML = `
+      <div class="bar-fill" style="height:${h}px" title="${item.count}x PMO"></div>
+      <div class="bar-lbl">${esc(item.lbl)}</div>`;
+    c.appendChild(col);
+  });
+}
+
+function renderStreaks() {
+  const c    = document.getElementById('streak-bars');
+  if (!c) return;
+  const list = DB.streaks();
+  const valid = list.filter(x => x.days > 0);
+  if (!valid.length) {
+    c.innerHTML = '<div style="color:var(--textm);font-size:12px;font-style:italic;padding:4px 0">Belum ada data streak</div>';
+    return;
+  }
+  const max  = Math.max(...valid.map(x => x.days), 1);
+  const rl   = ['🥇','🥈','🥉','4','5','6','7'];
+  const rc   = ['g','s','b','','','',''];
+  c.innerHTML = '';
+  valid.forEach((x, i) => {
+    const pct = Math.max(14, Math.round(x.days / max * 100));
+    const row = document.createElement('div');
+    row.className = 'srec';
+    row.innerHTML = `
+      <div class="srank ${rc[i] || ''}">${rl[i] || (i+1)}</div>
+      <div class="strack">
+        <div class="sfill" style="width:${pct}%">
+          <span>${x.days} hari — ${esc(x.label)}</span>
+        </div>
+      </div>`;
+    c.appendChild(row);
+  });
+}
+
+const DCOLS = ['#3b82f6','#60a5fa','#1d4ed8','#93c5fd','#0ea5e9','#38bdf8','#0284c7','#7dd3fc','#bfdbfe','#c7d2fe'];
+
+function renderDonut(svgId, legId, data) {
+  const svg = document.getElementById(svgId);
+  const leg = document.getElementById(legId);
+  if (!svg || !leg) return;
+
+  const total = data.reduce((s, d) => s + d.count, 0);
+
+  if (!total) {
+    svg.innerHTML = `
+      <circle cx="44" cy="44" r="30" fill="none" stroke="#dbeafe" stroke-width="14"/>
+      <text x="44" y="50" text-anchor="middle" font-size="10" fill="#94a3b8" font-family="DM Sans,sans-serif">0</text>`;
+    leg.innerHTML = '<div style="color:var(--textm);font-size:11px;font-style:italic">Belum ada data</div>';
+    return;
+  }
+
+  const cx = 44, cy = 44, r = 30, sw = 14;
+  const circ = 2 * Math.PI * r;
+  let offset = 0;
+  let paths  = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#dbeafe" stroke-width="${sw}"/>`;
+
+  data.forEach((item, i) => {
+    const dash  = item.count / total * circ;
+    const gap   = circ - dash;
+    const color = DCOLS[i % DCOLS.length];
+    paths += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none"
+      stroke="${color}" stroke-width="${sw}"
+      stroke-dasharray="${dash} ${gap}"
+      stroke-dashoffset="${-offset}"
+      transform="rotate(-90 ${cx} ${cy})"/>`;
+    offset += dash;
+  });
+
+  paths += `
+    <text x="${cx}" y="${cy-4}" text-anchor="middle" font-size="15" font-weight="800" fill="#1e40af" font-family="Sora,sans-serif">${total}</text>
+    <text x="${cx}" y="${cy+10}" text-anchor="middle" font-size="8" fill="#94a3b8" font-family="DM Sans,sans-serif">total</text>`;
+  svg.innerHTML = paths;
+
+  leg.innerHTML = '';
+  data.forEach((item, i) => {
+    const color = DCOLS[i % DCOLS.length];
+    const row   = document.createElement('div');
+    row.className = 'dl-row';
+    row.innerHTML = `
+      <div class="dl-dot" style="background:${color}"></div>
+      <div class="dl-name">${esc(item.name)}</div>
+      <div class="dl-cnt">${item.count}x</div>`;
+    leg.appendChild(row);
+  });
+}
+
+/* ====================================================
+   PAGE RENDERS
+==================================================== */
+const QUOTES = [
+  { t: 'Setiap hari adalah kesempatan baru untuk menjadi versi lebih baik dari dirimu.',       s: 'Refleksi Harian' },
+  { t: 'Disiplin adalah jembatan antara tujuan dan pencapaian.',                               s: 'Jim Rohn' },
+  { t: 'Kekuatan bukan tentang tidak pernah jatuh, tapi tentang bangkit setiap kali jatuh.',   s: 'Anonim' },
+  { t: 'Tubuhmu adalah rumahmu. Jaga dan hormati ia dengan baik.',                             s: 'Refleksi' },
+  { t: 'Perubahan tidak terjadi dalam semalam, tapi setiap keputusan baik membangun pondasinya.', s: 'Anonim' },
+  { t: 'Kamu tidak harus sempurna untuk melangkah maju. Cukup jujur dengan dirimu sendiri.',   s: 'Refleksi' },
+  { t: 'Setiap nafas adalah peluang untuk memulai lagi. Jangan menyerah.',                     s: 'Anonim' },
+];
+
+// Pick quote once per day (not random on each render)
+function getTodayQuote() {
+  const idx = new Date().getDate() % QUOTES.length;
+  return QUOTES[idx];
+}
+
+// ── DASHBOARD ──
+function updateDashSW() {
+  const p  = SW.getParts();
+  const el = id => document.getElementById(id);
+  if (el('h-d')) el('h-d').textContent = pad2(p.days);
+  if (el('h-h')) el('h-h').textContent = pad2(p.hr);
+  if (el('h-m')) el('h-m').textContent = pad2(p.min);
+  if (el('h-s')) el('h-s').textContent = pad2(p.sec);
+
+  const lastTs  = DB.lastRelapsTs();
+  const sinceEl = document.getElementById('h-since');
+  if (sinceEl) {
+    if (lastTs) {
+      const d = new Date(lastTs);
+      sinceEl.textContent =
+        'Terakhir relaps: ' + fmtFull(dateToStr(d)) +
+        ' · ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+    } else {
+      sinceEl.textContent = 'Belum ada catatan relaps — tetap semangat! 💪';
+    }
+  }
+}
+
+function buildWeekStrip() {
+  const strip  = document.getElementById('wstrip');
+  if (!strip) return;
+  const today  = new Date();
+  const ts     = dateToStr(today);
+  const DN     = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+
+  strip.innerHTML = '';
+
+  for (let i = -7; i <= 6; i++) {
+    const d   = new Date(today);
+    d.setDate(d.getDate() + i);
+    const ds  = dateToStr(d);
+    const cnt = DB.countOn(ds);
+    const cls = pmoClass(cnt);
+    const isT = ds === ts;
+
+    const cell = document.createElement('div');
+    cell.className = 'dc' + (isT ? ' today' : '');
+    cell.innerHTML = `
+      <div class="dc-lbl">${DN[d.getDay()]}</div>
+      <div class="dc-box${cls ? ' '+cls : ''}${isT ? ' today-ring' : ''}">${d.getDate()}</div>
+      <div class="dc-dot"></div>`;
+
+    cell.addEventListener('click', () => {
+      openDateSheet(ds, { onSave: renderDash });
+    });
+    strip.appendChild(cell);
+  }
+
+  // scroll today into view gently
+  const todayEl = strip.querySelector('.today');
+  if (todayEl) {
+    requestAnimationFrame(() => {
+      try { todayEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); } catch(e) {}
+    });
+  }
+}
+
+function renderDash() {
+  updateDashSW();
+  buildWeekStrip();
+
+  const all   = DB.all();
+  const td    = todayStr();
+  const mStart = td.slice(0, 7) + '-01';
+  const mCount = all.filter(r => r.date >= mStart && r.date <= td).length;
+
+  const streaks  = DB.streaks();
+  const curStreak = (streaks.find(s => s.label === 'Streak saat ini') || { days: 0 }).days;
+
+  const g = id => document.getElementById(id);
+  if (g('s-streak')) g('s-streak').textContent = curStreak;
+  if (g('s-month'))  g('s-month').textContent  = mCount;
+
+  // quote is stable per day
+  const q = getTodayQuote();
+  if (g('qtxt')) g('qtxt').textContent = q.t;
+  if (g('qsrc')) g('qsrc').textContent = '— ' + q.s;
+}
+
+// ── STOPWATCH PAGE ──
+function updateSwDisplay() {
+  const p  = SW.getParts();
+  const el = id => document.getElementById(id);
+  if (el('sw-d')) el('sw-d').textContent = p.days;
+  if (el('sw-h')) el('sw-h').textContent = pad2(p.hr);
+  if (el('sw-m')) el('sw-m').textContent = pad2(p.min);
+  if (el('sw-s')) el('sw-s').textContent = pad2(p.sec);
+}
+
+function renderRecentLogs() {
+  const c = document.getElementById('recent-logs');
+  if (!c) return;
+  c.innerHTML = '';
+
+  const recs = DB.all().slice().reverse().slice(0, 8);
+
+  if (!recs.length) {
+    c.innerHTML = '<div class="empty"><div class="empty-ico">🎉</div><div class="empty-txt">Belum ada catatan relaps.<br>Pertahankan streak-mu!</div></div>';
+    return;
+  }
+
+  recs.forEach(r => {
+    c.appendChild(buildLogCard(r, {
+      onDel:  () => { renderRecentLogs(); renderDash(); },
+      onEdit: rec => openForm({
+        date: rec.date, time: rec.time, rec,
+        onSave: () => { renderRecentLogs(); renderDash(); }
+      })
+    }));
+  });
+}
+
+// ── EVALUASI ──
+let calYear = null, calMonth = null, chartMode = 'day';
+
+function buildCalendar(y, m) {
+  const MN   = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  const mEl  = document.getElementById('cal-month');
+  if (mEl) mEl.textContent = MN[m] + ' ' + y;
+
+  const grid = document.getElementById('cal-grid');
+  if (!grid) return;
+
+  const firstDay  = new Date(y, m, 1).getDay();
+  const daysInMon = new Date(y, m + 1, 0).getDate();
+  const ts        = todayStr();
+
+  grid.innerHTML = '';
+
+  for (let i = 0; i < firstDay; i++) {
+    const e = document.createElement('div'); e.className = 'cal-d ce';
+    grid.appendChild(e);
+  }
+
+  for (let d = 1; d <= daysInMon; d++) {
+    const ds  = y + '-' + pad2(m + 1) + '-' + pad2(d);
+    const cnt = DB.countOn(ds);
+    const cls = pmoClass(cnt);
+    const isT = ds === ts;
+
+    const cell = document.createElement('div');
+    cell.className = 'cal-d' + (cls ? ' ' + cls : '') + (isT ? ' today' : '');
+    cell.textContent = d;
+
+    cell.addEventListener('click', () => {
+      openDateSheet(ds, {
+        onSave: () => {
+          buildCalendar(calYear, calMonth);
+          renderBarChart(chartMode);
+          renderStreaks();
+        }
+      });
+    });
+    grid.appendChild(cell);
+  }
+}
+
+function renderEval() {
+  const now = new Date();
+  if (calYear  === null) calYear  = now.getFullYear();
+  if (calMonth === null) calMonth = now.getMonth();
+  buildCalendar(calYear, calMonth);
+  renderBarChart(chartMode);
+  renderStreaks();
+}
+
+// ── CATATAN ──
+function renderCatatan() {
+  renderDonut('dsvg-t', 'dleg-t', DB.tagFreq('tempat'));
+  renderDonut('dsvg-w', 'dleg-w', DB.tagFreq('waktu'));
+  renderDonut('dsvg-m', 'dleg-m', DB.tagFreq('media'));
+}
+
+/* ====================================================
+   NAVIGATION
+==================================================== */
+let currentPage = 'dashboard';
+
+function goTo(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
+
+  const pg = document.getElementById('pg-' + page);
+  const nb = document.querySelector('.nav-btn[data-pg="' + page + '"]');
+  if (pg) pg.classList.add('active');
+  if (nb) nb.classList.add('on');
+
+  currentPage = page;
+
+  if (page === 'dashboard')  renderDash();
+  if (page === 'stopwatch')  { updateSwDisplay(); renderRecentLogs(); }
+  if (page === 'evaluasi')   renderEval();
+  if (page === 'catatan')    renderCatatan();
+  // setting page is static, no render needed
+}
+
+/* ====================================================
+   BOOT
+==================================================== */
+document.addEventListener('DOMContentLoaded', () => {
+
+  // ── Set header date ──
+  const now = new Date();
+  const DN  = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+  const MN  = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+  const hg = document.getElementById('hgreet');
+  const hd = document.getElementById('hdate');
+  if (hg) hg.textContent = 'Hari ini, ' + DN[now.getDay()];
+  if (hd) hd.textContent = now.getDate() + ' ' + MN[now.getMonth()] + ' ' + now.getFullYear();
+
+  // ── Navigation ──
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.addEventListener('click', () => goTo(btn.dataset.pg));
+  });
+
+  // ── Stopwatch tick → only update current visible page ──
+  SW.onTick(p => {
+    if (currentPage === 'dashboard')  updateDashSW();
+    if (currentPage === 'stopwatch')  updateSwDisplay();
+  });
+  SW.start();
+
+  // ── FAB ──
+  document.getElementById('fab').addEventListener('click', () => {
+    openForm({
+      onSave: () => {
+        renderDash();
+        if (currentPage === 'stopwatch') renderRecentLogs();
+        if (currentPage === 'evaluasi')  renderEval();
+        if (currentPage === 'catatan')   renderCatatan();
+      }
+    });
+  });
+
+  // ── Relapse button ──
+  document.getElementById('btn-relapse').addEventListener('click', () => {
+    openForm({
+      onSave: () => {
+        renderRecentLogs();
+        renderDash();
+        showToast('📌 Relaps tercatat. Bangkit lagi! 💪');
+      }
+    });
+  });
+
+  // ── SW page add ──
+  document.getElementById('sw-add').addEventListener('click', () => {
+    openForm({
+      onSave: () => { renderRecentLogs(); renderDash(); }
+    });
+  });
+
+  // ── Chart mode toggles ──
+  document.querySelectorAll('.tgl').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tgl').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      chartMode = btn.dataset.mode;
+      renderBarChart(chartMode);
+    });
+  });
+
+  // ── Calendar nav ──
+  document.getElementById('cal-prev').addEventListener('click', () => {
+    calMonth--;
+    if (calMonth < 0) { calMonth = 11; calYear--; }
+    buildCalendar(calYear, calMonth);
+  });
+  document.getElementById('cal-next').addEventListener('click', () => {
+    calMonth++;
+    if (calMonth > 11) { calMonth = 0; calYear++; }
+    buildCalendar(calYear, calMonth);
+  });
+
+  // ── Settings ──
+  document.getElementById('do-export').addEventListener('click', () => {
+    DB.exportBackup();
+    showToast('📤 Data berhasil diekspor!');
+  });
+
+  const impFile = document.getElementById('imp-file');
+  document.getElementById('do-import').addEventListener('click', () => impFile.click());
+  impFile.addEventListener('change', async e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    try {
+      await DB.importBackup(f);
+      showToast('📥 Data berhasil diimpor!');
+      renderDash();
+    } catch {
+      showToast('⚠️ Format file tidak valid!');
+    }
+    e.target.value = '';
+  });
+
+  // ── Initial render ──
+  goTo('dashboard');
+});
+</script>
+</body>
+</html>
+>>>>>>> 62033478697e3cb2e3be4d70c2afe7c9c98d0139
