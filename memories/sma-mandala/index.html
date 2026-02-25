@@ -7,309 +7,75 @@
   <title>Dokumentasi SMA Mandala</title>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Nunito:wght@400;600&display=swap"
     rel="stylesheet">
-  <style>
-    :root {
-      --cream: #fef9f4;
-      --brown: #7a5c45;
-      --brown-light: #b08870;
-      --shadow: rgba(120, 80, 50, 0.11);
-      --tape: rgba(220, 195, 168, 0.65);
-      --accent: #f0d9be;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background-color: var(--cream);
-      background-image:
-        radial-gradient(ellipse at 20% 15%, #fef3e8 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 85%, #faeee2 0%, transparent 50%),
-        url("data:image/svg+xml,%3Csvg width='44' height='44' viewBox='0 0 44 44' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle fill='%23c9976018' cx='22' cy='22' r='1'/%3E%3C/svg%3E");
-      font-family: 'Nunito', sans-serif;
-      min-height: 100vh;
-      padding-bottom: 60px;
-    }
-
-    /* ── HEADER ── */
-    .header {
-      text-align: center;
-      padding: 26px 20px 16px;
-    }
-
-    .header h1 {
-      font-family: 'Caveat', cursive;
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--brown);
-      letter-spacing: 0.2px;
-      line-height: 1.1;
-    }
-
-    .header-rule {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 7px;
-    }
-
-    .header-rule::before,
-    .header-rule::after {
-      content: '';
-      width: 40px;
-      height: 1px;
-      background: var(--accent);
-      border-radius: 1px;
-    }
-
-    .header-sub {
-      font-size: 0.68rem;
-      color: var(--brown-light);
-      letter-spacing: 1.8px;
-      text-transform: uppercase;
-      opacity: 0.75;
-    }
-
-    /* ── GALLERY ── */
-    .gallery {
-      padding: 6px 16px 16px;
-      columns: 2;
-      column-gap: 16px;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    @media (max-width: 360px) {
-      .gallery {
-        columns: 1;
-        max-width: 300px;
-      }
-    }
-
-    /* ── POLAROID ── */
-    .polaroid {
-      break-inside: avoid;
-      background: #fffefb;
-      padding: 9px 9px 0;
-      border-radius: 2px;
-      box-shadow: 2px 4px 16px var(--shadow), 0 1px 3px rgba(0, 0, 0, 0.06);
-      margin-bottom: 18px;
-      cursor: pointer;
-      position: relative;
-      display: inline-block;
-      width: 100%;
-
-      /* scroll-in pre-state */
-      opacity: 0;
-      transform: translateY(30px) rotate(var(--base-tilt, 0deg));
-      transition:
-        opacity 0.58s cubic-bezier(0.22, 1, 0.36, 1),
-        transform 0.58s cubic-bezier(0.22, 1, 0.36, 1),
-        box-shadow 0.22s ease;
-    }
-
-    .polaroid.visible {
-      opacity: 1;
-      transform: translateY(0) rotate(var(--base-tilt, 0deg));
-    }
-
-    .polaroid.visible:hover {
-      transform: translateY(-5px) rotate(0deg) scale(1.04) !important;
-      box-shadow: 5px 10px 26px rgba(120, 80, 50, 0.18);
-      z-index: 10;
-    }
-
-    /* Tape */
-    .polaroid.tape-top::before {
-      content: '';
-      position: absolute;
-      top: -11px;
-      left: 50%;
-      transform: translateX(-50%) rotate(-1.5deg);
-      width: 46px;
-      height: 20px;
-      background: var(--tape);
-      border-radius: 3px;
-      z-index: 2;
-    }
-
-    .polaroid.tape-left::before {
-      content: '';
-      position: absolute;
-      top: 8px;
-      left: -11px;
-      transform: rotate(-45deg);
-      width: 44px;
-      height: 18px;
-      background: var(--tape);
-      border-radius: 3px;
-      z-index: 2;
-    }
-
-    .polaroid .photo-wrap {
-      width: 100%;
-      overflow: hidden;
-      border-radius: 1px;
-    }
-
-    .polaroid img,
-    .polaroid video {
-      width: 100%;
-      height: auto;
-      display: block;
-      object-fit: cover;
-    }
-
-    .polaroid video {
-      pointer-events: none;
-    }
-
-    .caption-area {
-      padding: 9px 5px 11px;
-      text-align: center;
-    }
-
-    .caption-area .caption {
-      font-family: 'Caveat', cursive;
-      font-size: 1.0rem;
-      color: var(--brown);
-      line-height: 1.3;
-    }
-
-    .video-badge {
-      position: absolute;
-      top: 13px;
-      right: 13px;
-      background: var(--accent);
-      color: var(--brown);
-      font-size: 0.58rem;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 10px;
-      letter-spacing: 0.5px;
-      font-family: 'Nunito', sans-serif;
-      text-transform: uppercase;
-    }
-
-    /* ── LIGHTBOX ── */
-    .lightbox {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(50, 28, 10, 0.70);
-      backdrop-filter: blur(7px);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .lightbox.active {
-      display: flex;
-    }
-
-    .lightbox-inner {
-      position: relative;
-      max-width: 90vw;
-      max-height: 88vh;
-      background: #fffefb;
-      padding: 12px 12px 0;
-      border-radius: 2px;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.38);
-      animation: popIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    @keyframes popIn {
-      from {
-        transform: scale(0.72);
-        opacity: 0;
-      }
-
-      to {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    .lightbox-inner img,
-    .lightbox-inner video {
-      max-width: 100%;
-      max-height: 70vh;
-      display: block;
-      object-fit: contain;
-    }
-
-    .lightbox-inner video {
-      pointer-events: none;
-    }
-
-    .lightbox-caption {
-      padding: 10px 8px 14px;
-      text-align: center;
-    }
-
-    .lightbox-caption .caption {
-      font-family: 'Caveat', cursive;
-      font-size: 1.25rem;
-      color: var(--brown);
-    }
-
-    .lightbox-close {
-      position: absolute;
-      top: -13px;
-      right: -13px;
-      width: 32px;
-      height: 32px;
-      background: var(--accent);
-      border: none;
-      border-radius: 50%;
-      font-size: 1rem;
-      cursor: pointer;
-      color: var(--brown);
-      font-weight: 700;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.2s;
-    }
-
-    .lightbox-close:hover {
-      transform: scale(1.15) rotate(10deg);
-    }
-
-    /* ── FOOTER ── */
-    .footer-deco {
-      text-align: center;
-      padding: 18px 20px;
-      font-family: 'Caveat', cursive;
-      font-size: 1rem;
-      color: var(--brown-light);
-      opacity: 0.5;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+  <!-- HEADER -->
   <div class="header">
     <h1>Dokumentasi SMA Mandala</h1>
     <div class="header-rule">
-      <span class="header-sub">kenangan &amp; momen</span>
+      <span class="header-sub">Buat kenangan aja ya, dan semoga dokumentasinya memuaskan :D</span>
     </div>
   </div>
 
+  <!-- MUSIC PLAYER -->
+  <div class="player-wrapper">
+    <div class="player-song-title" id="player-title">Loading...</div>
+    <div class="player-card">
+      <div class="progress-row">
+        <span class="time-label" id="time-current">0:00</span>
+        <div class="progress-wrap" id="progress-wrap">
+          <div class="progress-fill" id="progress-fill"></div>
+          <div class="progress-thumb" id="progress-thumb"></div>
+        </div>
+        <span class="time-label right" id="time-total">0:00</span>
+      </div>
+      <div class="controls-row">
+        <button class="ctrl-btn" id="btn-playlist" title="Playlist" aria-label="Playlist">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M3 18h13v-2H3v2zm0-5h10v-2H3v2zm0-7v2h13V6H3zm18 9.59L17.42 12 21 8.41 19.59 7l-5 5 5 5L21 15.59z" />
+          </svg>
+        </button>
+        <button class="ctrl-btn" id="btn-prev" title="Sebelumnya" aria-label="Sebelumnya">
+          <svg viewBox="0 0 24 24">
+            <path d="M6 6h2v12H6zm3.5 6 8.5 6V6z" />
+          </svg>
+        </button>
+        <button class="ctrl-btn play-btn" id="btn-play" title="Play/Pause" aria-label="Play">
+          <svg id="icon-play" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+          <svg id="icon-pause" viewBox="0 0 24 24" style="display:none">
+            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+          </svg>
+        </button>
+        <button class="ctrl-btn" id="btn-next" title="Selanjutnya" aria-label="Selanjutnya">
+          <svg viewBox="0 0 24 24">
+            <path d="m6 18 8.5-6L6 6v12zM16 6v12h2V6h-2z" />
+          </svg>
+        </button>
+        <button class="ctrl-btn fav-btn" id="btn-fav" title="Suka" aria-label="Suka">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+          </svg>
+        </button>
+      </div>
+      <div class="playlist-panel" id="playlist-panel">
+        <div class="playlist-inner" id="playlist-inner"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GALLERY -->
   <div class="gallery" id="gallery"></div>
 
   <div class="footer-deco">✦ setiap momen berharga ✦</div>
 
+  <!-- LIGHTBOX -->
   <div class="lightbox" id="lightbox">
     <div class="lightbox-inner">
       <button class="lightbox-close" id="lb-close">✕</button>
@@ -320,89 +86,11 @@
     </div>
   </div>
 
-  <script>
-    const tiltMap = {
-      'tilt-left': '-2.5deg',
-      'tilt-right': '1.8deg',
-      'tilt-mini-left': '-1deg',
-      'tilt-mini-right': '0.8deg',
-    };
+  <!-- Scripts: gallery & player dulu, lalu app.js yang fetch manifest & init -->
+  <script src="js/gallery.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/app.js"></script>
 
-    const items = [
-      { type: 'image', src: 'assets/Dokumentasi Kunjungan 3.png', caption: 'Dokumentasi Kunjungan 3', tilt: 'tilt-left tape-top' },
-      { type: 'image', src: 'assets/dreamina-2026-02-20-3918-Buat agar pakaian dari character ini men....jpeg', caption: 'dreamina-2026-02-20-3918-Buat agar pakaian dari character ini men...', tilt: 'tilt-right tape-left' },
-      { type: 'image', src: 'assets/unnamed.webp', caption: 'unnamed', tilt: 'tilt-mini-left' },
-      { type: 'video', src: 'assets/VID_20251126_091613.mp4', caption: 'VID_20251126_091613', tilt: 'tilt-mini-right tape-top' },
-      { type: 'image', src: 'assets/WhatsApp Image 2024-09-01 at 10.20.59.jpg', caption: 'WhatsApp Image 2024-09-01 at 10.20.59', tilt: 'tilt-left tape-left' },
-      { type: 'image', src: 'assets/WhatsApp Image 2024-09-01 at 10.22.55 (1).jpg', caption: 'WhatsApp Image 2024-09-01 at 10.22.55 (1)', tilt: 'tilt-right' },
-      { type: 'video', src: 'assets/WhatsApp Video 2025-11-30 at 18.31.12.mp4', caption: 'WhatsApp Video 2025-11-30 at 18.31.12', tilt: 'tilt-mini-left tape-top' }
-    ];
-
-    const gallery = document.getElementById('gallery');
-
-    items.forEach((item, i) => {
-      const card = document.createElement('div');
-      const classes = item.tilt ? item.tilt.split(' ') : [];
-      const tiltCls = classes.find(c => tiltMap[c]) || '';
-      const tiltDeg = tiltMap[tiltCls] || '0deg';
-
-      card.className = `polaroid ${item.tilt || ''}`;
-      card.style.setProperty('--base-tilt', tiltDeg);
-      card.style.transitionDelay = `${(i % 2) * 75}ms`;
-
-      const badge = item.type === 'video' ? `<div class="video-badge">▶ video</div>` : '';
-      const mediaHTML = item.type === 'video'
-        ? `<video src="${item.src}" autoplay muted loop playsinline></video>`
-        : `<img src="${item.src}" alt="${item.caption}" loading="lazy">`;
-
-      card.innerHTML = `${badge}<div class="photo-wrap">${mediaHTML}</div><div class="caption-area"><div class="caption">${item.caption}</div></div>`;
-      card.addEventListener('click', () => openLightbox(item));
-      gallery.appendChild(card);
-    });
-
-    // Scroll-in observer
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          observer.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.06, rootMargin: '0px 0px -14px 0px' });
-
-    document.querySelectorAll('.polaroid').forEach(el => observer.observe(el));
-
-    // Lightbox
-    function openLightbox(item) {
-      const mediaEl = document.getElementById('lightbox-media');
-      mediaEl.innerHTML = '';
-
-      if (item.type === 'video') {
-        const v = document.createElement('video');
-        Object.assign(v, { src: item.src, autoplay: true, muted: true, loop: true, playsInline: true });
-        v.style.pointerEvents = 'none';
-        mediaEl.appendChild(v);
-      } else {
-        const img = document.createElement('img');
-        img.src = item.src; img.alt = item.caption;
-        mediaEl.appendChild(img);
-      }
-
-      document.getElementById('lb-caption').textContent = item.caption;
-      document.getElementById('lightbox').classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeLightbox() {
-      document.getElementById('lightbox').classList.remove('active');
-      document.getElementById('lightbox-media').innerHTML = '';
-      document.body.style.overflow = '';
-    }
-
-    document.getElementById('lb-close').addEventListener('click', closeLightbox);
-    document.getElementById('lightbox').addEventListener('click', e => { if (e.target === e.currentTarget) closeLightbox(); });
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
-  </script>
 </body>
 
 </html>

@@ -1,0 +1,76 @@
+{
+  "audio": [
+    {
+      "src": "assets/About You - The 1975.mp3",
+      "title": "About You",
+      "artist": "The 1975"
+    },
+    {
+      "src": "assets/Anti Hero - Mighfar Suganda.mp3",
+      "title": "Anti Hero",
+      "artist": "Mighfar Suganda"
+    },
+    {
+      "src": "assets/Bunga Maaf - The Lantis.mp3",
+      "title": "Bunga Maaf",
+      "artist": "The Lantis"
+    },
+    {
+      "src": "assets/Celengan rindu - Fiersa Besari (Feby Cover Video).mp3",
+      "title": "Celengan rindu",
+      "artist": "Fiersa Besari (Feby Cover Video)"
+    },
+    {
+      "src": "assets/Halalkanmu - Aron Ashab.mp3",
+      "title": "Halalkanmu",
+      "artist": "Aron Ashab"
+    },
+    {
+      "src": "assets/love - wave to earth.mp3",
+      "title": "love",
+      "artist": "wave to earth"
+    },
+    {
+      "src": "assets/Sempurna - Andra And The Backbone.mp3",
+      "title": "Sempurna",
+      "artist": "Andra And The Backbone"
+    }
+  ],
+  "media": [
+    {
+      "src": "assets/Dokumentasi Kunjungan 3.png",
+      "type": "image",
+      "caption": "Dokumentasi Kunjungan 3"
+    },
+    {
+      "src": "assets/dreamina-2026-02-20-3918-Buat agar pakaian dari character ini men....jpeg",
+      "type": "image",
+      "caption": "dreamina-2026-02-20-3918-Buat agar pakaian dari character ini men..."
+    },
+    {
+      "src": "assets/unnamed.webp",
+      "type": "image",
+      "caption": "unnamed"
+    },
+    {
+      "src": "assets/VID_20251126_091613.mp4",
+      "type": "video",
+      "caption": "VID_20251126_091613"
+    },
+    {
+      "src": "assets/WhatsApp Image 2024-09-01 at 10.20.59.jpg",
+      "type": "image",
+      "caption": "WhatsApp Image 2024-09-01 at 10.20.59"
+    },
+    {
+      "src": "assets/WhatsApp Image 2024-09-01 at 10.22.55 (1).jpg",
+      "type": "image",
+      "caption": "WhatsApp Image 2024-09-01 at 10.22.55 (1)"
+    },
+    {
+      "src": "assets/WhatsApp Video 2025-11-30 at 18.31.12.mp4",
+      "type": "video",
+      "caption": "WhatsApp Video 2025-11-30 at 18.31.12"
+    }
+  ]
+}
