@@ -1,6 +1,11 @@
 {
   "audio": [
     {
+      "src": "assets/kota ini tak sama tanpamu - Nadhif Basalamah.mp3",
+      "title": "kota ini tak sama tanpamu",
+      "artist": "Nadhif Basalamah"
+    },
+    {
       "src": "assets/About You - The 1975.mp3",
       "title": "About You",
       "artist": "The 1975"
@@ -9,6 +14,11 @@
       "src": "assets/Anti Hero - Mighfar Suganda.mp3",
       "title": "Anti Hero",
       "artist": "Mighfar Suganda"
+    },
+    {
+      "src": "assets/bergema sampai selamanya - Nadhif Basalamah.mp3",
+      "title": "bergema sampai selamanya",
+      "artist": "Nadhif Basalamah"
     },
     {
       "src": "assets/Bunga Maaf - The Lantis.mp3",
@@ -38,39 +48,48 @@
   ],
   "media": [
     {
+      "src": "assets/6a67a72c8034476ab465a3233adf0d1d.jpg",
+      "type": "image"
+    },
+    {
+      "src": "assets/Christmas Watch Sale.jpeg",
+      "type": "image"
+    },
+    {
       "src": "assets/Dokumentasi Kunjungan 3.png",
-      "type": "image",
-      "caption": "Dokumentasi Kunjungan 3"
+      "type": "image"
     },
     {
       "src": "assets/dreamina-2026-02-20-3918-Buat agar pakaian dari character ini men....jpeg",
-      "type": "image",
-      "caption": "My istri ini"
+      "type": "image"
+    },
+    {
+      "src": "assets/dreamina-2026-02-25-3561-buatin gw sketsa gambar mobil koegnisegg....jpeg",
+      "type": "image"
+    },
+    {
+      "src": "assets/Translate to Indones.jpeg",
+      "type": "image"
     },
     {
       "src": "assets/unnamed.webp",
-      "type": "image",
-      "caption": "😭😭😭"
+      "type": "image"
     },
     {
       "src": "assets/VID_20251126_091613.mp4",
-      "type": "video",
-      "caption": "VID_20251126_091613"
+      "type": "video"
     },
     {
       "src": "assets/WhatsApp Image 2024-09-01 at 10.20.59.jpg",
-      "type": "image",
-      "caption": "WhatsApp Image 2024-09-01 at 10.20.59"
+      "type": "image"
     },
     {
       "src": "assets/WhatsApp Image 2024-09-01 at 10.22.55 (1).jpg",
-      "type": "image",
-      "caption": "WhatsApp Image 2024-09-01 at 10.22.55 (1)"
+      "type": "image"
     },
     {
       "src": "assets/WhatsApp Video 2025-11-30 at 18.31.12.mp4",
-      "type": "video",
-      "caption": "WhatsApp Video 2025-11-30 at 18.31.12"
+      "type": "video"
     }
   ]
 }

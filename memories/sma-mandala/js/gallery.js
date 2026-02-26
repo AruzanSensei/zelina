@@ -29,23 +29,46 @@
 
             const badge = item.type === 'video'
                 ? `<div class="video-badge">▶ video</div>` : '';
+            // Gunakan data-src agar browser tidak langsung mengunduh sebelum masuk viewport
             const mediaHTML = item.type === 'video'
-                ? `<video src="${item.src}" autoplay muted loop playsinline></video>`
-                : `<img src="${item.src}" alt="${item.caption}" loading="lazy">`;
+                ? `<video data-src="${item.src}" muted loop playsinline></video>`
+                : `<img data-src="${item.src}" alt="${item.caption ?? ''}">`;
 
-            card.innerHTML = `${badge}<div class="photo-wrap">${mediaHTML}</div><div class="caption-area"><div class="caption">${item.caption}</div></div>`;
+            card.innerHTML = `${badge}<div class="photo-wrap">${mediaHTML}</div><div class="caption-area"><div class="caption">${item.caption ?? ' '}</div></div>`;
             card.addEventListener('click', () => openLightbox(item));
             gallery.appendChild(card);
         });
 
-        // Scroll-in observer
-        const observer = new IntersectionObserver(entries => {
+        // Observer 1: animasi scroll-in (card muncul)
+        const visibilityObserver = new IntersectionObserver(entries => {
             entries.forEach(e => {
-                if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+                if (e.isIntersecting) { e.target.classList.add('visible'); visibilityObserver.unobserve(e.target); }
             });
         }, { threshold: 0.06, rootMargin: '0px 0px -14px 0px' });
 
-        document.querySelectorAll('.polaroid').forEach(el => observer.observe(el));
+        // Observer 2: lazy load media — src di-set hanya saat mendekati viewport
+        const mediaObserver = new IntersectionObserver(entries => {
+            entries.forEach(e => {
+                if (!e.isIntersecting) return;
+                const card = e.target;
+                // Load image
+                const img = card.querySelector('img[data-src]');
+                if (img) { img.src = img.dataset.src; delete img.dataset.src; }
+                // Load video — set src dan mulai play
+                const vid = card.querySelector('video[data-src]');
+                if (vid) {
+                    vid.src = vid.dataset.src;
+                    delete vid.dataset.src;
+                    vid.play().catch(() => { });
+                }
+                mediaObserver.unobserve(card);
+            });
+        }, { threshold: 0, rootMargin: '0px 0px 200px 0px' }); // 200px sebelum masuk viewport
+
+        document.querySelectorAll('.polaroid').forEach(el => {
+            visibilityObserver.observe(el);
+            mediaObserver.observe(el);
+        });
     }
 
     /* ── Lightbox ── */

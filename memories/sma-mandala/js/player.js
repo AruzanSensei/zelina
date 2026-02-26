@@ -10,6 +10,7 @@
     let isPlaying = false;
     const favSet = new Set();
     const audio = new Audio();
+    audio.preload = 'none'; // Jangan unduh apapun sampai user menekan play
 
     /* ── DOM refs (tersedia karena script dimuat setelah body) ── */
     const elTitle = document.getElementById('player-title');
