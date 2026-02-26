@@ -47,7 +47,7 @@ const App = (() => {
     const records = DB.getAllRecords();
     const today = DB.todayStr();
     const d = new Date(today);
-    const monthStart = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-01`;
+    const monthStart = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
     const monthCount = records.filter(r => r.date >= monthStart && r.date <= today).length;
 
     // streak
@@ -60,7 +60,7 @@ const App = (() => {
     // quote
     const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
     if (el('quote-text')) el('quote-text').textContent = q.text;
-    if (el('quote-src'))  el('quote-src').textContent  = `— ${q.src}`;
+    if (el('quote-src')) el('quote-src').textContent = `— ${q.src}`;
   }
 
   function updateDashboardSW() {
@@ -69,15 +69,15 @@ const App = (() => {
     const pad = Stopwatch.pad;
     const el = id => document.getElementById(id);
     if (el('hw-days')) el('hw-days').textContent = pad(days);
-    if (el('hw-hr'))   el('hw-hr').textContent   = pad(hr);
-    if (el('hw-min'))  el('hw-min').textContent  = pad(min);
-    if (el('hw-sec'))  el('hw-sec').textContent  = pad(sec);
+    if (el('hw-hr')) el('hw-hr').textContent = pad(hr);
+    if (el('hw-min')) el('hw-min').textContent = pad(min);
+    if (el('hw-sec')) el('hw-sec').textContent = pad(sec);
 
     const last = DB.getLastRelapseTs();
     if (el('hero-sub')) {
       if (last) {
         const d = new Date(last);
-        el('hero-sub').textContent = `Terakhir relaps: ${UI.formatDateLabel(DB.fmtDate(d))} · Pukul ${DB.nowTimeStr.call ? formatTime(d) : ''}`;
+        el('hero-sub').textContent = `Terakhir relaps: ${UI.formatDateLabel(DB.fmtDate(d))} · Pukul ${formatTime(d)}`;
       } else {
         el('hero-sub').textContent = 'Belum ada catatan relaps — tetap semangat! 💪';
       }
@@ -85,7 +85,7 @@ const App = (() => {
   }
 
   function formatTime(d) {
-    return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+    return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
   }
 
   function renderWeekStrip() {
@@ -103,7 +103,7 @@ const App = (() => {
       days.push(d);
     }
 
-    const DAYS_SHORT = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
+    const DAYS_SHORT = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
     strip.innerHTML = '';
 
     days.forEach(d => {
@@ -148,9 +148,9 @@ const App = (() => {
     const el = id => document.getElementById(id);
 
     if (el('sw-days')) el('sw-days').textContent = days;
-    if (el('sw-hr'))   el('sw-hr').textContent   = pad(hr);
-    if (el('sw-min'))  el('sw-min').textContent  = pad(min);
-    if (el('sw-sec'))  el('sw-sec').textContent  = pad(sec);
+    if (el('sw-hr')) el('sw-hr').textContent = pad(hr);
+    if (el('sw-min')) el('sw-min').textContent = pad(min);
+    if (el('sw-sec')) el('sw-sec').textContent = pad(sec);
   }
 
   function loadRecentLogs() {
@@ -181,7 +181,7 @@ const App = (() => {
   function renderEvaluasi() {
     const now = new Date();
     if (calMonth == null) calMonth = now.getMonth();
-    if (calYear  == null) calYear  = now.getFullYear();
+    if (calYear == null) calYear = now.getFullYear();
 
     renderCalendar(calYear, calMonth);
     renderBarChart();
@@ -190,7 +190,7 @@ const App = (() => {
 
   function renderCalendar(year, month) {
     const el = id => document.getElementById(id);
-    const MONTHS = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+    const MONTHS = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
     if (el('cal-title')) el('cal-title').textContent = `${MONTHS[month]} ${year}`;
 
     const grid = el('cal-grid');
@@ -209,7 +209,7 @@ const App = (() => {
     }
 
     for (let d = 1; d <= daysInMonth; d++) {
-      const ds = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const ds = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
       const count = DB.getCountForDate(ds);
       const cls = UI.intensityClass(count);
       const isToday = ds === todayStr;
@@ -232,8 +232,8 @@ const App = (() => {
   // ===== CATATAN PAGE =====
   function renderCatatan() {
     Charts.renderDonutCard('donut-tempat', 'svg-tempat', 'leg-tempat', DB.getTagFrequency('tempat'));
-    Charts.renderDonutCard('donut-waktu',  'svg-waktu',  'leg-waktu',  DB.getTagFrequency('waktu'));
-    Charts.renderDonutCard('donut-media',  'svg-media',  'leg-media',  DB.getTagFrequency('media'));
+    Charts.renderDonutCard('donut-waktu', 'svg-waktu', 'leg-waktu', DB.getTagFrequency('waktu'));
+    Charts.renderDonutCard('donut-media', 'svg-media', 'leg-media', DB.getTagFrequency('media'));
   }
 
   // ===== SETTING =====
