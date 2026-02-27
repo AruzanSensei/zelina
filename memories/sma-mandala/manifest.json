@@ -1,6 +1,11 @@
 {
   "audio": [
     {
+      "src": "assets/kota ini tak sama tanpamu - Nadhif Basalamah.mp3",
+      "title": "kota ini tak sama tanpamu",
+      "artist": "Nadhif Basalamah"
+    },
+    {
       "src": "assets/About You - The 1975.mp3",
       "title": "About You",
       "artist": "The 1975"
@@ -31,11 +36,6 @@
       "artist": "Aron Ashab"
     },
     {
-      "src": "assets/kota ini tak sama tanpamu - Nadhif Basalamah.mp3",
-      "title": "kota ini tak sama tanpamu",
-      "artist": "Nadhif Basalamah"
-    },
-    {
       "src": "assets/love - wave to earth.mp3",
       "title": "love",
       "artist": "wave to earth"
@@ -48,40 +48,192 @@
   ],
   "media": [
     {
-      "src": "assets/6a67a72c8034476ab465a3233adf0d1d.jpg",
+      "src": "assets/Hadiah - Trim.mp4",
+      "type": "video"
+    },
+    {
+      "src": "assets/IMG_20260227_082028_124.jpg",
       "type": "image"
     },
     {
-      "src": "assets/Dokumentasi Kunjungan 3.png",
+      "src": "assets/IMG_20260227_090219_157.jpg",
       "type": "image"
     },
     {
-      "src": "assets/IMG_20251120_084323_612.jpg",
+      "src": "assets/IMG_20260227_101454_725.jpg",
       "type": "image"
     },
     {
-      "src": "assets/IMG_20251120_094157_540.jpg",
+      "src": "assets/IMG_20260227_101458_796.jpg",
       "type": "image"
     },
     {
-      "src": "assets/IMG_20251120_095415_500.jpg",
+      "src": "assets/IMG_20260227_102057_461.jpg",
       "type": "image"
     },
     {
-      "src": "assets/IMG_20251120_131530_418.jpg",
+      "src": "assets/IMG_20260227_102610_957.jpg",
       "type": "image"
     },
     {
-      "src": "assets/unnamed.webp",
+      "src": "assets/IMG_20260227_103309_564.jpg",
       "type": "image"
     },
     {
-      "src": "assets/WhatsApp Image 2024-09-01 at 10.20.59.jpg",
+      "src": "assets/IMG_20260227_104307_068.jpg",
       "type": "image"
     },
     {
-      "src": "assets/WhatsApp Image 2024-09-01 at 10.22.55 (1).jpg",
+      "src": "assets/IMG_20260227_104358_102.jpg",
       "type": "image"
+    },
+    {
+      "src": "assets/IMG_20260227_104516_2.jpg",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_20260227_105506_870.jpg",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_20260227_105523_8.jpg",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_20260227_105546_477.jpg",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_20260227_105600_7.jpg",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_20260227_105619_8.jpg",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_20260227_105643_6.jpg",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_20260227_105659_5.jpg",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_20260227_110047_555.jpg",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_8003.JPG",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_8038.JPG",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_8043 - Trim.mp4",
+      "type": "video"
+    },
+    {
+      "src": "assets/IMG_8065.JPG",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_8087 - Trim.mp4",
+      "type": "video"
+    },
+    {
+      "src": "assets/IMG_8096.mov",
+      "type": "video"
+    },
+    {
+      "src": "assets/IMG_8106.JPG",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_8126.JPG",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_8129.JPG",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_8130.JPG",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_8132.JPG",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_8134.JPG",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_8174.JPG",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_8180 - Trim - Trim.mp4",
+      "type": "video"
+    },
+    {
+      "src": "assets/IMG_8180 - Trim.mp4",
+      "type": "video"
+    },
+    {
+      "src": "assets/IMG_8181 - Trim 2.mp4",
+      "type": "video"
+    },
+    {
+      "src": "assets/IMG_8181 - Trim.mp4",
+      "type": "video"
+    },
+    {
+      "src": "assets/IMG_8209.JPG",
+      "type": "image"
+    },
+    {
+      "src": "assets/IMG_8223.JPG",
+      "type": "image"
+    },
+    {
+      "src": "assets/plang sma mandala.jpeg",
+      "type": "image"
+    },
+    {
+      "src": "assets/VID_20260227_072553 - Trim.mp4",
+      "type": "video"
+    },
+    {
+      "src": "assets/VID_20260227_073825.mp4",
+      "type": "video"
+    },
+    {
+      "src": "assets/VID_20260227_081049 - Trim.mp4",
+      "type": "video"
+    },
+    {
+      "src": "assets/VID_20260227_090847 - Trim.mp4",
+      "type": "video"
+    },
+    {
+      "src": "assets/VID_20260227_092407.mp4",
+      "type": "video"
+    },
+    {
+      "src": "assets/VID_20260227_104501.mp4",
+      "type": "video"
+    },
+    {
+      "src": "assets/VID_20260227_104629.mp4",
+      "type": "video"
+    },
+    {
+      "src": "assets/VID_20260227_105200 - Trim.mp4",
+      "type": "video"
     }
   ]
 }
