@@ -1,258 +1,215 @@
-/**
- * ui.js — UI utilities: modals, toasts, shared helpers
- */
+/* ====================================================
+   TOAST
+==================================================== */
+let _toastTimer = null;
 
-// ===== TOAST =====
-let toastTimer;
 function showToast(msg) {
-  let t = document.getElementById('toast');
-  if (!t) {
-    t = document.createElement('div');
-    t.id = 'toast';
-    t.className = 'toast';
-    document.body.appendChild(t);
-  }
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
 }
 
-// ===== MODAL OVERLAY =====
-let activeOverlayClose = null;
+/* ====================================================
+   MODAL / SHEET
+==================================================== */
+let _sheetOnClose = null;
 
-function openSheet(html, onClose) {
-  let overlay = document.getElementById('modal-overlay');
-  if (!overlay) {
-    overlay = document.createElement('div');
-    overlay.className = 'modal-overlay';
-    overlay.id = 'modal-overlay';
-    document.body.appendChild(overlay);
-  }
-  overlay.innerHTML = `<div class="modal-sheet" id="modal-sheet">${html}</div>`;
-  overlay.classList.add('show');
+function openSheet(builder) {
+    const ov = document.getElementById('ov');
+    const sheet = document.getElementById('sheet');
+    sheet.innerHTML = ''; // clear old
+    builder(sheet);       // populate new content
+    // force reflow then show (ensures CSS transition fires)
+    requestAnimationFrame(() => {
+        requestAnimationFrame(() => { ov.classList.add('show'); });
+    });
+    // backdrop close
+    ov.onclick = e => { if (e.target === ov) closeSheet(); };
+}
 
-  // close on backdrop click
-  overlay.addEventListener('click', function handler(e) {
-    if (e.target === overlay) {
-      closeSheet();
-      overlay.removeEventListener('click', handler);
+function closeSheet(after) {
+    const ov = document.getElementById('ov');
+    ov.classList.remove('show');
+    _sheetOnClose = null;
+    if (typeof after === 'function') {
+        // wait for sheet animation to finish before callback
+        setTimeout(after, 350);
     }
-  });
-
-  activeOverlayClose = onClose;
 }
 
-function closeSheet() {
-  const overlay = document.getElementById('modal-overlay');
-  if (overlay) {
-    overlay.classList.remove('show');
-  }
-  if (typeof activeOverlayClose === 'function') {
-    activeOverlayClose();
-    activeOverlayClose = null;
-  }
-}
+/* ====================================================
+   PMO FORM SHEET
+==================================================== */
+function openForm({ date, time, rec, onSave } = {}) {
+    date = date || todayStr();
+    time = time || nowTimeStr();
+    const isEdit = !!rec;
+    const r = rec || { tempat: '', waktu: '', media: '', catatan: '' };
 
-// ===== PMO INTENSITY CLASS =====
-function intensityClass(count) {
-  if (count === 0) return 'pmo-0';
-  if (count === 1) return 'pmo-1';
-  if (count === 2) return 'pmo-2';
-  return 'pmo-3';
-}
-
-// ===== RENDER LOG CARD =====
-function renderLogCard(rec, { onDelete, onEdit } = {}) {
-  const div = document.createElement('div');
-  div.className = 'log-card';
-  div.dataset.id = rec.id;
-
-  const dateLabel = formatDateLabel(rec.date);
-  const tagsHtml = [
-    rec.tags.tempat ? `<span class="tag tag-tempat">📍 ${esc(rec.tags.tempat)}</span>` : '',
-    rec.tags.waktu  ? `<span class="tag tag-waktu">🕐 ${esc(rec.tags.waktu)}</span>`  : '',
-    rec.tags.media  ? `<span class="tag tag-media">📱 ${esc(rec.tags.media)}</span>`  : ''
-  ].join('');
-
-  div.innerHTML = `
-    <div class="log-card-header">
-      <div class="log-date-time">
-        <div class="log-date">${dateLabel}</div>
-        <div class="log-time">Pukul ${esc(rec.time)}</div>
-      </div>
-      <span class="log-chevron">▾</span>
-    </div>
-    <div class="log-card-body">
-      <div class="log-card-inner">
-        <div class="log-tags">${tagsHtml || '<span style="font-size:12px;color:var(--text-muted)">Tidak ada tag</span>'}</div>
-        <div class="log-note-label">Catatan Evaluasi</div>
-        <div class="log-note-text">${rec.catatan ? esc(rec.catatan) : '<em style="color:var(--text-muted)">Belum ada catatan</em>'}</div>
-        <div class="log-actions">
-          <button class="btn-sm btn-edit" data-edit="${rec.id}">✏️ Edit</button>
-          <button class="btn-sm btn-delete" data-del="${rec.id}">🗑 Hapus</button>
+    openSheet(sh => {
+        sh.innerHTML = `
+      <div class="sh-handle"></div>
+      <div class="sh-title">${isEdit ? 'Edit Catatan PMO' : 'Tambah Catatan PMO'}</div>
+      <div class="sh-body">
+        <div class="frow">
+          <div class="fg">
+            <label class="flbl">📅 Tanggal</label>
+            <input class="fi" type="date" id="f-date" value="${esc(date)}">
+          </div>
+          <div class="fg">
+            <label class="flbl">🕐 Jam</label>
+            <input class="fi" type="time" id="f-time" value="${esc(time)}">
+          </div>
+        </div>
+        <div class="fg">
+          <label class="flbl">📍 Tempat</label>
+          <input class="fi" type="text" id="f-tempat" placeholder="Kamar Tidur, Kamar Mandi..." value="${esc(r.tempat)}">
+        </div>
+        <div class="fg">
+          <label class="flbl">🕐 Waktu</label>
+          <input class="fi" type="text" id="f-waktu" placeholder="Pagi, Siang, Sore, Malam..." value="${esc(r.waktu)}">
+        </div>
+        <div class="fg">
+          <label class="flbl">📱 Media</label>
+          <input class="fi" type="text" id="f-media" placeholder="YouTube, Instagram..." value="${esc(r.media)}">
+        </div>
+        <div class="fg">
+          <label class="flbl">📝 Catatan Evaluasi</label>
+          <textarea class="fi" id="f-cat" placeholder="Apa yang memicu? Bagaimana perasaanmu?">${esc(r.catatan)}</textarea>
         </div>
       </div>
-    </div>
-  `;
+      <div class="sh-actions">
+        <button class="btn-sec" id="f-batal">Batal</button>
+        <button class="btn-pri" id="f-simpan">${isEdit ? 'Simpan Perubahan' : 'Simpan'}</button>
+      </div>`;
 
-  div.querySelector('.log-card-header').addEventListener('click', () => {
-    div.classList.toggle('open');
-  });
+        sh.querySelector('#f-batal').addEventListener('click', () => closeSheet());
 
-  div.querySelector('[data-del]')?.addEventListener('click', e => {
-    e.stopPropagation();
-    if (confirm('Hapus catatan ini?')) {
-      DB.deleteRecord(rec.id);
-      div.remove();
-      if (typeof onDelete === 'function') onDelete(rec.id);
-    }
-  });
+        sh.querySelector('#f-simpan').addEventListener('click', () => {
+            const dt = sh.querySelector('#f-date').value;
+            const tm = sh.querySelector('#f-time').value;
+            const tpt = sh.querySelector('#f-tempat').value;
+            const twk = sh.querySelector('#f-waktu').value;
+            const tmd = sh.querySelector('#f-media').value;
+            const cat = sh.querySelector('#f-cat').value;
 
-  div.querySelector('[data-edit]')?.addEventListener('click', e => {
-    e.stopPropagation();
-    if (typeof onEdit === 'function') onEdit(rec);
-  });
+            if (!dt || !tm) {
+                showToast('⚠️ Tanggal dan jam wajib diisi!');
+                return;
+            }
 
-  return div;
+            let saved;
+            if (isEdit) {
+                saved = DB.edit(r.id, { date: dt, time: tm, tempat: tpt, waktu: twk, media: tmd, catatan: cat });
+                showToast('✅ Catatan diperbarui');
+            } else {
+                saved = DB.add({ date: dt, time: tm, tempat: tpt, waktu: twk, media: tmd, catatan: cat });
+                showToast('✅ Catatan ditambahkan');
+            }
+
+            closeSheet(() => { if (typeof onSave === 'function') onSave(saved); });
+        });
+    });
 }
 
-// ===== PMO FORM SHEET =====
-function openPmoFormSheet({ date = DB.todayStr(), time = DB.nowTimeStr(), existingRec = null, onSave } = {}) {
-  const isEdit = !!existingRec;
-  const title = isEdit ? 'Edit Catatan PMO' : 'Tambah Catatan PMO';
-  const rec = existingRec || {};
+/* ====================================================
+   DATE SHEET
+==================================================== */
+function openDateSheet(ds, { onSave } = {}) {
+    openSheet(sh => {
+        const recs = DB.byDate(ds);
+        const cnt = recs.length;
+        const clrMap = { '': '#3b82f6', p1: '#ca8a04', p2: '#ef4444', p3: '#1e293b' };
+        const color = clrMap[pmoClass(cnt)] || '#3b82f6';
 
-  const html = `
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">${title}</div>
-    <div class="sheet-body">
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">📅 Tanggal</label>
-          <input class="form-input" type="date" id="pf-date" value="${date}">
-        </div>
-        <div class="form-group">
-          <label class="form-label">🕐 Jam</label>
-          <input class="form-input" type="time" id="pf-time" value="${time}">
-        </div>
+        sh.innerHTML = `
+      <div class="sh-handle"></div>
+      <div class="sh-title">
+        📅 ${fmtFull(ds)}
+        <span style="font-size:12px;font-weight:600;color:${color}"> · ${cnt}x PMO</span>
       </div>
-      <div class="form-group">
-        <label class="form-label">📍 Tempat</label>
-        <input class="form-input" type="text" id="pf-tempat" placeholder="Kamar Tidur, Kamar Mandi..." value="${esc(rec.tags?.tempat||'')}">
+      <div class="dbar">
+        <button class="dbtn dbtn-add" id="ds-add">+ Tambah Catatan</button>
       </div>
-      <div class="form-group">
-        <label class="form-label">🕐 Waktu</label>
-        <input class="form-input" type="text" id="pf-waktu" placeholder="Pagi, Siang, Sore, Malam..." value="${esc(rec.tags?.waktu||'')}">
-      </div>
-      <div class="form-group">
-        <label class="form-label">📱 Media</label>
-        <input class="form-input" type="text" id="pf-media" placeholder="YouTube, Instagram..." value="${esc(rec.tags?.media||'')}">
-      </div>
-      <div class="form-group">
-        <label class="form-label">📝 Catatan Evaluasi</label>
-        <textarea class="form-textarea" id="pf-catatan" placeholder="Apa yang memicu? Bagaimana perasaanmu?">${esc(rec.catatan||'')}</textarea>
-      </div>
-    </div>
-    <div class="sheet-actions">
-      <button class="btn-secondary" id="pf-cancel">Batal</button>
-      <button class="btn-primary" id="pf-save">${isEdit ? 'Simpan Perubahan' : 'Simpan Catatan'}</button>
-    </div>
-  `;
+      <div class="dlist" id="ds-list"></div>
+      <div style="height:20px"></div>`;
 
-  openSheet(html, null);
+        const list = sh.querySelector('#ds-list');
 
-  document.getElementById('pf-cancel').addEventListener('click', closeSheet);
-  document.getElementById('pf-save').addEventListener('click', () => {
-    const date   = document.getElementById('pf-date').value;
-    const time   = document.getElementById('pf-time').value;
-    const tempat = document.getElementById('pf-tempat').value.trim();
-    const waktu  = document.getElementById('pf-waktu').value.trim();
-    const media  = document.getElementById('pf-media').value.trim();
-    const catatan = document.getElementById('pf-catatan').value.trim();
-
-    if (!date || !time) {
-      showToast('⚠️ Tanggal dan jam wajib diisi!');
-      return;
-    }
-
-    let saved;
-    if (isEdit) {
-      saved = DB.updateRecord(rec.id, { date, time, tags: { tempat, waktu, media }, catatan });
-      showToast('✅ Catatan diperbarui');
-    } else {
-      saved = DB.addRecord({ date, time, tags: { tempat, waktu, media }, catatan });
-      showToast('✅ Catatan ditambahkan');
-    }
-    closeSheet();
-    if (typeof onSave === 'function') onSave(saved);
-  });
-}
-
-// ===== DATE CLICK SHEET =====
-function openDateSheet(dateStr, { onSave } = {}) {
-  const records = DB.getRecordsByDate(dateStr);
-  const label = formatDateLabel(dateStr);
-  const count = records.length;
-  const cls = intensityClass(count);
-  const colorMap = { 'pmo-0': '#3b82f6', 'pmo-1': '#ca8a04', 'pmo-2': '#ef4444', 'pmo-3': '#1e293b' };
-  const dotColor = colorMap[cls];
-
-  const logsHtml = records.length === 0
-    ? `<div class="day-log-empty">Tidak ada catatan PMO pada hari ini 🎉</div>`
-    : records.map(r => `<div id="log-slot-${r.id}"></div>`).join('');
-
-  const html = `
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">
-      📅 ${label}
-      <span style="font-size:13px;font-weight:600;color:${dotColor}"> · ${count}x PMO</span>
-    </div>
-    <div class="date-action-bar">
-      <button class="date-action-btn add" id="ds-add">+ Tambah Catatan</button>
-      ${count > 0 ? '' : ''}
-    </div>
-    <div class="day-log-list" id="ds-logs">${logsHtml}</div>
-    <div style="height:16px"></div>
-  `;
-
-  openSheet(html, null);
-
-  // mount log cards
-  records.forEach(r => {
-    const slot = document.getElementById(`log-slot-${r.id}`);
-    if (slot) {
-      const card = renderLogCard(r, {
-        onDelete: () => { if (typeof onSave === 'function') onSave(); },
-        onEdit: (rec) => {
-          closeSheet();
-          setTimeout(() => openPmoFormSheet({ date: rec.date, time: rec.time, existingRec: rec, onSave: () => { if (typeof onSave === 'function') onSave(); } }), 100);
+        if (!recs.length) {
+            list.innerHTML = '<div class="dempty">Tidak ada catatan PMO pada hari ini 🎉</div>';
+        } else {
+            recs.forEach(r => {
+                const card = buildLogCard(r, {
+                    onDel: () => closeSheet(() => { if (onSave) onSave(); }),
+                    onEdit: rec => closeSheet(() => {
+                        setTimeout(() => openForm({
+                            date: rec.date, time: rec.time, rec,
+                            onSave: () => { if (onSave) onSave(); }
+                        }), 50);
+                    })
+                });
+                list.appendChild(card);
+            });
         }
-      });
-      slot.replaceWith(card);
-    }
-  });
 
-  document.getElementById('ds-add').addEventListener('click', () => {
-    closeSheet();
-    setTimeout(() => openPmoFormSheet({ date: dateStr, time: DB.nowTimeStr(), onSave: () => { if (typeof onSave === 'function') onSave(); } }), 100);
-  });
+        sh.querySelector('#ds-add').addEventListener('click', () => {
+            closeSheet(() => {
+                setTimeout(() => openForm({
+                    date: ds, time: nowTimeStr(),
+                    onSave: () => { if (onSave) onSave(); }
+                }), 50);
+            });
+        });
+    });
 }
 
-// ===== HELPERS =====
-function formatDateLabel(dateStr) {
-  const d = new Date(dateStr + 'T00:00:00');
-  const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-  const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
-  return `${days[d.getDay()]}, ${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
-}
+/* ====================================================
+   LOG CARD BUILDER
+==================================================== */
+function buildLogCard(rec, { onDel, onEdit } = {}) {
+    const tagsHtml = [
+        rec.tempat ? `<span class="tag tag-t">📍 ${esc(rec.tempat)}</span>` : '',
+        rec.waktu ? `<span class="tag tag-w">🕐 ${esc(rec.waktu)}</span>` : '',
+        rec.media ? `<span class="tag tag-m">📱 ${esc(rec.media)}</span>` : '',
+    ].filter(Boolean).join('');
 
-function esc(str) {
-  return String(str)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;');
-}
+    const el = document.createElement('div');
+    el.className = 'lc';
+    el.innerHTML = `
+    <div class="lc-hdr">
+      <div>
+        <div class="lc-date">${fmtFull(rec.date)}</div>
+        <div class="lc-time">Pukul ${esc(rec.time)}</div>
+      </div>
+      <span class="lc-chev">▾</span>
+    </div>
+    <div class="lc-body">
+      <div class="lc-inner">
+        <div class="tags-wrap">${tagsHtml || '<span style="font-size:11px;color:var(--textm)">Tidak ada tag</span>'}</div>
+        <div class="note-lbl">Catatan Evaluasi</div>
+        <div class="note-txt">${rec.catatan ? esc(rec.catatan) : '<em style="color:var(--textm)">Belum ada catatan</em>'}</div>
+        <div class="lc-acts">
+          <button class="bxs bedit">✏️ Edit</button>
+          <button class="bxs bdel">🗑 Hapus</button>
+        </div>
+      </div>
+    </div>`;
 
-window.UI = { showToast, openSheet, closeSheet, intensityClass, renderLogCard, openPmoFormSheet, openDateSheet, formatDateLabel, esc };
+    el.querySelector('.lc-hdr').addEventListener('click', () => el.classList.toggle('open'));
+    el.querySelector('.bedit').addEventListener('click', e => { e.stopPropagation(); if (onEdit) onEdit(rec); });
+    el.querySelector('.bdel').addEventListener('click', e => {
+        e.stopPropagation();
+        if (confirm('Hapus catatan ini?')) {
+            DB.del(rec.id);
+            el.style.opacity = '0';
+            el.style.transform = 'scale(.95)';
+            el.style.transition = 'all .2s';
+            setTimeout(() => { el.remove(); if (onDel) onDel(); }, 200);
+        }
+    });
+
+    return el;
+}

@@ -1,0 +1,73 @@
+/* =========================================
+   RESET & ROOT
+========================================= */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    --blue-50: #eff6ff;
+    --blue-100: #dbeafe;
+    --blue-200: #bfdbfe;
+    --blue-300: #93c5fd;
+    --blue-400: #60a5fa;
+    --blue-500: #3b82f6;
+    --blue-600: #2563eb;
+    --blue-700: #1d4ed8;
+    --blue-800: #1e40af;
+    --blue-900: #1e3a8a;
+
+    --grad-hero: linear-gradient(160deg, #c5deff 0%, #93c5fd 35%, #3b82f6 100%);
+    --grad-btn: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    --grad-danger: linear-gradient(135deg, #ef4444, #b91c1c);
+    --grad-card: linear-gradient(145deg, #ffffff, #f0f7ff);
+
+    --pmo-0: #ffffff;
+    --pmo-0b: #bfdbfe;
+    --pmo-1: #fde047;
+    --pmo-1b: #eab308;
+    --pmo-2: #f87171;
+    --pmo-2b: #ef4444;
+    --pmo-3: #1e293b;
+    --pmo-3b: #0f172a;
+
+    --bg: #edf4ff;
+    --surface: #ffffff;
+    --surf2: #f4f9ff;
+    --border: rgba(147, 197, 253, 0.45);
+
+    --text: #0f172a;
+    --text2: #475569;
+    --textm: #94a3b8;
+
+    --sh-sm: 0 1px 6px rgba(30, 64, 175, .08);
+    --sh-md: 0 4px 18px rgba(30, 64, 175, .12);
+    --sh-lg: 0 10px 38px rgba(30, 64, 175, .18);
+
+    --ff: 'Sora', sans-serif;
+    --fb: 'DM Sans', sans-serif;
+
+    --nav-h: 72px;
+    --safe-b: env(safe-area-inset-bottom, 0px);
+}
+
+html {
+    height: 100%;
+    font-size: 16px;
+    background: var(--bg);
+}
+
+body {
+    font-family: var(--fb);
+    background: var(--bg);
+    color: var(--text);
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100%;
+    position: relative;
+}
