@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="PRT – Katalog Properti. Kavling dan Rumah terbaik di Jabodetabek.">
+  <title>PRT – Katalog Properti</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+
+  <!-- ───────────── TOP BAR ───────────── -->
+  <header class="topbar">
+    <div class="topbar-logo">PRT<span>.</span></div>
+    <div class="topbar-count" id="topbar-count">— properti</div>
+  </header>
+
+  <!-- ═══════════════════════════════════
+       PAGE: HOME
+  ═══════════════════════════════════════ -->
+  <section id="page-home" class="page active">
+
+    <div class="section-head">
+      <div class="dot"></div>
+      <h2>Rekomendasi Untukmu</h2>
+    </div>
+
+    <div class="reco-row">
+      <div class="reco-group">
+        <div class="reco-label">🏷️ Termurah</div>
+        <div class="reco-scroll" id="reco-termurah"></div>
+      </div>
+      <div class="reco-group">
+        <div class="reco-label">💎 Terworth It</div>
+        <div class="reco-scroll" id="reco-terworth"></div>
+      </div>
+      <div class="reco-group">
+        <div class="reco-label">📐 Terluas</div>
+        <div class="reco-scroll" id="reco-terluas"></div>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top: 28px;">
+      <div class="dot"></div>
+      <h2>Semua Properti</h2>
+    </div>
+
+    <div class="prop-grid" id="home-grid"></div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════
+       PAGE: KAVLING
+  ═══════════════════════════════════════ -->
+  <section id="page-kavling" class="page">
+
+    <div class="page-title-wrap">
+      <h1 class="page-title">Kavling</h1>
+      <p class="page-subtitle">Tanah siap bangun, SHM tersedia</p>
+    </div>
+
+    <div class="filter-bar">
+      <div class="search-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" class="search-input" id="kavling-search" placeholder="Cari lokasi atau nama..."
+          oninput="App.renderFilteredPage('kavling','kavling-grid','kavling-search')">
+      </div>
+      <div class="filter-chips">
+        <div class="filter-chip" id="kavling-filter-chip" onclick="App.toggleFilter('kavling')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
+          </svg>
+          Filter
+        </div>
+      </div>
+      <div class="filter-panel" id="kavling-filter-panel">
+        <div class="filter-group">
+          <label>Harga Min (Juta)</label>
+          <input type="number" id="kavling-min-harga" placeholder="50" min="0">
+        </div>
+        <div class="filter-group">
+          <label>Harga Max (Juta)</label>
+          <input type="number" id="kavling-max-harga" placeholder="1000" min="0">
+        </div>
+        <div class="filter-group">
+          <label>Luas Min (m²)</label>
+          <input type="number" id="kavling-min-luas" placeholder="60" min="0">
+        </div>
+        <div class="filter-group">
+          <label>Max Harga/m² (Ribu)</label>
+          <input type="number" id="kavling-max-ppm" placeholder="5000" min="0">
+        </div>
+        <button class="filter-apply-btn" onclick="App.renderFilteredPage('kavling','kavling-grid','kavling-search')">
+          Terapkan Filter
+        </button>
+      </div>
+    </div>
+
+    <p class="results-count" id="kavling-count"></p>
+    <div class="prop-grid" id="kavling-grid"></div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════
+       PAGE: RUMAH
+  ═══════════════════════════════════════ -->
+  <section id="page-rumah" class="page">
+
+    <div class="page-title-wrap">
+      <h1 class="page-title">Rumah</h1>
+      <p class="page-subtitle">Siap huni, lokasi strategis</p>
+    </div>
+
+    <div class="filter-bar">
+      <div class="search-wrap">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" class="search-input" id="rumah-search" placeholder="Cari lokasi atau nama..."
+          oninput="App.renderFilteredPage('rumah','rumah-grid','rumah-search')">
+      </div>
+      <div class="filter-chips">
+        <div class="filter-chip" id="rumah-filter-chip" onclick="App.toggleFilter('rumah')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/>
+          </svg>
+          Filter
+        </div>
+      </div>
+      <div class="filter-panel" id="rumah-filter-panel">
+        <div class="filter-group">
+          <label>Harga Min (Juta)</label>
+          <input type="number" id="rumah-min-harga" placeholder="100" min="0">
+        </div>
+        <div class="filter-group">
+          <label>Harga Max (Juta)</label>
+          <input type="number" id="rumah-max-harga" placeholder="2000" min="0">
+        </div>
+        <div class="filter-group">
+          <label>Luas Tanah Min (m²)</label>
+          <input type="number" id="rumah-min-luas" placeholder="60" min="0">
+        </div>
+        <div class="filter-group">
+          <label>Max Harga/m² (Ribu)</label>
+          <input type="number" id="rumah-max-ppm" placeholder="8000" min="0">
+        </div>
+        <button class="filter-apply-btn" onclick="App.renderFilteredPage('rumah','rumah-grid','rumah-search')">
+          Terapkan Filter
+        </button>
+      </div>
+    </div>
+
+    <p class="results-count" id="rumah-count"></p>
+    <div class="prop-grid" id="rumah-grid"></div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════
+       PAGE: SETTINGS
+  ═══════════════════════════════════════ -->
+  <section id="page-settings" class="page">
+
+    <div class="page-title-wrap">
+      <h1 class="page-title">Pengaturan</h1>
+      <p class="page-subtitle">Sesuaikan tampilanmu</p>
+    </div>
+
+    <div style="height: 20px;"></div>
+
+    <div class="settings-section">
+      <div class="settings-row">
+        <div class="settings-row-left">
+          <h3>Mode Gelap</h3>
+          <p>Tampilan lebih nyaman di malam hari</p>
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="dark-toggle" onchange="App.toggleDark(this.checked)">
+          <div class="toggle-track"></div>
+          <div class="toggle-thumb"></div>
+        </label>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-left">
+          <h3>Urutan Default</h3>
+          <p>Properti ditampilkan berdasarkan</p>
+        </div>
+        <select class="sort-select" id="sort-select" onchange="App.setSort(this.value)">
+          <option value="cheapest">Termurah</option>
+          <option value="newest">Terbaru</option>
+          <option value="largest">Terluas</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="reset-btn" onclick="App.resetAll()">
+      🔄 Reset Semua Filter
+    </button>
+
+    <div style="text-align:center; padding-bottom: 24px;">
+      <p style="font-size:12px; color: var(--gray-400); font-family: 'Syne',sans-serif; font-weight:700;">PRT · Katalog Properti</p>
+      <p style="font-size:11px; color: var(--gray-400); margin-top: 2px;">Jabodetabek · Jawa Barat</p>
+    </div>
+
+  </section>
+
+  <!-- ═══════════════════════════════════
+       MODAL DETAIL
+  ═══════════════════════════════════════ -->
+  <div id="modal-overlay" class="modal-overlay">
+    <div class="modal-sheet">
+
+      <!-- Gallery -->
+      <div class="modal-gallery">
+        <div class="modal-gallery-track" id="gallery-track"></div>
+        <button class="gallery-btn gallery-prev" onclick="App.prevGallery()" aria-label="Prev">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="m15 18-6-6 6-6"/>
+          </svg>
+        </button>
+        <button class="gallery-btn gallery-next" onclick="App.nextGallery()" aria-label="Next">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="m9 18 6-6-6-6"/>
+          </svg>
+        </button>
+        <div class="gallery-dots" id="gallery-dots"></div>
+      </div>
+
+      <!-- Scrollable Body -->
+      <div class="modal-body">
+
+        <div class="modal-header">
+          <div>
+            <div class="modal-price" id="modal-price"></div>
+            <div class="modal-title" id="modal-title"></div>
+          </div>
+          <button class="modal-close-btn" onclick="App.closeModal()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M18 6 6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="modal-stats">
+          <div class="modal-stat">
+            <span class="modal-stat-val" id="modal-stat-luas"></span>
+            <span class="modal-stat-lbl">Luas Tanah</span>
+          </div>
+          <div class="modal-stat">
+            <span class="modal-stat-val" id="modal-stat-ppm"></span>
+            <span class="modal-stat-lbl">Harga/m²</span>
+          </div>
+          <div class="modal-stat">
+            <span class="modal-stat-val" id="modal-stat-building"></span>
+            <span class="modal-stat-lbl" id="modal-stat-building-lbl">Bangunan</span>
+          </div>
+        </div>
+
+        <div class="modal-info-row">
+          <div class="modal-info-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+          </div>
+          <div>
+            <div class="modal-info-label">Lokasi</div>
+            <div class="modal-info-val" id="modal-location"></div>
+          </div>
+        </div>
+
+        <div class="modal-info-row">
+          <div class="modal-info-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="modal-info-label">Status</div>
+            <div class="modal-info-val" id="modal-status"></div>
+          </div>
+        </div>
+
+        <div class="modal-info-row">
+          <div class="modal-info-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/>
+            </svg>
+          </div>
+          <div>
+            <div class="modal-info-label">Legalitas</div>
+            <div class="modal-info-val" id="modal-legality"></div>
+          </div>
+        </div>
+
+        <div class="modal-info-row">
+          <div class="modal-info-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="modal-info-label">Akses Jalan</div>
+            <div class="modal-info-val" id="modal-road"></div>
+          </div>
+        </div>
+
+        <div class="modal-info-row">
+          <div class="modal-info-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="modal-info-label">Potensi</div>
+            <div class="modal-info-val" id="modal-potential"></div>
+          </div>
+        </div>
+
+        <div class="modal-section-title">Deskripsi</div>
+        <div class="modal-description" id="modal-desc"></div>
+
+      </div>
+
+      <!-- Sticky Footer -->
+      <div class="modal-footer">
+        <button class="wa-btn" id="wa-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+          </svg>
+          Hubungi via WhatsApp
+        </button>
+        <button class="close-modal-btn" onclick="App.closeModal()">Tutup</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════
+       BOTTOM NAV
+  ═══════════════════════════════════════ -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" data-page="home" onclick="App.navigate('home')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+      <span>Home</span>
+    </div>
+    <div class="nav-item" data-page="kavling" onclick="App.navigate('kavling')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+        <line x1="12" y1="22" x2="12" y2="2"/>
+        <path d="M20 13V5l2 2"/>
+        <path d="M4 13V5L2 7"/>
+      </svg>
+      <span>Kavling</span>
+    </div>
+    <div class="nav-item" data-page="rumah" onclick="App.navigate('rumah')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+        <path d="M9 22V12h6v10"/>
+        <line x1="6" y1="15" x2="6" y2="22"/>
+        <line x1="18" y1="15" x2="18" y2="22"/>
+      </svg>
+      <span>Rumah</span>
+    </div>
+    <div class="nav-item" data-page="settings" onclick="App.navigate('settings')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+      </svg>
+      <span>Pengaturan</span>
+    </div>
+  </nav>
+
+  <script src="assets/js/app.js"></script>
+
+</body>
+</html>
