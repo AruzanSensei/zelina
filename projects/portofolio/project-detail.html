@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detail Project | Rizky Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --off-white: #FAFAF7; --cream: #F4F2EC; --dark: #1A1A1A; --muted: #888880; --border: #E5E3DC;
+      --purple: #7C5CFF; --purple-light: #EDE9FF;
+      --green: #4CAF50; --green-light: #E8F5E9;
+      --orange: #FF8C42; --orange-light: #FFF0E6;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.06); --shadow-md: 0 8px 32px rgba(0,0,0,0.09); --shadow-note: 3px 4px 0px rgba(0,0,0,0.08);
+      --font-hand: 'Caveat', cursive; --font-body: 'DM Sans', sans-serif; --font-serif: 'Instrument Serif', serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--off-white); color: var(--dark); line-height: 1.6; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+
+    /* NAV */
+    #navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; transition: all 0.3s; padding: 20px 0; }
+    #navbar.scrolled { background: rgba(250,250,247,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 12px 0; box-shadow: var(--shadow-sm); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-family: var(--font-hand); font-size: 1.6rem; font-weight: 700; }
+    .nav-logo span { color: var(--purple); }
+    .nav-links { display: flex; align-items: center; gap: 36px; }
+    .nav-links a { font-size: 0.9rem; font-weight: 500; color: var(--muted); position: relative; transition: color 0.2s; }
+    .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: var(--purple); border-radius: 2px; transition: width 0.25s; }
+    .nav-links a:hover { color: var(--dark); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-cta { font-size: 0.85rem !important; background: var(--dark); color: white !important; padding: 8px 18px; border-radius: 999px; }
+    .nav-cta:hover { background: var(--purple) !important; }
+    .nav-cta::after { display: none !important; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--dark); border-radius: 2px; transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: var(--off-white); border-bottom: 1px solid var(--border); padding: 24px; z-index: 999; flex-direction: column; gap: 20px; opacity: 0; transform: translateY(-20px); transition: all 0.3s; }
+    .mobile-menu.open { display: flex; opacity: 1; transform: translateY(0); }
+    .mobile-menu a { font-size: 1.1rem; font-weight: 500; color: var(--dark); padding: 8px 0; border-bottom: 1px solid var(--border); }
+
+    /* BREADCRUMB */
+    .breadcrumb { padding: 100px 0 0; }
+    .breadcrumb-inner { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--muted); flex-wrap: wrap; }
+    .breadcrumb a { color: var(--muted); transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--purple); }
+    .breadcrumb .current { color: var(--dark); font-weight: 500; }
+
+    /* HERO DETAIL */
+    .detail-hero { padding: 32px 0 0; }
+    .detail-header { max-width: 760px; }
+    .detail-cat { display: inline-block; padding: 4px 14px; border-radius: 999px; font-size: 0.8rem; font-weight: 600; background: var(--purple-light); color: var(--purple); margin-bottom: 16px; }
+    .detail-title { font-family: var(--font-serif); font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 400; margin-bottom: 12px; }
+    .detail-role { font-size: 0.9rem; color: var(--muted); margin-bottom: 24px; }
+
+    .detail-meta { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 40px; }
+    .meta-item { }
+    .meta-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .meta-value { font-size: 0.92rem; font-weight: 500; }
+
+    /* MAIN IMAGE */
+    .detail-main-img {
+      width: 100%; height: 420px;
+      background: linear-gradient(135deg, var(--purple-light), #d8d0ff);
+      border-radius: 24px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 6rem; opacity: 0.4;
+      margin-bottom: 64px;
+      border: 1px solid var(--border);
+    }
+
+    /* CONTENT LAYOUT */
+    .detail-content { display: grid; grid-template-columns: 2fr 1fr; gap: 48px; align-items: start; }
+    .detail-main { }
+    .detail-sidebar { position: sticky; top: 100px; }
+
+    .content-section { margin-bottom: 40px; }
+    .content-section h3 { font-family: var(--font-hand); font-size: 1.4rem; color: var(--purple); margin-bottom: 14px; }
+    .content-section p { color: #555; line-height: 1.8; font-size: 0.96rem; margin-bottom: 12px; }
+
+    /* SCREENSHOTS */
+    .screenshots { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+    .screenshot {
+      border-radius: 14px; overflow: hidden;
+      border: 1px solid var(--border);
+      height: 160px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem; opacity: 0.35;
+    }
+    .ss-1 { background: linear-gradient(135deg, #e8f5e9, #c8efc9); }
+    .ss-2 { background: linear-gradient(135deg, #fff0e6, #ffd9be); }
+    .ss-3 { background: linear-gradient(135deg, #f0eefc, #d8d0ff); }
+    .ss-4 { background: linear-gradient(135deg, #fff9c4, #fff0e6); }
+
+    /* SIDEBAR CARD */
+    .sidebar-card { background: white; border: 1px solid var(--border); border-radius: 20px; padding: 28px; box-shadow: var(--shadow-note); margin-bottom: 20px; }
+    .sidebar-card h4 { font-family: var(--font-hand); font-size: 1.2rem; color: var(--dark); margin-bottom: 16px; }
+    .tool-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tool-tag { padding: 4px 12px; background: var(--purple-light); color: var(--purple); border-radius: 999px; font-size: 0.78rem; font-weight: 500; }
+
+    .result-list { display: flex; flex-direction: column; gap: 10px; }
+    .result-item { display: flex; align-items: flex-start; gap: 10px; font-size: 0.88rem; color: #555; }
+    .result-item i { color: var(--green); margin-top: 2px; font-size: 0.8rem; flex-shrink: 0; }
+
+    .cta-sidebar { background: var(--dark); color: white; border-radius: 20px; padding: 28px; text-align: center; }
+    .cta-sidebar h4 { font-family: var(--font-hand); font-size: 1.3rem; margin-bottom: 8px; }
+    .cta-sidebar p { font-size: 0.84rem; color: rgba(255,255,255,0.6); margin-bottom: 20px; }
+    .cta-sidebar a { display: block; background: var(--purple); color: white; padding: 12px; border-radius: 12px; font-weight: 600; font-size: 0.9rem; transition: all 0.2s; }
+    .cta-sidebar a:hover { background: #6a4de8; }
+
+    /* NAV BUTTONS */
+    .project-nav { display: flex; justify-content: space-between; padding: 48px 0 80px; gap: 16px; flex-wrap: wrap; }
+    .nav-proj-btn { display: flex; align-items: center; gap: 10px; background: white; border: 1px solid var(--border); border-radius: 14px; padding: 14px 20px; transition: all 0.2s; font-size: 0.88rem; font-weight: 500; }
+    .nav-proj-btn:hover { border-color: var(--purple); box-shadow: var(--shadow-sm); }
+
+    .fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 48px 0 32px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+    .footer-logo { font-family: var(--font-hand); font-size: 1.4rem; font-weight: 700; }
+    .footer-logo span { color: var(--purple); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 0.88rem; color: var(--muted); transition: color 0.2s; }
+    .footer-links a:hover { color: var(--dark); }
+    .footer-copy { width: 100%; text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.82rem; color: var(--muted); }
+
+    .float-wa { position: fixed; bottom: 28px; right: 28px; z-index: 999; display: flex; align-items: center; gap: 10px; background: #25D366; color: white; padding: 12px 22px; border-radius: 999px; font-size: 0.9rem; font-weight: 600; box-shadow: 0 8px 32px rgba(37,211,102,0.4); opacity: 0; transform: translateY(16px); transition: all 0.4s; pointer-events: none; }
+    .float-wa.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+    .float-wa:hover { background: #20c05c; transform: translateY(-3px); }
+
+    @media (max-width: 992px) { .detail-content { grid-template-columns: 1fr; } .detail-sidebar { position: static; } .nav-links { display: none; } .hamburger { display: flex; } }
+    @media (max-width: 640px) { .screenshots { grid-template-columns: 1fr; } .detail-main-img { height: 240px; font-size: 4rem; } }
+    @media (max-width: 768px) { .footer-inner { flex-direction: column; text-align: center; } .footer-links { flex-wrap: wrap; justify-content: center; } }
+  </style>
+</head>
+<body>
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo">rz<span>.</span></a>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="tentang.html">Tentang</a></li>
+          <li><a href="project.html">Project</a></li>
+          <li><a href="layanan.html">Layanan</a></li>
+          <li><a href="dokumentasi.html">Dokumentasi</a></li>
+          <li><a href="kontak.html" class="nav-cta">Kontak</a></li>
+        </ul>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a><a href="tentang.html">Tentang</a><a href="project.html">Project</a>
+    <a href="layanan.html">Layanan</a><a href="dokumentasi.html">Dokumentasi</a><a href="kontak.html">Kontak</a>
+  </div>
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <div class="container">
+      <div class="breadcrumb-inner">
+        <a href="index.html">Home</a>
+        <i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i>
+        <a href="project.html">Project</a>
+        <i class="fas fa-chevron-right" style="font-size: 0.7rem;"></i>
+        <span class="current">Toko Online UMKM Batik</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO DETAIL -->
+  <div class="detail-hero">
+    <div class="container">
+      <div class="detail-header fade-up">
+        <span class="detail-cat">Web Development</span>
+        <h1 class="detail-title">Toko Online UMKM Batik Nusantara</h1>
+        <div class="detail-role">Role: Fullstack Developer</div>
+        <div class="detail-meta">
+          <div class="meta-item">
+            <div class="meta-label">Klien</div>
+            <div class="meta-value">Batik Nusantara</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Timeline</div>
+            <div class="meta-value">14 Hari</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Tahun</div>
+            <div class="meta-value">2024</div>
+          </div>
+          <div class="meta-item">
+            <div class="meta-label">Status</div>
+            <div class="meta-value" style="color: var(--green);">✓ Live</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="detail-main-img fade-up">🛒</div>
+
+      <div class="detail-content">
+        <!-- Main Content -->
+        <div class="detail-main">
+          <div class="content-section fade-up">
+            <h3>🎯 Problem</h3>
+            <p>
+              Batik Nusantara, UMKM batik lokal asal Bandung, kesulitan menjangkau pasar yang lebih luas. 
+              Mereka hanya mengandalkan penjualan offline dan media sosial yang tidak terstruktur. 
+              Klien butuh platform digital yang bisa menampilkan produk secara profesional dan memudahkan 
+              calon pembeli untuk menghubungi mereka.
+            </p>
+            <p>
+              Tantangannya: budget terbatas, pemilik tidak tech-savvy, dan harus bisa diupdate sendiri tanpa coding.
+            </p>
+          </div>
+
+          <div class="content-section fade-up">
+            <h3>💡 Solusi</h3>
+            <p>
+              Gue bikin website e-commerce sederhana berbasis Laravel dengan CMS yang mudah digunakan. 
+              Fitur utama: katalog produk dengan kategori, detail produk dengan galeri foto, 
+              dan tombol pesan via WhatsApp langsung — sesuai kebiasaan transaksi klien.
+            </p>
+            <p>
+              Desain dibuat clean dan mencerminkan keanggunan batik — warm tones, typografi yang elegan, 
+              dan layout yang memberi fokus ke foto produk.
+            </p>
+          </div>
+
+          <div class="content-section fade-up">
+            <h3>📸 Screenshot</h3>
+            <div class="screenshots">
+              <div class="screenshot ss-1">🏠</div>
+              <div class="screenshot ss-2">🛍️</div>
+              <div class="screenshot ss-3">📱</div>
+              <div class="screenshot ss-4">⚙️</div>
+            </div>
+          </div>
+
+          <div class="content-section fade-up">
+            <h3>✅ Hasil Akhir</h3>
+            <p>
+              Website berhasil go live dalam 14 hari kerja. Dalam bulan pertama, klien melaporkan 
+              peningkatan 3x lipat pada inquiry produk dan berhasil menjangkau pembeli dari luar kota 
+              yang menemukan toko via Google Search.
+            </p>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="detail-sidebar fade-up">
+          <div class="sidebar-card">
+            <h4>🛠️ Tools & Tech</h4>
+            <div class="tool-list">
+              <span class="tool-tag">Laravel 10</span>
+              <span class="tool-tag">MySQL</span>
+              <span class="tool-tag">Tailwind CSS</span>
+              <span class="tool-tag">Alpine.js</span>
+              <span class="tool-tag">Figma</span>
+              <span class="tool-tag">Hostinger</span>
+            </div>
+          </div>
+
+          <div class="sidebar-card">
+            <h4>🏆 Hasil</h4>
+            <div class="result-list">
+              <div class="result-item"><i class="fas fa-check"></i>3x peningkatan inquiry</div>
+              <div class="result-item"><i class="fas fa-check"></i>Jangkauan nasional</div>
+              <div class="result-item"><i class="fas fa-check"></i>Page speed 90+ Google</div>
+              <div class="result-item"><i class="fas fa-check"></i>Mobile-first responsive</div>
+              <div class="result-item"><i class="fas fa-check"></i>CMS mudah dipakai klien</div>
+            </div>
+          </div>
+
+          <div class="cta-sidebar">
+            <h4>Mau project serupa?</h4>
+            <p>Gue bisa bikin website yang sama atau lebih bagus buat bisnis lo.</p>
+            <a href="kontak.html">Hubungi Gue <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROJECT NAV -->
+  <div class="container">
+    <div class="project-nav">
+      <a href="project.html" class="nav-proj-btn">
+        <i class="fas fa-arrow-left"></i> Kembali ke Semua Project
+      </a>
+      <a href="project.html" class="nav-proj-btn">
+        Project Berikutnya <i class="fas fa-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">rz<span>.</span></div>
+        <ul class="footer-links">
+          <li><a href="tentang.html">Tentang</a></li>
+          <li><a href="project.html">Project</a></li>
+          <li><a href="layanan.html">Layanan</a></li>
+          <li><a href="kontak.html">Kontak</a></li>
+        </ul>
+      </div>
+      <div class="footer-copy">Made with ☕ & 💜 oleh <strong>Rizky Pratama</strong> · 2025</div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/6281234567890" target="_blank" class="float-wa" id="floatWa">
+    <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> Chat Sekarang
+  </a>
+
+  <script>
+    const navbar = document.getElementById('navbar');
+    const floatWa = document.getElementById('floatWa');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) navbar.classList.add('scrolled'); else navbar.classList.remove('scrolled');
+      if (window.scrollY > 300) floatWa.classList.add('visible'); else floatWa.classList.remove('visible');
+    });
+    document.getElementById('hamburger').addEventListener('click', function() {
+      this.classList.toggle('open');
+      document.getElementById('mobileMenu').classList.toggle('open');
+    });
+    document.querySelectorAll('.fade-up').forEach(el => {
+      new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+      }, { threshold: 0.08 }).observe(el);
+    });
+  </script>
+</body>
+</html>

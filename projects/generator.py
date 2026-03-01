@@ -17,6 +17,24 @@ else:
 if not os.path.exists(PROJECTS_DIR):
     raise FileNotFoundError(f"Folder 'projects' tidak ditemukan di {BASE_PATH}")
 
+# Fungsi untuk membuat projects.json default jika belum ada
+def create_default_projects_json(project_folder):
+    """Buat projects.json default jika folder belum memilikinya"""
+    json_path = os.path.join(PROJECTS_DIR, project_folder, "projects.json")
+    if not os.path.exists(json_path):
+        default_metadata = {
+            "name": project_folder.replace("-", " ").title(),
+            "description": "A web development project in progress",
+            "bestProject": False,
+            "icon": "📂"
+        }
+        try:
+            with open(json_path, "w", encoding="utf-8") as f:
+                json.dump(default_metadata, f, indent=2, ensure_ascii=False)
+            print(f"[+] Dibuat: {json_path}")
+        except IOError as e:
+            print(f"⚠️ Gagal membuat {json_path}: {e}")
+
 # Fungsi untuk membaca projects.json dari setiap folder
 def load_project_metadata(project_folder):
     """Load metadata dari projects.json di folder proyek"""
@@ -50,6 +68,7 @@ def load_project_metadata(project_folder):
 project_data = []
 for d in os.listdir(PROJECTS_DIR):
     if os.path.isdir(os.path.join(PROJECTS_DIR, d)):
+        create_default_projects_json(d)  # Buat projects.json jika belum ada
         metadata = load_project_metadata(d)
         metadata["folder"] = d
         project_data.append(metadata)

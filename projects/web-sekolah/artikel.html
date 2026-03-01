@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Berita dan artikel terbaru dari SMA Cendekia Nusantara.">
+  <title>Berita & Artikel – SMA Cendekia Nusantara</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar scrolled">
+  <div class="container navbar-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">CN</div>
+      <div class="nav-logo-text">
+        <span class="nav-logo-name">SMA Cendekia Nusantara</span>
+        <span class="nav-logo-sub">Terakreditasi A | Est. 1985</span>
+      </div>
+    </a>
+    <ul class="nav-menu">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="tentang.html" class="nav-link">Tentang Sekolah</a></li>
+      <li><a href="akademik.html" class="nav-link">Akademik</a></li>
+      <li><a href="dokumentasi.html" class="nav-link">Dokumentasi</a></li>
+      <li><a href="artikel.html" class="nav-link active">Berita</a></li>
+      <li><a href="kontak.html" class="nav-link nav-cta">Kontak</a></li>
+    </ul>
+    <button class="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="container">
+    <h1>Berita & Artikel</h1>
+    <p>Informasi terkini, prestasi, dan kegiatan SMA Cendekia Nusantara.</p>
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <i class="fas fa-chevron-right"></i>
+      <span>Berita & Artikel</span>
+    </div>
+  </div>
+</div>
+
+<!-- ARTICLES -->
+<section class="section-padding" style="background:var(--bg-light);">
+  <div class="container">
+    <!-- Filter tabs -->
+    <div class="filter-tabs" style="margin-bottom:40px;">
+      <button class="filter-tab active" data-filter="all">Semua</button>
+      <button class="filter-tab" data-filter="prestasi">Prestasi</button>
+      <button class="filter-tab" data-filter="kegiatan">Kegiatan</button>
+      <button class="filter-tab" data-filter="pengumuman">Pengumuman</button>
+      <button class="filter-tab" data-filter="info">Informasi</button>
+    </div>
+
+    <div class="articles-list-grid">
+
+      <div class="article-card reveal" data-category="prestasi">
+        <div class="article-thumb">
+          <div class="article-thumb-placeholder" style="background:linear-gradient(135deg,#2563EB,#06b6d4);">🏆</div>
+          <span class="article-cat">Prestasi</span>
+        </div>
+        <div class="article-body">
+          <div class="article-meta"><i class="far fa-calendar"></i> 15 Januari 2025</div>
+          <h3 class="article-title">Siswa SMA Cendekia Raih Medali Emas Olimpiade Matematika Nasional</h3>
+          <p class="article-excerpt">Ahmad Fauzi berhasil membawa pulang medali emas dari Olimpiade Matematika tingkat nasional yang diadakan di Jakarta.</p>
+          <a href="artikel-detail.html" class="article-read">Baca Selengkapnya <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="article-card reveal" data-category="kegiatan">
+        <div class="article-thumb">
+          <div class="article-thumb-placeholder" style="background:linear-gradient(135deg,#8b5cf6,#ec4899);">🎭</div>
+          <span class="article-cat">Kegiatan</span>
+        </div>
+        <div class="article-body">
+          <div class="article-meta"><i class="far fa-calendar"></i> 8 Januari 2025</div>
+          <h3 class="article-title">Pentas Seni Tahunan "Harmoni Nusantara" Sukses Digelar</h3>
+          <p class="article-excerpt">Ribuan penonton memadati aula sekolah dalam acara pentas seni tahunan yang menampilkan berbagai pertunjukan budaya.</p>
+          <a href="artikel-detail.html" class="article-read">Baca Selengkapnya <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="article-card reveal" data-category="pengumuman">
+        <div class="article-thumb">
+          <div class="article-thumb-placeholder" style="background:linear-gradient(135deg,#f59e0b,#f97316);">📢</div>
+          <span class="article-cat">Pengumuman</span>
+        </div>
+        <div class="article-body">
+          <div class="article-meta"><i class="far fa-calendar"></i> 2 Januari 2025</div>
+          <h3 class="article-title">Pendaftaran Siswa Baru Tahun Ajaran 2025/2026 Resmi Dibuka</h3>
+          <p class="article-excerpt">SMA Cendekia Nusantara membuka pendaftaran siswa baru dengan jalur prestasi, zonasi, dan beasiswa khusus.</p>
+          <a href="artikel-detail.html" class="article-read">Baca Selengkapnya <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="article-card reveal" data-category="prestasi">
+        <div class="article-thumb">
+          <div class="article-thumb-placeholder" style="background:linear-gradient(135deg,#10b981,#0ea5e9);">🥇</div>
+          <span class="article-cat">Prestasi</span>
+        </div>
+        <div class="article-body">
+          <div class="article-meta"><i class="far fa-calendar"></i> 20 Desember 2024</div>
+          <h3 class="article-title">Tim Robotika SMA Cendekia Juara 2 Kompetisi Robotik Regional</h3>
+          <p class="article-excerpt">Tim Robotika berhasil meraih juara 2 dalam kompetisi robotik regional yang diikuti oleh 45 sekolah se-Jawa Tengah.</p>
+          <a href="artikel-detail.html" class="article-read">Baca Selengkapnya <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="article-card reveal" data-category="kegiatan">
+        <div class="article-thumb">
+          <div class="article-thumb-placeholder" style="background:linear-gradient(135deg,#f97316,#ef4444);">⚽</div>
+          <span class="article-cat">Kegiatan</span>
+        </div>
+        <div class="article-body">
+          <div class="article-meta"><i class="far fa-calendar"></i> 15 Desember 2024</div>
+          <h3 class="article-title">Turnamen Futsal Antar Kelas "Copa Cendekia 2024" Meriah</h3>
+          <p class="article-excerpt">Semangat sportivitas dan kebersamaan terasa kental dalam turnamen futsal yang melibatkan 24 tim dari seluruh kelas.</p>
+          <a href="artikel-detail.html" class="article-read">Baca Selengkapnya <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="article-card reveal" data-category="info">
+        <div class="article-thumb">
+          <div class="article-thumb-placeholder" style="background:linear-gradient(135deg,#0ea5e9,#6366f1);">📚</div>
+          <span class="article-cat">Informasi</span>
+        </div>
+        <div class="article-body">
+          <div class="article-meta"><i class="far fa-calendar"></i> 1 Desember 2024</div>
+          <h3 class="article-title">SMA Cendekia Luncurkan Program Smart Classroom Berbasis AI</h3>
+          <p class="article-excerpt">Inovasi terbaru hadir di SMA Cendekia dengan diluncurkannya Smart Classroom yang mengintegrasikan teknologi AI dalam pembelajaran.</p>
+          <a href="artikel-detail.html" class="article-read">Baca Selengkapnya <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="article-card reveal" data-category="prestasi">
+        <div class="article-thumb">
+          <div class="article-thumb-placeholder" style="background:linear-gradient(135deg,#7c3aed,#2563EB);">🎤</div>
+          <span class="article-cat">Prestasi</span>
+        </div>
+        <div class="article-body">
+          <div class="article-meta"><i class="far fa-calendar"></i> 18 November 2024</div>
+          <h3 class="article-title">Paduan Suara SMA Cendekia Raih Juara 1 Festival Musik Daerah</h3>
+          <p class="article-excerpt">Paduan suara sekolah tampil memukau dan berhasil memboyong trophy juara 1 dalam festival musik daerah tingkat provinsi.</p>
+          <a href="artikel-detail.html" class="article-read">Baca Selengkapnya <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="article-card reveal" data-category="kegiatan">
+        <div class="article-thumb">
+          <div class="article-thumb-placeholder" style="background:linear-gradient(135deg,#059669,#10b981);">🏕️</div>
+          <span class="article-cat">Kegiatan</span>
+        </div>
+        <div class="article-body">
+          <div class="article-meta"><i class="far fa-calendar"></i> 5 November 2024</div>
+          <h3 class="article-title">Perkemahan Pramuka Tingkat Penggalang 2024 Sukses Terlaksana</h3>
+          <p class="article-excerpt">Sebanyak 300 siswa kelas X mengikuti perkemahan pramuka selama 3 hari 2 malam di Bumi Perkemahan Sriwedari.</p>
+          <a href="artikel-detail.html" class="article-read">Baca Selengkapnya <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+      <div class="article-card reveal" data-category="pengumuman">
+        <div class="article-thumb">
+          <div class="article-thumb-placeholder" style="background:linear-gradient(135deg,#be185d,#f43f5e);">📋</div>
+          <span class="article-cat">Pengumuman</span>
+        </div>
+        <div class="article-body">
+          <div class="article-meta"><i class="far fa-calendar"></i> 25 Oktober 2024</div>
+          <h3 class="article-title">Jadwal Ujian Tengah Semester Ganjil 2024/2025</h3>
+          <p class="article-excerpt">Berikut adalah jadwal lengkap Ujian Tengah Semester (UTS) Ganjil Tahun Ajaran 2024/2025 untuk semua tingkatan kelas.</p>
+          <a href="artikel-detail.html" class="article-read">Baca Selengkapnya <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo">
+          <div class="nav-logo-icon">CN</div>
+          <div class="nav-logo-text">
+            <span class="nav-logo-name">SMA Cendekia Nusantara</span>
+            <span class="nav-logo-sub">Terakreditasi A | Est. 1985</span>
+          </div>
+        </div>
+        <p class="footer-desc">Membentuk generasi cerdas, berkarakter, dan berdaya saing global.</p>
+        <div class="footer-socials">
+          <a href="#" class="footer-social"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="footer-social"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="footer-social"><i class="fab fa-youtube"></i></a>
+          <a href="#" class="footer-social"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Menu Utama</h4>
+        <ul class="footer-links">
+          <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+          <li><a href="tentang.html"><i class="fas fa-chevron-right"></i> Tentang Sekolah</a></li>
+          <li><a href="akademik.html"><i class="fas fa-chevron-right"></i> Akademik</a></li>
+          <li><a href="dokumentasi.html"><i class="fas fa-chevron-right"></i> Dokumentasi</a></li>
+          <li><a href="artikel.html"><i class="fas fa-chevron-right"></i> Berita</a></li>
+          <li><a href="kontak.html"><i class="fas fa-chevron-right"></i> Kontak</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Kategori Berita</h4>
+        <ul class="footer-links">
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Prestasi</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Kegiatan</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Pengumuman</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Informasi Sekolah</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Kontak</h4>
+        <div class="footer-contact-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>Jl. Pendidikan No. 45, Kota Nusantara, Jawa Tengah 50000</span>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fas fa-phone"></i>
+          <span>(024) 1234-5678</span>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fas fa-envelope"></i>
+          <span>info@smacendekia.sch.id</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 SMA Cendekia Nusantara. Hak Cipta Dilindungi.</span>
+      <span>Dibuat dengan <i class="fas fa-heart" style="color:#ef4444;"></i> untuk pendidikan</span>
+    </div>
+  </div>
+</footer>
+
+<div class="wa-float visible">
+  <a href="https://wa.me/6281234567890" class="wa-btn" target="_blank">
+    <i class="fab fa-whatsapp"></i> Chat Admin Sekolah
+  </a>
+</div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

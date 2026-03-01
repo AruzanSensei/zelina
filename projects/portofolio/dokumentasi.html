@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dokumentasi | Rizky Portfolio</title>
+  <meta name="description" content="Behind the scenes — dokumentasi kegiatan, workspace, dan proses kerja Rizky." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --off-white: #FAFAF7; --cream: #F4F2EC; --dark: #1A1A1A; --muted: #888880; --border: #E5E3DC;
+      --purple: #7C5CFF; --purple-light: #EDE9FF;
+      --green: #4CAF50; --green-light: #E8F5E9;
+      --orange: #FF8C42; --orange-light: #FFF0E6;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.06); --shadow-md: 0 8px 32px rgba(0,0,0,0.09);
+      --font-hand: 'Caveat', cursive; --font-body: 'DM Sans', sans-serif; --font-serif: 'Instrument Serif', serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--off-white); color: var(--dark); line-height: 1.6; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+
+    /* NAV */
+    #navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; transition: all 0.3s; padding: 20px 0; }
+    #navbar.scrolled { background: rgba(250,250,247,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 12px 0; box-shadow: var(--shadow-sm); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-family: var(--font-hand); font-size: 1.6rem; font-weight: 700; }
+    .nav-logo span { color: var(--purple); }
+    .nav-links { display: flex; align-items: center; gap: 36px; }
+    .nav-links a { font-size: 0.9rem; font-weight: 500; color: var(--muted); position: relative; transition: color 0.2s; }
+    .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: var(--purple); border-radius: 2px; transition: width 0.25s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--dark); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+    .nav-cta { font-size: 0.85rem !important; background: var(--dark); color: white !important; padding: 8px 18px; border-radius: 999px; }
+    .nav-cta:hover { background: var(--purple) !important; }
+    .nav-cta::after { display: none !important; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--dark); border-radius: 2px; transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: var(--off-white); border-bottom: 1px solid var(--border); padding: 24px; z-index: 999; flex-direction: column; gap: 20px; opacity: 0; transform: translateY(-20px); transition: all 0.3s; }
+    .mobile-menu.open { display: flex; opacity: 1; transform: translateY(0); }
+    .mobile-menu a { font-size: 1.1rem; font-weight: 500; color: var(--dark); padding: 8px 0; border-bottom: 1px solid var(--border); }
+
+    /* PAGE HERO */
+    .page-hero { padding: 140px 0 72px; background: var(--cream); border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+    .page-hero::before { content: ''; position: absolute; top: -80px; left: -80px; width: 320px; height: 320px; border-radius: 50%; background: var(--orange-light); opacity: 0.9; }
+    .page-label { font-family: var(--font-hand); font-size: 1.1rem; color: var(--muted); margin-bottom: 12px; position: relative; z-index: 1; }
+    .page-title { font-family: var(--font-serif); font-size: clamp(2.4rem, 5vw, 3.2rem); font-weight: 400; position: relative; z-index: 1; }
+    .page-title em { font-style: italic; color: var(--orange); }
+    .page-sub { color: var(--muted); font-size: 1rem; margin-top: 12px; max-width: 480px; position: relative; z-index: 1; }
+
+    /* MASONRY GALLERY */
+    .gallery-section { padding: 72px 0 96px; }
+
+    .gallery-categories { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 40px; }
+    .cat-btn { padding: 8px 20px; border-radius: 999px; font-size: 0.85rem; font-weight: 500; border: 1.5px solid var(--border); background: white; color: var(--muted); cursor: pointer; transition: all 0.2s; }
+    .cat-btn.active, .cat-btn:hover { background: var(--dark); color: white; border-color: var(--dark); }
+
+    .masonry-grid {
+      columns: 3;
+      column-gap: 20px;
+    }
+
+    .masonry-item {
+      break-inside: avoid;
+      margin-bottom: 20px;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      background: white;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s;
+    }
+    .masonry-item:hover { transform: scale(1.02); box-shadow: var(--shadow-md); }
+    .masonry-item:hover .item-overlay { opacity: 1; }
+
+    .item-placeholder {
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem; opacity: 0.4;
+    }
+
+    .item-overlay {
+      position: absolute; inset: 0;
+      background: rgba(26,26,26,0.7);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 8px; opacity: 0; transition: opacity 0.3s;
+    }
+    .item-overlay i { color: white; font-size: 1.5rem; }
+    .item-overlay span { color: white; font-size: 0.82rem; font-family: var(--font-hand); font-size: 1rem; }
+
+    .item-cat-badge {
+      position: absolute; top: 12px; left: 12px;
+      padding: 4px 10px; border-radius: 999px;
+      font-size: 0.72rem; font-weight: 600;
+    }
+    .badge-orange { background: var(--orange-light); color: var(--orange); border: 1px solid #ffcba0; }
+    .badge-purple { background: var(--purple-light); color: var(--purple); border: 1px solid #c8bbff; }
+    .badge-green { background: var(--green-light); color: #2e7d32; border: 1px solid #a5d6a7; }
+
+    /* LIGHTBOX */
+    .lightbox {
+      display: none;
+      position: fixed; inset: 0; z-index: 2000;
+      background: rgba(0,0,0,0.85);
+      align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox-inner { max-width: 720px; width: 100%; background: white; border-radius: 24px; overflow: hidden; position: relative; }
+    .lightbox-close { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,0.2); border: none; cursor: pointer; color: white; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: background 0.2s; z-index: 1; }
+    .lightbox-close:hover { background: rgba(0,0,0,0.5); }
+    .lightbox-img { height: 380px; display: flex; align-items: center; justify-content: center; font-size: 5rem; opacity: 0.3; }
+    .lightbox-body { padding: 24px; }
+    .lightbox-title { font-family: var(--font-hand); font-size: 1.4rem; margin-bottom: 8px; }
+    .lightbox-desc { color: var(--muted); font-size: 0.9rem; }
+
+    .fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 48px 0 32px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+    .footer-logo { font-family: var(--font-hand); font-size: 1.4rem; font-weight: 700; }
+    .footer-logo span { color: var(--purple); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 0.88rem; color: var(--muted); transition: color 0.2s; }
+    .footer-links a:hover { color: var(--dark); }
+    .footer-copy { width: 100%; text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.82rem; color: var(--muted); }
+
+    .float-wa { position: fixed; bottom: 28px; right: 28px; z-index: 999; display: flex; align-items: center; gap: 10px; background: #25D366; color: white; padding: 12px 22px; border-radius: 999px; font-size: 0.9rem; font-weight: 600; box-shadow: 0 8px 32px rgba(37,211,102,0.4); opacity: 0; transform: translateY(16px); transition: all 0.4s; pointer-events: none; }
+    .float-wa.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+    .float-wa:hover { background: #20c05c; transform: translateY(-3px); }
+
+    @media (max-width: 992px) { .masonry-grid { columns: 2; } .nav-links { display: none; } .hamburger { display: flex; } }
+    @media (max-width: 640px) { .masonry-grid { columns: 1; } }
+    @media (max-width: 768px) { .gallery-section { padding: 48px 0 72px; } .footer-inner { flex-direction: column; text-align: center; } .footer-links { flex-wrap: wrap; justify-content: center; } }
+  </style>
+</head>
+<body>
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo">rz<span>.</span></a>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="tentang.html">Tentang</a></li>
+          <li><a href="project.html">Project</a></li>
+          <li><a href="layanan.html">Layanan</a></li>
+          <li><a href="dokumentasi.html" class="active">Dokumentasi</a></li>
+          <li><a href="kontak.html" class="nav-cta">Kontak</a></li>
+        </ul>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a><a href="tentang.html">Tentang</a><a href="project.html">Project</a>
+    <a href="layanan.html">Layanan</a><a href="dokumentasi.html">Dokumentasi</a><a href="kontak.html">Kontak</a>
+  </div>
+
+  <div class="page-hero">
+    <div class="container">
+      <div class="page-label">📸 Behind the scenes</div>
+      <h1 class="page-title">Dokumentasi<br /><em>Kegiatan & Proses</em></h1>
+      <p class="page-sub">Ngintip di balik layar — workspace, meeting, progress project, dan momen seru lainnya.</p>
+    </div>
+  </div>
+
+  <section class="gallery-section">
+    <div class="container">
+      <div class="gallery-categories fade-up">
+        <button class="cat-btn active" data-filter="all">Semua</button>
+        <button class="cat-btn" data-filter="workspace">Workspace</button>
+        <button class="cat-btn" data-filter="meeting">Meeting</button>
+        <button class="cat-btn" data-filter="progress">Progress</button>
+      </div>
+
+      <div class="masonry-grid" id="masonryGrid">
+
+        <div class="masonry-item fade-up" data-cat="workspace" onclick="openLightbox('🖥️','Setup Workspace','Ini setup gue sehari-hari — dual monitor, mechanical keyboard, dan secangkir kopi. Setup sederhana tapi produktif!')">
+          <div class="item-placeholder" style="height: 220px; background: linear-gradient(135deg, #f0eefc, #e0dbff);">🖥️</div>
+          <div class="item-cat-badge badge-purple">Workspace</div>
+          <div class="item-overlay"><i class="fas fa-expand"></i><span>Lihat Detail</span></div>
+        </div>
+
+        <div class="masonry-item fade-up" data-cat="meeting" onclick="openLightbox('🤝','Meeting Online','Diskusi bareng klien via Zoom — ngobrolin brief, timeline, dan ekspektasi project bareng.')">
+          <div class="item-placeholder" style="height: 300px; background: linear-gradient(135deg, #e8f5e9, #c8efc9);">🤝</div>
+          <div class="item-cat-badge badge-green">Meeting</div>
+          <div class="item-overlay"><i class="fas fa-expand"></i><span>Lihat Detail</span></div>
+        </div>
+
+        <div class="masonry-item fade-up" data-cat="progress" onclick="openLightbox('💻','Coding Session','Deep work session — ngerjain sistem web Laravel sambil dengerin lofi beats.')">
+          <div class="item-placeholder" style="height: 260px; background: linear-gradient(135deg, #fff0e6, #ffd9be);">💻</div>
+          <div class="item-cat-badge badge-orange">Progress</div>
+          <div class="item-overlay"><i class="fas fa-expand"></i><span>Lihat Detail</span></div>
+        </div>
+
+        <div class="masonry-item fade-up" data-cat="progress" onclick="openLightbox('🎨','Figma Design Session','Proses desain UI dari wireframe sampai prototype high-fidelity di Figma.')">
+          <div class="item-placeholder" style="height: 320px; background: linear-gradient(135deg, #f0eefc, #d8d0ff);">🎨</div>
+          <div class="item-cat-badge badge-purple">Progress</div>
+          <div class="item-overlay"><i class="fas fa-expand"></i><span>Lihat Detail</span></div>
+        </div>
+
+        <div class="masonry-item fade-up" data-cat="workspace" onclick="openLightbox('☕','Kafe Working','Kadang butuh ganti suasana — working from kafe favorit di Bandung.')">
+          <div class="item-placeholder" style="height: 240px; background: linear-gradient(135deg, #fff0e6, #ffe0c8);">☕</div>
+          <div class="item-cat-badge badge-orange">Workspace</div>
+          <div class="item-overlay"><i class="fas fa-expand"></i><span>Lihat Detail</span></div>
+        </div>
+
+        <div class="masonry-item fade-up" data-cat="meeting" onclick="openLightbox('📋','Brainstorming','Sesi brainstorming dengan sticky notes — nentuin arsitektur dan fitur sistem sebelum mulai ngoding.')">
+          <div class="item-placeholder" style="height: 200px; background: linear-gradient(135deg, #e8f5e9, #d0f0d2);">📋</div>
+          <div class="item-cat-badge badge-green">Meeting</div>
+          <div class="item-overlay"><i class="fas fa-expand"></i><span>Lihat Detail</span></div>
+        </div>
+
+        <div class="masonry-item fade-up" data-cat="progress" onclick="openLightbox('🚀','Deploy Day!','Momen paling epic — pas project berhasil di-deploy dan live buat pertama kalinya!')">
+          <div class="item-placeholder" style="height: 280px; background: linear-gradient(135deg, #EDE9FF, #c8bbff);">🚀</div>
+          <div class="item-cat-badge badge-purple">Progress</div>
+          <div class="item-overlay"><i class="fas fa-expand"></i><span>Lihat Detail</span></div>
+        </div>
+
+        <div class="masonry-item fade-up" data-cat="workspace" onclick="openLightbox('📱','Mobile Testing','Ngecek responsiveness di berbagai perangkat — iPhone, Android, tablet. Quality check penting!')">
+          <div class="item-placeholder" style="height: 250px; background: linear-gradient(135deg, #fff9c4, #fff0e6);">📱</div>
+          <div class="item-cat-badge badge-orange">Workspace</div>
+          <div class="item-overlay"><i class="fas fa-expand"></i><span>Lihat Detail</span></div>
+        </div>
+
+        <div class="masonry-item fade-up" data-cat="meeting" onclick="openLightbox('🎓','Campus Collab','Kolaborasi bareng temen kampus buat ngerjain project kompetisi hackathon.')">
+          <div class="item-placeholder" style="height: 230px; background: linear-gradient(135deg, #e8f5e9, #a5d6a7);">🎓</div>
+          <div class="item-cat-badge badge-green">Meeting</div>
+          <div class="item-overlay"><i class="fas fa-expand"></i><span>Lihat Detail</span></div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <div class="lightbox-inner">
+      <button class="lightbox-close" onclick="document.getElementById('lightbox').classList.remove('open')">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="lightbox-img" id="lbImg">📸</div>
+      <div class="lightbox-body">
+        <div class="lightbox-title" id="lbTitle">Judul</div>
+        <div class="lightbox-desc" id="lbDesc">Deskripsi</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">rz<span>.</span></div>
+        <ul class="footer-links">
+          <li><a href="tentang.html">Tentang</a></li>
+          <li><a href="project.html">Project</a></li>
+          <li><a href="layanan.html">Layanan</a></li>
+          <li><a href="kontak.html">Kontak</a></li>
+        </ul>
+      </div>
+      <div class="footer-copy">Made with ☕ & 💜 oleh <strong>Rizky Pratama</strong> · 2025</div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/6281234567890" target="_blank" class="float-wa" id="floatWa">
+    <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> Chat Sekarang
+  </a>
+
+  <script>
+    const navbar = document.getElementById('navbar');
+    const floatWa = document.getElementById('floatWa');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) navbar.classList.add('scrolled'); else navbar.classList.remove('scrolled');
+      if (window.scrollY > 300) floatWa.classList.add('visible'); else floatWa.classList.remove('visible');
+    });
+    document.getElementById('hamburger').addEventListener('click', function() {
+      this.classList.toggle('open');
+      document.getElementById('mobileMenu').classList.toggle('open');
+    });
+
+    // Category filter
+    document.querySelectorAll('.cat-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        document.querySelectorAll('.masonry-item').forEach(item => {
+          item.style.display = (filter === 'all' || item.dataset.cat === filter) ? '' : 'none';
+        });
+      });
+    });
+
+    // Fade-up
+    document.querySelectorAll('.fade-up').forEach(el => {
+      new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+      }, { threshold: 0.08 }).observe(el);
+    });
+
+    // Lightbox
+    function openLightbox(emoji, title, desc) {
+      document.getElementById('lbImg').textContent = emoji;
+      document.getElementById('lbTitle').textContent = title;
+      document.getElementById('lbDesc').textContent = desc;
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox(e) {
+      if (e.target === document.getElementById('lightbox')) {
+        document.getElementById('lightbox').classList.remove('open');
+        document.body.style.overflow = '';
+      }
+    }
+    document.querySelector('.lightbox-close').addEventListener('click', () => {
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    });
+  </script>
+</body>
+</html>

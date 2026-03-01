@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Website resmi SMA Cendekia Nusantara - Sekolah Menengah Atas unggulan dengan fasilitas modern dan kurikulum terbaik.">
+  <title>SMA Cendekia Nusantara – Meraih Masa Depan Cerah</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* Hero placeholder slides */
+    .slide-1 { background: linear-gradient(135deg, #1a3c6e 0%, #2563EB 50%, #06b6d4 100%); }
+    .slide-2 { background: linear-gradient(135deg, #0f4c75 0%, #1565C0 50%, #00acc1 100%); }
+    .slide-3 { background: linear-gradient(135deg, #1E3A8A 0%, #4A90D9 50%, #81D4FA 100%); }
+    
+    .hero-slide-gradient { display: flex; align-items: center; justify-content: center; }
+    .hero-slide-pattern {
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    .hero-shapes { position: absolute; inset: 0; }
+    .shape {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+    }
+    .s1 { width: 500px; height: 500px; top: -150px; right: -100px; }
+    .s2 { width: 300px; height: 300px; bottom: -50px; left: -80px; }
+    .s3 { width: 200px; height: 200px; top: 200px; right: 300px; }
+
+    .hero-school-visual {
+      position: absolute;
+      right: 60px;
+      bottom: 60px;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+    }
+
+    .hero-visual-card {
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 16px;
+      padding: 16px 20px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 200px;
+      animation: fadeInUp 0.6s ease both;
+    }
+
+    .hero-visual-card:nth-child(2) { animation-delay: 0.2s; }
+    .hero-visual-card:nth-child(3) { animation-delay: 0.4s; }
+
+    .hvc-icon {
+      width: 40px; height: 40px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .hvc-text strong { display: block; font-size: 1.1rem; font-family: 'Nunito', sans-serif; font-weight: 900; }
+    .hvc-text span { font-size: 0.72rem; opacity: 0.8; }
+
+    @media (max-width: 992px) {
+      .hero-school-visual { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar transparent">
+  <div class="container navbar-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">CN</div>
+      <div class="nav-logo-text">
+        <span class="nav-logo-name">SMA Cendekia Nusantara</span>
+        <span class="nav-logo-sub">Terakreditasi A | Est. 1985</span>
+      </div>
+    </a>
+    <ul class="nav-menu">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="tentang.html" class="nav-link">Tentang Sekolah</a></li>
+      <li><a href="akademik.html" class="nav-link">Akademik</a></li>
+      <li><a href="dokumentasi.html" class="nav-link">Dokumentasi</a></li>
+      <li><a href="artikel.html" class="nav-link">Berita</a></li>
+      <li><a href="kontak.html" class="nav-link nav-cta">Kontak</a></li>
+    </ul>
+    <button class="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="hero-slideshow">
+      <div class="hero-slide active">
+        <div class="hero-slide-gradient slide-1">
+          <div class="hero-slide-pattern"></div>
+          <div class="hero-shapes">
+            <div class="shape s1"></div>
+            <div class="shape s2"></div>
+            <div class="shape s3"></div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-slide">
+        <div class="hero-slide-gradient slide-2">
+          <div class="hero-slide-pattern"></div>
+          <div class="hero-shapes">
+            <div class="shape s1"></div>
+            <div class="shape s2"></div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-slide">
+        <div class="hero-slide-gradient slide-3">
+          <div class="hero-slide-pattern"></div>
+          <div class="hero-shapes">
+            <div class="shape s1"></div>
+            <div class="shape s3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-overlay"></div>
+  </div>
+
+  <div class="container hero-content">
+    <div class="hero-badge">
+      <i class="fas fa-star"></i>
+      Akreditasi A · Terbaik se-Kabupaten
+    </div>
+    <h1 class="hero-title">
+      Selamat Datang di<br>
+      <span class="accent">SMA Cendekia Nusantara</span>
+    </h1>
+    <p class="hero-desc">
+      Membentuk generasi cerdas, berkarakter, dan berdaya saing global. 
+      Bersama kami, raih prestasi terbaik dan wujudkan impianmu!
+    </p>
+    <div class="hero-buttons">
+      <a href="tentang.html" class="btn btn-secondary">
+        <i class="fas fa-info-circle"></i> Tentang Kami
+      </a>
+      <a href="kontak.html" class="btn btn-primary">
+        <i class="fas fa-pen-to-square"></i> Daftar Sekarang
+      </a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-num" data-count="1200" data-suffix="+">0+</div>
+        <div class="hero-stat-label">Siswa Aktif</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" data-count="85" data-suffix="+">0+</div>
+        <div class="hero-stat-label">Guru & Staff</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" data-count="38" data-suffix="">0</div>
+        <div class="hero-stat-label">Tahun Berdiri</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" data-count="250" data-suffix="+">0+</div>
+        <div class="hero-stat-label">Prestasi Diraih</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Visual cards floating right -->
+  <div class="hero-school-visual">
+    <div class="hero-visual-card">
+      <div class="hvc-icon"><i class="fas fa-trophy"></i></div>
+      <div class="hvc-text">
+        <strong>Juara 1</strong>
+        <span>Olimpiade Nasional 2024</span>
+      </div>
+    </div>
+    <div class="hero-visual-card">
+      <div class="hvc-icon"><i class="fas fa-graduation-cap"></i></div>
+      <div class="hvc-text">
+        <strong>98.5%</strong>
+        <span>Kelulusan Tahun Ini</span>
+      </div>
+    </div>
+    <div class="hero-visual-card">
+      <div class="hvc-icon"><i class="fas fa-users"></i></div>
+      <div class="hvc-text">
+        <strong>20+ Ekskul</strong>
+        <span>Minat & Bakat Siswa</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <span>Scroll ke bawah</span>
+    <i class="fas fa-chevron-down"></i>
+  </div>
+</section>
+
+<!-- HIGHLIGHTS -->
+<section class="highlights">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">Keunggulan Kami</div>
+      <h2 class="section-title">Kenapa Pilih <span>SMA Cendekia?</span></h2>
+      <p class="section-desc">Kami menyediakan lingkungan belajar terbaik dengan fasilitas lengkap dan guru berpengalaman.</p>
+    </div>
+    <div class="highlight-grid">
+      <div class="highlight-card reveal">
+        <div class="highlight-icon blue">
+          <i class="fas fa-medal"></i>
+        </div>
+        <h3>Prestasi Akademik</h3>
+        <p>Ratusan siswa kami telah meraih prestasi di tingkat kabupaten, provinsi, hingga nasional setiap tahunnya.</p>
+      </div>
+      <div class="highlight-card reveal">
+        <div class="highlight-icon yellow">
+          <i class="fas fa-futbol"></i>
+        </div>
+        <h3>Ekstrakurikuler Lengkap</h3>
+        <p>20+ ekstrakurikuler dari olahraga, seni, sains, hingga kepemimpinan untuk mengembangkan bakat siswa.</p>
+      </div>
+      <div class="highlight-card reveal">
+        <div class="highlight-icon green">
+          <i class="fas fa-building-columns"></i>
+        </div>
+        <h3>Fasilitas Modern</h3>
+        <p>Lab sains lengkap, perpustakaan digital, lapangan olahraga, dan ruang kelas berteknologi tinggi.</p>
+      </div>
+      <div class="highlight-card reveal">
+        <div class="highlight-icon pink">
+          <i class="fas fa-chalkboard-user"></i>
+        </div>
+        <h3>Guru Profesional</h3>
+        <p>85+ tenaga pendidik berpengalaman dan bersertifikat, siap membimbing setiap siswa dengan penuh dedikasi.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TENTANG SINGKAT -->
+<section class="about-home">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-content">
+        <div class="section-badge">Tentang Sekolah</div>
+        <h2 class="section-title">Sekolah dengan <span>Tradisi Unggul</span> Sejak 1985</h2>
+        <p class="about-text">
+          SMA Cendekia Nusantara berdiri sejak 1985 dengan misi mencetak generasi bangsa yang cerdas, berkarakter, dan siap bersaing di era global. Dengan akreditasi A, kami terus berinovasi dalam dunia pendidikan.
+        </p>
+        <p class="about-text">
+          Berlokasi di pusat kota dengan lingkungan yang kondusif, sekolah kami menyediakan fasilitas lengkap dan program akademik berkualitas tinggi untuk setiap siswa.
+        </p>
+        <div class="about-features">
+          <div class="about-feature">
+            <i class="fas fa-check-circle"></i> Akreditasi A
+          </div>
+          <div class="about-feature">
+            <i class="fas fa-check-circle"></i> Kurikulum Merdeka
+          </div>
+          <div class="about-feature">
+            <i class="fas fa-check-circle"></i> Lab & Fasilitas Lengkap
+          </div>
+          <div class="about-feature">
+            <i class="fas fa-check-circle"></i> Program Beasiswa
+          </div>
+        </div>
+        <a href="tentang.html" class="btn btn-primary">
+          Baca Selengkapnya <i class="fas fa-arrow-right"></i>
+        </a>
+      </div>
+      <div class="about-img-wrap reveal">
+        <div style="width:100%;height:420px;background:linear-gradient(135deg,#A7C7E7,#2563EB);border-radius:32px;display:flex;align-items:center;justify-content:center;box-shadow:0 20px 48px rgba(74,144,217,0.18);">
+          <div style="text-align:center;color:white;">
+            <i class="fas fa-school" style="font-size:5rem;margin-bottom:16px;opacity:0.9;"></i>
+            <div style="font-family:'Nunito',sans-serif;font-weight:900;font-size:1.3rem;">SMA Cendekia Nusantara</div>
+            <div style="font-size:0.85rem;opacity:0.8;margin-top:6px;">Gedung Utama</div>
+          </div>
+        </div>
+        <div class="about-img-badge">
+          <div class="about-img-badge-icon">
+            <i class="fas fa-award"></i>
+          </div>
+          <div class="about-img-badge-text">
+            <strong>38 Tahun</strong>
+            <span>Pengalaman Mendidik</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY PREVIEW -->
+<section class="gallery-preview">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">Dokumentasi</div>
+      <h2 class="section-title">Momen <span>Kegiatan Kami</span></h2>
+      <p class="section-desc">Intip berbagai kegiatan seru dan momen berkesan siswa SMA Cendekia Nusantara.</p>
+    </div>
+    <div class="gallery-grid">
+      <!-- Gallery items with colored placeholders -->
+      <div class="gallery-item reveal">
+        <div class="gallery-placeholder" style="background:linear-gradient(135deg,#2563EB,#06b6d4);">🎭</div>
+        <div class="gallery-overlay">
+          <div class="gallery-overlay-title">Pentas Seni Tahunan</div>
+        </div>
+      </div>
+      <div class="gallery-item reveal">
+        <div class="gallery-placeholder" style="background:linear-gradient(135deg,#0ea5e9,#6366f1);">⚽</div>
+        <div class="gallery-overlay">
+          <div class="gallery-overlay-title">Turnamen Futsal Antar Kelas</div>
+        </div>
+      </div>
+      <div class="gallery-item reveal">
+        <div class="gallery-placeholder" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">🔬</div>
+        <div class="gallery-overlay">
+          <div class="gallery-overlay-title">Praktik Laboratorium IPA</div>
+        </div>
+      </div>
+      <div class="gallery-item reveal">
+        <div class="gallery-placeholder" style="background:linear-gradient(135deg,#10b981,#06b6d4);">🎓</div>
+        <div class="gallery-overlay">
+          <div class="gallery-overlay-title">Wisuda Kelas XII 2024</div>
+        </div>
+      </div>
+      <div class="gallery-item reveal">
+        <div class="gallery-placeholder" style="background:linear-gradient(135deg,#8b5cf6,#ec4899);">🏆</div>
+        <div class="gallery-overlay">
+          <div class="gallery-overlay-title">Olimpiade Sains Nasional</div>
+        </div>
+      </div>
+      <div class="gallery-item reveal">
+        <div class="gallery-placeholder" style="background:linear-gradient(135deg,#f97316,#eab308);">🏕️</div>
+        <div class="gallery-overlay">
+          <div class="gallery-overlay-title">Perkemahan Pramuka</div>
+        </div>
+      </div>
+    </div>
+    <div class="gallery-center">
+      <a href="dokumentasi.html" class="btn btn-outline">
+        <i class="fas fa-images"></i> Lihat Semua Dokumentasi
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ARTIKEL PREVIEW -->
+<section class="articles-preview">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">Berita & Artikel</div>
+      <h2 class="section-title">Kabar <span>Terkini</span> Sekolah</h2>
+      <p class="section-desc">Ikuti berita dan informasi terbaru dari SMA Cendekia Nusantara.</p>
+    </div>
+    <div class="articles-grid">
+      <div class="article-card reveal">
+        <div class="article-thumb">
+          <div class="article-thumb-placeholder" style="background:linear-gradient(135deg,#2563EB,#06b6d4);">🏆</div>
+          <span class="article-cat">Prestasi</span>
+        </div>
+        <div class="article-body">
+          <div class="article-meta">
+            <i class="far fa-calendar"></i> 15 Januari 2025
+          </div>
+          <h3 class="article-title">Siswa SMA Cendekia Raih Medali Emas Olimpiade Matematika Nasional</h3>
+          <p class="article-excerpt">Keberhasilan luar biasa ditorehkan oleh Ahmad Fauzi, siswa kelas XI IPA, yang berhasil meraih medali emas dalam ajang Olimpiade Matematika Nasional 2025.</p>
+          <a href="artikel-detail.html" class="article-read">
+            Baca Selengkapnya <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+      <div class="article-card reveal">
+        <div class="article-thumb">
+          <div class="article-thumb-placeholder" style="background:linear-gradient(135deg,#10b981,#0ea5e9);">🎪</div>
+          <span class="article-cat">Kegiatan</span>
+        </div>
+        <div class="article-body">
+          <div class="article-meta">
+            <i class="far fa-calendar"></i> 8 Januari 2025
+          </div>
+          <h3 class="article-title">Pentas Seni Tahunan "Harmoni Nusantara" Sukses Digelar</h3>
+          <p class="article-excerpt">Ribuan penonton memadati aula sekolah dalam acara pentas seni tahunan yang menampilkan berbagai pertunjukan budaya dari seluruh siswa.</p>
+          <a href="artikel-detail.html" class="article-read">
+            Baca Selengkapnya <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+      <div class="article-card reveal">
+        <div class="article-thumb">
+          <div class="article-thumb-placeholder" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">📢</div>
+          <span class="article-cat">Pengumuman</span>
+        </div>
+        <div class="article-body">
+          <div class="article-meta">
+            <i class="far fa-calendar"></i> 2 Januari 2025
+          </div>
+          <h3 class="article-title">Pendaftaran Siswa Baru Tahun Ajaran 2025/2026 Resmi Dibuka</h3>
+          <p class="article-excerpt">SMA Cendekia Nusantara membuka pendaftaran siswa baru untuk tahun ajaran 2025/2026. Tersedia jalur prestasi, zonasi, dan beasiswa khusus.</p>
+          <a href="artikel-detail.html" class="article-read">
+            Baca Selengkapnya <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="gallery-center" style="margin-top:40px;">
+      <a href="artikel.html" class="btn btn-outline">
+        <i class="fas fa-newspaper"></i> Lihat Semua Berita
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-decoration d1"></div>
+  <div class="cta-decoration d2"></div>
+  <div class="container" style="position:relative;z-index:2;">
+    <div class="section-badge">Bergabung Bersama Kami</div>
+    <h2>Bersama Kami, Raih<br>Masa Depan Cerahmu!</h2>
+    <p>Jadilah bagian dari keluarga besar SMA Cendekia Nusantara dan wujudkan potensi terbaikmu bersama kami.</p>
+    <a href="kontak.html" class="btn btn-white">
+      <i class="fas fa-phone"></i> Hubungi Sekolah
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo">
+          <div class="nav-logo-icon">CN</div>
+          <div class="nav-logo-text">
+            <span class="nav-logo-name">SMA Cendekia Nusantara</span>
+            <span class="nav-logo-sub">Terakreditasi A | Est. 1985</span>
+          </div>
+        </div>
+        <p class="footer-desc">
+          Membentuk generasi cerdas, berkarakter, dan berdaya saing global melalui pendidikan berkualitas sejak 1985.
+        </p>
+        <div class="footer-socials">
+          <a href="#" class="footer-social"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="footer-social"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="footer-social"><i class="fab fa-youtube"></i></a>
+          <a href="#" class="footer-social"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Menu Utama</h4>
+        <ul class="footer-links">
+          <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+          <li><a href="tentang.html"><i class="fas fa-chevron-right"></i> Tentang Sekolah</a></li>
+          <li><a href="akademik.html"><i class="fas fa-chevron-right"></i> Akademik</a></li>
+          <li><a href="dokumentasi.html"><i class="fas fa-chevron-right"></i> Dokumentasi</a></li>
+          <li><a href="artikel.html"><i class="fas fa-chevron-right"></i> Berita</a></li>
+          <li><a href="kontak.html"><i class="fas fa-chevron-right"></i> Kontak</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Akademik</h4>
+        <ul class="footer-links">
+          <li><a href="akademik.html"><i class="fas fa-chevron-right"></i> Jurusan IPA</a></li>
+          <li><a href="akademik.html"><i class="fas fa-chevron-right"></i> Jurusan IPS</a></li>
+          <li><a href="akademik.html"><i class="fas fa-chevron-right"></i> Ekstrakurikuler</a></li>
+          <li><a href="akademik.html"><i class="fas fa-chevron-right"></i> Kalender Akademik</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Kontak</h4>
+        <div class="footer-contact-item">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>Jl. Pendidikan No. 45, Kota Nusantara, Jawa Tengah 50000</span>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fas fa-phone"></i>
+          <span>(024) 1234-5678</span>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fas fa-envelope"></i>
+          <span>info@smacendekia.sch.id</span>
+        </div>
+        <div class="footer-contact-item">
+          <i class="fas fa-clock"></i>
+          <span>Sen–Jum: 07.00–15.00 WIB</span>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 SMA Cendekia Nusantara. Hak Cipta Dilindungi.</span>
+      <span>Dibuat dengan <i class="fas fa-heart" style="color:#ef4444;"></i> untuk pendidikan</span>
+    </div>
+  </div>
+</footer>
+
+<!-- WHATSAPP FLOAT -->
+<div class="wa-float">
+  <a href="https://wa.me/6281234567890" class="wa-btn" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+    Chat Admin Sekolah
+  </a>
+</div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

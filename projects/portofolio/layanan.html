@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Layanan | Rizky Portfolio</title>
+  <meta name="description" content="Layanan jasa Rizky: web development, desain kreatif, dan joki tugas akademik. Harga terjangkau, kualitas terjamin." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --off-white: #FAFAF7; --cream: #F4F2EC; --dark: #1A1A1A; --muted: #888880; --border: #E5E3DC;
+      --purple: #7C5CFF; --purple-light: #EDE9FF; --purple-soft: #F5F2FF;
+      --green: #4CAF50; --green-light: #E8F5E9; --green-soft: #F1FAF1;
+      --orange: #FF8C42; --orange-light: #FFF0E6; --orange-soft: #FFF8F3;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.06); --shadow-md: 0 8px 32px rgba(0,0,0,0.09); --shadow-note: 3px 4px 0px rgba(0,0,0,0.08);
+      --font-hand: 'Caveat', cursive; --font-body: 'DM Sans', sans-serif; --font-serif: 'Instrument Serif', serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--off-white); color: var(--dark); line-height: 1.6; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+    section { padding: 80px 0; }
+
+    /* NAV */
+    #navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; transition: all 0.3s; padding: 20px 0; }
+    #navbar.scrolled { background: rgba(250,250,247,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 12px 0; box-shadow: var(--shadow-sm); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-family: var(--font-hand); font-size: 1.6rem; font-weight: 700; }
+    .nav-logo span { color: var(--purple); }
+    .nav-links { display: flex; align-items: center; gap: 36px; }
+    .nav-links a { font-size: 0.9rem; font-weight: 500; color: var(--muted); position: relative; transition: color 0.2s; }
+    .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: var(--purple); border-radius: 2px; transition: width 0.25s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--dark); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+    .nav-cta { font-size: 0.85rem !important; background: var(--dark); color: white !important; padding: 8px 18px; border-radius: 999px; }
+    .nav-cta:hover { background: var(--purple) !important; }
+    .nav-cta::after { display: none !important; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--dark); border-radius: 2px; transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: var(--off-white); border-bottom: 1px solid var(--border); padding: 24px; z-index: 999; flex-direction: column; gap: 20px; opacity: 0; transform: translateY(-20px); transition: all 0.3s; }
+    .mobile-menu.open { display: flex; opacity: 1; transform: translateY(0); }
+    .mobile-menu a { font-size: 1.1rem; font-weight: 500; color: var(--dark); padding: 8px 0; border-bottom: 1px solid var(--border); }
+
+    /* PAGE HERO */
+    .page-hero { padding: 140px 0 72px; background: var(--cream); border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+    .page-hero::before { content: ''; position: absolute; bottom: -60px; right: -60px; width: 280px; height: 280px; border-radius: 50%; background: var(--orange-light); opacity: 0.8; }
+    .page-label { font-family: var(--font-hand); font-size: 1.1rem; color: var(--muted); margin-bottom: 12px; }
+    .page-title { font-family: var(--font-serif); font-size: clamp(2.4rem, 5vw, 3.2rem); font-weight: 400; }
+    .page-title em { font-style: italic; color: var(--orange); }
+    .page-sub { color: var(--muted); font-size: 1rem; margin-top: 12px; max-width: 520px; }
+
+    /* SECTION HEADER */
+    .svc-section { padding: 80px 0; }
+    .svc-section:nth-child(even) { background: var(--cream); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+    .svc-header { display: flex; align-items: flex-end; gap: 16px; margin-bottom: 48px; flex-wrap: wrap; }
+    .svc-icon-big {
+      width: 64px; height: 64px; border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; flex-shrink: 0;
+    }
+    .ic-purple { background: var(--purple-light); }
+    .ic-orange { background: var(--orange-light); }
+    .ic-green { background: var(--green-light); }
+    .svc-title-block {}
+    .svc-label { font-family: var(--font-hand); font-size: 1rem; color: var(--muted); margin-bottom: 4px; }
+    .svc-title { font-family: var(--font-serif); font-size: clamp(1.8rem, 3vw, 2.4rem); font-weight: 400; }
+
+    /* PRICING CARDS */
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+    .pricing-card {
+      background: white; border-radius: 20px; padding: 32px;
+      border: 1.5px solid var(--border); box-shadow: var(--shadow-sm);
+      position: relative; transition: all 0.3s; display: flex; flex-direction: column;
+    }
+    .pricing-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+    .pricing-card.featured { border-width: 2px; }
+    .pricing-card.featured-purple { border-color: var(--purple); }
+    .pricing-card.featured-orange { border-color: var(--orange); }
+    .pricing-card.featured-green { border-color: var(--green); }
+
+    .badge-popular {
+      position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+      padding: 4px 14px; border-radius: 999px; font-size: 0.72rem; font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge-purple { background: var(--purple); color: white; }
+    .badge-orange { background: var(--orange); color: white; }
+    .badge-green { background: var(--green); color: white; }
+
+    .pack-name { font-size: 0.85rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px; }
+    .pack-price { font-family: var(--font-hand); font-size: 2.2rem; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+    .pack-price-note { font-size: 0.8rem; color: var(--muted); margin-bottom: 20px; }
+    .pack-divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+
+    .pack-features { flex: 1; }
+    .pack-feature { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; font-size: 0.86rem; color: #555; }
+    .pack-feature i { color: var(--green); margin-top: 2px; font-size: 0.8rem; flex-shrink: 0; }
+    .pack-feature.no i { color: var(--muted); }
+    .pack-feature.no { color: var(--muted); }
+
+    .pack-btn {
+      display: block; text-align: center; padding: 12px;
+      border-radius: 12px; font-weight: 600; font-size: 0.9rem;
+      margin-top: 24px; transition: all 0.2s;
+    }
+    .btn-purple { background: var(--purple); color: white; }
+    .btn-purple:hover { background: #6a4de8; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,92,255,0.3); }
+    .btn-orange { background: var(--orange); color: white; }
+    .btn-orange:hover { background: #e67a30; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,140,66,0.3); }
+    .btn-green { background: var(--green); color: white; }
+    .btn-green:hover { background: #3d9142; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(76,175,80,0.3); }
+    .btn-outline-pack { background: transparent; border: 1.5px solid var(--border); color: var(--dark); }
+    .btn-outline-pack:hover { border-color: var(--dark); }
+
+    /* DISCLAIMER */
+    .disclaimer {
+      background: #FFF9C4; border: 1px solid #F0D800;
+      border-radius: 12px; padding: 16px 20px;
+      display: flex; gap: 12px; align-items: flex-start;
+      font-size: 0.84rem; color: #6b5900; margin-top: 24px;
+    }
+    .disclaimer i { color: #F0B800; margin-top: 2px; flex-shrink: 0; }
+
+    .fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 48px 0 32px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+    .footer-logo { font-family: var(--font-hand); font-size: 1.4rem; font-weight: 700; }
+    .footer-logo span { color: var(--purple); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 0.88rem; color: var(--muted); transition: color 0.2s; }
+    .footer-links a:hover { color: var(--dark); }
+    .footer-copy { width: 100%; text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.82rem; color: var(--muted); }
+
+    .float-wa { position: fixed; bottom: 28px; right: 28px; z-index: 999; display: flex; align-items: center; gap: 10px; background: #25D366; color: white; padding: 12px 22px; border-radius: 999px; font-size: 0.9rem; font-weight: 600; box-shadow: 0 8px 32px rgba(37,211,102,0.4); opacity: 0; transform: translateY(16px); transition: all 0.4s; pointer-events: none; }
+    .float-wa.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+    .float-wa:hover { background: #20c05c; transform: translateY(-3px); }
+
+    @media (max-width: 992px) { .pricing-grid { grid-template-columns: 1fr 1fr; } .nav-links { display: none; } .hamburger { display: flex; } }
+    @media (max-width: 640px) { .pricing-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { section { padding: 56px 0; } .footer-inner { flex-direction: column; text-align: center; } .footer-links { flex-wrap: wrap; justify-content: center; } }
+  </style>
+</head>
+<body>
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo">rz<span>.</span></a>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="tentang.html">Tentang</a></li>
+          <li><a href="project.html">Project</a></li>
+          <li><a href="layanan.html" class="active">Layanan</a></li>
+          <li><a href="dokumentasi.html">Dokumentasi</a></li>
+          <li><a href="kontak.html" class="nav-cta">Kontak</a></li>
+        </ul>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a><a href="tentang.html">Tentang</a><a href="project.html">Project</a>
+    <a href="layanan.html">Layanan</a><a href="dokumentasi.html">Dokumentasi</a><a href="kontak.html">Kontak</a>
+  </div>
+
+  <div class="page-hero">
+    <div class="container">
+      <div class="page-label">💼 Yang bisa gue bantu</div>
+      <h1 class="page-title">Layanan &<br /><em>Paket Harga</em></h1>
+      <p class="page-sub">Pilih paket yang sesuai kebutuhan lo. Kalau masih bingung, langsung chat aja — gratis konsultasi!</p>
+    </div>
+  </div>
+
+  <!-- WEB DEVELOPMENT -->
+  <section class="svc-section" id="coding">
+    <div class="container">
+      <div class="svc-header fade-up">
+        <div class="svc-icon-big ic-purple">💜</div>
+        <div class="svc-title-block">
+          <div class="svc-label">// Kategori pertama</div>
+          <h2 class="svc-title" style="color: var(--purple);">Web Development</h2>
+        </div>
+      </div>
+
+      <div class="pricing-grid">
+        <div class="pricing-card fade-up">
+          <div class="pack-name">Starter</div>
+          <div class="pack-price" style="color: var(--purple);">Rp 150K</div>
+          <div class="pack-price-note">Landing page 1 halaman</div>
+          <div class="pack-divider"></div>
+          <div class="pack-features">
+            <div class="pack-feature"><i class="fas fa-check"></i>HTML + CSS + JS</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Responsive mobile</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>1x revisi</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Serah terima 3 hari</div>
+            <div class="pack-feature no"><i class="fas fa-times"></i>Database</div>
+            <div class="pack-feature no"><i class="fas fa-times"></i>Admin panel</div>
+          </div>
+          <a href="kontak.html" class="pack-btn btn-outline-pack">Pesan Starter</a>
+        </div>
+
+        <div class="pricing-card featured featured-purple fade-up">
+          <div class="badge-popular badge-purple">⭐ Paling Diminati</div>
+          <div class="pack-name">Professional</div>
+          <div class="pack-price" style="color: var(--purple);">Rp 400K</div>
+          <div class="pack-price-note">Multi-page + backend dasar</div>
+          <div class="pack-divider"></div>
+          <div class="pack-features">
+            <div class="pack-feature"><i class="fas fa-check"></i>React / Next.js</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>3-5 halaman</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Database MySQL</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Contact form aktif</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>3x revisi</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Serah terima 7 hari</div>
+          </div>
+          <a href="kontak.html" class="pack-btn btn-purple">Pesan Sekarang</a>
+        </div>
+
+        <div class="pricing-card fade-up">
+          <div class="pack-name">Enterprise</div>
+          <div class="pack-price" style="color: var(--purple);">Rp 800K+</div>
+          <div class="pack-price-note">Sistem web kompleks / custom</div>
+          <div class="pack-divider"></div>
+          <div class="pack-features">
+            <div class="pack-feature"><i class="fas fa-check"></i>Full system Laravel</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Admin panel</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Auth & roles</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>API integration</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Revisi unlimited</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Estimasi sesuai scope</div>
+          </div>
+          <a href="kontak.html" class="pack-btn btn-outline-pack">Diskusi Dulu</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DESIGN -->
+  <section class="svc-section" id="design" style="background: var(--cream); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+    <div class="container">
+      <div class="svc-header fade-up">
+        <div class="svc-icon-big ic-orange">🧡</div>
+        <div class="svc-title-block">
+          <div class="svc-label">// Kategori kedua</div>
+          <h2 class="svc-title" style="color: var(--orange);">Design & Creative</h2>
+        </div>
+      </div>
+
+      <div class="pricing-grid">
+        <div class="pricing-card fade-up">
+          <div class="pack-name">Logo Only</div>
+          <div class="pack-price" style="color: var(--orange);">Rp 75K</div>
+          <div class="pack-price-note">Logo + 3 konsep awal</div>
+          <div class="pack-divider"></div>
+          <div class="pack-features">
+            <div class="pack-feature"><i class="fas fa-check"></i>File PNG + SVG</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Versi warna & hitam putih</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>2x revisi</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Serah terima 2 hari</div>
+            <div class="pack-feature no"><i class="fas fa-times"></i>Brand guideline</div>
+          </div>
+          <a href="kontak.html" class="pack-btn btn-outline-pack">Pesan Logo</a>
+        </div>
+
+        <div class="pricing-card featured featured-orange fade-up">
+          <div class="badge-popular badge-orange">🔥 Best Value</div>
+          <div class="pack-name">Brand Identity</div>
+          <div class="pack-price" style="color: var(--orange);">Rp 250K</div>
+          <div class="pack-price-note">Paket branding lengkap</div>
+          <div class="pack-divider"></div>
+          <div class="pack-features">
+            <div class="pack-feature"><i class="fas fa-check"></i>Logo + variasi</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Palet warna</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Tipografi</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Template IG (3 post)</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>3x revisi</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Serah terima 5 hari</div>
+          </div>
+          <a href="kontak.html" class="pack-btn btn-orange">Pesan Sekarang</a>
+        </div>
+
+        <div class="pricing-card fade-up">
+          <div class="pack-name">UI Design</div>
+          <div class="pack-price" style="color: var(--orange);">Rp 200K</div>
+          <div class="pack-price-note">Per 5 screen Figma</div>
+          <div class="pack-divider"></div>
+          <div class="pack-features">
+            <div class="pack-feature"><i class="fas fa-check"></i>Desain Figma</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Desktop + mobile</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Komponen reusable</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>2x revisi per screen</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Export siap developer</div>
+          </div>
+          <a href="kontak.html" class="pack-btn btn-outline-pack">Pesan UI</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JOKI TUGAS -->
+  <section class="svc-section" id="tugas">
+    <div class="container">
+      <div class="svc-header fade-up">
+        <div class="svc-icon-big ic-green">💚</div>
+        <div class="svc-title-block">
+          <div class="svc-label">// Kategori ketiga</div>
+          <h2 class="svc-title" style="color: var(--green);">Joki Tugas Akademik</h2>
+        </div>
+      </div>
+
+      <div class="pricing-grid">
+        <div class="pricing-card fade-up">
+          <div class="pack-name">Ringan</div>
+          <div class="pack-price" style="color: var(--green);">Rp 30K+</div>
+          <div class="pack-price-note">Tugas kecil / presentasi</div>
+          <div class="pack-divider"></div>
+          <div class="pack-features">
+            <div class="pack-feature"><i class="fas fa-check"></i>Resume / ringkasan</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>PPT sederhana (10 slide)</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Tugas esai pendek</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>1x revisi</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Serah terima 1 hari</div>
+          </div>
+          <a href="kontak.html" class="pack-btn btn-outline-pack">Pesan</a>
+        </div>
+
+        <div class="pricing-card featured featured-green fade-up">
+          <div class="badge-popular badge-green">💡 Sering Dipesan</div>
+          <div class="pack-name">Sedang</div>
+          <div class="pack-price" style="color: var(--green);">Rp 100K+</div>
+          <div class="pack-price-note">Laporan / coding assignment</div>
+          <div class="pack-divider"></div>
+          <div class="pack-features">
+            <div class="pack-feature"><i class="fas fa-check"></i>Laporan PKL / magang</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Coding assignment</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Makalah ilmiah</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>2x revisi</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Serah terima 2-3 hari</div>
+          </div>
+          <a href="kontak.html" class="pack-btn btn-green">Pesan Sekarang</a>
+        </div>
+
+        <div class="pricing-card fade-up">
+          <div class="pack-name">Berat</div>
+          <div class="pack-price" style="color: var(--green);">Rp 250K+</div>
+          <div class="pack-price-note">Skripsi / tugas akhir</div>
+          <div class="pack-divider"></div>
+          <div class="pack-features">
+            <div class="pack-feature"><i class="fas fa-check"></i>Proposal skripsi</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Bab per bab</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Sistem / program pendukung</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Revisi unlimited</div>
+            <div class="pack-feature"><i class="fas fa-check"></i>Estimasi sesuai scope</div>
+          </div>
+          <a href="kontak.html" class="pack-btn btn-outline-pack">Diskusi Dulu</a>
+        </div>
+      </div>
+
+      <div class="disclaimer fade-up">
+        <i class="fas fa-exclamation-triangle"></i>
+        <div>
+          <strong>Disclaimer:</strong> Joki tugas disediakan sebagai bantuan belajar dan referensi. Gue tidak bertanggung jawab atas penggunaan hasil kerja yang melanggar aturan akademik institusi lo. Gunakan dengan bijak ya!
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">rz<span>.</span></div>
+        <ul class="footer-links">
+          <li><a href="tentang.html">Tentang</a></li>
+          <li><a href="project.html">Project</a></li>
+          <li><a href="layanan.html">Layanan</a></li>
+          <li><a href="kontak.html">Kontak</a></li>
+        </ul>
+      </div>
+      <div class="footer-copy">Made with ☕ & 💜 oleh <strong>Rizky Pratama</strong> · 2025</div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/6281234567890" target="_blank" class="float-wa" id="floatWa">
+    <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> Chat Sekarang
+  </a>
+
+  <script>
+    const navbar = document.getElementById('navbar');
+    const floatWa = document.getElementById('floatWa');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) navbar.classList.add('scrolled'); else navbar.classList.remove('scrolled');
+      if (window.scrollY > 300) floatWa.classList.add('visible'); else floatWa.classList.remove('visible');
+    });
+    document.getElementById('hamburger').addEventListener('click', function() {
+      this.classList.toggle('open');
+      document.getElementById('mobileMenu').classList.toggle('open');
+    });
+    document.querySelectorAll('.fade-up').forEach(el => {
+      new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+      }, { threshold: 0.08 }).observe(el);
+    });
+  </script>
+</body>
+</html>
