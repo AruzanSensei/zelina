@@ -174,10 +174,10 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
   if (!form) return;
 
   const rules = {
-    name:    { fn: v => v.trim().length > 1 ? '' : 'Please enter your full name.' },
-    email:   { fn: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) ? '' : 'Please enter a valid email address.' },
-    service: { fn: v => v ? '' : 'Please select a service.' },
-    message: { fn: v => v.trim().length >= 10 ? '' : 'Message must be at least 10 characters.' }
+    name: { fn: v => v.trim().length > 1 ? '' : 'Harap masukkan nama lengkap Anda.' },
+    email: { fn: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) ? '' : 'Harap masukkan alamat email yang valid.' },
+    service: { fn: v => v ? '' : 'Harap pilih layanan.' },
+    message: { fn: v => v.trim().length >= 10 ? '' : 'Pesan harus minimal 10 karakter.' }
   };
 
   function getField(id) {
@@ -253,16 +253,16 @@ function copyToClipboard(text, el) {
     ta.select();
     document.execCommand('copy');
     document.body.removeChild(ta);
-    showToast('Copied: ' + text);
+    showToast('Tersalin: ' + text);
     return;
   }
   navigator.clipboard.writeText(text).then(() => {
-    showToast('Copied: ' + text);
+    showToast('Tersalin: ' + text);
     if (el) {
       const hint = el.querySelector('.cic-hint');
       if (hint) {
         const prev = hint.textContent;
-        hint.textContent = 'Copied!';
+        hint.textContent = 'Tersalin!';
         setTimeout(() => { hint.textContent = prev; }, 1500);
       }
     }
