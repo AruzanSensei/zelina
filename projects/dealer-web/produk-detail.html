@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detail Produk – MotoPrima Dealer Mobil</title>
+  <meta name="description" content="Lihat spesifikasi lengkap, galeri, simulasi kredit, dan informasi booking test drive.">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="container">
+    <div class="navbar-inner">
+      <a href="index.html" class="nav-logo">
+        <div class="nav-logo-icon">M</div>
+        MOTO<span>PRIMA</span>
+      </a>
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="tentang.html" class="nav-link">Tentang Kami</a></li>
+        <li class="nav-item">
+          <a href="produk.html" class="nav-link active">Produk <span>▾</span></a>
+          <div class="dropdown-menu">
+            <a href="produk.html#sedan" class="dropdown-item"><span class="dropdown-item-icon">🚗</span>Sedan</a>
+            <a href="produk.html#suv" class="dropdown-item"><span class="dropdown-item-icon">🚙</span>SUV</a>
+            <a href="produk.html#mpv" class="dropdown-item"><span class="dropdown-item-icon">🚐</span>MPV</a>
+            <a href="produk.html#hatchback" class="dropdown-item"><span class="dropdown-item-icon">🚘</span>Hatchback</a>
+            <a href="produk.html#pickup" class="dropdown-item"><span class="dropdown-item-icon">🛻</span>Pickup</a>
+            <a href="produk.html#ev" class="dropdown-item"><span class="dropdown-item-icon">⚡</span>Electric Vehicle</a>
+          </div>
+        </li>
+        <li class="nav-item"><a href="dokumentasi.html" class="nav-link">Dokumentasi</a></li>
+        <li class="nav-item"><a href="kontak.html" class="nav-link">Kontak</a></li>
+      </ul>
+      <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="tentang.html" class="mobile-nav-link">Tentang Kami</a>
+  <a href="produk.html" class="mobile-nav-link">Produk</a>
+  <a href="dokumentasi.html" class="mobile-nav-link">Dokumentasi</a>
+  <a href="kontak.html" class="mobile-nav-link">Kontak</a>
+</div>
+
+<!-- BREADCRUMB -->
+<div style="background:var(--gray);border-bottom:1.5px solid var(--border);padding:16px 0;">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a><span>/</span>
+      <a href="produk.html">Produk</a><span>/</span>
+      Toyota Fortuner
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL -->
+<section class="section">
+  <div class="container">
+    <div class="detail-layout">
+
+      <!-- GALLERY -->
+      <div>
+        <div class="gallery-main">🚙</div>
+        <div class="gallery-thumbs">
+          <div class="gallery-thumb">🚙</div>
+          <div class="gallery-thumb">🏔️</div>
+          <div class="gallery-thumb">🛞</div>
+          <div class="gallery-thumb">💺</div>
+        </div>
+        <p style="font-size:11px;color:var(--mid);margin-top:10px;text-align:center;">
+          Ganti placeholder dengan foto asli di assets/img/
+        </p>
+      </div>
+
+      <!-- INFO -->
+      <div class="detail-info">
+        <span class="product-badge">SUV</span>
+        <h1>Toyota Fortuner</h1>
+        <div style="display:flex;gap:12px;margin:12px 0;flex-wrap:wrap;">
+          <span class="product-spec" style="font-size:14px;">⚙️ 2.4L Diesel Turbo</span>
+          <span class="product-spec" style="font-size:14px;">🔄 Automatic 6AT</span>
+          <span class="product-spec" style="font-size:14px;">🛞 4x4</span>
+          <span class="product-spec" style="font-size:14px;">👨‍👩‍👧 7-Seater</span>
+        </div>
+        <div class="detail-price">Rp 598.000.000 <small>OTR Jakarta</small></div>
+
+        <!-- SPESIFIKASI -->
+        <table class="detail-specs-table">
+          <tr><td>Mesin</td><td>2.4L 2GD-FTV Diesel Turbo</td></tr>
+          <tr><td>Tenaga</td><td>150 PS @ 3.400 rpm</td></tr>
+          <tr><td>Torsi</td><td>400 Nm @ 1.400-3.000 rpm</td></tr>
+          <tr><td>Transmisi</td><td>6-Speed Automatic</td></tr>
+          <tr><td>Penggerak</td><td>4WD (Shift-on-the-Fly)</td></tr>
+          <tr><td>Dimensi (P×L×T)</td><td>4.795 × 1.855 × 1.835 mm</td></tr>
+          <tr><td>Kapasitas Tangki</td><td>80 Liter</td></tr>
+          <tr><td>Garansi</td><td>3 Tahun / 100.000 Km</td></tr>
+          <tr><td>Warna Tersedia</td><td>Silver, White, Black, Bronze</td></tr>
+          <tr><td>Stok</td><td style="color:#22c55e;font-weight:700;">✅ Ready Stock</td></tr>
+        </table>
+
+        <!-- SIMULASI KREDIT -->
+        <div class="kredit-sim">
+          <h3>🧮 Simulasi Kredit</h3>
+          <form id="kredit-form">
+            <div class="form-group" style="margin-bottom:12px;">
+              <label>Harga OTR (Rp)</label>
+              <input type="number" id="k-harga" value="598000000" min="100000000" step="10000000">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+              <div class="form-group" style="margin-bottom:0;">
+                <label>DP (%)</label>
+                <select id="k-dp">
+                  <option value="10">10%</option>
+                  <option value="20" selected>20%</option>
+                  <option value="25">25%</option>
+                  <option value="30">30%</option>
+                  <option value="40">40%</option>
+                </select>
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label>Tenor (Bulan)</label>
+                <select id="k-tenor">
+                  <option value="12">12 Bulan</option>
+                  <option value="24">24 Bulan</option>
+                  <option value="36" selected>36 Bulan</option>
+                  <option value="48">48 Bulan</option>
+                  <option value="60">60 Bulan</option>
+                </select>
+              </div>
+            </div>
+          </form>
+          <div class="kredit-result">
+            <span id="kredit-result-val">Rp 0/bulan</span>
+            <small>*Estimasi cicilan, hubungi kami untuk penawaran terbaik</small>
+          </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="detail-actions">
+          <a href="https://wa.me/6281234567890?text=Halo%2C%20saya%20tertarik%20dengan%20Toyota%20Fortuner.%20Bisa%20bantu%20konsultasi%3F" target="_blank" rel="noopener" class="btn btn-primary">💬 Konsultasi</a>
+          <a href="kontak.html" class="btn btn-outline-dark">🏁 Booking Test Drive</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PRODUK TERKAIT -->
+<section class="section" style="background:var(--gray);border-top:1.5px solid var(--border);padding-top:56px;padding-bottom:56px;">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Rekomendasi Lain</span>
+      <h2 class="section-title">Produk Terkait</h2>
+    </div>
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="product-img"><div class="product-img-placeholder">🚙</div></div>
+        <div class="product-info">
+          <span class="product-badge">SUV</span>
+          <h3 class="product-name">Honda CR-V</h3>
+          <div class="product-price">Rp 568 Juta <small>OTR</small></div>
+          <a href="produk-detail.html" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;">Detail →</a>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img"><div class="product-img-placeholder">🚙</div></div>
+        <div class="product-info">
+          <span class="product-badge">SUV</span>
+          <h3 class="product-name">Mitsubishi Pajero Sport</h3>
+          <div class="product-price">Rp 628 Juta <small>OTR</small></div>
+          <a href="produk-detail.html" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;">Detail →</a>
+        </div>
+      </div>
+      <div class="product-card">
+        <div class="product-img"><div class="product-img-placeholder">🚙</div></div>
+        <div class="product-info">
+          <span class="product-badge">SUV</span>
+          <h3 class="product-name">Hyundai Tucson</h3>
+          <div class="product-price">Rp 498 Juta <small>OTR</small></div>
+          <a href="produk-detail.html" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;">Detail →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">MOTO<span>PRIMA</span> — Dealer Resmi Terpercaya</div>
+      <div>© 2025 MotoPrima. All rights reserved.</div>
+    </div>
+  </div>
+</footer>
+<a href="https://wa.me/6281234567890?text=Halo%20MotoPrima%2C%20saya%20ingin%20konsultasi%20mobil" class="wa-float" target="_blank" rel="noopener">
+  <span class="wa-float-icon">💬</span><span class="wa-float-text">Konsultasi</span>
+</a>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

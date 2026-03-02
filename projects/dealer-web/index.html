@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MotoPrima – Dealer Mobil Resmi Terpercaya</title>
+  <meta name="description" content="MotoPrima adalah dealer mobil resmi terpercaya dengan pengalaman 5+ tahun, 100+ unit terjual, dan 4 cabang showroom.">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    /* Hero backgrounds menggunakan gradient warna sebagai placeholder foto */
+    .hero-slide:nth-child(1) { background: linear-gradient(135deg,#0a1628 0%,#1a3a6e 50%,#2255aa 100%); }
+    .hero-slide:nth-child(2) { background: linear-gradient(135deg,#0d1f1f 0%,#0a3833 50%,#0d5e55 100%); }
+    .hero-slide:nth-child(3) { background: linear-gradient(135deg,#1a0d28 0%,#3a1a6e 50%,#5522aa 100%); }
+    .hero-slide:nth-child(4) { background: linear-gradient(135deg,#1a1a0d 0%,#5a4a0a 50%,#8a6e0d 100%); }
+    .hero-car-icon {
+      position: absolute;
+      right: 8%;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 180px;
+      opacity: 0.12;
+      z-index: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+  <div class="container">
+    <div class="navbar-inner">
+      <a href="index.html" class="nav-logo">
+        <div class="nav-logo-icon">M</div>
+        MOTO<span>PRIMA</span>
+      </a>
+      <ul class="nav-menu">
+        <li class="nav-item">
+          <a href="tentang.html" class="nav-link">Tentang Kami</a>
+        </li>
+        <li class="nav-item">
+          <a href="produk.html" class="nav-link">Produk <span>▾</span></a>
+          <div class="dropdown-menu">
+            <a href="produk.html#sedan" class="dropdown-item"><span class="dropdown-item-icon">🚗</span>Sedan</a>
+            <a href="produk.html#suv" class="dropdown-item"><span class="dropdown-item-icon">🚙</span>SUV</a>
+            <a href="produk.html#mpv" class="dropdown-item"><span class="dropdown-item-icon">🚐</span>MPV</a>
+            <a href="produk.html#hatchback" class="dropdown-item"><span class="dropdown-item-icon">🚘</span>Hatchback</a>
+            <a href="produk.html#pickup" class="dropdown-item"><span class="dropdown-item-icon">🛻</span>Pickup</a>
+            <a href="produk.html#ev" class="dropdown-item"><span class="dropdown-item-icon">⚡</span>Electric Vehicle</a>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a href="dokumentasi.html" class="nav-link">Dokumentasi</a>
+        </li>
+        <li class="nav-item">
+          <a href="kontak.html" class="nav-link">Kontak</a>
+        </li>
+      </ul>
+      <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="tentang.html" class="mobile-nav-link">Tentang Kami</a>
+  <a href="produk.html" class="mobile-nav-link">Produk</a>
+  <div class="mobile-dropdown">
+    <a href="produk.html#sedan" class="mobile-dropdown-item">🚗 Sedan</a>
+    <a href="produk.html#suv" class="mobile-dropdown-item">🚙 SUV</a>
+    <a href="produk.html#mpv" class="mobile-dropdown-item">🚐 MPV</a>
+    <a href="produk.html#hatchback" class="mobile-dropdown-item">🚘 Hatchback</a>
+    <a href="produk.html#pickup" class="mobile-dropdown-item">🛻 Pickup</a>
+    <a href="produk.html#ev" class="mobile-dropdown-item">⚡ Electric Vehicle</a>
+  </div>
+  <a href="dokumentasi.html" class="mobile-nav-link">Dokumentasi</a>
+  <a href="kontak.html" class="mobile-nav-link">Kontak</a>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-slide">
+    <div class="hero-car-icon">🚗</div>
+  </div>
+  <div class="hero-slide">
+    <div class="hero-car-icon">🚙</div>
+  </div>
+  <div class="hero-slide">
+    <div class="hero-car-icon">⚡</div>
+  </div>
+  <div class="hero-slide">
+    <div class="hero-car-icon">🛻</div>
+  </div>
+
+  <div class="container hero-content">
+    <span class="hero-label">Dealer Mobil Resmi Terpercaya</span>
+    <h1 class="hero-title">Temukan Mobil<br><span>Impian</span> Anda</h1>
+    <p class="hero-subtitle">Koleksi lengkap dari brand ternama dunia. Layanan profesional, harga transparan, proses mudah dan cepat.</p>
+    <div class="hero-buttons">
+      <a href="produk.html" class="btn btn-primary">🚗 Lihat Produk</a>
+      <a href="kontak.html" class="btn btn-outline">💬 Hubungi Kami</a>
+    </div>
+  </div>
+
+  <div class="hero-indicators">
+    <div class="hero-dot"></div>
+    <div class="hero-dot"></div>
+    <div class="hero-dot"></div>
+    <div class="hero-dot"></div>
+  </div>
+</section>
+
+<!-- ===== STATISTIK ===== -->
+<section class="stats-section">
+  <div class="container" style="padding:0;">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">🏆</div>
+        <div>
+          <div class="stat-number">5+</div>
+          <div class="stat-label">Tahun Pengalaman</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🚗</div>
+        <div>
+          <div class="stat-number">100+</div>
+          <div class="stat-label">Unit Terjual</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📍</div>
+        <div>
+          <div class="stat-number">4</div>
+          <div class="stat-label">Cabang Showroom</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">😊</div>
+        <div>
+          <div class="stat-number">300+</div>
+          <div class="stat-label">Customer Puas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRODUK UNGGULAN ===== -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Pilihan Terbaik Kami</span>
+      <h2 class="section-title">Produk Unggulan</h2>
+      <p class="section-subtitle">Mobil-mobil terpopuler dengan spesifikasi terbaik dan harga bersaing. Tersedia ready stock.</p>
+    </div>
+    <div class="products-grid">
+
+      <div class="product-card">
+        <div class="product-img">
+          <div class="product-img-placeholder">🚙</div>
+        </div>
+        <div class="product-info">
+          <span class="product-badge">SUV</span>
+          <h3 class="product-name">Toyota Fortuner</h3>
+          <div class="product-specs">
+            <span class="product-spec">⚙️ 2.4L Diesel</span>
+            <span class="product-spec">🔄 Automatic</span>
+            <span class="product-spec">🛞 4x4</span>
+          </div>
+          <div class="product-price">Rp 598 Juta <small>OTR Jakarta</small></div>
+          <a href="produk-detail.html?id=fortuner" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;">Lihat Detail →</a>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">
+          <div class="product-img-placeholder">🚗</div>
+        </div>
+        <div class="product-info">
+          <span class="product-badge">Sedan</span>
+          <h3 class="product-name">Honda Civic</h3>
+          <div class="product-specs">
+            <span class="product-spec">⚙️ 1.5L Turbo</span>
+            <span class="product-spec">🔄 CVT</span>
+            <span class="product-spec">🏁 Sport</span>
+          </div>
+          <div class="product-price">Rp 499 Juta <small>OTR Jakarta</small></div>
+          <a href="produk-detail.html?id=civic" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;">Lihat Detail →</a>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">
+          <div class="product-img-placeholder">🚐</div>
+        </div>
+        <div class="product-info">
+          <span class="product-badge">MPV</span>
+          <h3 class="product-name">Toyota Innova Zenix</h3>
+          <div class="product-specs">
+            <span class="product-spec">⚙️ 2.0L Hybrid</span>
+            <span class="product-spec">🔄 Automatic</span>
+            <span class="product-spec">👨‍👩‍👧‍👦 7-Seat</span>
+          </div>
+          <div class="product-price">Rp 448 Juta <small>OTR Jakarta</small></div>
+          <a href="produk-detail.html?id=innova" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;">Lihat Detail →</a>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">
+          <div class="product-img-placeholder">⚡</div>
+        </div>
+        <div class="product-info">
+          <span class="product-badge" style="background:#e8ffe8;color:#22a555;border-color:#22a555;">Electric</span>
+          <h3 class="product-name">Hyundai Ioniq 6</h3>
+          <div class="product-specs">
+            <span class="product-spec">⚡ 53 kWh</span>
+            <span class="product-spec">🔋 Single Motor</span>
+            <span class="product-spec">🌿 EV</span>
+          </div>
+          <div class="product-price">Rp 749 Juta <small>OTR Jakarta</small></div>
+          <a href="produk-detail.html?id=ioniq6" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;">Lihat Detail →</a>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">
+          <div class="product-img-placeholder">🚘</div>
+        </div>
+        <div class="product-info">
+          <span class="product-badge">Hatchback</span>
+          <h3 class="product-name">Honda Jazz</h3>
+          <div class="product-specs">
+            <span class="product-spec">⚙️ 1.5L i-VTEC</span>
+            <span class="product-spec">🔄 CVT</span>
+            <span class="product-spec">🏙️ City</span>
+          </div>
+          <div class="product-price">Rp 285 Juta <small>OTR Jakarta</small></div>
+          <a href="produk-detail.html?id=jazz" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;">Lihat Detail →</a>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="product-img">
+          <div class="product-img-placeholder">🛻</div>
+        </div>
+        <div class="product-info">
+          <span class="product-badge">Pickup</span>
+          <h3 class="product-name">Mitsubishi Triton</h3>
+          <div class="product-specs">
+            <span class="product-spec">⚙️ 2.4L Diesel</span>
+            <span class="product-spec">🔄 6-Speed AT</span>
+            <span class="product-spec">💪 4WD</span>
+          </div>
+          <div class="product-price">Rp 398 Juta <small>OTR Jakarta</small></div>
+          <a href="produk-detail.html?id=triton" class="btn btn-primary btn-sm" style="width:100%;justify-content:center;">Lihat Detail →</a>
+        </div>
+      </div>
+
+    </div>
+    <div style="text-align:center;margin-top:40px;">
+      <a href="produk.html" class="btn btn-outline-dark">Lihat Semua Produk →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BRAND SCROLL ===== -->
+<section class="brands-section">
+  <div class="container" style="margin-bottom:16px;">
+    <span class="section-label">Brand Partner Kami</span>
+  </div>
+  <div class="brands-track-wrapper">
+    <div class="brands-track" id="brandsTrack">
+      <div class="brand-item">🟠 Toyota</div>
+      <div class="brand-item">🔴 Honda</div>
+      <div class="brand-item">🔵 Mitsubishi</div>
+      <div class="brand-item">🟦 Hyundai</div>
+      <div class="brand-item">🔵 Nissan</div>
+      <div class="brand-item">🟦 Suzuki</div>
+      <div class="brand-item">🟥 Wuling</div>
+      <!-- Duplikat untuk loop -->
+      <div class="brand-item">🟠 Toyota</div>
+      <div class="brand-item">🔴 Honda</div>
+      <div class="brand-item">🔵 Mitsubishi</div>
+      <div class="brand-item">🟦 Hyundai</div>
+      <div class="brand-item">🔵 Nissan</div>
+      <div class="brand-item">🟦 Suzuki</div>
+      <div class="brand-item">🟥 Wuling</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONI ===== -->
+<section class="section" style="background:var(--gray);">
+  <div class="container">
+    <div class="section-header centered">
+      <span class="section-label">Kata Mereka</span>
+      <h2 class="section-title">Testimoni Customer</h2>
+      <p class="section-subtitle">Kepuasan pelanggan adalah prioritas utama kami.</p>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">Proses pembelian sangat mudah dan cepat. Sales nya ramah dan informatif. Mobil langsung siap dalam 3 hari. Sangat puas!</p>
+        <div class="testi-author">
+          <div class="testi-avatar">B</div>
+          <div>
+            <div class="testi-name">Budi Santoso</div>
+            <div class="testi-city">📍 Jakarta Selatan</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">Dealer terpercaya! Harga transparan tanpa biaya tersembunyi. Cicilan ringan, dokumen beres semuanya dibantu. Recommended banget!</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#22c55e;">R</div>
+          <div>
+            <div class="testi-name">Rina Kusuma</div>
+            <div class="testi-city">📍 Bekasi</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">Sudah beli mobil ke-2 di sini. Pelayanan purna jual juga bagus, always responsive. MotoPrima memang beda!</p>
+        <div class="testi-author">
+          <div class="testi-avatar" style="background:#f59e0b;">A</div>
+          <div>
+            <div class="testi-name">Ahmad Fauzan</div>
+            <div class="testi-city">📍 Depok</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT STRIP ===== -->
+<section class="contact-strip">
+  <div class="container">
+    <div class="contact-strip-inner">
+      <div class="contact-strip-info">
+        <h3>Siap Konsultasi Gratis?</h3>
+        <p>Tim kami siap membantu Anda menemukan mobil yang tepat sesuai kebutuhan dan budget.</p>
+      </div>
+      <div class="contact-details">
+        <div class="contact-detail-item">
+          <span>📍</span>
+          <span>Jl. Raya Serpong No. 88, Tangerang</span>
+        </div>
+        <div class="contact-detail-item">
+          <span>📞</span>
+          <span>(021) 7788-9900</span>
+        </div>
+      </div>
+      <a href="kontak.html" class="btn btn-primary">Hubungi Kami →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">MOTO<span>PRIMA</span> — Dealer Resmi Terpercaya</div>
+      <div>© 2025 MotoPrima. All rights reserved.</div>
+    </div>
+  </div>
+</footer>
+
+<!-- WA FLOAT -->
+<a href="https://wa.me/6281234567890?text=Halo%20MotoPrima%2C%20saya%20ingin%20konsultasi%20mobil" class="wa-float" target="_blank" rel="noopener">
+  <span class="wa-float-icon">💬</span>
+  <span class="wa-float-text">Konsultasi</span>
+</a>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
