@@ -113,7 +113,7 @@ export function initManualMode() {
                     </div>
                     
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
-                        <div style="font-size: 0.85rem; color: var(--tertiary); font-weight: 600;">
+                        <div style="font-size: 0.85rem; color: var(--bg-card); background-color: var(--tertiary); margin: 0 2px; padding: 2px 8px; border-radius: 4px; font-weight: 600;">
                             ${index + 1}
                         </div>
                         <div style="font-weight: 600; color: var(--primary);">

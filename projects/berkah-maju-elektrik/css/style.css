@@ -438,7 +438,7 @@ small {
 #manual-items-container {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
     margin-bottom: 12px;
 }
 
@@ -446,6 +446,7 @@ small {
 .item-card {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
+    border-top: 3px solid var(--text-muted);
     border-radius: var(--radius-sm);
     padding: var(--spacing-md);
     /* margin-bottom: 12px; REMOVED in favor of gap */
@@ -723,6 +724,11 @@ small {
 .modal.active {
     opacity: 1;
     visibility: visible;
+}
+
+/* Preview modal must always sit above other modals (e.g. detail sheet) */
+#preview-modal {
+    z-index: 300;
 }
 
 .modal-content {

@@ -291,6 +291,8 @@ export function initHistoryMode() {
                 const div = document.createElement('div');
                 div.className = 'item-card';
                 div.style.padding = '10px';
+                div.style.marginBottom = '10px';
+                div.style.borderTop = '1px solid var(--border-color)';
                 div.innerHTML = `
                     <div style="font-weight:600; margin-bottom:4px;">${item.name}</div>
                     <div style="display:flex; gap:10px; font-size:0.9rem; color:var(--text-muted);">
@@ -305,38 +307,94 @@ export function initHistoryMode() {
         }
 
         // ===================================
-        // PREVIEW RENDERING (Invoice + Surat Jalan)
+        // PREVIEW RENDERING (Invoice + Surat Jalan) — compact preview-cards style
         // ===================================
+        let invoiceHTML = '';
+        let suratJalanHTML = '';
+        try {
+            invoiceHTML = buildInvoiceHTML(items, title);
+            suratJalanHTML = buildSuratJalanHTML(items);
+        } catch (err) {
+            console.warn('Could not build preview HTML in detail:', err);
+        }
+
         const previewSection = document.createElement('div');
         previewSection.style.cssText = 'margin-top:16px; border-top:1px solid var(--border-color); padding-top:16px;';
-        previewSection.innerHTML = `
-            <h4 style="margin-bottom:10px; font-size:0.9rem; color:var(--text-muted);">Preview Dokumen</h4>
-            <div style="display:flex; flex-direction:column; gap:12px;">
-                <div style="border-radius:8px; overflow:hidden; border:1px solid var(--border-color); background:white;">
-                    <div style="padding:6px 10px; background:var(--bg-body); font-size:0.8rem; font-weight:600; color:var(--text-muted);">Invoice</div>
-                    <iframe id="detail-invoice-preview" style="width:100%; height:300px; border:none; pointer-events:none;"></iframe>
-                </div>
-                <div style="border-radius:8px; overflow:hidden; border:1px solid var(--border-color); background:white;">
-                    <div style="padding:6px 10px; background:var(--bg-body); font-size:0.8rem; font-weight:600; color:var(--text-muted);">Surat Jalan</div>
-                    <iframe id="detail-surat-preview" style="width:100%; height:300px; border:none; pointer-events:none;"></iframe>
-                </div>
-            </div>
-        `;
+
+        const previewHeader = document.createElement('h4');
+        previewHeader.textContent = 'Preview';
+        previewHeader.style.cssText = 'margin-bottom:10px; font-size:0.9rem; color:var(--text-muted);';
+        previewSection.appendChild(previewHeader);
+
+        const cardsRow = document.createElement('div');
+        cardsRow.style.cssText = 'display:flex; gap:12px; margin-bottom:12px;';
+        previewSection.appendChild(cardsRow);
+
         detailContent.appendChild(previewSection);
 
-        // Render previews into iframes
-        try {
-            const invoiceHTML = buildInvoiceHTML(items, title);
-            const suratJalanHTML = buildSuratJalanHTML(items);
+        // Build a self-contained preview card with explicit inline sizing
+        const buildPreviewCard = (htmlStr, bgColor) => {
+            // Outer card — aspect-ratio A4, clips overflow
+            const card = document.createElement('div');
+            card.style.cssText = `
+                flex:1; position:relative; border-radius:var(--radius-sm);
+                border:1px solid var(--border-color); overflow:hidden;
+                background:${bgColor}; aspect-ratio:1/1.414;
+            `;
 
-            const invoiceFrame = previewSection.querySelector('#detail-invoice-preview');
-            const suratFrame = previewSection.querySelector('#detail-surat-preview');
+            if (htmlStr) {
+                // Inner frame-wrap: will be sized explicitly once we know the card width
+                const frameWrap = document.createElement('div');
+                frameWrap.style.cssText = 'position:absolute; top:0; left:0; width:100%; overflow:hidden;';
+                card.appendChild(frameWrap);
 
-            if (invoiceFrame) invoiceFrame.srcdoc = invoiceHTML;
-            if (suratFrame) suratFrame.srcdoc = suratJalanHTML;
-        } catch (err) {
-            console.warn('Could not render preview in detail:', err);
-        }
+                const iframe = document.createElement('iframe');
+                iframe.style.cssText = 'border:0; pointer-events:none; display:block; width:794px; height:1123px; transform-origin:top left;';
+                iframe.srcdoc = htmlStr;
+                frameWrap.appendChild(iframe);
+
+                // After modal finishes its 300ms open animation, measure and scale
+                // Pass cardsRow reference so we have a fallback width source
+                setTimeout(() => {
+                    const availW = card.offsetWidth || cardsRow.offsetWidth / 2 || 150;
+                    const scale = availW / 794;
+                    iframe.style.transform = `scale(${scale})`;
+                }, 400);
+            }
+
+            return card;
+        };
+
+        const invoiceCard = buildPreviewCard(invoiceHTML, 'var(--invoice-bg, #f0f4ff)');
+        const suratCard = buildPreviewCard(suratJalanHTML, 'var(--letter-bg, #f0fff4)');
+
+        // Add Preview buttons
+        const makePreviewBtn = (type) => {
+            const btn = document.createElement('button');
+            btn.className = 'btn btn-outline';
+            btn.textContent = 'Preview';
+            btn.style.cssText = 'position:absolute; right:8px; bottom:8px; padding:5px 10px; font-size:0.78rem; z-index:2;';
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const html = type === 'invoice' ? invoiceHTML : suratJalanHTML;
+                const label = type === 'invoice' ? 'Invoice' : 'Surat Jalan';
+                const previewModal = document.getElementById('preview-modal');
+                const previewFrame = document.getElementById('pdf-preview-frame');
+                const previewTitle = document.getElementById('preview-title');
+                if (previewModal && previewFrame) {
+                    previewFrame.srcdoc = html;
+                    if (previewTitle) previewTitle.textContent = label;
+                    previewModal.classList.remove('hidden');
+                    previewModal.classList.add('active');
+                }
+            });
+            return btn;
+        };
+
+        invoiceCard.appendChild(makePreviewBtn('invoice'));
+        suratCard.appendChild(makePreviewBtn('surat'));
+        cardsRow.appendChild(invoiceCard);
+        cardsRow.appendChild(suratCard);
     };
 
     const openDetail = (index) => {
