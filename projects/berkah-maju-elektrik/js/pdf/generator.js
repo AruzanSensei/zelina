@@ -640,8 +640,66 @@ ${rows}
 };
 
 // ============================================
-// PINCH ZOOM (MOBILE PREVIEW)
+// MODAL PREVIEW & PINCH ZOOM
 // ============================================
+export const openPreviewModal = (html, titleText, type, downloadAction) => {
+    const previewModal = document.getElementById('preview-modal');
+    const previewFrame = document.getElementById('pdf-preview-frame');
+    const previewTitle = document.getElementById('preview-title');
+    const previewDownloadBtn = document.getElementById('preview-download-btn');
+    const btnModalEdit = document.getElementById('btn-modal-edit');
+    if (!previewModal || !previewFrame || !previewTitle || !previewDownloadBtn) return;
+
+    previewTitle.textContent = titleText;
+    previewFrame.srcdoc = html;
+
+    // Optional: Hide edit button if we passed a custom downloadAction (History Mode)
+    if (btnModalEdit) {
+        btnModalEdit.style.display = downloadAction ? 'none' : 'inline-flex';
+    }
+
+    previewModal.classList.remove('hidden');
+    previewModal.classList.add('active');
+
+    // Attach download action
+    previewDownloadBtn.onclick = () => {
+        if (downloadAction) downloadAction();
+    };
+
+    // Calculate zoom-to-fit
+    setTimeout(() => {
+        const modalBody = previewModal.querySelector('.modal-body');
+        if (modalBody) {
+            modalBody.style.display = 'flex';
+            modalBody.style.justifyContent = 'center';
+            modalBody.style.alignItems = 'center'; // Center the canvas
+            modalBody.style.overflow = 'hidden'; // Remove scrollbars as requested
+
+            previewFrame.style.width = '794px';
+            previewFrame.style.height = '1123px';
+            previewFrame.style.flexShrink = '0';
+
+            // Reset position
+            previewFrame.dataset.x = '0';
+            previewFrame.dataset.y = '0';
+
+            const refWidth = 794;
+            const refHeight = 1123;
+            const availableWidth = modalBody.clientWidth || document.documentElement.clientWidth * 0.9;
+            const availableHeight = modalBody.clientHeight || document.documentElement.clientHeight * 0.8;
+            const scale = Math.min(availableWidth / refWidth, availableHeight / refHeight) * 0.95; // 95% to leave some margin
+
+            previewFrame.dataset.minZoom = scale.toString();
+            previewFrame.dataset.zoom = scale.toString();
+            previewFrame.style.transformOrigin = 'center center';
+            previewFrame.style.transform = `translate(0px, 0px) scale(${scale})`;
+            previewFrame.style.transition = 'none'; // smooth drag
+
+            setupPinchZoom(modalBody, previewFrame);
+        }
+    }, 150);
+};
+
 function setupPinchZoom(wrapper, frame) {
     if (wrapper.dataset.pinchBound) return;
     wrapper.dataset.pinchBound = '1';
@@ -649,6 +707,7 @@ function setupPinchZoom(wrapper, frame) {
     let pointers = new Map();
     let initialDistance = 0;
     let initialZoom = 1;
+    let lastPanCenter = null;
 
     const getDistance = () => {
         const pts = Array.from(pointers.values());
@@ -659,16 +718,26 @@ function setupPinchZoom(wrapper, frame) {
         return Math.sqrt(dx * dx + dy * dy);
     };
 
+    const getCenter = () => {
+        const pts = Array.from(pointers.values());
+        if (pts.length === 1) return { x: pts[0].x, y: pts[0].y };
+        if (pts.length >= 2) return { x: (pts[0].x + pts[1].x) / 2, y: (pts[0].y + pts[1].y) / 2 };
+        return { x: 0, y: 0 };
+    };
+
     const updateTransform = () => {
-        const baseScale = parseFloat(frame.dataset.baseScale || '1');
         const zoom = parseFloat(frame.dataset.zoom || '1');
-        frame.style.transform = `scale(${baseScale * zoom})`;
+        const x = parseFloat(frame.dataset.x || '0');
+        const y = parseFloat(frame.dataset.y || '0');
+        frame.style.transform = `translate(${x}px, ${y}px) scale(${zoom})`;
     };
 
     const onPointerDown = (e) => {
-        if (e.pointerType !== 'touch') return;
         wrapper.setPointerCapture(e.pointerId);
         pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+        lastPanCenter = getCenter();
+
         if (pointers.size === 2) {
             initialDistance = getDistance();
             initialZoom = parseFloat(frame.dataset.zoom || '1');
@@ -677,16 +746,32 @@ function setupPinchZoom(wrapper, frame) {
 
     const onPointerMove = (e) => {
         if (!pointers.has(e.pointerId)) return;
-        if (e.pointerType !== 'touch') return;
         pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+        const center = getCenter();
+
+        // Panning interaction
+        if (lastPanCenter) {
+            let x = parseFloat(frame.dataset.x || '0');
+            let y = parseFloat(frame.dataset.y || '0');
+            x += (center.x - lastPanCenter.x);
+            y += (center.y - lastPanCenter.y);
+            frame.dataset.x = String(x);
+            frame.dataset.y = String(y);
+        }
+        lastPanCenter = center;
+
+        // Zooming interaction
         if (pointers.size === 2 && initialDistance > 0) {
             const dist = getDistance();
             if (!dist) return;
+            const minZoom = parseFloat(frame.dataset.minZoom || '0.3');
             let nextZoom = initialZoom * (dist / initialDistance);
-            nextZoom = Math.max(0.3, Math.min(1, nextZoom)); // Only allow zoom OUT (max 1 = 100%)
+            nextZoom = Math.max(minZoom, Math.min(1, nextZoom)); // limit zoom
             frame.dataset.zoom = String(nextZoom);
-            updateTransform();
         }
+
+        updateTransform();
     };
 
     const onPointerUp = (e) => {
@@ -695,14 +780,48 @@ function setupPinchZoom(wrapper, frame) {
         if (pointers.size < 2) {
             initialDistance = 0;
         }
+        if (pointers.size > 0) {
+            lastPanCenter = getCenter();
+        } else {
+            lastPanCenter = null;
+        }
     };
 
     wrapper.style.touchAction = 'none';
-    wrapper.addEventListener('pointerdown', onPointerDown);
+    wrapper.style.overflow = 'hidden';
+    wrapper.style.cursor = 'grab';
+
+    wrapper.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const minZoom = parseFloat(frame.dataset.minZoom || '0.3');
+        let currentZoom = parseFloat(frame.dataset.zoom || minZoom);
+
+        const zoomFactor = 0.05;
+        let nextZoom = currentZoom - Math.sign(e.deltaY) * zoomFactor;
+        nextZoom = Math.max(minZoom, Math.min(1, nextZoom));
+
+        frame.dataset.zoom = String(nextZoom);
+        updateTransform();
+    }, { passive: false });
+
+    // Handle mouse cursor changes
+    wrapper.addEventListener('pointerdown', (e) => {
+        wrapper.style.cursor = 'grabbing';
+        onPointerDown(e);
+    });
     wrapper.addEventListener('pointermove', onPointerMove);
-    wrapper.addEventListener('pointerup', onPointerUp);
-    wrapper.addEventListener('pointercancel', onPointerUp);
-    wrapper.addEventListener('pointerleave', onPointerUp);
+    wrapper.addEventListener('pointerup', (e) => {
+        wrapper.style.cursor = 'grab';
+        onPointerUp(e);
+    });
+    wrapper.addEventListener('pointercancel', (e) => {
+        wrapper.style.cursor = 'grab';
+        onPointerUp(e);
+    });
+    wrapper.addEventListener('pointerleave', (e) => {
+        wrapper.style.cursor = 'grab';
+        onPointerUp(e);
+    });
 }
 
 // ============================================
@@ -783,23 +902,14 @@ export function initPDFGenerator() {
 
     // Fullscreen preview (modal)
     const openFullPreview = (type) => {
-        if (!previewModal || !previewFrame || !previewTitle || !previewDownloadBtn) return;
-
-        // reset zoom state for modal frame
-        previewFrame.dataset.baseScale = '1';
-        previewFrame.dataset.zoom = '1';
-        previewFrame.style.transform = 'scale(1)';
-
         currentPreviewType = type;
+        const html = type === 'invoice' ? lastInvoiceHTML : lastSuratJalanHTML;
+        const titleText = type === 'invoice' ? 'Preview Invoice' : 'Preview Surat Jalan';
 
-        if (type === 'invoice') {
-            previewTitle.textContent = 'Preview Invoice';
-            previewFrame.srcdoc = lastInvoiceHTML;
-        } else {
-            previewTitle.textContent = 'Preview Surat Jalan';
-            previewFrame.srcdoc = lastSuratJalanHTML;
-        }
+        // Use generalized modal open function, pass null for downloadAction to use manual mode's override
+        openPreviewModal(html, titleText, type, null);
 
+        // Customize download click to handle manual edits logic
         previewDownloadBtn.onclick = () => {
             const title = document.getElementById('manual-title')?.value || '';
             const items = appState.state.invoiceItems;
@@ -815,21 +925,9 @@ export function initPDFGenerator() {
                 w.document.title = `Edited-${title}`;
                 setTimeout(() => { w.focus(); w.print(); }, 300);
             } else {
-                if (type === 'invoice') {
-                    printInvoicePDF(items, title);
-                } else {
-                    printInvoicePDF(items, title); // preserving original fallback
-                }
+                printInvoicePDF(items, title);
             }
         };
-
-        previewModal.classList.remove('hidden');
-        previewModal.classList.add('active');
-
-        const modalBody = previewModal.querySelector('.modal-body');
-        if (modalBody) {
-            setupPinchZoom(modalBody, previewFrame);
-        }
     };
 
     if (closePreviewBtn && previewModal) {

@@ -2,7 +2,7 @@
  * History Mode Logic with Search, Multi-Select, Swipe, and Detail Preview
  */
 import { appState } from '../state.js';
-import { printInvoicePDF, buildInvoiceHTML, buildSuratJalanHTML } from '../pdf/generator.js';
+import { printInvoicePDF, buildInvoiceHTML, buildSuratJalanHTML, openPreviewModal } from '../pdf/generator.js';
 
 export function initHistoryMode() {
     const container = document.getElementById('history-list');
@@ -377,16 +377,8 @@ export function initHistoryMode() {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const html = type === 'invoice' ? invoiceHTML : suratJalanHTML;
-                const label = type === 'invoice' ? 'Invoice' : 'Surat Jalan';
-                const previewModal = document.getElementById('preview-modal');
-                const previewFrame = document.getElementById('pdf-preview-frame');
-                const previewTitle = document.getElementById('preview-title');
-                if (previewModal && previewFrame) {
-                    previewFrame.srcdoc = html;
-                    if (previewTitle) previewTitle.textContent = label;
-                    previewModal.classList.remove('hidden');
-                    previewModal.classList.add('active');
-                }
+                const label = type === 'invoice' ? 'Preview Invoice' : 'Preview Surat Jalan';
+                openPreviewModal(html, label, type, () => printInvoicePDF(items, title));
             });
             return btn;
         };
