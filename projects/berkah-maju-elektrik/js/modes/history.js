@@ -3,7 +3,7 @@
  */
 import { appState } from '../state.js';
 import { printInvoicePDF, buildInvoiceHTML, buildSuratJalanHTML, openPreviewModal } from '../pdf/generator.js';
-
+import { exportToPNG, exportToJPEG, exportBothDocuments } from '../pdf/imageExporter.js';
 export function initHistoryMode() {
     const container = document.getElementById('history-list');
     const searchInput = document.getElementById('history-search');
@@ -378,7 +378,40 @@ export function initHistoryMode() {
                 e.stopPropagation();
                 const html = type === 'invoice' ? invoiceHTML : suratJalanHTML;
                 const label = type === 'invoice' ? 'Preview Invoice' : 'Preview Surat Jalan';
-                openPreviewModal(html, label, type, () => printInvoicePDF(items, title));
+
+                openPreviewModal(html, label, type, async () => {
+                    const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
+                    const formats = appState.state.settings.fileNameFormat || { invoice: 'Invoice-{judul}', suratJalan: 'Surat Jalan-{judul}' };
+                    const template = type === 'surat' ? formats.suratJalan : formats.invoice;
+
+                    const now = new Date();
+                    const filename = template
+                        .replace(/\{judul\}/gi, title)
+                        .replace(/%YYYY/g, String(now.getFullYear()))
+                        .replace(/%MM/g, String(now.getMonth() + 1).padStart(2, '0'))
+                        .replace(/%DD/g, String(now.getDate()).padStart(2, '0'))
+                        .replace(/%HH/g, String(now.getHours()).padStart(2, '0'))
+                        .replace(/%mm/g, String(now.getMinutes()).padStart(2, '0'))
+                        .replace(/%ss/g, String(now.getSeconds()).padStart(2, '0'));
+
+                    if (defaultMethod === 'pdf') {
+                        printInvoicePDF(items, title);
+                    } else {
+                        const alertEl = document.getElementById('custom-alert');
+                        const messageEl = document.getElementById('alert-message');
+                        if (alertEl && messageEl) {
+                            messageEl.innerHTML = 'Mengekspor... <i class="fa-solid fa-spinner fa-spin"></i>';
+                            alertEl.classList.remove('hidden');
+                            alertEl.style.animation = 'alert-in 0.3s ease-out forwards';
+                        }
+                        if (defaultMethod === 'jpeg') {
+                            await exportToJPEG(html, filename);
+                        } else {
+                            await exportToPNG(html, filename);
+                        }
+                        if (alertEl) alertEl.classList.add('hidden');
+                    }
+                });
             });
             return btn;
         };
@@ -430,7 +463,14 @@ export function initHistoryMode() {
             e.stopPropagation();
             const index = btnDownloadEl.dataset.index;
             const entry = appState.state.history[index];
-            printInvoicePDF(entry.items, entry.title);
+
+            const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
+            if (defaultMethod === 'pdf') {
+                printInvoicePDF(entry.items, entry.title);
+            } else {
+                // For main list download button, we download BOTH
+                exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML, entry.items, entry.title, defaultMethod);
+            }
             return;
         }
 

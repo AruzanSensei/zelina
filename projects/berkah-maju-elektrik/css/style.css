@@ -731,6 +731,11 @@ small {
     z-index: 300;
 }
 
+/* Edit confirm modal must sit above everything */
+#edit-confirm-modal {
+    z-index: 400;
+}
+
 .modal-content {
     background: var(--bg-card);
     width: 100%;

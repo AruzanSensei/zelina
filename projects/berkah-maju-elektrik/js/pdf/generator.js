@@ -910,7 +910,7 @@ export function initPDFGenerator() {
         openPreviewModal(html, titleText, type, null);
 
         // Customize download click to handle manual edits logic
-        previewDownloadBtn.onclick = () => {
+        previewDownloadBtn.onclick = async () => {
             const title = document.getElementById('manual-title')?.value || '';
             const items = appState.state.invoiceItems;
             if (!items || items.length === 0 || !title) return;
@@ -925,7 +925,49 @@ export function initPDFGenerator() {
                 w.document.title = `Edited-${title}`;
                 setTimeout(() => { w.focus(); w.print(); }, 300);
             } else {
-                printInvoicePDF(items, title);
+                // Download base on default method
+                const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
+
+                // Retrieve configured filename format
+                const formats = appState.state.settings.fileNameFormat || { invoice: 'Invoice-{judul}', suratJalan: 'Surat Jalan-{judul}' };
+                const template = type === 'surat' ? formats.suratJalan : formats.invoice;
+
+                // Quick format string token replacer
+                const now = new Date();
+                const filename = template
+                    .replace(/\{judul\}/gi, title)
+                    .replace(/%YYYY/g, String(now.getFullYear()))
+                    .replace(/%MM/g, String(now.getMonth() + 1).padStart(2, '0'))
+                    .replace(/%DD/g, String(now.getDate()).padStart(2, '0'))
+                    .replace(/%HH/g, String(now.getHours()).padStart(2, '0'))
+                    .replace(/%mm/g, String(now.getMinutes()).padStart(2, '0'))
+                    .replace(/%ss/g, String(now.getSeconds()).padStart(2, '0'));
+
+                if (defaultMethod === 'pdf') {
+                    // The printInvoicePDF always does both, or just invoice depending. Wait, 
+                    // To keep it simple, if user chose PDF, the existing printInvoicePDF only prints A4 page natively.
+                    printInvoicePDF(items, title);
+                } else {
+                    const html = type === 'invoice' ? buildInvoiceHTML(items, title) : buildSuratJalanHTML(items);
+                    // Show a quick alert
+                    const alertEl = document.getElementById('custom-alert');
+                    const messageEl = document.getElementById('alert-message');
+                    if (alertEl && messageEl) {
+                        messageEl.innerHTML = 'Mengekspor... <i class="fa-solid fa-spinner fa-spin"></i>';
+                        alertEl.classList.remove('hidden');
+                        alertEl.style.animation = 'alert-in 0.3s ease-out forwards';
+                    }
+
+                    if (defaultMethod === 'jpeg') {
+                        await exportToJPEG(html, filename);
+                    } else {
+                        await exportToPNG(html, filename);
+                    }
+
+                    if (alertEl) {
+                        alertEl.classList.add('hidden');
+                    }
+                }
             }
         };
     };
@@ -955,6 +997,19 @@ export function initPDFGenerator() {
 
     const enableEditing = () => {
         if (previewFrame && previewFrame.contentDocument) {
+            // Re-enable pointer events so the user can click text to edit
+            previewFrame.style.pointerEvents = 'auto';
+
+            // Reset zoom/transform so browser hit-testing (clicking text) is accurate
+            previewFrame.style.transform = 'translate(0px, 0px) scale(1)';
+            previewFrame.dataset.zoom = '1';
+            previewFrame.dataset.x = '0';
+            previewFrame.dataset.y = '0';
+
+            // To allow scrolling inside the modal now that it's full size
+            const modalBody = previewModal.querySelector('.modal-body');
+            if (modalBody) modalBody.style.overflow = 'auto';
+
             previewFrame.contentDocument.body.contentEditable = "true";
             previewFrame.contentDocument.body.style.outline = "2px dashed #f39c12"; // visual feedback
             previewFrame.contentDocument.body.focus();
