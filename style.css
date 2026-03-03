@@ -15,6 +15,7 @@
   --orange: #FB923C;
   --orange-dark: #F97316;
   --cyan: #06B6D4;
+  --green: #10B981;
   --text: #0f0f11;
   --text-2: #52525b;
   --text-3: #a1a1aa;
@@ -377,6 +378,7 @@ h4 {
   background: var(--bg);
   color: var(--purple);
 }
+
 
 /* ========================
    PEMBERITAHUAN
@@ -3825,4 +3827,163 @@ textarea::placeholder {
   .contact-form-wrap {
     padding: 24px;
   }
+}
+
+/* ========================
+   FOOTER
+   ======================== */
+.footer {
+  background: linear-gradient(180deg, #111116 0%, #060608 100%);
+  color: var(--white);
+  padding: 80px 0 30px;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--purple), var(--orange), var(--cyan));
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr;
+  gap: 60px;
+  margin-bottom: 60px;
+}
+
+@media (max-width: 900px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+.footer-brand .nav-logo {
+  color: var(--white);
+  margin-bottom: 20px;
+  display: inline-flex;
+}
+
+.footer-brand p {
+  color: var(--text-3);
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 320px;
+}
+
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+@media (max-width: 500px) {
+  .footer-links {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.fl-col h5 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+
+.fl-col a {
+  display: block;
+  color: var(--text-3);
+  font-size: 14px;
+  margin-bottom: 14px;
+  transition: var(--transition);
+}
+
+.fl-col a:hover {
+  color: var(--purple);
+  transform: translateX(3px);
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-3);
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .footer-bottom {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+}
+
+.fb-links {
+  display: flex;
+  gap: 20px;
+}
+
+.fb-links a {
+  transition: var(--transition);
+}
+
+.fb-links a:hover {
+  color: var(--white);
+}
+
+.wa-label-sub {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--green);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: var(--shadow-lg);
+  z-index: 1000;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wa-label-sub:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-purple);
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: var(--text);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: transform var(--transition);
+  z-index: 2000;
+  opacity: 0;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
 }
