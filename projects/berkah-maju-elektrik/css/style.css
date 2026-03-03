@@ -753,14 +753,32 @@ small {
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-color);
     margin-bottom: 20px;
+    /* Hide scrollbar visually, scroll still works */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+}
+
+.table-view-container::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
 }
 
 /* Responsive Table */
 .item-table {
-    width: 100%;
+    width: max-content;
+    /* Table grows to content, container scrolls */
+    min-width: 100%;
+    /* At minimum fill the container */
     border-collapse: collapse;
-    min-width: 600px;
-    /* Removed table-layout: fixed for better flexibility */
+    table-layout: auto;
+}
+
+/* All cells: don't wrap text by default so they expand with content */
+.item-table th,
+.item-table td {
+    white-space: nowrap;
 }
 
 .item-table th,
@@ -792,49 +810,88 @@ small {
     /* Excel-like hover */
 }
 
-/* Column Widths */
-.item-table th:nth-child(1),
-.item-table td:nth-child(1) {
-    /* Barang */
-    min-width: 200px;
-    width: 35%;
+/* Fix icon overlapping text in Barang cell: give input right padding for the icon button */
+.item-table td .input-with-icon input {
+    padding-right: 28px;
 }
 
 .item-table th:nth-child(2),
 .item-table td:nth-child(2) {
-    /* Harga */
-    min-width: 120px;
-    width: 20%;
+    /* Harga - auto width */
+    white-space: nowrap;
+    min-width: 30px;
+    max-width: 120px;
 }
 
 .item-table th:nth-child(3),
 .item-table td:nth-child(3) {
-    /* Pcs */
-    width: 60px;
-    text-align: center;
+    /* Tipe - just enough for the dropdown arrow */
+    white-space: nowrap;
 }
 
 .item-table th:nth-child(4),
 .item-table td:nth-child(4) {
-    /* Note */
-    min-width: 150px;
-    width: 30%;
+    /* Pcs - compact */
+    text-align: center;
+    white-space: nowrap;
 }
 
 .item-table th:nth-child(5),
 .item-table td:nth-child(5) {
-    /* Delete */
-    width: 40px;
+    /* Note - limited to ~7 words, wraps text */
+    width: 180px;
+    max-width: 200px;
+    white-space: normal;
+    word-break: break-word;
 }
 
-/* Table Inputs */
-.item-table td input {
-    width: 100%;
+.item-table th:nth-child(6),
+.item-table td:nth-child(6) {
+    /* Delete icon */
+    width: 32px;
+    text-align: center;
+}
+
+/* Table Inputs - use auto width so each column stays compact */
+.item-table td input,
+.item-table td textarea,
+.item-table td select {
+    width: auto;
     border: none;
     background: transparent;
     font-size: 0.9rem;
     color: var(--text-main);
     padding: 4px;
+}
+
+/* Barang name input should fill its cell */
+.item-table td .input-with-icon {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.item-table td .item-name {
+    width: 100%;
+    min-width: 80px;
+}
+
+/* Harga: fill its cell naturally */
+.item-table td .item-price-format {
+    width: 100%;
+    min-width: 60px;
+}
+
+/* Pcs/Qty: tiny fixed width */
+.item-table td .item-qty,
+.item-table td .table-qty-input {
+    width: 36px;
+    text-align: center;
+}
+
+/* Note textarea: fill the constrained column */
+.item-table td .item-note {
+    width: 100%;
 }
 
 .item-table td input:focus {
@@ -908,13 +965,83 @@ small {
 }
 
 .setting-item {
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: 0;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border-color);
 }
 
-.setting-item label {
+.setting-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.setting-item label:not(.toggle-switch-wrapper) {
     display: block;
     margin-bottom: var(--spacing-sm);
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    letter-spacing: 0.01em;
+}
+
+/* Setting section group card */
+.settings-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 4px 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+/* Accordion Specifics */
+details.settings-card {
+    padding-bottom: 4px;
+}
+
+details.settings-card[open] summary {
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 12px;
+}
+
+summary.setting-item {
+    cursor: pointer;
+    list-style: none;
+    /* Hide default arrow */
+    position: relative;
+    padding-right: 24px;
+}
+
+summary.setting-item::-webkit-details-marker {
+    display: none;
+}
+
+summary.setting-item::after {
+    content: '\f078';
+    /* FontAwesome chevron-down */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    transition: transform 0.2s ease;
+}
+
+details[open]>summary.setting-item::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+/* Setting description text */
+.setting-desc {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    opacity: 0.8;
+    margin-top: 2px;
+    margin-bottom: 10px;
+    display: block;
 }
 
 .toggle-group {

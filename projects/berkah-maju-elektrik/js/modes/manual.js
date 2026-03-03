@@ -166,7 +166,7 @@ export function initManualMode() {
                         </select>
                     </td>
                     <td><input type="text" class="item-qty table-qty-input" value="${item.qty}" data-index="${index}" inputmode="numeric"></td>
-                    <td><input type="text" class="item-note ${!item.note ? 'required-empty-orange' : ''}" value="${item.note || ''}" data-index="${index}" placeholder="Deskripsi (wajib)"></td>
+                    <td><textarea class="item-note ${!item.note ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Deskripsi (wajib)" rows="2" style="width:100%; border:none; background:transparent; font-size:0.9rem; resize:none; overflow:hidden; font-family:inherit; padding:4px; word-break:break-word;">${item.note || ''}</textarea></td>
                     <td>
                         <button class="remove-item-btn" data-index="${index}" style="position:static; color:#ff4d4f; background:none; border:none; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
                     </td>

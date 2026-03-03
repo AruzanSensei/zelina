@@ -193,105 +193,151 @@
                 <h2>Pengaturan</h2>
                 <button class="close-modal"><i class="fa-solid fa-times"></i></button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="padding: 0;">
                 <!-- Settings Tabs -->
-                <div class="toggle-group" style="margin-bottom: 20px;">
+                <div class="toggle-group" style="margin-bottom: 16px;">
                     <button class="toggle-btn active" id="tab-general">Umum</button>
                     <button class="toggle-btn" id="tab-templates">Templates</button>
                 </div>
 
                 <div id="settings-general">
-                    <div class="setting-item">
-                        <label>Tema / Theme</label>
-                        <div class="toggle-group">
-                            <button class="toggle-btn active" data-theme="light">Light</button>
-                            <button class="toggle-btn" data-theme="dark">Dark</button>
-                        </div>
-                    </div>
 
-                    <div class="setting-item">
-                        <label>Format Download</label>
-                        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
-                            <label class="toggle-switch-wrapper"
-                                style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
-                                <span style="font-size: 0.95rem; user-select: none;">PNG (Gambar tanpa kompresi)</span>
-                                <div class="ios-switch">
-                                    <input type="checkbox" id="enable-png" checked>
-                                    <span class="ios-slider"></span>
-                                </div>
-                            </label>
-
-                            <label class="toggle-switch-wrapper"
-                                style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
-                                <span style="font-size: 0.95rem; user-select: none;">JPEG (Gambar terkompresi)</span>
-                                <div class="ios-switch">
-                                    <input type="checkbox" id="enable-jpeg" checked>
-                                    <span class="ios-slider"></span>
-                                </div>
-                            </label>
-
-                            <label class="toggle-switch-wrapper"
-                                style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
-                                <span style="font-size: 0.95rem; user-select: none; color: var(--text-muted);">PDF
-                                    (Print to PDF) <small style="color:#f39c12;">(Segera)</small></span>
-                                <div class="ios-switch">
-                                    <input type="checkbox" id="enable-pdf" disabled>
-                                    <span class="ios-slider"></span>
-                                </div>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="setting-item">
-                        <label>Metode Download Default</label>
-                        <select id="default-download-method" class="form-input" style="margin-top: 8px;">
-                            <option value="png">PNG</option>
-                            <option value="jpeg">JPEG</option>
-                            <option value="pdf" disabled>PDF (Segera)</option>
-                        </select>
-                    </div>
-
-                    <div class="setting-item">
-                        <label class="toggle-switch-wrapper"
-                            style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
-                            <span style="font-size: 0.95rem; user-select: none;">Judul Wajib Diisi</span>
-                            <div class="ios-switch">
-                                <input type="checkbox" id="setting-title-required" checked>
-                                <span class="ios-slider"></span>
-                            </div>
-                        </label>
-                    </div>
-
-                    <div class="setting-item">
-                        <label style="display:flex; align-items:center; gap:6px;">
-                            Format Nama File
-                            <button id="btn-format-help" class="icon-btn"
-                                style="font-size:0.85rem; width:24px; height:24px; border-radius:50%; background:var(--bg-body); border:1px solid var(--border-color);"
-                                title="Bantuan format">
-                                <i class="fa-solid fa-question"></i>
-                            </button>
-                        </label>
-                        <div style="display:flex; flex-direction:column; gap:10px; margin-top:8px;">
-                            <div>
-                                <small style="color:var(--text-muted); font-weight:500;">Invoice:</small>
-                                <input type="text" id="format-invoice" class="form-input" value="Invoice-{judul}"
-                                    style="margin-top:4px; font-size:0.9rem;">
-                            </div>
-                            <div>
-                                <small style="color:var(--text-muted); font-weight:500;">Surat Jalan:</small>
-                                <input type="text" id="format-surat-jalan" class="form-input"
-                                    value="Surat Jalan-{judul}" style="margin-top:4px; font-size:0.9rem;">
+                    <!-- Group 1: Tampilan -->
+                    <div class="settings-card">
+                        <div class="setting-item" style="border-bottom: none; padding-bottom: 4px;">
+                            <label style="font-size: 0.95rem; font-weight: 600;">Tema / Theme</label>
+                            <div class="toggle-group">
+                                <button class="toggle-btn active" data-theme="light">Light</button>
+                                <button class="toggle-btn" data-theme="dark">Dark</button>
                             </div>
                         </div>
                     </div>
 
-                    <div class="setting-item"
-                        style="border-top:1px solid var(--border-color); padding-top:16px; margin-top:8px;">
-                        <button id="btn-reset-settings" class="btn btn-outline btn-full"
-                            style="color:#ff4d4f; border-color:#ff4d4f;">
-                            <i class="fa-solid fa-rotate-left"></i> Reset Semua Pengaturan
-                        </button>
-                    </div>
+                    <!-- Group 2: Format & Unduh (Accordion) -->
+                    <details class="settings-card">
+                        <summary class="setting-item" style="border-bottom: none; outline: none; padding-bottom: 4px;">
+                            <label
+                                style="font-size: 0.95rem; font-weight: 600; margin: 0; display: inline-block; cursor: pointer;">Format
+                                Download</label>
+                        </summary>
+                        <div class="setting-item" style="padding-top: 12px; border-top: 1px solid var(--border-color);">
+                            <div
+                                style="display: flex; flex-direction: column; gap: 0; margin-top: 4px; padding-left: 12px;">
+                                <label class="toggle-switch-wrapper"
+                                    style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding: 10px 0; border-bottom: 1px solid var(--border-color);">
+                                    <div>
+                                        <span style="font-size: 0.85rem; font-weight: 600;">PNG</span>
+                                        <small class="setting-desc" style="display:block; margin:0;">Gambar tanpa
+                                            kompresi, kualitas terbaik</small>
+                                    </div>
+                                    <div class="ios-switch">
+                                        <input type="checkbox" id="enable-png" checked>
+                                        <span class="ios-slider"></span>
+                                    </div>
+                                </label>
+
+                                <label class="toggle-switch-wrapper"
+                                    style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding: 10px 0; border-bottom: 1px solid var(--border-color);">
+                                    <div>
+                                        <span style="font-size: 0.85rem; font-weight: 600;">JPEG</span>
+                                        <small class="setting-desc" style="display:block; margin:0;">Gambar terkompresi,
+                                            ukuran lebih kecil</small>
+                                    </div>
+                                    <div class="ios-switch">
+                                        <input type="checkbox" id="enable-jpeg" checked>
+                                        <span class="ios-slider"></span>
+                                    </div>
+                                </label>
+
+                                <label class="toggle-switch-wrapper"
+                                    style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding: 10px 0; opacity: 0.5;">
+                                    <div>
+                                        <span style="font-size: 0.85rem; font-weight: 600;">PDF <small
+                                                style="color:#f39c12; opacity:1;">(Segera)</small></span>
+                                        <small class="setting-desc" style="display:block; margin:0;">Print to PDF via
+                                            browser</small>
+                                    </div>
+                                    <div class="ios-switch">
+                                        <input type="checkbox" id="enable-pdf" disabled>
+                                        <span class="ios-slider"></span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="setting-item" style="padding-bottom: 12px; border-bottom: none;">
+                            <label style="font-size: 0.85rem; padding-left: 12px;">Metode Download Default</label>
+                            <div style="padding-left: 12px;">
+                                <select id="default-download-method" class="form-input"
+                                    style="margin-top: 6px; font-size: 0.85rem;">
+                                    <option value="png">PNG</option>
+                                    <option value="jpeg">JPEG</option>
+                                    <option value="pdf" disabled>PDF (Segera)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- Group 3: Validasi & Nama File (Accordion) -->
+                    <details class="settings-card">
+                        <summary class="setting-item" style="border-bottom: none; outline: none; padding-bottom: 4px;">
+                            <label
+                                style="font-size: 0.95rem; font-weight: 600; margin: 0; display: inline-block; cursor: pointer;">Format
+                                Nama File & Validasi</label>
+                        </summary>
+                        <div class="setting-item" style="padding-top: 12px; border-top: 1px solid var(--border-color);">
+                            <label class="toggle-switch-wrapper"
+                                style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding-left: 12px;">
+                                <div>
+                                    <span style="font-size: 0.85rem; font-weight: 600; display: block;">Judul Wajib
+                                        Diisi</span>
+                                    <small class="setting-desc" style="margin:0;">Cegah unduhan tanpa judul
+                                        invoice.</small>
+                                </div>
+                                <div class="ios-switch">
+                                    <input type="checkbox" id="setting-title-required" checked>
+                                    <span class="ios-slider"></span>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="setting-item" style="padding-bottom: 12px; border-bottom: none;">
+                            <label
+                                style="display:flex; align-items:center; gap:6px; font-size:0.85rem; font-weight:600; padding-left: 12px;">
+                                Format Nama File
+                                <button id="btn-format-help" class="icon-btn"
+                                    style="font-size:0.75rem; width:20px; height:20px; border-radius:50%; background:var(--bg-card); border:1px solid var(--border-color);"
+                                    title="Bantuan format">
+                                    <i class="fa-solid fa-question"></i>
+                                </button>
+                            </label>
+                            <small class="setting-desc" style="padding-left: 12px;">Gunakan <code
+                                    style="background:var(--bg-card); padding: 1px 5px; border-radius:3px; font-size:0.75rem; border: 1px solid var(--border-color);">{judul}</code>
+                                sebagai placeholder untuk judul.</small>
+                            <div
+                                style="display:flex; flex-direction:column; gap:10px; margin-top:10px; padding-left: 12px;">
+                                <div>
+                                    <small
+                                        style="color:var(--text-muted); font-weight:600; font-size:0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Invoice</small>
+                                    <input type="text" id="format-invoice" class="form-input" value="Invoice-{judul}"
+                                        style="margin-top:4px; font-size:0.85rem;">
+                                </div>
+                                <div>
+                                    <small
+                                        style="color:var(--text-muted); font-weight:600; font-size:0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Surat
+                                        Jalan</small>
+                                    <input type="text" id="format-surat-jalan" class="form-input"
+                                        value="Surat Jalan-{judul}" style="margin-top:4px; font-size:0.85rem;">
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                    <!-- Danger Zone -->
+                    <button id="btn-reset-settings" class="btn btn-outline btn-full"
+                        style="color:#ff4d4f; border-color:#ff4d4f; margin-top: 4px; margin-bottom: 8px;">
+                        <i class="fa-solid fa-rotate-left"></i> Reset Semua Pengaturan
+                    </button>
                 </div>
 
                 <div id="settings-templates" class="hidden" style="display:none;">
