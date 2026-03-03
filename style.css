@@ -973,14 +973,14 @@ h4 {
    ======================== */
 .quick-links {
   background: var(--bg);
-  padding: 40px 0;
+  padding: 20px 0;
   border-bottom: 1px solid var(--border);
 }
 
 .quick-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 8px;
 }
 
 .quick-card {
@@ -1055,7 +1055,7 @@ h4 {
 
 @media (max-width: 640px) {
   .quick-grid {
-    grid-template-columns: 1fr;
+    grid-template-rows: 2fr;
   }
 }
 
@@ -3120,7 +3120,7 @@ h4 {
   }
 
   .proj-masonry {
-    columns: 2;
+    columns: 3;
   }
 
   .design-grid {
@@ -3217,7 +3217,7 @@ h4 {
   }
 
   .proj-masonry {
-    columns: 1;
+    columns: 2;
   }
 
   .design-grid {
@@ -3252,6 +3252,10 @@ h4 {
 
   section {
     padding: 72px 0 !important;
+  }
+
+  section.quick-links {
+    padding: 20px 0 !important;
   }
 
   .wa-btn {
