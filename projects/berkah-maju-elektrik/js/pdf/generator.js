@@ -1157,7 +1157,7 @@ export function initPDFGenerator() {
     };
 
     // Ensure manual edit overlay is hidden on page load (manualEdits is always null on init)
-    updateManualEditOverlay(); b
+    updateManualEditOverlay();
 
     const btnResetManual = document.getElementById('btn-reset-manual-edit');
     if (btnResetManual) {
