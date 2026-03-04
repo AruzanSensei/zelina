@@ -147,7 +147,7 @@ export function initSettings() {
 
     if (enablePNG) enablePNG.addEventListener('change', handleFormatToggle);
     if (enableJPEG) enableJPEG.addEventListener('change', handleFormatToggle);
-    // PDF disabled - no listener
+    if (enablePDF) enablePDF.addEventListener('change', handleFormatToggle);
 
     // Handle default method change
     if (defaultMethodSelect) {

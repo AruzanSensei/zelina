@@ -959,7 +959,11 @@ export function initPDFGenerator() {
                     w.document.write(htmlDoc);
                     w.document.close();
                     w.document.title = title;
-                    setTimeout(() => { w.focus(); w.print(); }, 300);
+                    setTimeout(() => {
+                        w.focus();
+                        w.print();
+                        document.dispatchEvent(new CustomEvent('download-complete'));
+                    }, 300);
                 } else {
                     // PNG/JPEG export using htmlDoc (edited or fresh)
                     const alertEl = document.getElementById('custom-alert');
@@ -1179,6 +1183,9 @@ export function initPDFGenerator() {
         }, 10000);
     };
 
+    // Attach to the newly implemented global download event
+    document.addEventListener('download-complete', showConverterPopup);
+
     // ============================================
     // DOWNLOAD EXECUTION
     // ============================================
@@ -1187,10 +1194,8 @@ export function initPDFGenerator() {
             printInvoicePDF(items, title);
         } else if (format === 'png') {
             await exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML, items, title, 'png');
-            showConverterPopup();
         } else if (format === 'jpeg') {
             await exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML, items, title, 'jpeg');
-            showConverterPopup();
         }
     };
 
@@ -1460,6 +1465,7 @@ export async function printInvoicePDF(items, titleName) {
         } catch {
             // ignore; user can still print manually from the new tab
         } finally {
+            document.dispatchEvent(new CustomEvent('download-complete'));
             try {
                 w.document.title = originalTitle;
             } catch { }

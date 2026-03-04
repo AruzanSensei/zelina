@@ -149,6 +149,7 @@ export async function exportToPNG(htmlString, filename) {
         link.href = dataUrl;
         link.click();
 
+        document.dispatchEvent(new CustomEvent('download-complete'));
         return true;
     } catch (error) {
         console.error('PNG export failed:', error);
@@ -197,6 +198,7 @@ export async function exportToJPEG(htmlString, filename) {
         link.href = dataUrl;
         link.click();
 
+        document.dispatchEvent(new CustomEvent('download-complete'));
         return true;
     } catch (error) {
         console.error('JPEG export failed:', error);
