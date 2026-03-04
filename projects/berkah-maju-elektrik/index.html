@@ -403,16 +403,28 @@
         </div>
     </div>
 
+    <!-- Custom Confirm: Transfer history to Manual Mode -->
+    <div id="history-to-manual-confirm" class="modal hidden" style="z-index: 500;">
+        <div class="modal-content" style="max-width: 360px; text-align: center; padding: 24px;">
+            <i class="fa-solid fa-rotate-left" style="font-size: 2.2rem; color: #F5A623; margin-bottom: 12px;"></i>
+            <h3 style="margin-bottom: 8px; font-size: 1.1rem;">Pindah ke Mode Manual?</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5;">
+                Data riwayat ini akan <strong>menggantikan</strong> data yang ada di Mode Manual saat ini.
+            </p>
+            <div style="display: flex; gap: 10px;">
+                <button id="btn-history-confirm-cancel" class="btn btn-outline" style="flex:1;">Batal</button>
+                <button id="btn-history-confirm-proceed" class="btn btn-primary"
+                    style="flex:1; background:#F5A623; border-color:#d4880d;">Pindahkan</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Bottom Sheet for History Details -->
     <div id="detail-sheet" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="detail-title">Detail Invoice</h2>
                 <div style="display:flex; gap:10px; margin-left:auto; margin-right:8px;">
-                    <button id="btn-detail-edit-mode" class="btn btn-outline"
-                        style="padding:6px 12px; font-size:0.85rem;" title="Edit As Manual">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                    </button>
                     <button id="btn-detail-download-mode" class="btn btn-primary"
                         style="padding:6px 12px; font-size:0.85rem;" title="Unduh">
                         <i class="fa-solid fa-download"></i>

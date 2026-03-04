@@ -240,28 +240,66 @@ export function initHistoryMode() {
 
         // Inject "Edit Back in Manual" Button into Header
         let btnEdit = document.getElementById('btn-detail-edit');
-        if (!btnEdit) {
-            btnEdit = document.createElement('button');
-            btnEdit.id = 'btn-detail-edit';
-            btnEdit.className = 'icon-btn';
-            btnEdit.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
-            btnEdit.style.marginRight = '10px';
-            btnEdit.style.color = '#F5A623';
-            btnEdit.title = "Edit di Mode Manual";
-
-            btnCloseDetail.parentNode.insertBefore(btnEdit, btnCloseDetail);
-
-            btnEdit.addEventListener('click', () => {
-                if (!currentDetailItem) return;
-                if (!confirm("Pindah ke Mode Manual untuk mengedit?")) return;
-
-                document.dispatchEvent(new CustomEvent('template-selected', { detail: { items: currentDetailItem.items } }));
-                const manualTitle = document.getElementById('manual-title');
-                if (manualTitle) manualTitle.value = currentDetailItem.title;
-                document.querySelector('[data-tab="manual"]').click();
-                closeDetail();
-            });
+        if (btnEdit) {
+            btnEdit.remove();
         }
+
+        btnEdit = document.createElement('button');
+        btnEdit.id = 'btn-detail-edit';
+        btnEdit.className = 'icon-btn';
+        btnEdit.innerHTML = '<i class="fa-solid fa-arrow-left"></i>';
+        btnEdit.style.marginRight = '10px';
+        btnEdit.style.color = '#F5A623';
+        btnEdit.title = "Buka di Mode Manual";
+
+        btnCloseDetail.parentNode.insertBefore(btnEdit, btnCloseDetail);
+
+        btnEdit.addEventListener('click', () => {
+            if (!currentDetailItem) return;
+
+            const confirmModal = document.getElementById('history-to-manual-confirm');
+            if (!confirmModal) return;
+
+            confirmModal.classList.remove('hidden');
+            confirmModal.classList.add('active');
+
+            const btnCancel = document.getElementById('btn-history-confirm-cancel');
+            const btnProceed = document.getElementById('btn-history-confirm-proceed');
+
+            const cleanup = () => {
+                confirmModal.classList.add('hidden');
+                confirmModal.classList.remove('active');
+            };
+
+            const onCancel = () => { cleanup(); };
+            const onProceed = () => {
+                cleanup();
+
+                const clonedItems = JSON.parse(JSON.stringify(currentDetailItem.items));
+                const historyTitle = currentDetailItem.title;
+
+                // Dispatch template-selected so manual.js re-renders items
+                document.dispatchEvent(new CustomEvent('template-selected', {
+                    detail: { items: clonedItems }
+                }));
+
+                // Update title
+                const manualTitle = document.getElementById('manual-title');
+                if (manualTitle) {
+                    manualTitle.value = historyTitle;
+                    manualTitle.dispatchEvent(new Event('input'));
+                }
+
+                // Switch tab to Manual Mode
+                const tabManual = document.querySelector('[data-tab="manual"]');
+                if (tabManual) tabManual.click();
+
+                closeDetail();
+            };
+
+            btnCancel.addEventListener('click', onCancel, { once: true });
+            btnProceed.addEventListener('click', onProceed, { once: true });
+        });
 
         // Render data content (form or table)
         if (detailViewMode === 'table') {
@@ -396,7 +434,7 @@ export function initHistoryMode() {
                         closeDetail(); // Close detail sheet
 
                         // Switch tab to Manual Mode
-                        const tabManual = document.getElementById('tab-manual');
+                        const tabManual = document.querySelector('[data-tab="manual"]');
                         if (tabManual) tabManual.click();
                     }
                 };
@@ -457,26 +495,6 @@ export function initHistoryMode() {
     };
 
     // Header buttons in Detail Sheet
-    const btnDetailEditMode = document.getElementById('btn-detail-edit-mode');
-    if (btnDetailEditMode) {
-        btnDetailEditMode.addEventListener('click', () => {
-            if (!currentDetailItem) return;
-            if (confirm('Buka riwayat ini di Mode Manual untuk diedit?')) {
-                // Populate state
-                appState.state.invoiceItems = JSON.parse(JSON.stringify(currentDetailItem.items));
-                const manualTitle = document.getElementById('manual-title');
-                if (manualTitle) manualTitle.value = currentDetailItem.title;
-                appState.save('bme_invoice_items', appState.state.invoiceItems);
-
-                // Switch tab to Manual Mode
-                const tabManual = document.getElementById('tab-manual');
-                if (tabManual) tabManual.click();
-
-                closeDetail();
-            }
-        });
-    }
-
     const btnDetailDownloadMode = document.getElementById('btn-detail-download-mode');
     if (btnDetailDownloadMode) {
         btnDetailDownloadMode.addEventListener('click', () => {
