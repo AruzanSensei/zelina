@@ -653,30 +653,31 @@ export const openPreviewModal = (html, titleText, type, downloadAction, editActi
     previewTitle.textContent = titleText;
     previewFrame.srcdoc = html;
 
-    // Optional: Hide/Show edit button
+    // Optional: Hide/Show edit button and attach custom editAction if provided
     if (btnModalEdit) {
         btnModalEdit.style.display = showEditButton ? 'inline-flex' : 'none';
 
-        // Remove old listeners by cloning
-        const newBtnEdit = btnModalEdit.cloneNode(true);
-        btnModalEdit.parentNode.replaceChild(newBtnEdit, btnModalEdit);
-
+        // Tag with editAction so the existing listener can check at click-time
         if (showEditButton && editAction) {
-            newBtnEdit.addEventListener('click', editAction);
+            btnModalEdit._customEditAction = editAction;
+        } else {
+            btnModalEdit._customEditAction = null;
         }
     }
 
     previewModal.classList.remove('hidden');
     previewModal.classList.add('active');
 
-    // Attach download action
-    // Remove old listeners by cloning
-    const newDownloadBtn = previewDownloadBtn.cloneNode(true);
-    previewDownloadBtn.parentNode.replaceChild(newDownloadBtn, previewDownloadBtn);
-
-    newDownloadBtn.onclick = () => {
-        if (downloadAction) downloadAction();
-    };
+    // Attach download action to the download button directly
+    const freshDownloadBtn = document.getElementById('preview-download-btn');
+    if (freshDownloadBtn) {
+        // Clone to remove any previous onclick from last session
+        const newDownloadBtn = freshDownloadBtn.cloneNode(true);
+        freshDownloadBtn.parentNode.replaceChild(newDownloadBtn, freshDownloadBtn);
+        newDownloadBtn.onclick = () => {
+            if (downloadAction) downloadAction();
+        };
+    }
 
     // Calculate zoom-to-fit
     setTimeout(() => {
@@ -921,30 +922,20 @@ export function initPDFGenerator() {
         // Use generalized modal open function, pass null for downloadAction to use manual mode's override
         openPreviewModal(html, titleText, type, null);
 
+        // Re-query the download button after openPreviewModal (it may have been replaced by cloneNode)
+        const liveDownloadBtn = document.getElementById('preview-download-btn');
+
         // Customize download click to handle manual edits logic
-        previewDownloadBtn.onclick = async () => {
-            const title = document.getElementById('manual-title')?.value || '';
-            const items = appState.state.invoiceItems;
-            if (!items || items.length === 0 || !title) return;
+        if (liveDownloadBtn) {
+            liveDownloadBtn.onclick = async () => {
+                const title = document.getElementById('manual-title')?.value || '';
+                const items = appState.state.invoiceItems;
+                if (!items || items.length === 0 || !title) return;
 
-            const editKey = type === 'surat' ? 'letter' : 'invoice';
-            if (manualEdits[editKey]) {
-                const w = window.open('', '_blank');
-                if (!w) return;
-                w.document.open();
-                w.document.write(manualEdits[editKey]);
-                w.document.close();
-                w.document.title = `Edited-${title}`;
-                setTimeout(() => { w.focus(); w.print(); }, 300);
-            } else {
-                // Download base on default method
+                // Resolve default method and filename regardless of edit mode
                 const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
-
-                // Retrieve configured filename format
                 const formats = appState.state.settings.fileNameFormat || { invoice: 'Invoice-{judul}', suratJalan: 'Surat Jalan-{judul}' };
                 const template = type === 'surat' ? formats.suratJalan : formats.invoice;
-
-                // Quick format string token replacer
                 const now = new Date();
                 const filename = template
                     .replace(/\{judul\}/gi, title)
@@ -955,13 +946,22 @@ export function initPDFGenerator() {
                     .replace(/%mm/g, String(now.getMinutes()).padStart(2, '0'))
                     .replace(/%ss/g, String(now.getSeconds()).padStart(2, '0'));
 
+                const editKey = type === 'surat' ? 'letter' : 'invoice';
+                // Use edited HTML if available, otherwise build fresh
+                const htmlDoc = manualEdits[editKey]
+                    ? manualEdits[editKey]
+                    : (type === 'invoice' ? buildInvoiceHTML(items, title) : buildSuratJalanHTML(items));
+
                 if (defaultMethod === 'pdf') {
-                    // The printInvoicePDF always does both, or just invoice depending. Wait, 
-                    // To keep it simple, if user chose PDF, the existing printInvoicePDF only prints A4 page natively.
-                    printInvoicePDF(items, title);
+                    const w = window.open('', '_blank');
+                    if (!w) return;
+                    w.document.open();
+                    w.document.write(htmlDoc);
+                    w.document.close();
+                    w.document.title = title;
+                    setTimeout(() => { w.focus(); w.print(); }, 300);
                 } else {
-                    const html = type === 'invoice' ? buildInvoiceHTML(items, title) : buildSuratJalanHTML(items);
-                    // Show a quick alert
+                    // PNG/JPEG export using htmlDoc (edited or fresh)
                     const alertEl = document.getElementById('custom-alert');
                     const messageEl = document.getElementById('alert-message');
                     if (alertEl && messageEl) {
@@ -971,17 +971,17 @@ export function initPDFGenerator() {
                     }
 
                     if (defaultMethod === 'jpeg') {
-                        await exportToJPEG(html, filename);
+                        await exportToJPEG(htmlDoc, filename);
                     } else {
-                        await exportToPNG(html, filename);
+                        await exportToPNG(htmlDoc, filename);
                     }
 
                     if (alertEl) {
                         alertEl.classList.add('hidden');
                     }
                 }
-            }
-        };
+            };
+        }
     };
 
     if (closePreviewBtn && previewModal) {
@@ -1055,6 +1055,13 @@ export function initPDFGenerator() {
 
     if (btnModalEdit) {
         btnModalEdit.addEventListener('click', () => {
+            // If called from history mode, use the custom action
+            if (btnModalEdit._customEditAction) {
+                btnModalEdit._customEditAction();
+                return;
+            }
+
+            // Default: manual mode inline editing
             const editKey = currentPreviewType === 'surat' ? 'letter' : 'invoice';
             if (manualEdits[editKey]) {
                 enableEditing();
