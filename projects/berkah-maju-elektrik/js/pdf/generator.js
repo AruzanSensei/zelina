@@ -1441,8 +1441,71 @@ export async function printInvoicePDF(items, titleName) {
         console.warn('Font check before PDF failed:', error);
     }
 
-    const html = buildInvoiceHTML(items, titleName);
-    const fileTitle = `Invoice-${titleName}`;
+    const invoiceHtml = buildInvoiceHTML(items, titleName);
+    const suratJalanHtml = buildSuratJalanHTML(items);
+    const fileTitle = `Dokumen-${titleName}`;
+
+    // Combine both documents into one HTML stream with a page break
+    // We extract the <body> contents of each and wrap them in a unified HTML structure 
+    // to ensure styles apply correctly across both pages.
+    const extractBody = (fullHtml) => {
+        const bodyMatch = fullHtml.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+        return bodyMatch ? bodyMatch[1] : fullHtml;
+    };
+
+    // We extract the <head> of Invoice and Surat Jalan.
+    // However, they both redefine global tags like `h1`, `table td`, etc.
+    // To prevent Surat Jalan from breaking Invoice styles, we will scope Surat Jalan's CSS
+    // by prefixing all of its rules with "#surat-jalan-wrapper "
+
+    // Quick and dirty CSS scoping: find all selectors before '{' and prefix them
+    const scopedSuratJalanStyle = SURAT_JALAN_STYLE.replace(/([^\r\n,{}]+)(,(?=[^}]*{)|\s*{)/g, (match, selector, suffix) => {
+        // Skip @media, @keyframes, formatting
+        if (selector.trim().startsWith('@') || selector.trim() === '') return match;
+
+        // Split by comma if multiple selectors (e.g., h1, h2)
+        const scopedSelectors = selector.split(',').map(sel => {
+            const s = sel.trim();
+            if (!s) return '';
+            // Don't prefix root/body, replace them with wrapper
+            if (s === 'html' || s === 'body') return `#surat-jalan-wrapper`;
+            return `#surat-jalan-wrapper ${s}`;
+        }).join(', ');
+
+        return `${scopedSelectors} ${suffix}`;
+    });
+
+    const combinedHtml = `
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>${fileTitle}</title>
+    <style>
+        /* INVOICE STYLES (Applies to the first page) */
+        ${INVOICE_STYLE}
+        
+        /* SURAT JALAN STYLES (Scoped strictly to its wrapper to prevent bleed) */
+        ${scopedSuratJalanStyle}
+
+        @media print {
+            .page-break { page-break-before: always; }
+            body { margin: 0; padding: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="invoice-wrapper">
+        ${extractBody(invoiceHtml)}
+    </div>
+    
+    <div class="page-break"></div>
+    
+    <div id="surat-jalan-wrapper">
+        ${extractBody(suratJalanHtml)}
+    </div>
+</body>
+</html>`;
 
     const w = window.open('', '_blank');
     if (!w) return;
@@ -1450,7 +1513,7 @@ export async function printInvoicePDF(items, titleName) {
     const originalTitle = document.title;
     try {
         w.document.open();
-        w.document.write(html);
+        w.document.write(combinedHtml);
         w.document.close();
         w.document.title = fileTitle;
     } catch {
