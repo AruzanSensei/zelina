@@ -642,7 +642,7 @@ ${rows}
 // ============================================
 // MODAL PREVIEW & PINCH ZOOM
 // ============================================
-export const openPreviewModal = (html, titleText, type, downloadAction) => {
+export const openPreviewModal = (html, titleText, type, downloadAction, editAction = null, showEditButton = true) => {
     const previewModal = document.getElementById('preview-modal');
     const previewFrame = document.getElementById('pdf-preview-frame');
     const previewTitle = document.getElementById('preview-title');
@@ -653,16 +653,28 @@ export const openPreviewModal = (html, titleText, type, downloadAction) => {
     previewTitle.textContent = titleText;
     previewFrame.srcdoc = html;
 
-    // Optional: Hide edit button if we passed a custom downloadAction (History Mode)
+    // Optional: Hide/Show edit button
     if (btnModalEdit) {
-        btnModalEdit.style.display = downloadAction ? 'none' : 'inline-flex';
+        btnModalEdit.style.display = showEditButton ? 'inline-flex' : 'none';
+
+        // Remove old listeners by cloning
+        const newBtnEdit = btnModalEdit.cloneNode(true);
+        btnModalEdit.parentNode.replaceChild(newBtnEdit, btnModalEdit);
+
+        if (showEditButton && editAction) {
+            newBtnEdit.addEventListener('click', editAction);
+        }
     }
 
     previewModal.classList.remove('hidden');
     previewModal.classList.add('active');
 
     // Attach download action
-    previewDownloadBtn.onclick = () => {
+    // Remove old listeners by cloning
+    const newDownloadBtn = previewDownloadBtn.cloneNode(true);
+    previewDownloadBtn.parentNode.replaceChild(newDownloadBtn, previewDownloadBtn);
+
+    newDownloadBtn.onclick = () => {
         if (downloadAction) downloadAction();
     };
 

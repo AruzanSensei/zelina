@@ -379,6 +379,28 @@ export function initHistoryMode() {
                 const html = type === 'invoice' ? invoiceHTML : suratJalanHTML;
                 const label = type === 'invoice' ? 'Preview Invoice' : 'Preview Surat Jalan';
 
+                const editAction = () => {
+                    if (confirm('Buka riwayat ini di Mode Manual untuk diedit?')) {
+                        // Populate state
+                        appState.state.invoiceItems = JSON.parse(JSON.stringify(items));
+                        const manualTitle = document.getElementById('manual-title');
+                        if (manualTitle) manualTitle.value = title;
+                        appState.save('bme_invoice_items', appState.state.invoiceItems);
+
+                        // Close preview modal
+                        const previewModal = document.getElementById('preview-modal');
+                        if (previewModal) {
+                            previewModal.classList.add('hidden');
+                            previewModal.classList.remove('active');
+                        }
+                        closeDetail(); // Close detail sheet
+
+                        // Switch tab to Manual Mode
+                        const tabManual = document.getElementById('tab-manual');
+                        if (tabManual) tabManual.click();
+                    }
+                };
+
                 openPreviewModal(html, label, type, async () => {
                     const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
                     const formats = appState.state.settings.fileNameFormat || { invoice: 'Invoice-{judul}', suratJalan: 'Surat Jalan-{judul}' };
@@ -411,7 +433,7 @@ export function initHistoryMode() {
                         }
                         if (alertEl) alertEl.classList.add('hidden');
                     }
-                });
+                }, editAction, true);
             });
             return btn;
         };
@@ -432,9 +454,41 @@ export function initHistoryMode() {
     const closeDetail = () => {
         detailSheet.classList.remove('active');
         currentDetailItem = null;
-        const btnEdit = document.getElementById('btn-detail-edit');
-        if (btnEdit) btnEdit.remove();
     };
+
+    // Header buttons in Detail Sheet
+    const btnDetailEditMode = document.getElementById('btn-detail-edit-mode');
+    if (btnDetailEditMode) {
+        btnDetailEditMode.addEventListener('click', () => {
+            if (!currentDetailItem) return;
+            if (confirm('Buka riwayat ini di Mode Manual untuk diedit?')) {
+                // Populate state
+                appState.state.invoiceItems = JSON.parse(JSON.stringify(currentDetailItem.items));
+                const manualTitle = document.getElementById('manual-title');
+                if (manualTitle) manualTitle.value = currentDetailItem.title;
+                appState.save('bme_invoice_items', appState.state.invoiceItems);
+
+                // Switch tab to Manual Mode
+                const tabManual = document.getElementById('tab-manual');
+                if (tabManual) tabManual.click();
+
+                closeDetail();
+            }
+        });
+    }
+
+    const btnDetailDownloadMode = document.getElementById('btn-detail-download-mode');
+    if (btnDetailDownloadMode) {
+        btnDetailDownloadMode.addEventListener('click', () => {
+            if (!currentDetailItem) return;
+            const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
+            if (defaultMethod === 'pdf') {
+                printInvoicePDF(currentDetailItem.items, currentDetailItem.title);
+            } else {
+                exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML, currentDetailItem.items, currentDetailItem.title, defaultMethod);
+            }
+        });
+    }
 
     // Toggle Handlers
     btnFormView.addEventListener('click', () => {
