@@ -1157,7 +1157,7 @@ export function initPDFGenerator() {
     };
 
     // Ensure manual edit overlay is hidden on page load (manualEdits is always null on init)
-    updateManualEditOverlay();
+    updateManualEditOverlay(); b
 
     const btnResetManual = document.getElementById('btn-reset-manual-edit');
     if (btnResetManual) {
@@ -1231,21 +1231,20 @@ export function initPDFGenerator() {
     // DOWNLOAD EXECUTION
     // ============================================
     const executeDownload = async (items, title, format) => {
+        const sourceInvoice = manualEdits.invoice || buildInvoiceHTML;
+        const sourceLetter = manualEdits.letter || buildSuratJalanHTML;
+
         if (format === 'pdf') {
             printInvoicePDF(items, title);
         } else if (format === 'png') {
-            await exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML, items, title, 'png');
+            await exportBothDocuments(sourceInvoice, sourceLetter, items, title, 'png');
         } else if (format === 'jpeg') {
-            await exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML, items, title, 'jpeg');
+            await exportBothDocuments(sourceInvoice, sourceLetter, items, title, 'jpeg');
         }
     };
 
     // Show format selection menu
     const showFormatMenu = () => {
-        if (manualEdits.invoice || manualEdits.letter) {
-            showAlert("File yang diedit manual harus diunduh satuan lewat Preview!", false);
-            return;
-        }
 
         const formats = appState.state.settings.downloadFormats || { png: true, jpeg: true, pdf: true };
         const enabledFormats = Object.keys(formats).filter(f => formats[f]);
@@ -1414,11 +1413,6 @@ export function initPDFGenerator() {
 
             // Prevent ghost click (touch fires both touchend + mouseup)
             e.preventDefault();
-
-            if (manualEdits.invoice || manualEdits.letter) {
-                showAlert("File yang diedit manual harus diunduh satuan lewat Preview!", false);
-                return;
-            }
             const title = validate();
             if (!title) return;
             const items = appState.state.invoiceItems;

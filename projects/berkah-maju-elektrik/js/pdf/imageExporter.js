@@ -214,8 +214,8 @@ export async function exportToJPEG(htmlString, filename) {
 
 // Export both Invoice and Surat Jalan in specified format
 export async function exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML, items, title, format = 'png') {
-    const invoiceHTML = buildInvoiceHTML(items, title);
-    const suratJalanHTML = buildSuratJalanHTML(items);
+    const invoiceHTML = typeof buildInvoiceHTML === 'function' ? buildInvoiceHTML(items, title) : buildInvoiceHTML;
+    const suratJalanHTML = typeof buildSuratJalanHTML === 'function' ? buildSuratJalanHTML(items) : buildSuratJalanHTML;
 
     const formats = appState.state.settings.fileNameFormat || { invoice: 'Invoice-{judul}', suratJalan: 'Surat Jalan-{judul}' };
     const invoiceFilename = formatFileName(formats.invoice, title);
