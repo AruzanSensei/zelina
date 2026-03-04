@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DocFlow — Document Generator</title>
+    <meta name="description" content="Buat, kelola, dan ekspor dokumen bisnis secara dinamis.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
+</head>
+
+<body>
+    <!-- ====== HEADER ====== -->
+    <header class="app-header">
+        <div class="app-logo">
+            <i class="fa-solid fa-file-lines" style="font-size:1.3rem; color:var(--primary)"></i>
+            <h1>DocFlow</h1>
+            <span>Admin</span>
+        </div>
+        <div class="header-actions">
+            <button id="btn-settings" title="Pengaturan">
+                <i class="fa-solid fa-gear"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- ====== NAV TABS ====== -->
+    <nav class="nav-tabs">
+        <button class="tab-btn active" data-tab="templates">
+            <i class="fa-solid fa-layer-group"></i> Templates
+        </button>
+        <button class="tab-btn" data-tab="generator">
+            <i class="fa-solid fa-pen-ruler"></i> Generator
+        </button>
+        <button class="tab-btn" data-tab="clients">
+            <i class="fa-solid fa-users"></i> Clients
+        </button>
+        <button class="tab-btn" data-tab="history">
+            <i class="fa-solid fa-clock-rotate-left"></i> History
+        </button>
+    </nav>
+
+    <!-- ====== TEMPLATES VIEW ====== -->
+    <section id="templates-view" class="view">
+        <div class="section-header">
+            <h2>Template Dokumen</h2>
+            <button class="btn btn-sm btn-primary" id="btn-add-template">
+                <i class="fa-solid fa-plus"></i> Tambah
+            </button>
+        </div>
+        <div class="template-grid" id="template-grid">
+            <!-- Rendered dynamically -->
+        </div>
+    </section>
+
+    <!-- ====== GENERATOR VIEW ====== -->
+    <section id="generator-view" class="view hidden">
+        <!-- Template Selector -->
+        <div class="card mb-3">
+            <label class="form-label">Jenis Dokumen</label>
+            <select class="form-select" id="template-selector">
+                <!-- Options populated from registry -->
+            </select>
+        </div>
+
+        <!-- Title -->
+        <div class="card mb-3">
+            <div class="form-group">
+                <label class="form-label">Judul Dokumen</label>
+                <input type="text" class="form-input" id="doc-title" placeholder="Contoh: Pemeliharaan Jan 2025">
+            </div>
+        </div>
+
+        <!-- Dynamic Extra Fields -->
+        <div class="card mb-3" id="extra-fields-container">
+            <div class="form-label mb-2">Detail Dokumen</div>
+            <div id="extra-fields">
+                <!-- Rendered by forms.js -->
+            </div>
+        </div>
+
+        <!-- Dynamic Items Table -->
+        <div class="card mb-3">
+            <div class="section-header">
+                <span class="form-label" style="margin-bottom:0;">Daftar Item</span>
+                <button class="btn btn-sm btn-outline" id="btn-add-item">
+                    <i class="fa-solid fa-plus"></i> Tambah
+                </button>
+            </div>
+            <div class="items-table-wrapper">
+                <table class="items-table" id="items-table">
+                    <thead id="items-thead">
+                        <!-- Rendered by forms.js -->
+                    </thead>
+                    <tbody id="items-tbody">
+                        <!-- Rendered by forms.js -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- Total (conditional) -->
+            <div id="total-row" class="hidden" style="text-align:right; margin-top:8px;">
+                <span class="text-sm text-muted">Total:</span>
+                <strong id="total-value" style="font-size:0.9rem; margin-left:6px;">Rp 0</strong>
+            </div>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="card mb-3">
+            <div class="form-label mb-2">Preview</div>
+            <div class="preview-grid" id="preview-grid" data-count="0">
+                <!-- Rendered dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== CLIENTS VIEW ====== -->
+    <section id="clients-view" class="view hidden">
+        <div class="section-header">
+            <h2>Daftar Klien</h2>
+            <button class="btn btn-sm btn-primary" id="btn-add-client">
+                <i class="fa-solid fa-user-plus"></i> Tambah
+            </button>
+        </div>
+        <div class="client-list" id="client-list">
+            <!-- Rendered dynamically -->
+        </div>
+        <div class="empty-state hidden" id="clients-empty">
+            <i class="fa-solid fa-users"></i>
+            <h3>Belum ada klien</h3>
+            <p>Tambahkan klien pertama untuk memulai.</p>
+        </div>
+    </section>
+
+    <!-- ====== HISTORY VIEW ====== -->
+    <section id="history-view" class="view hidden">
+        <div class="section-header">
+            <h2>Riwayat Dokumen</h2>
+            <button class="btn btn-sm btn-outline" id="btn-clear-history">
+                <i class="fa-solid fa-trash"></i> Hapus Semua
+            </button>
+        </div>
+        <div id="history-list" class="flex flex-col gap-2">
+            <!-- Rendered dynamically -->
+        </div>
+        <div class="empty-state hidden" id="history-empty">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <h3>Belum ada riwayat</h3>
+            <p>Dokumen yang telah di-generate akan muncul di sini.</p>
+        </div>
+    </section>
+
+    <!-- ====== ACTION BAR (Generator) ====== -->
+    <div class="action-bar hidden" id="action-bar">
+        <button class="btn btn-outline" id="btn-reset-form">
+            <i class="fa-solid fa-rotate-left"></i> Reset
+        </button>
+        <button class="btn btn-primary" id="btn-generate">
+            <i class="fa-solid fa-download"></i> Generate & Unduh
+        </button>
+    </div>
+
+    <!-- ====== CUSTOM ALERT ====== -->
+    <div class="custom-alert hidden" id="custom-alert">
+        <span id="alert-message"></span>
+    </div>
+
+    <!-- ====== ADD CLIENT MODAL ====== -->
+    <div class="modal" id="add-client-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Tambah Klien Baru</h2>
+                <button class="modal-close" id="close-client-modal">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Nama Klien / Perusahaan</label>
+                <input type="text" class="form-input" id="new-client-name" placeholder="PT. Contoh Perusahaan">
+            </div>
+            <button class="btn btn-primary btn-full mt-3" id="btn-save-client">
+                <i class="fa-solid fa-check"></i> Simpan
+            </button>
+        </div>
+    </div>
+
+    <!-- ====== PREVIEW MODAL (Full) ====== -->
+    <div class="modal" id="preview-modal">
+        <div class="modal-content" style="max-width:90vw; max-height:90vh; padding:0; overflow:hidden;">
+            <div class="modal-header" style="padding:12px 16px; border-bottom:1px solid var(--border);">
+                <h2 id="preview-modal-title">Preview</h2>
+                <div style="display:flex; gap:6px;">
+                    <button class="btn btn-sm btn-primary" id="preview-download-btn">
+                        <i class="fa-solid fa-download"></i>
+                    </button>
+                    <button class="modal-close" id="close-preview-modal">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+            <div style="overflow:auto; max-height:calc(90vh - 56px); padding:12px; background:var(--bg);">
+                <div id="preview-modal-body"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== SCRIPTS ====== -->
+    <script type="module" src="js/app.js"></script>
+</body>
+
+</html>

@@ -657,6 +657,11 @@ export const openPreviewModal = (html, titleText, type, downloadAction, editActi
     if (btnModalEdit) {
         btnModalEdit.style.display = showEditButton ? 'inline-flex' : 'none';
 
+        // Reset editing state on modal load
+        btnModalEdit.classList.remove('is-editing');
+        btnModalEdit.style.backgroundColor = '';
+        btnModalEdit.style.color = '';
+
         // Tag with editAction so the existing listener can check at click-time
         if (showEditButton && editAction) {
             btnModalEdit._customEditAction = editAction;
@@ -685,12 +690,14 @@ export const openPreviewModal = (html, titleText, type, downloadAction, editActi
         if (modalBody) {
             modalBody.style.display = 'flex';
             modalBody.style.justifyContent = 'center';
-            modalBody.style.alignItems = 'center'; // Center the canvas
-            modalBody.style.overflow = 'hidden'; // Remove scrollbars as requested
+            modalBody.style.alignItems = 'center';
+            modalBody.style.overflow = 'hidden';
+            modalBody.style.cursor = 'grab';
 
             previewFrame.style.width = '794px';
             previewFrame.style.height = '1123px';
             previewFrame.style.flexShrink = '0';
+            previewFrame.style.pointerEvents = 'none';
 
             // Reset position
             previewFrame.dataset.x = '0';
@@ -700,21 +707,29 @@ export const openPreviewModal = (html, titleText, type, downloadAction, editActi
             const refHeight = 1123;
             const availableWidth = modalBody.clientWidth || document.documentElement.clientWidth * 0.9;
             const availableHeight = modalBody.clientHeight || document.documentElement.clientHeight * 0.8;
-            const scale = Math.min(availableWidth / refWidth, availableHeight / refHeight) * 0.95; // 95% to leave some margin
+            const scale = Math.min(availableWidth / refWidth, availableHeight / refHeight) * 0.95;
 
             previewFrame.dataset.minZoom = scale.toString();
             previewFrame.dataset.zoom = scale.toString();
             previewFrame.style.transformOrigin = 'center center';
             previewFrame.style.transform = `translate(0px, 0px) scale(${scale})`;
-            previewFrame.style.transition = 'none'; // smooth drag
+            previewFrame.style.transition = 'none';
 
+            // Reset pinchBound so setupPinchZoom re-registers clean listeners each open
+            delete modalBody.dataset.pinchBound;
             setupPinchZoom(modalBody, previewFrame);
         }
     }, 150);
 };
 
 function setupPinchZoom(wrapper, frame) {
-    if (wrapper.dataset.pinchBound) return;
+    // Clean up any previous pinch/zoom listeners via AbortController
+    if (wrapper._pinchZoomAbort) {
+        wrapper._pinchZoomAbort.abort();
+    }
+    const controller = new AbortController();
+    wrapper._pinchZoomAbort = controller;
+    const sig = controller.signal;
     wrapper.dataset.pinchBound = '1';
 
     let pointers = new Map();
@@ -815,27 +830,28 @@ function setupPinchZoom(wrapper, frame) {
 
         frame.dataset.zoom = String(nextZoom);
         updateTransform();
-    }, { passive: false });
+    }, { passive: false, signal: sig });
 
     // Handle mouse cursor changes
     wrapper.addEventListener('pointerdown', (e) => {
         wrapper.style.cursor = 'grabbing';
         onPointerDown(e);
-    });
-    wrapper.addEventListener('pointermove', onPointerMove);
+    }, { signal: sig });
+    wrapper.addEventListener('pointermove', onPointerMove, { signal: sig });
     wrapper.addEventListener('pointerup', (e) => {
         wrapper.style.cursor = 'grab';
         onPointerUp(e);
-    });
+    }, { signal: sig });
     wrapper.addEventListener('pointercancel', (e) => {
         wrapper.style.cursor = 'grab';
         onPointerUp(e);
-    });
+    }, { signal: sig });
     wrapper.addEventListener('pointerleave', (e) => {
         wrapper.style.cursor = 'grab';
         onPointerUp(e);
-    });
+    }, { signal: sig });
 }
+
 
 // ============================================
 // INITIALIZER
@@ -916,7 +932,11 @@ export function initPDFGenerator() {
     // Fullscreen preview (modal)
     const openFullPreview = (type) => {
         currentPreviewType = type;
-        const html = type === 'invoice' ? lastInvoiceHTML : lastSuratJalanHTML;
+        const editKey = type === 'surat' ? 'letter' : 'invoice';
+        // Show the edited HTML if it exists, otherwise the last rendered HTML
+        const html = manualEdits[editKey]
+            ? manualEdits[editKey]
+            : (type === 'invoice' ? lastInvoiceHTML : lastSuratJalanHTML);
         const titleText = type === 'invoice' ? 'Preview Invoice' : 'Preview Surat Jalan';
 
         // Use generalized modal open function, pass null for downloadAction to use manual mode's override
@@ -1011,24 +1031,39 @@ export function initPDFGenerator() {
     const btnCancelEdit = document.getElementById('btn-cancel-edit');
     const btnProceedEdit = document.getElementById('btn-proceed-edit');
 
+    const disableEditing = () => {
+        if (previewFrame && previewFrame.contentDocument) {
+            previewFrame.style.pointerEvents = 'none';
+            previewFrame.contentDocument.body.contentEditable = "false";
+            previewFrame.contentDocument.body.style.outline = "none";
+
+            if (btnModalEdit) {
+                btnModalEdit.classList.remove('is-editing');
+                btnModalEdit.style.backgroundColor = '';
+                btnModalEdit.style.color = '';
+            }
+        }
+    };
+
     const enableEditing = () => {
         if (previewFrame && previewFrame.contentDocument) {
             // Re-enable pointer events so the user can click text to edit
             previewFrame.style.pointerEvents = 'auto';
 
-            // Reset zoom/transform so browser hit-testing (clicking text) is accurate
-            previewFrame.style.transform = 'translate(0px, 0px) scale(1)';
-            previewFrame.dataset.zoom = '1';
-            previewFrame.dataset.x = '0';
-            previewFrame.dataset.y = '0';
+            // DO NOT reset transform or overflow here!
+            // We want to KEEP the existing pinch/zoom layout set up by openPreviewModal
+            // so the user can pan and zoom while editing just like in preview mode.
 
-            // To allow scrolling inside the modal now that it's full size
-            const modalBody = previewModal.querySelector('.modal-body');
-            if (modalBody) modalBody.style.overflow = 'auto';
-
+            // Enable content editable
             previewFrame.contentDocument.body.contentEditable = "true";
             previewFrame.contentDocument.body.style.outline = "2px dashed #f39c12"; // visual feedback
             previewFrame.contentDocument.body.focus();
+
+            if (btnModalEdit) {
+                btnModalEdit.classList.add('is-editing');
+                btnModalEdit.style.backgroundColor = '#f39c12'; // orange primary color
+                btnModalEdit.style.color = '#fff';
+            }
 
             const onInput = () => {
                 const editedHTML = "<!DOCTYPE html>\n<html lang=\"id\">\n" + previewFrame.contentDocument.documentElement.innerHTML + "\n</html>";
@@ -1062,6 +1097,12 @@ export function initPDFGenerator() {
             // If called from history mode, use the custom action
             if (btnModalEdit._customEditAction) {
                 btnModalEdit._customEditAction();
+                return;
+            }
+
+            // Toggle editing off if it's already active
+            if (btnModalEdit.classList.contains('is-editing')) {
+                disableEditing();
                 return;
             }
 
