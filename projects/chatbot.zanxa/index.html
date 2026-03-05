@@ -89,14 +89,37 @@
                     </svg>
                 </button>
                 <div class="topbar-center">
-                    <span class="model-badge">
-                        <!-- <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <circle cx="12" cy="12" r="10" />
-                            <path d="M12 8v4l3 3" />
-                        </svg> -->
-                        gemini-3-flash
-                    </span>
+                    <div class="model-selector" id="model-selector">
+                        <button class="model-selected">
+                            <span class="model-name">Gemini 2.5 Flash</span>
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="m6 9 6 6 6-6" />
+                            </svg>
+                        </button>
+                        <div class="model-dropdown">
+                            <div class="model-option active" data-model="gemini-1.5-flash">
+                                <span class="opt-name">Gemini 2.5 Flash</span>
+                                <span class="tag free">Free</span>
+                            </div>
+                            <div class="model-option active">
+                                <span class="opt-name">Sawit AI</span>
+                                <span class="tag free">Free</span>
+                            </div>
+                            <div class="model-option locked">
+                                <span class="opt-name">Claude 3.5 Sonnet</span>
+                                <span class="tag pro">Pro</span>
+                            </div>
+                            <div class="model-option locked">
+                                <span class="opt-name">GPT-4o</span>
+                                <span class="tag pro">Pro</span>
+                            </div>
+                            <div class="model-option locked">
+                                <span class="opt-name">DeepSeek R1</span>
+                                <span class="tag pro">Pro</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <button class="icon-btn" id="clear-chat-btn" title="Clear Chat" aria-label="Clear Chat">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
@@ -123,7 +146,8 @@
                         </svg>
                     </div> -->
                     <h1></h1>
-                    <p class="welcome-sub">Tanyakan apa saja — Saya AI buatan Zanxa.</p>
+                    <p class="welcome-sub">Tanyakan apa saja
+                    </p>
                 </div>
 
                 <!-- Chat Messages -->
@@ -157,11 +181,10 @@
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                     <circle cx="12" cy="7" r="4" />
                 </svg>
-                <h2>Siapa nama kamu?</h2>
+                <h2>Spill nama mu dong</h2>
             </div>
             <form id="username-form">
-                <input type="text" id="username-input" placeholder="Masukkan nama panggilan..." required
-                    autocomplete="off">
+                <input type="text" id="username-input" placeholder="nama panggilanmu..." required autocomplete="off">
                 <button type="submit" class="btn-primary">Mulai Ngobrol</button>
             </form>
         </div>

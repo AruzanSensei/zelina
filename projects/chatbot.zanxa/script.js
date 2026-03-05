@@ -28,6 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ── State ── */
     let isGenerating = false;
     let conversationHistory = [];
+    let savedSessions = JSON.parse(localStorage.getItem('zanxa-sessions') || '[]');
+    let currentSessionId = Date.now().toString();
     let username = localStorage.getItem('zanxa-username') || '';
     let hasSavedToHistory = false;
 
@@ -98,9 +100,18 @@ document.addEventListener('DOMContentLoaded', () => {
     ═══════════════════════════════════════════════ */
     function saveChat() {
         localStorage.setItem('zanxa-chat-history', JSON.stringify(conversationHistory));
+        // Update the current session in savedSessions if it exists
+        const sessionIdx = savedSessions.findIndex(s => s.id === currentSessionId);
+        if (sessionIdx !== -1) {
+            savedSessions[sessionIdx].history = conversationHistory;
+            localStorage.setItem('zanxa-sessions', JSON.stringify(savedSessions));
+        }
     }
 
     function loadChat() {
+        // Load sidebar items first
+        renderSidebar();
+
         const saved = localStorage.getItem('zanxa-chat-history');
         if (saved) {
             conversationHistory = JSON.parse(saved);
@@ -112,6 +123,60 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         }
+    }
+
+    function renderSidebar() {
+        chatHistoryList.innerHTML = '';
+        if (savedSessions.length === 0) {
+            chatHistoryList.innerHTML = '<div class="history-empty">Belum ada percakapan</div>';
+            return;
+        }
+
+        savedSessions.forEach(session => {
+            const item = createHistoryItem(session);
+            chatHistoryList.appendChild(item);
+        });
+    }
+
+    function createHistoryItem(session) {
+        const item = document.createElement('div');
+        item.className = `history-item ${session.id === currentSessionId ? 'active' : ''}`;
+        const firstMsg = session.history.find(m => m.role === 'user');
+        const title = firstMsg?.parts[0]?.text?.slice(0, 30) + (firstMsg?.parts[0]?.text?.length > 30 ? '...' : '') || 'Percakapan Baru';
+
+        item.innerHTML = `
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            <span>${title}</span>
+        `;
+
+        item.addEventListener('click', () => {
+            if (isGenerating) return;
+            loadSession(session.id);
+            if (window.innerWidth <= 768) closeSidebar();
+        });
+
+        return item;
+    }
+
+    function loadSession(id) {
+        const session = savedSessions.find(s => s.id === id);
+        if (!session) return;
+
+        currentSessionId = id;
+        conversationHistory = session.history;
+        localStorage.setItem('zanxa-chat-history', JSON.stringify(conversationHistory));
+
+        messagesList.innerHTML = '';
+        welcomeScreen.style.display = 'none';
+        hasSavedToHistory = true;
+
+        conversationHistory.forEach(msg => {
+            appendMessage(msg.parts[0].text, msg.role === 'user' ? 'user' : 'ai', false);
+        });
+
+        renderSidebar();
     }
 
     /* ═══════════════════════════════════════════════
@@ -414,32 +479,62 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     newChatBtn.addEventListener('click', () => {
-        if (conversationHistory.length > 0) {
-            if (!hasSavedToHistory) addToHistory();
+        if (conversationHistory.length > 0 || hasSavedToHistory) {
+            if (!hasSavedToHistory && conversationHistory.length > 0) addToHistory();
+
+            currentSessionId = Date.now().toString();
             conversationHistory = [];
             localStorage.removeItem('zanxa-chat-history');
             messagesList.innerHTML = '';
             welcomeScreen.style.display = 'flex';
             hasSavedToHistory = false;
-            // Restart rotation if welcome screen is shown
             startWelcomeAnimation();
+            renderSidebar();
         }
     });
 
     function addToHistory() {
-        const firstUser = conversationHistory.find(m => m.role === 'user');
-        const title = firstUser?.parts[0]?.text?.slice(0, 30) + '...' || 'Chat';
+        const session = {
+            id: currentSessionId,
+            history: conversationHistory,
+            timestamp: Date.now()
+        };
 
-        const item = document.createElement('div');
-        item.className = 'history-item';
-        item.innerHTML = `
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-            </svg>
-            <span>${title}</span>
-        `;
-        chatHistoryList.prepend(item);
+        const existingIdx = savedSessions.findIndex(s => s.id === currentSessionId);
+        if (existingIdx !== -1) {
+            savedSessions[existingIdx] = session;
+        } else {
+            savedSessions.unshift(session);
+        }
+
+        localStorage.setItem('zanxa-sessions', JSON.stringify(savedSessions));
+        renderSidebar();
     }
+
+    /* ═══════════════════════════════════════════════
+       MOBILE FIXES
+    ═══════════════════════════════════════════════ */
+    // Handle visual viewport (keyboard)
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener('resize', () => {
+            const height = window.visualViewport.height;
+            document.body.style.height = `${height}px`;
+            scrollToBottom();
+        });
+    }
+
+    // Model Selector Logic (UI only)
+    const modelSelector = document.getElementById('model-selector');
+    const modelName = modelSelector.querySelector('.model-name');
+    const options = modelSelector.querySelectorAll('.model-option:not(.locked)');
+
+    options.forEach(opt => {
+        opt.addEventListener('click', () => {
+            options.forEach(o => o.classList.remove('active'));
+            opt.classList.add('active');
+            modelName.textContent = opt.querySelector('.opt-name').textContent.toLowerCase();
+        });
+    });
 
     // Init
     loadChat();
