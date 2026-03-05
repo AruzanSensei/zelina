@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let conversationHistory = [];
     let savedSessions = JSON.parse(localStorage.getItem('zanxa-sessions') || '[]');
     let currentSessionId = Date.now().toString();
-    let username = localStorage.getItem('zanxa-username') || '';
     let hasSavedToHistory = false;
 
     // Config marked.js
@@ -42,22 +41,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ═══════════════════════════════════════════════
-       USERNAME SETUP
+       INITIALIZATION
     ═══════════════════════════════════════════════ */
-    if (!username) {
-        usernameModal.classList.add('visible');
+    function init() {
+        loadChat();
+        startWelcomeAnimation();
     }
-
-    usernameForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const val = usernameInput.value.trim();
-        if (val) {
-            username = val;
-            localStorage.setItem('zanxa-username', username);
-            usernameModal.classList.remove('visible');
-            appendMessage(`Halo **${username}**! Ada yang bisa saya bantu hari ini?`, 'ai');
-        }
-    });
 
     /* ═══════════════════════════════════════════════
        THEME & SIDEBAR
@@ -207,7 +196,42 @@ document.addEventListener('DOMContentLoaded', () => {
             addCopyButtons(content);
         }
 
+        const actions = document.createElement('div');
+        actions.className = 'msg-actions';
+
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'action-btn';
+        copyBtn.title = 'Salin pesan';
+        copyBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+        `;
+
+        copyBtn.addEventListener('click', () => {
+            const textToCopy = role === 'user' ? text : content.innerText;
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                copyBtn.innerHTML = `
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                `;
+                setTimeout(() => {
+                    copyBtn.innerHTML = `
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                    `;
+                }, 2000);
+            });
+        });
+
+        actions.appendChild(copyBtn);
+
         bubble.appendChild(content);
+        bubble.appendChild(actions);
         row.appendChild(bubble);
 
         return row;
@@ -252,14 +276,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function appendMessage(text, role, shouldSave = true) {
+    function appendMessage(text, role, shouldSave = true, shouldScroll = true) {
         if (welcomeScreen.style.display !== 'none') {
             welcomeScreen.style.display = 'none';
         }
 
         const row = createMessageRow(text, role);
         messagesList.appendChild(row);
-        scrollToBottom();
+
+        if (shouldScroll) {
+            scrollToBottom();
+        }
 
         if (shouldSave) {
             saveChat();
@@ -268,7 +295,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function scrollToBottom() {
-        messagesContainer.scrollTo({ top: messagesContainer.scrollHeight, behavior: 'smooth' });
+        // Only scroll if already near bottom or forced
+        const threshold = 150;
+        const isNearBottom = messagesContainer.scrollHeight - messagesContainer.scrollTop - messagesContainer.clientHeight < threshold;
+
+        if (isNearBottom) {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
     }
 
     /* ═══════════════════════════════════════════════
@@ -436,7 +469,8 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const aiReply = await callGeminiProxy(text);
             removeTyping();
-            appendMessage(aiReply, 'ai');
+            // User requested NO direct scroll-to-bottom for AI output
+            appendMessage(aiReply, 'ai', true, false);
         } catch (err) {
             removeTyping();
             appendMessage(`⚠️ Waduh, ada error: ${err.message}. Coba lagi ya!`, 'ai');
