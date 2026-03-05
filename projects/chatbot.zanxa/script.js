@@ -6,10 +6,8 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     /* ── Config ── */
-    // Security Note: API keys are now handled by the Cloudflare Worker backend.
-    // No sensitive keys or direct Gemini URLs are stored in the frontend.
     const PROXY_URL = "https://api.zanxa.site";
-    const SITE_TOKEN = "zanxa-web-client-v1"; // Custom header for basic worker-side filtering
+    const SITE_TOKEN = "zanxa-web-client-v1";
 
     /* ── DOM refs ── */
     const messagesList = document.getElementById('messages-list');
@@ -22,14 +20,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggle = document.getElementById('theme-toggle');
     const sidebarToggle = document.getElementById('sidebar-toggle');
     const sidebar = document.getElementById('sidebar');
-    const chatHistory = document.getElementById('chat-history');
+    const chatHistoryList = document.getElementById('chat-history');
+    const usernameModal = document.getElementById('username-modal');
+    const usernameForm = document.getElementById('username-form');
+    const usernameInput = document.getElementById('username-input');
 
     /* ── State ── */
     let isGenerating = false;
-    let conversationHistory = []; // for multi-turn context
+    let conversationHistory = [];
+    let username = localStorage.getItem('zanxa-username') || '';
+
+    // Config marked.js
+    if (window.marked) {
+        marked.setOptions({
+            breaks: true,
+            gfm: true
+        });
+    }
 
     /* ═══════════════════════════════════════════════
-       THEME
+       USERNAME SETUP
+    ═══════════════════════════════════════════════ */
+    if (!username) {
+        usernameModal.classList.add('visible');
+    }
+
+    usernameForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const val = usernameInput.value.trim();
+        if (val) {
+            username = val;
+            localStorage.setItem('zanxa-username', username);
+            usernameModal.classList.remove('visible');
+            appendMessage(`Halo **${username}**! Ada yang bisa saya bantu hari ini?`, 'ai');
+        }
+    });
+
+    /* ═══════════════════════════════════════════════
+       THEME & SIDEBAR
     ═══════════════════════════════════════════════ */
     const savedTheme = localStorage.getItem('zanxa-theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
@@ -41,12 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('zanxa-theme', next);
     });
 
-    /* ═══════════════════════════════════════════════
-       SIDEBAR TOGGLE
-    ═══════════════════════════════════════════════ */
     sidebarToggle.addEventListener('click', () => {
         sidebar.classList.toggle('collapsed');
-        // mobile overlay
         let overlay = document.querySelector('.sidebar-overlay');
         if (!overlay) {
             overlay = document.createElement('div');
@@ -69,7 +93,243 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ═══════════════════════════════════════════════
-       AUTO-RESIZE TEXTAREA
+       AUTO-SAVE & LOAD
+    ═══════════════════════════════════════════════ */
+    function saveChat() {
+        localStorage.setItem('zanxa-chat-history', JSON.stringify(conversationHistory));
+    }
+
+    function loadChat() {
+        const saved = localStorage.getItem('zanxa-chat-history');
+        if (saved) {
+            conversationHistory = JSON.parse(saved);
+            if (conversationHistory.length > 0) {
+                welcomeScreen.style.display = 'none';
+                conversationHistory.forEach(msg => {
+                    appendMessage(msg.parts[0].text, msg.role === 'user' ? 'user' : 'ai', false);
+                });
+            }
+        }
+    }
+
+    /* ═══════════════════════════════════════════════
+       MESSAGE RENDERING
+    ═══════════════════════════════════════════════ */
+    function formatMarkdown(text) {
+        if (window.marked) {
+            return marked.parse(text);
+        }
+        return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+            .replace(/\n/g, '<br>');
+    }
+
+    function createMessageRow(text, role) {
+        const row = document.createElement('div');
+        row.className = `message-row ${role}`;
+
+        const bubble = document.createElement('div');
+        bubble.className = 'msg-bubble';
+
+        const content = document.createElement('div');
+        content.className = 'msg-content';
+
+        if (role === 'user') {
+            content.textContent = text;
+        } else {
+            content.innerHTML = formatMarkdown(text);
+            addCopyButtons(content);
+        }
+
+        bubble.appendChild(content);
+        row.appendChild(bubble);
+
+        return row;
+    }
+
+    function addCopyButtons(container) {
+        const pres = container.querySelectorAll('pre');
+        pres.forEach(pre => {
+            if (pre.querySelector('.code-header')) return;
+
+            const header = document.createElement('div');
+            header.className = 'code-header';
+
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'copy-btn';
+            copyBtn.innerHTML = `
+                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg> 
+                <p>  Salin</p>
+            `;
+
+            copyBtn.addEventListener('click', () => {
+                const code = pre.querySelector('code').innerText;
+                navigator.clipboard.writeText(code).then(() => {
+                    copyBtn.innerHTML = 'Tersalin!';
+                    setTimeout(() => {
+                        copyBtn.innerHTML = `
+                            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg> 
+                            <p>  Salin</p>
+                        `;
+                    }, 2000);
+                });
+            });
+
+            header.appendChild(copyBtn);
+            pre.prepend(header);
+        });
+    }
+
+    function appendMessage(text, role, shouldSave = true) {
+        if (welcomeScreen.style.display !== 'none') {
+            welcomeScreen.style.display = 'none';
+        }
+
+        const row = createMessageRow(text, role);
+        messagesList.appendChild(row);
+        scrollToBottom();
+
+        if (shouldSave) {
+            saveChat();
+        }
+        return row;
+    }
+
+    function scrollToBottom() {
+        messagesContainer.scrollTo({ top: messagesContainer.scrollHeight, behavior: 'smooth' });
+    }
+
+    /* ── Funny Typing indicator ── */
+    let typingInterval;
+    const funnyMessages = [
+        "Sebentar ya...",
+        "Lagi mikir keras nih...",
+        "Sabar, orang sabar disayang Tuhan...",
+        "Bentar, lagi buka primbon...",
+        "Lagi ngetik, jangan diintip...",
+        "Tunggu ya, lagi cari jawaban di awan...",
+        "Bentar bos, lagi loading...",
+        "Dikit lagi selesai nih..."
+    ];
+
+    function showTyping() {
+        const row = document.createElement('div');
+        row.className = 'message-row ai typing-row';
+        row.id = 'typing-indicator';
+
+        const bubble = document.createElement('div');
+        bubble.className = 'msg-bubble';
+
+        const loadingText = document.createElement('div');
+        loadingText.className = 'loading-text';
+        loadingText.textContent = funnyMessages[0];
+
+        const content = document.createElement('div');
+        content.className = 'msg-content';
+        content.innerHTML = `
+            <div class="typing-indicator">
+                <span></span><span></span><span></span>
+            </div>`;
+
+        bubble.appendChild(loadingText);
+        bubble.appendChild(content);
+        row.appendChild(bubble);
+        messagesList.appendChild(row);
+        scrollToBottom();
+
+        let msgIndex = 0;
+        typingInterval = setInterval(() => {
+            msgIndex = (msgIndex + 1) % funnyMessages.length;
+            loadingText.style.opacity = '0';
+            setTimeout(() => {
+                loadingText.textContent = funnyMessages[msgIndex];
+                loadingText.style.opacity = '1';
+            }, 300);
+        }, 3000);
+
+        return row;
+    }
+
+    function removeTyping() {
+        const el = document.getElementById('typing-indicator');
+        if (el) el.remove();
+        clearInterval(typingInterval);
+    }
+
+    /* ═══════════════════════════════════════════════
+       API CALL
+    ═══════════════════════════════════════════════ */
+    async function callGeminiProxy(userText) {
+        conversationHistory.push({
+            role: "user",
+            parts: [{ text: userText }]
+        });
+
+        const response = await fetch(PROXY_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-site-token": SITE_TOKEN,
+                "x-turnstile-token": "turnstile-placeholder-token"
+            },
+            body: JSON.stringify({
+                contents: conversationHistory
+            })
+        });
+
+        if (!response.ok) {
+            const err = await response.json().catch(() => ({}));
+            throw new Error(err?.message || err?.error?.message || `Error ${response.status}`);
+        }
+
+        const data = await response.json();
+        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!aiText) return "(Tidak ada respon)";
+
+        conversationHistory.push({
+            role: "model",
+            parts: [{ text: aiText }]
+        });
+
+        saveChat();
+        return aiText;
+    }
+
+    async function handleSend() {
+        const text = messageInput.value.trim();
+        if (!text || isGenerating) return;
+
+        isGenerating = true;
+        sendBtn.disabled = true;
+        messageInput.value = '';
+        messageInput.style.height = 'auto';
+
+        appendMessage(text, 'user');
+        showTyping();
+
+        try {
+            const aiReply = await callGeminiProxy(text);
+            removeTyping();
+            appendMessage(aiReply, 'ai');
+        } catch (err) {
+            removeTyping();
+            appendMessage(`⚠️ Waduh, ada error: ${err.message}. Coba lagi ya!`, 'ai');
+            conversationHistory.pop();
+        } finally {
+            isGenerating = false;
+            sendBtn.disabled = messageInput.value.trim() === '';
+            messageInput.focus();
+        }
+    }
+
+    /* ═══════════════════════════════════════════════
+       CONTROLS
     ═══════════════════════════════════════════════ */
     messageInput.addEventListener('input', () => {
         messageInput.style.height = 'auto';
@@ -86,282 +346,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     sendBtn.addEventListener('click', handleSend);
 
-    /* ═══════════════════════════════════════════════
-       CLEAR / NEW CHAT
-    ═══════════════════════════════════════════════ */
-    function resetChat() {
-        conversationHistory = [];
-        messagesList.innerHTML = '';
-        welcomeScreen.style.display = 'flex';
-        messageInput.value = '';
-        messageInput.style.height = 'auto';
-        sendBtn.disabled = true;
-    }
+    clearChatBtn.addEventListener('click', () => {
+        if (confirm('Hapus semua obrolan ini?')) {
+            conversationHistory = [];
+            localStorage.removeItem('zanxa-chat-history');
+            messagesList.innerHTML = '';
+            welcomeScreen.style.display = 'flex';
+        }
+    });
 
-    clearChatBtn.addEventListener('click', resetChat);
     newChatBtn.addEventListener('click', () => {
-        // Save current chat to history
         if (conversationHistory.length > 0) {
             addToHistory();
+            conversationHistory = [];
+            localStorage.removeItem('zanxa-chat-history');
+            messagesList.innerHTML = '';
+            welcomeScreen.style.display = 'flex';
         }
-        resetChat();
     });
 
-    /* ═══════════════════════════════════════════════
-       SUGGESTION CARDS
-    ═══════════════════════════════════════════════ */
-    document.querySelectorAll('.suggestion-card').forEach(card => {
-        card.addEventListener('click', () => {
-            const prompt = card.getAttribute('data-prompt');
-            messageInput.value = prompt;
-            messageInput.dispatchEvent(new Event('input'));
-            handleSend();
-        });
-    });
-
-    /* ═══════════════════════════════════════════════
-       MARKDOWN FORMATTER
-    ═══════════════════════════════════════════════ */
-    function formatMarkdown(text) {
-        let html = text;
-
-        // Escape HTML first (except we need to handle code blocks specially)
-        // --- Code blocks (``` lang \n code ```)
-        html = html.replace(/```(\w+)?\n?([\s\S]*?)```/g, (_, lang, code) => {
-            const escaped = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            return `<pre><code class="language-${lang || 'plaintext'}">${escaped.trim()}</code></pre>`;
-        });
-
-        // --- Inline code
-        html = html.replace(/`([^`\n]+?)`/g, '<code>$1</code>');
-
-        // --- Headings
-        html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-        html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
-        html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
-
-        // --- Bold / Italic
-        html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
-        html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-        html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-        html = html.replace(/__(.+?)__/g, '<strong>$1</strong>');
-        html = html.replace(/_(.+?)_/g, '<em>$1</em>');
-
-        // --- Blockquote
-        html = html.replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>');
-
-        // --- HR
-        html = html.replace(/^---$/gm, '<hr>');
-
-        // --- Unordered list
-        html = html.replace(/^[\*\-] (.+)$/gm, '<li>$1</li>');
-        html = html.replace(/(<li>.*<\/li>\n?)+/g, m => `<ul>${m}</ul>`);
-
-        // --- Ordered list
-        html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
-
-        // --- Paragraphs (double newlines)
-        html = html
-            .split(/\n{2,}/)
-            .map(para => {
-                const trimmed = para.trim();
-                if (/^<(h[1-6]|ul|ol|pre|blockquote|hr)/.test(trimmed)) return trimmed;
-                if (!trimmed) return '';
-                // Single newlines → <br>
-                return `<p>${trimmed.replace(/\n/g, '<br>')}</p>`;
-            })
-            .filter(Boolean)
-            .join('\n');
-
-        return html;
-    }
-
-    /* ═══════════════════════════════════════════════
-       MESSAGE RENDERING
-    ═══════════════════════════════════════════════ */
-    function createMessageRow(text, role) {
-        const row = document.createElement('div');
-        row.className = `message-row ${role}`;
-
-        // Avatar
-        const avatar = document.createElement('div');
-        avatar.className = 'msg-avatar';
-        avatar.textContent = role === 'user' ? 'U' : '✦';
-
-        // Bubble
-        const bubble = document.createElement('div');
-        bubble.className = 'msg-bubble';
-
-        const content = document.createElement('div');
-        content.className = 'msg-content';
-
-        if (role === 'user') {
-            content.textContent = text;
-        } else {
-            content.innerHTML = formatMarkdown(text);
-        }
-
-        bubble.appendChild(content);
-        row.appendChild(avatar);
-        row.appendChild(bubble);
-
-        return row;
-    }
-
-    function appendMessage(text, role) {
-        // Hide welcome screen on first message
-        if (welcomeScreen.style.display !== 'none') {
-            welcomeScreen.style.display = 'none';
-        }
-
-        const row = createMessageRow(text, role);
-        messagesList.appendChild(row);
-        scrollToBottom();
-        return row;
-    }
-
-    function scrollToBottom() {
-        messagesContainer.scrollTo({ top: messagesContainer.scrollHeight, behavior: 'smooth' });
-    }
-
-    /* ── Typing indicator ── */
-    function showTyping() {
-        const row = document.createElement('div');
-        row.className = 'message-row ai typing-row';
-        row.id = 'typing-indicator';
-
-        const avatar = document.createElement('div');
-        avatar.className = 'msg-avatar';
-        avatar.textContent = '✦';
-
-        const bubble = document.createElement('div');
-        bubble.className = 'msg-bubble';
-
-        const content = document.createElement('div');
-        content.className = 'msg-content';
-        content.innerHTML = `
-            <div class="typing-indicator">
-                <span></span><span></span><span></span>
-            </div>`;
-
-        bubble.appendChild(content);
-        row.appendChild(avatar);
-        row.appendChild(bubble);
-        messagesList.appendChild(row);
-        scrollToBottom();
-        return row;
-    }
-
-    function removeTyping() {
-        const el = document.getElementById('typing-indicator');
-        if (el) el.remove();
-    }
-
-    /* ═══════════════════════════════════════════════
-       BACKEND PROXY CALL (Cloudflare Worker)
-    ═══════════════════════════════════════════════ */
-
-    /**
-     * Optional: Turnstile verification placeholder.
-     * In production, you would generate a token here and send it to the worker.
-     */
-    async function getTurnstileToken() {
-        // Placeholder for cf-turnstile response
-        return "turnstile-placeholder-token";
-    }
-
-    async function callGeminiProxy(userText) {
-        // Build multi-turn contents for the state
-        conversationHistory.push({
-            role: "user",
-            parts: [{ text: userText }]
-        });
-
-        // Add verification token (placeholder)
-        const turnstileToken = await getTurnstileToken();
-
-        const response = await fetch(PROXY_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "x-site-token": SITE_TOKEN,
-                "x-turnstile-token": turnstileToken
-            },
-            body: JSON.stringify({
-                contents: conversationHistory
-            })
-        });
-
-        if (!response.ok) {
-            const err = await response.json().catch(() => ({}));
-            // Provide clean error message for the UI
-            throw new Error(err?.message || err?.error?.message || `Gateway Error ${response.status}`);
-        }
-
-        const data = await response.json();
-
-        // Extract AI reply from candidates array
-        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-
-        if (!aiText) {
-            return "(No response)";
-        }
-
-        // Store AI reply in conversation state
-        conversationHistory.push({
-            role: "model",
-            parts: [{ text: aiText }]
-        });
-
-        return aiText;
-    }
-
-    /* ═══════════════════════════════════════════════
-       SEND MESSAGE
-    ═══════════════════════════════════════════════ */
-    async function handleSend() {
-        const text = messageInput.value.trim();
-        if (!text || isGenerating) return;
-
-        isGenerating = true;
-        sendBtn.disabled = true;
-
-        // Clear input
-        messageInput.value = '';
-        messageInput.style.height = 'auto';
-
-        // Show user message
-        appendMessage(text, 'user');
-
-        // Show typing
-        showTyping();
-
-        try {
-            const aiReply = await callGeminiProxy(text);
-            removeTyping();
-            appendMessage(aiReply, 'ai');
-        } catch (err) {
-            removeTyping();
-            appendMessage(`⚠️ Error: ${err.message}. Please try again.`, 'ai');
-            console.error('Gemini API error:', err);
-            // Remove failed turn from history
-            conversationHistory.pop();
-        } finally {
-            isGenerating = false;
-            sendBtn.disabled = messageInput.value.trim() === '';
-            messageInput.focus();
-        }
-    }
-
-    /* ═══════════════════════════════════════════════
-       CHAT HISTORY (sidebar)
-    ═══════════════════════════════════════════════ */
     function addToHistory() {
-        const historyEmpty = chatHistory.querySelector('.history-empty');
-        if (historyEmpty) historyEmpty.remove();
-
         const firstUser = conversationHistory.find(m => m.role === 'user');
-        const title = firstUser?.parts[0]?.text?.slice(0, 36) + '...' || 'Chat';
+        const title = firstUser?.parts[0]?.text?.slice(0, 30) + '...' || 'Chat';
 
         const item = document.createElement('div');
         item.className = 'history-item';
@@ -369,12 +375,13 @@ document.addEventListener('DOMContentLoaded', () => {
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
-            <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${title}</span>
+            <span>${title}</span>
         `;
-        chatHistory.prepend(item);
+        chatHistoryList.prepend(item);
     }
 
-    /* ── Initial focus ── */
+    // Init
+    loadChat();
     messageInput.focus();
 
 });

@@ -21,13 +21,17 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="brand">
-                    <div class="brand-icon">
+                    <!-- <div class="brand-icon">
                         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <polygon
-                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 8V4H8"></path>
+                            <rect width="16" height="12" x="4" y="8" rx="2"></rect>
+                            <path d="M2 14h2"></path>
+                            <path d="M20 14h2"></path>
+                            <path d="M15 13v2"></path>
+                            <path d="M9 13v2"></path>
                         </svg>
-                    </div>
+                    </div> -->
                     <span class="brand-name">Zanxa AI</span>
                 </div>
                 <button class="icon-btn" id="new-chat-btn" title="New Chat" aria-label="New Chat">
@@ -38,14 +42,14 @@
             </div>
 
             <div class="sidebar-content">
-                <p class="sidebar-label">Recent</p>
+                <p class="sidebar-label">Riwayat Chat</p>
                 <div class="chat-history" id="chat-history">
                     <div class="history-empty">
                         <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor"
                             stroke-width="1.5">
                             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                         </svg>
-                        <p>No conversations yet</p>
+                        <p>Belum ada percakapan</p>
                     </div>
                 </div>
             </div>
@@ -67,7 +71,7 @@
                     <svg class="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                     </svg>
-                    <span>Toggle Theme</span>
+                    <span>Ubah Tema</span>
                 </button>
             </div>
         </aside>
@@ -86,11 +90,11 @@
                 </button>
                 <div class="topbar-center">
                     <span class="model-badge">
-                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
+                        <!-- <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor"
                             stroke-width="2">
                             <circle cx="12" cy="12" r="10" />
                             <path d="M12 8v4l3 3" />
-                        </svg>
+                        </svg> -->
                         gemini-3-flash
                     </span>
                 </div>
@@ -107,34 +111,19 @@
 
                 <!-- Welcome / Empty State -->
                 <div class="welcome-screen" id="welcome-screen">
-                    <div class="welcome-icon">
+                    <!-- <div class="welcome-icon">
                         <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor"
-                            stroke-width="1.5">
-                            <polygon
-                                points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 8V4H8"></path>
+                            <rect width="16" height="12" x="4" y="8" rx="2"></rect>
+                            <path d="M2 14h2"></path>
+                            <path d="M20 14h2"></path>
+                            <path d="M15 13v2"></path>
+                            <path d="M9 13v2"></path>
                         </svg>
-                    </div>
-                    <h1>How can I help you today?</h1>
-                    <p class="welcome-sub">Ask me anything — I'm powered by Gemini.</p>
-
-                    <div class="suggestion-grid">
-                        <button class="suggestion-card" data-prompt="Explain quantum computing in simple terms">
-                            <span class="suggestion-icon">⚛️</span>
-                            <span>Explain quantum computing</span>
-                        </button>
-                        <button class="suggestion-card" data-prompt="Write a Python function to sort a list">
-                            <span class="suggestion-icon">🐍</span>
-                            <span>Write a Python function</span>
-                        </button>
-                        <button class="suggestion-card" data-prompt="Give me ideas for a creative short story">
-                            <span class="suggestion-icon">✍️</span>
-                            <span>Creative short story ideas</span>
-                        </button>
-                        <button class="suggestion-card" data-prompt="What are the best practices for REST API design?">
-                            <span class="suggestion-icon">🌐</span>
-                            <span>REST API best practices</span>
-                        </button>
-                    </div>
+                    </div> -->
+                    <h1>Ada yang bisa dibantu?</h1>
+                    <p class="welcome-sub">Tanyakan apa saja — Saya AI buatan Zanxa.</p>
                 </div>
 
                 <!-- Chat Messages -->
@@ -145,20 +134,41 @@
             <!-- Input Area -->
             <footer class="input-area">
                 <div class="input-wrapper">
-                    <textarea id="message-input" class="message-input" placeholder="Message Zanxa AI..." rows="1"
+                    <textarea id="message-input" class="message-input" placeholder="Ketik pesan..." rows="1"
                         aria-label="Chat input"></textarea>
-                    <button class="send-btn" id="send-btn" aria-label="Send message" disabled>
+                    <button class="send-btn" id="send-btn" aria-label="Kirim pesan" disabled>
                         <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
                             <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
                         </svg>
                     </button>
                 </div>
-                <p class="input-disclaimer">Zanxa AI can make mistakes. Consider checking important information.</p>
+                <p class="input-disclaimer">Zanxa AI dapat membuat kesalahan.
+                </p>
             </footer>
 
         </div>
     </div>
 
+    <!-- Username Modal Overlay -->
+    <div id="username-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+                <h2>Siapa nama kamu?</h2>
+            </div>
+            <form id="username-form">
+                <input type="text" id="username-input" placeholder="Masukkan nama panggilan..." required
+                    autocomplete="off">
+                <button type="submit" class="btn-primary">Mulai Ngobrol</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Marked.js for better Markdown parsing (code copy, lists, etc) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="script.js"></script>
 </body>
 
