@@ -26,7 +26,7 @@
     --bg-ai-bubble: transparent;
     --border-color: rgba(255, 255, 255, 0.08);
     --border-input: rgba(255, 255, 255, 0.15);
-    --text-primary: #ececec;
+    --text-primary: #dbdbdb;
     --text-secondary: #8a8a8a;
     --text-placeholder: #555;
     --accent: #8b5cf6;
@@ -591,7 +591,8 @@ body {
 }
 
 .msg-content strong {
-    font-weight: 600;
+    font-weight: 700;
+    color: #ffffff !important;
 }
 
 .msg-content em {
@@ -672,9 +673,9 @@ body {
 .msg-content h1,
 .msg-content h2,
 .msg-content h3 {
-    font-weight: 600;
+    font-weight: 700;
     margin: 12px 0 6px;
-    color: var(--text-primary);
+    color: #ffffff !important;
 }
 
 .msg-content h1 {
