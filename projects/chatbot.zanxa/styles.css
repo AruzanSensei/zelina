@@ -754,49 +754,101 @@ body {
     color: var(--text-code);
     padding: 2px 6px;
     border-radius: 4px;
-    font-family: 'Consolas', 'Monaco', monospace;
+    font-family: inherit;
     font-size: 0.9em;
 }
 
 .msg-content pre {
-    background: var(--bg-code);
-    color: var(--text-code);
-    padding: 16px;
-    border-radius: var(--radius-md);
-    margin: 12px 0;
-    overflow-x: auto;
+    background: #0d0d0d !important;
+    color: #e6edf3 !important;
+    padding: 0;
+    /* Reset padding, will use inner spacing */
+    border-radius: 8px;
+    margin: 16px 0;
+    overflow: hidden;
+    /* Contain the header */
     position: relative;
-    border: 1px solid var(--border-color);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.msg-content pre code {
+    background: none !important;
+    padding: 44px 16px 16px !important;
+    /* Proper spacing below absolute header */
+    border-radius: 0;
+    color: #e6edf3 !important;
+    display: block;
+    overflow-x: auto;
 }
 
 /* Code Header/Copy Button */
 .code-header {
     position: absolute;
     top: 0;
-    right: 0;
     left: 0;
-    height: 30px;
-    background: rgba(255, 255, 255, 0.05);
+    right: 0;
+    height: 34px;
+    background: #1e1e1e !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
-    justify-content: flex-end;
     align-items: center;
-    padding: 0 10px;
+    padding: 0 12px;
+    justify-content: space-between;
+    z-index: 10;
+}
+
+.code-header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mac-btn {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ff5f56;
+    border: none;
+}
+
+.mac-btn.yellow {
+    background: #ffbd2e;
+}
+
+.mac-btn.green {
+    background: #27c93f;
+}
+
+.code-lang {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.5);
+    margin-left: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: 0.5px;
 }
 
 .copy-btn {
     background: none;
     border: none;
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.5);
     font-size: 11px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 0px;
-    transition: color 0.2s;
+    gap: 6px;
+    transition: all 0.2s;
+    padding: 4px 8px;
+    border-radius: 4px;
 }
 
 .copy-btn:hover {
-    color: var(--text-primary);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
 }
 
 .msg-content h1,

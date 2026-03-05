@@ -281,40 +281,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return row;
     }
 
-    function addCopyButtons(container) {
-        const pres = container.querySelectorAll('pre');
-        pres.forEach(pre => {
-            if (pre.querySelector('.code-header')) return;
-
-            const header = document.createElement('div');
-            header.className = 'code-header';
-
-            const copyBtn = document.createElement('button');
-            copyBtn.className = 'copy-btn';
-            copyBtn.innerHTML = `
-                <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                </svg> 
-                <p>  Salin</p>
-            `;
-
-            copyBtn.addEventListener('click', () => {
-                const code = pre.querySelector('code')?.innerText || pre.innerText;
-                navigator.clipboard.writeText(code).then(() => {
-                    const originalHTML = copyBtn.innerHTML;
-                    copyBtn.innerHTML = 'Tersalin!';
-                    setTimeout(() => {
-                        copyBtn.innerHTML = originalHTML;
-                    }, 2000);
-                });
-            });
-
-            header.appendChild(copyBtn);
-            pre.prepend(header);
-        });
-    }
-
     function createActionBtn(type, onClick) {
         const btn = document.createElement('button');
         btn.className = 'action-btn';
@@ -330,6 +296,65 @@ document.addEventListener('DOMContentLoaded', () => {
             onClick();
         };
         return btn;
+    }
+
+    function addCopyButtons(container) {
+        const pres = container.querySelectorAll('pre');
+        pres.forEach(pre => {
+            const codeEl = pre.querySelector('code');
+            if (codeEl && !codeEl.dataset.highlighted) {
+                hljs.highlightElement(codeEl);
+                codeEl.dataset.highlighted = 'true';
+            }
+
+            if (pre.querySelector('.code-header')) return;
+
+            // Extract language
+            let lang = 'code';
+            if (codeEl) {
+                const langClass = Array.from(codeEl.classList).find(c => c.startsWith('language-'));
+                if (langClass) lang = langClass.replace('language-', '');
+                else {
+                    const classes = Array.from(codeEl.classList);
+                    const otherClass = classes.find(c => c !== 'hljs' && c !== 'hljs-ln');
+                    if (otherClass) lang = otherClass;
+                }
+            }
+
+            const header = document.createElement('div');
+            header.className = 'code-header';
+            header.innerHTML = `
+                <div class="code-header-left">
+                    <div class="mac-btn"></div>
+                    <div class="mac-btn yellow"></div>
+                    <div class="mac-btn green"></div>
+                    <span class="code-lang">${lang}</span>
+                </div>
+                <button class="copy-btn">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    <span>Salin</span>
+                </button>
+            `;
+
+            const copyBtn = header.querySelector('.copy-btn');
+            copyBtn.onclick = (e) => {
+                e.stopPropagation();
+                const code = codeEl?.innerText || pre.innerText;
+                navigator.clipboard.writeText(code).then(() => {
+                    const span = copyBtn.querySelector('span');
+                    const originalText = span.textContent;
+                    span.textContent = 'Tersalin!';
+                    setTimeout(() => {
+                        span.textContent = originalText;
+                    }, 2000);
+                });
+            };
+
+            pre.prepend(header);
+        });
     }
 
     function createBranchSelector(index) {
