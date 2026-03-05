@@ -536,7 +536,7 @@ document.addEventListener('DOMContentLoaded', () => {
         opt.addEventListener('click', () => {
             options.forEach(o => o.classList.remove('active'));
             opt.classList.add('active');
-            modelName.textContent = opt.querySelector('.opt-name').textContent.toLowerCase();
+            modelName.textContent = opt.querySelector('.opt-name').textContent;
         });
     });
 
