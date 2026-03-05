@@ -517,9 +517,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle visual viewport (keyboard)
     if (window.visualViewport) {
         window.visualViewport.addEventListener('resize', () => {
-            const height = window.visualViewport.height;
-            document.body.style.height = `${height}px`;
-            scrollToBottom();
+            const layout = document.querySelector('.app-layout');
+            layout.style.height = `${window.visualViewport.height}px`;
+
+            // Auto-scroll to bottom to keep input/last message visible
+            setTimeout(() => {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 100);
         });
     }
 

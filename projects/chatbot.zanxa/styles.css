@@ -280,6 +280,9 @@ body {
     border-bottom: 1px solid var(--border-color);
     background: var(--bg-chat);
     flex-shrink: 0;
+    z-index: 100;
+    position: sticky;
+    top: 0;
 }
 
 .topbar-center {
@@ -751,10 +754,11 @@ body {
    ===================================================== */
 
 .input-area {
-    padding: 16px 24px calc(16px + env(safe-area-inset-bottom));
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
     background: var(--bg-chat);
     border-top: 1px solid var(--border-color);
     flex-shrink: 0;
+    z-index: 100;
 }
 
 .input-wrapper {
@@ -900,12 +904,16 @@ body {
         padding: 6px 16px;
     }
 
-    .input-area {
-        padding: 12px 16px 16px;
+    .topbar {
+        padding: 0 8px;
     }
 
     .topbar-center {
-        left: 50%;
+        position: static;
+        transform: none;
+        flex: 1;
+        display: flex;
+        justify-content: center;
     }
 }
 
