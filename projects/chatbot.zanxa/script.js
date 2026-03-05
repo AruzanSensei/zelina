@@ -15,10 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const welcomeScreen = document.getElementById('welcome-screen');
     const messageInput = document.getElementById('message-input');
     const sendBtn = document.getElementById('send-btn');
-    const clearChatBtn = document.getElementById('clear-chat-btn');
     const newChatBtn = document.getElementById('new-chat-btn');
-    const themeToggle = document.getElementById('theme-toggle');
     const sidebarToggle = document.getElementById('sidebar-toggle');
+    const themeToggleTop = document.getElementById('theme-toggle');
     const sidebar = document.getElementById('sidebar');
     const chatHistoryList = document.getElementById('chat-history');
     const usernameModal = document.getElementById('username-modal');
@@ -51,15 +50,24 @@ document.addEventListener('DOMContentLoaded', () => {
     /* ═══════════════════════════════════════════════
        THEME & SIDEBAR
     ═══════════════════════════════════════════════ */
-    const savedTheme = localStorage.getItem('zanxa-theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', savedTheme);
+    const themes = ['dark', 'light', 'cream', 'pink', 'blue', 'green'];
 
-    themeToggle.addEventListener('click', () => {
-        const cur = document.documentElement.getAttribute('data-theme');
-        const next = cur === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', next);
-        localStorage.setItem('zanxa-theme', next);
+    themeToggleTop.addEventListener('click', () => {
+        let currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+        let nextIndex = (themes.indexOf(currentTheme) + 1) % themes.length;
+        let nextTheme = themes[nextIndex];
+
+        document.documentElement.setAttribute('data-theme', nextTheme);
+        localStorage.setItem('zanxa-theme', nextTheme);
     });
+
+    // Set initial theme
+    const savedTheme = localStorage.getItem('zanxa-theme');
+    if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
 
     sidebarToggle.addEventListener('click', () => {
         sidebar.classList.toggle('collapsed');
@@ -103,13 +111,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const saved = localStorage.getItem('zanxa-chat-history');
         if (saved) {
-            conversationHistory = JSON.parse(saved);
+            const rawHistory = JSON.parse(saved);
+            // Conversion logic for old history format if exists
+            conversationHistory = rawHistory.map(node => {
+                if (node.versions) return node;
+                // Convert old flat format
+                return {
+                    role: node.role === 'model' ? 'ai' : 'user',
+                    activeVersion: 0,
+                    versions: [{ text: node.parts[0].text }]
+                };
+            });
+
             if (conversationHistory.length > 0) {
-                welcomeScreen.style.display = 'none';
-                hasSavedToHistory = true;
-                conversationHistory.forEach(msg => {
-                    appendMessage(msg.parts[0].text, msg.role === 'user' ? 'user' : 'ai', false);
-                });
+                renderActiveHistory();
             }
         }
     }
@@ -130,23 +145,65 @@ document.addEventListener('DOMContentLoaded', () => {
     function createHistoryItem(session) {
         const item = document.createElement('div');
         item.className = `history-item ${session.id === currentSessionId ? 'active' : ''}`;
-        const firstMsg = session.history.find(m => m.role === 'user');
-        const title = firstMsg?.parts[0]?.text?.slice(0, 30) + (firstMsg?.parts[0]?.text?.length > 30 ? '...' : '') || 'Percakapan Baru';
+
+        // Find first user message text
+        const firstNode = session.history.find(n => n.role === 'user');
+        const activeText = firstNode?.versions[firstNode.activeVersion]?.text || 'Percakapan Baru';
+        const title = activeText.slice(0, 30) + (activeText.length > 30 ? '...' : '');
 
         item.innerHTML = `
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
             <span>${title}</span>
+            <button class="history-delete-btn" title="Hapus chat">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+            </button>
         `;
 
-        item.addEventListener('click', () => {
+        item.addEventListener('click', (e) => {
+            if (e.target.closest('.history-delete-btn')) return;
             if (isGenerating) return;
             loadSession(session.id);
             if (window.innerWidth <= 768) closeSidebar();
         });
 
+        // Delete button listener
+        const deleteBtn = item.querySelector('.history-delete-btn');
+        deleteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (confirm('Hapus percakapan ini secara permanen?')) {
+                deleteSession(session.id);
+            }
+        });
+
+        // Long press for mobile
+        let touchTimeout;
+        item.addEventListener('touchstart', () => {
+            touchTimeout = setTimeout(() => {
+                item.classList.add('show-delete');
+            }, 500);
+        });
+        item.addEventListener('touchend', () => clearTimeout(touchTimeout));
+        item.addEventListener('touchmove', () => clearTimeout(touchTimeout));
+
         return item;
+    }
+
+    function deleteSession(id) {
+        savedSessions = savedSessions.filter(s => s.id !== id);
+        localStorage.setItem('zanxa-sessions', JSON.stringify(savedSessions));
+
+        if (currentSessionId === id) {
+            newChatBtn.click();
+        } else {
+            renderSidebar();
+        }
     }
 
     function loadSession(id) {
@@ -156,15 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentSessionId = id;
         conversationHistory = session.history;
         localStorage.setItem('zanxa-chat-history', JSON.stringify(conversationHistory));
-
-        messagesList.innerHTML = '';
-        welcomeScreen.style.display = 'none';
-        hasSavedToHistory = true;
-
-        conversationHistory.forEach(msg => {
-            appendMessage(msg.parts[0].text, msg.role === 'user' ? 'user' : 'ai', false);
-        });
-
+        renderActiveHistory();
         renderSidebar();
     }
 
@@ -179,12 +228,18 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/\n/g, '<br>');
     }
 
-    function createMessageRow(text, role) {
+    function createMessageRow(text, role, index) {
         const row = document.createElement('div');
         row.className = `message-row ${role}`;
+        row.dataset.index = index;
 
         const bubble = document.createElement('div');
         bubble.className = 'msg-bubble';
+
+        // Add Branch Selector for User messages if they have forks
+        if (role === 'user' && conversationHistory[index]?.versions?.length > 1) {
+            bubble.appendChild(createBranchSelector(index));
+        }
 
         const content = document.createElement('div');
         content.className = 'msg-content';
@@ -199,36 +254,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const actions = document.createElement('div');
         actions.className = 'msg-actions';
 
-        const copyBtn = document.createElement('button');
-        copyBtn.className = 'action-btn';
-        copyBtn.title = 'Salin pesan';
-        copyBtn.innerHTML = `
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-            </svg>
-        `;
-
-        copyBtn.addEventListener('click', () => {
+        // Copy Button (All)
+        const copyBtn = createActionBtn('copy', () => {
             const textToCopy = role === 'user' ? text : content.innerText;
             navigator.clipboard.writeText(textToCopy).then(() => {
-                copyBtn.innerHTML = `
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-                        <polyline points="20 6 9 17 4 12"></polyline>
-                    </svg>
-                `;
+                // Visual feedback for copy
+                const originalIcon = copyBtn.innerHTML;
+                copyBtn.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
                 setTimeout(() => {
-                    copyBtn.innerHTML = `
-                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                        </svg>
-                    `;
+                    copyBtn.innerHTML = originalIcon;
                 }, 2000);
             });
         });
-
         actions.appendChild(copyBtn);
+
+        // Edit Button (User only)
+        if (role === 'user') {
+            const editBtn = createActionBtn('edit', () => enterEditMode(row, text, index));
+            actions.appendChild(editBtn);
+        }
 
         bubble.appendChild(content);
         bubble.appendChild(actions);
@@ -256,17 +300,12 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
 
             copyBtn.addEventListener('click', () => {
-                const code = pre.querySelector('code').innerText;
+                const code = pre.querySelector('code')?.innerText || pre.innerText;
                 navigator.clipboard.writeText(code).then(() => {
+                    const originalHTML = copyBtn.innerHTML;
                     copyBtn.innerHTML = 'Tersalin!';
                     setTimeout(() => {
-                        copyBtn.innerHTML = `
-                            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                            </svg> 
-                            <p>  Salin</p>
-                        `;
+                        copyBtn.innerHTML = originalHTML;
                     }, 2000);
                 });
             });
@@ -276,13 +315,146 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function createActionBtn(type, onClick) {
+        const btn = document.createElement('button');
+        btn.className = 'action-btn';
+        if (type === 'copy') {
+            btn.title = 'Salin pesan';
+            btn.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+        } else if (type === 'edit') {
+            btn.title = 'Edit pesan';
+            btn.innerHTML = `<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`;
+        }
+        btn.onclick = (e) => {
+            e.stopPropagation();
+            onClick();
+        };
+        return btn;
+    }
+
+    function createBranchSelector(index) {
+        const msg = conversationHistory[index];
+        const selector = document.createElement('div');
+        selector.className = 'branch-selector';
+        selector.innerHTML = `
+            <div class="branch-nav">
+                <button class="branch-nav-btn prev" ${msg.activeVersion === 0 ? 'disabled' : ''}>&lt;</button>
+                <span class="branch-counter">${msg.activeVersion + 1} / ${msg.versions.length}</span>
+                <button class="branch-nav-btn next" ${msg.activeVersion === msg.versions.length - 1 ? 'disabled' : ''}>&gt;</button>
+            </div>
+        `;
+
+        selector.querySelector('.prev').onclick = () => switchBranch(index, msg.activeVersion - 1);
+        selector.querySelector('.next').onclick = () => switchBranch(index, msg.activeVersion + 1);
+        return selector;
+    }
+
+    function enterEditMode(row, originalText, index) {
+        const bubble = row.querySelector('.msg-bubble');
+        const originalContent = bubble.querySelector('.msg-content');
+        const actions = bubble.querySelector('.msg-actions');
+        const branchSelector = bubble.querySelector('.branch-selector');
+
+        originalContent.style.display = 'none';
+        actions.style.display = 'none';
+        if (branchSelector) branchSelector.style.display = 'none';
+
+        const textarea = document.createElement('textarea');
+        textarea.className = 'msg-edit-area';
+        textarea.value = originalText;
+        textarea.rows = Math.max(3, originalText.split('\n').length); // Adjust rows based on content
+
+        const controls = document.createElement('div');
+        controls.className = 'edit-controls';
+        controls.innerHTML = `
+            <button class="sidebar-btn" style="width: auto; padding: 4px 12px; border: 1px solid var(--border-color)">Batal</button>
+            <button class="btn-primary" style="width: auto; padding: 4px 12px">Kirim</button>
+        `;
+
+        controls.querySelectorAll('button')[0].onclick = () => {
+            textarea.remove();
+            controls.remove();
+            originalContent.style.display = 'block';
+            actions.style.display = 'block';
+            if (branchSelector) branchSelector.style.display = 'block';
+        };
+
+        controls.querySelectorAll('button')[1].onclick = () => {
+            const newText = textarea.value.trim();
+            if (newText && newText !== originalText) {
+                processEdit(index, newText);
+            } else {
+                controls.querySelectorAll('button')[0].click();
+            }
+        };
+
+        bubble.appendChild(textarea);
+        bubble.appendChild(controls);
+        textarea.focus();
+    }
+
+    function processEdit(index, newText) {
+        const msg = conversationHistory[index];
+        // Add new version
+        msg.versions.push({
+            text: newText,
+            tail: [] // To store history of this branch if we want, but let's keep it simple: truncate
+        });
+        msg.activeVersion = msg.versions.length - 1;
+
+        // Truncate history after this message
+        conversationHistory = conversationHistory.slice(0, index + 1);
+
+        // Re-render and trigger AI
+        renderActiveHistory();
+        triggerAIResponse(newText);
+    }
+
+    function switchBranch(index, versionIndex) {
+        const msg = conversationHistory[index];
+        msg.activeVersion = versionIndex;
+
+        // In a real branching system, we'd restore the 'tail' of this version
+        // For now, we'll just truncate and let the user re-generate or keep it simple
+        conversationHistory = conversationHistory.slice(0, index + 1);
+        renderActiveHistory();
+
+        // If it's a version switch, we might want to automatically re-generate if there's no tail
+        // But let's just show the state.
+    }
+
+    function renderActiveHistory() {
+        messagesList.innerHTML = '';
+        welcomeScreen.style.display = 'none';
+        conversationHistory.forEach((node, idx) => {
+            const activeMsg = node.versions[node.activeVersion];
+            appendMessageUI(activeMsg.text, node.role, idx);
+        });
+        saveChat();
+        scrollToBottom(); // Always scroll to bottom after re-rendering history
+    }
+
+    function appendMessageUI(text, role, index) {
+        const row = createMessageRow(text, role, index);
+        messagesList.appendChild(row);
+        return row;
+    }
+
     function appendMessage(text, role, shouldSave = true, shouldScroll = true) {
         if (welcomeScreen.style.display !== 'none') {
             welcomeScreen.style.display = 'none';
         }
 
-        const row = createMessageRow(text, role);
-        messagesList.appendChild(row);
+        // Add to history state as a new node
+        const node = {
+            role: role,
+            activeVersion: 0,
+            versions: [{ text: text }]
+        };
+        conversationHistory.push(node);
+        const index = conversationHistory.length - 1;
+
+        const row = appendMessageUI(text, role, index);
 
         if (shouldScroll) {
             scrollToBottom();
@@ -409,10 +581,11 @@ document.addEventListener('DOMContentLoaded', () => {
        API CALL
     ═══════════════════════════════════════════════ */
     async function callGeminiProxy(userText) {
-        conversationHistory.push({
-            role: "user",
-            parts: [{ text: userText }]
-        });
+        // Map conversationHistory nodes to simple AI structure
+        const contents = conversationHistory.map(node => ({
+            role: node.role === 'user' ? 'user' : 'model',
+            parts: [{ text: node.versions[node.activeVersion].text }]
+        }));
 
         const response = await fetch(PROXY_URL, {
             method: "POST",
@@ -422,7 +595,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 "x-turnstile-token": "turnstile-placeholder-token"
             },
             body: JSON.stringify({
-                contents: conversationHistory
+                contents: contents
             })
         });
 
@@ -436,13 +609,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!aiText) return "(Tidak ada respon)";
 
-        conversationHistory.push({
-            role: "model",
-            parts: [{ text: aiText }]
-        });
-
         saveChat();
         return aiText;
+    }
+
+    async function triggerAIResponse(text) {
+        isGenerating = true;
+        sendBtn.disabled = true;
+        showTyping();
+
+        try {
+            const aiReply = await callGeminiProxy(text);
+            removeTyping();
+            appendMessage(aiReply, 'ai', true, false);
+        } catch (err) {
+            removeTyping();
+            appendMessage(`⚠️ Waduh ada error: ${err.message}`, 'ai');
+        } finally {
+            isGenerating = false;
+            sendBtn.disabled = false;
+        }
     }
 
     async function handleSend() {
@@ -459,7 +645,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Auto-save to history on first message
         if (!hasSavedToHistory) {
-            // Delay slightly to ensure conversationHistory has the first message
             setTimeout(() => {
                 addToHistory();
                 hasSavedToHistory = true;
@@ -499,18 +684,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     sendBtn.addEventListener('click', handleSend);
-
-    clearChatBtn.addEventListener('click', () => {
-        if (confirm('Hapus semua obrolan ini?')) {
-            conversationHistory = [];
-            localStorage.removeItem('zanxa-chat-history');
-            messagesList.innerHTML = '';
-            welcomeScreen.style.display = 'flex';
-            hasSavedToHistory = false;
-            // Restart rotation if welcome screen is shown
-            startWelcomeAnimation();
-        }
-    });
 
     newChatBtn.addEventListener('click', () => {
         if (conversationHistory.length > 0 || hasSavedToHistory) {
@@ -565,12 +738,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const modelSelector = document.getElementById('model-selector');
     const modelName = modelSelector.querySelector('.model-name');
     const options = modelSelector.querySelectorAll('.model-option:not(.locked)');
+    const prankAudio = new Audio('assets/sound/hidup-jokowi.mp3');
 
     options.forEach(opt => {
         opt.addEventListener('click', () => {
             options.forEach(o => o.classList.remove('active'));
             opt.classList.add('active');
-            modelName.textContent = opt.querySelector('.opt-name').textContent;
+            const selectedName = opt.querySelector('.opt-name').textContent;
+            modelName.textContent = selectedName;
+
+            // Sawit AI Prank
+            if (selectedName === 'Sawit AI') {
+                prankAudio.play().catch(e => console.log("Audio play blocked: " + e.message));
+            } else {
+                prankAudio.pause();
+                prankAudio.currentTime = 0;
+            }
         });
     });
 
