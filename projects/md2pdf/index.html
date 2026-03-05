@@ -1,834 +1,109 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="dark">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MarkPDF — Markdown to PDF Converter</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-
-<style>
-  :root {
-    --bg: #0e0e10;
-    --surface: #16161a;
-    --border: #2a2a32;
-    --accent: #f0e040;
-    --accent2: #40e0c8;
-    --text: #e8e8f0;
-    --muted: #7a7a90;
-    --r: 10px;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: Arial, sans-serif;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  body::before {
-    content: '';
-    position: fixed; inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none; z-index: 999; opacity: .5;
-  }
-
-  header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 18px 36px;
-    border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(14,14,16,.92);
-    backdrop-filter: blur(14px);
-  }
-
-  .logo {
-    display: flex; align-items: center; gap: 10px;
-    font-weight: 800; font-size: 1.25rem; letter-spacing: -.5px;
-  }
-  .logo-mark {
-    width: 32px; height: 32px;
-    background: var(--accent); border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: .75rem; font-weight: 800; color: #000; flex-shrink: 0;
-  }
-  .logo span { color: var(--accent); }
-
-  .header-pill {
-    display: flex; align-items: center; gap: 8px;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 100px; padding: 6px 14px;
-    font-size: .78rem; color: var(--muted);
-  }
-  .dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--accent2); animation: pulse 2s infinite;
-  }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.8)} }
-
-  main {
-    display: grid; grid-template-columns: 1fr 1fr;
-    flex: 1; overflow: hidden;
-  }
-
-  .panel {
-    display: flex; flex-direction: column;
-    height: calc(100vh - 65px); overflow: hidden;
-  }
-  .panel-left { border-right: 1px solid var(--border); }
-
-  .panel-header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 20px; border-bottom: 1px solid var(--border);
-    flex-shrink: 0; background: var(--surface);
-  }
-  .panel-title {
-    font-size: .7rem; font-weight: 700;
-    letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
-  }
-
-  .btn-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-
-  .btn {
-    font-family: Arial, sans-serif; font-size: .78rem; font-weight: 600;
-    padding: 7px 14px; border-radius: 8px; border: 1px solid var(--border);
-    cursor: pointer; transition: all .2s;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .btn-ghost { background: transparent; color: var(--muted); }
-  .btn-ghost:hover { color: var(--text); border-color: var(--muted); background: rgba(255,255,255,.04); }
-  .btn-accent { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 700; }
-  .btn-accent:hover { background: #fff7a0; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(240,224,64,.3); }
-  .btn-accent:active { transform: translateY(0); }
-  .btn svg { width: 14px; height: 14px; flex-shrink: 0; }
-
-  .editor-wrap { position: relative; flex: 1; overflow: hidden; }
-
-  #md-input {
-    width: 100%; height: 100%;
-    background: transparent; border: none; outline: none; resize: none;
-    padding: 24px 28px;
-    font-family: 'DM Mono', monospace; font-size: .82rem;
-    line-height: 1.75; color: var(--text);
-    caret-color: var(--accent); tab-size: 2;
-  }
-  #md-input::placeholder { color: #383840; }
-  #md-input::selection { background: rgba(240,224,64,.2); }
-  #md-input::-webkit-scrollbar { width: 4px; }
-  #md-input::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-
-  .char-count {
-    position: absolute; bottom: 12px; right: 16px;
-    font-family: 'DM Mono', monospace; font-size: .7rem;
-    color: var(--border); pointer-events: none;
-  }
-
-  .preview-scroll {
-    flex: 1; overflow-y: auto;
-    background: #b8b8b8;
-    padding: 32px 20px;
-    display: flex; flex-direction: column;
-    align-items: center; gap: 24px;
-  }
-  .preview-scroll::-webkit-scrollbar { width: 6px; }
-  .preview-scroll::-webkit-scrollbar-thumb { background: #888; border-radius: 3px; }
-
-  /* A4 PAGE */
-  .a4-page {
-    width: 210mm; min-height: 297mm;
-    background: #fff;
-    box-shadow: 0 8px 40px rgba(0,0,0,.35);
-    padding: 20mm 22mm;
-    position: relative; border-radius: 2px;
-  }
-  .a4-page::after {
-    content: attr(data-page);
-    position: absolute; bottom: 10mm; right: 14mm;
-    font-family: 'DM Mono', monospace; font-size: 8pt; color: #bbb;
-  }
-
-  /* MARKDOWN STYLES */
-  .a4-page { font-family: 'Lora', Georgia, serif; font-size: 10.5pt; line-height: 1.75; color: #1a1a2e; }
-
-  .a4-page h1 {
-    font-family: Arial, sans-serif; font-size: 24pt; font-weight: 900;
-    line-height: 1.2; color: #0d0d0d;
-    margin-bottom: 5mm; margin-top: 0; padding-bottom: 3mm;
-    border-bottom: 3px solid #0d0d0d;
-  }
-  .a4-page h2 {
-    font-family: Arial, sans-serif; font-size: 16pt; font-weight: 700;
-    color: #0d0d0d; margin-top: 8mm; margin-bottom: 3mm;
-    padding-left: 4mm; border-left: 4px solid #e8c800;
-  }
-  .a4-page h3 {
-    font-family: Arial, sans-serif; font-size: 13pt; font-weight: 700;
-    color: #1a1a2e; margin-top: 6mm; margin-bottom: 2mm;
-  }
-  .a4-page h4 {
-    font-family: Arial, sans-serif; font-size: 11pt; font-weight: 700;
-    color: #2a2a50; margin-top: 5mm; margin-bottom: 1.5mm;
-    text-transform: uppercase; letter-spacing: 1px;
-  }
-  .a4-page h5 {
-    font-family: Arial, sans-serif; font-size: 10pt; font-weight: 700;
-    color: #3a3a60; margin-top: 4mm; margin-bottom: 1mm;
-  }
-  .a4-page h6 {
-    font-family: Arial, sans-serif; font-size: 9.5pt; font-weight: 700;
-    color: #555; margin-top: 4mm; margin-bottom: 1mm; font-style: italic;
-  }
-
-  .a4-page p { margin-bottom: 4mm; text-align: justify; hyphens: auto; }
-  .a4-page a { color: #1a5cb5; text-decoration: underline; text-underline-offset: 2px; }
-  .a4-page strong { font-weight: 700; color: #0d0d0d; }
-  .a4-page em { font-style: italic; color: #2a2a50; }
-  .a4-page del { text-decoration: line-through; color: #888; }
-
-  .a4-page blockquote {
-    margin: 4mm 0; padding: 3mm 5mm 3mm 6mm;
-    border-left: 4px solid #40e0c8; background: #f5fffe;
-    color: #2a4a48; font-style: italic; border-radius: 0 4px 4px 0;
-  }
-  .a4-page blockquote p { margin-bottom: 0; text-align: left; }
-
-  .a4-page code {
-    font-family: 'DM Mono', monospace; font-size: 8.5pt;
-    background: #f0f0f7; color: #c0392b;
-    padding: 1px 5px; border-radius: 3px; border: 1px solid #e0e0ec;
-  }
-
-  .a4-page pre {
-    background: #1a1a2e; border-radius: 6px;
-    padding: 4mm 5mm; overflow: hidden; margin: 4mm 0;
-  }
-  .a4-page pre::before {
-    content: '● ● ●'; display: block; color: #555;
-    font-family: 'DM Mono', monospace; font-size: 7pt;
-    letter-spacing: 3px; margin-bottom: 3mm;
-  }
-  .a4-page pre code {
-    background: transparent; color: #a8e6cf;
-    padding: 0; border: none; font-size: 8pt;
-    line-height: 1.6; white-space: pre-wrap; word-break: break-all;
-  }
-
-  .a4-page ul, .a4-page ol { margin: 2mm 0 4mm 6mm; padding-left: 5mm; }
-  .a4-page li { margin-bottom: 1.5mm; line-height: 1.6; }
-  .a4-page ul li::marker { color: #e8c800; font-size: 10pt; }
-  .a4-page ol li::marker { font-family: 'DM Mono', monospace; color: #40e0c8; font-size: 9pt; font-weight: 700; }
-
-  .a4-page hr {
-    border: none; height: 1px;
-    background: linear-gradient(to right, transparent, #d0d0e0, transparent);
-    margin: 6mm 0;
-  }
-
-  .a4-page table { width: 100%; border-collapse: collapse; margin: 4mm 0; font-size: 9.5pt; font-family: Arial, sans-serif; }
-  .a4-page th { background: #1a1a2e; color: #fff; padding: 2.5mm 3mm; text-align: left; font-weight: 700; font-size: 8.5pt; letter-spacing: .5px; text-transform: uppercase; }
-  .a4-page td { padding: 2mm 3mm; border-bottom: 1px solid #e0e0ec; font-family: 'Lora', serif; }
-  .a4-page tr:nth-child(even) td { background: #f8f8fc; }
-  .a4-page tr:last-child td { border-bottom: 2px solid #1a1a2e; }
-
-  .a4-page img { max-width: 100%; height: auto; display: block; margin: 4mm auto; border-radius: 4px; box-shadow: 0 2px 12px rgba(0,0,0,.12); }
-
-  .a4-page input[type="checkbox"] {
-    appearance: none; -webkit-appearance: none;
-    width: 11px; height: 11px; border: 2px solid #888; border-radius: 2px;
-    display: inline-block; vertical-align: middle; margin-right: 4px; position: relative;
-  }
-  .a4-page input[type="checkbox"]:checked { background: #40e0c8; border-color: #40e0c8; }
-
-  /* EMPTY STATE */
-  .empty-state {
-    display: flex; flex-direction: column; align-items: center;
-    justify-content: center; gap: 12px;
-    color: var(--muted); text-align: center;
-    padding: 60px 40px; font-size: .85rem; width: 100%;
-  }
-  .empty-icon { font-size: 3rem; opacity: .3; }
-
-  .badge {
-    font-family: 'DM Mono', monospace; font-size: .65rem;
-    padding: 2px 8px; border-radius: 100px;
-    background: var(--bg); border: 1px solid var(--border); color: var(--muted);
-  }
-
-  .drop-overlay {
-    display: none; position: absolute; inset: 0;
-    background: rgba(240,224,64,.08); border: 2px dashed var(--accent);
-    border-radius: var(--r); z-index: 10;
-    align-items: center; justify-content: center;
-    font-size: 1rem; font-weight: 700; color: var(--accent); pointer-events: none;
-  }
-  .editor-wrap.dragover .drop-overlay { display: flex; }
-
-  .toast {
-    position: fixed; bottom: 24px; left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--surface); border: 1px solid var(--border); color: var(--text);
-    padding: 10px 20px; border-radius: 100px; font-size: .8rem; font-weight: 600;
-    box-shadow: 0 8px 32px rgba(0,0,0,.4);
-    transition: transform .3s cubic-bezier(.34,1.56,.64,1);
-    z-index: 9999; pointer-events: none;
-  }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-
-  .fmt-bar {
-    display: flex; gap: 2px; padding: 0 4px;
-    border-right: 1px solid var(--border); margin-right: 4px;
-  }
-  .fmt-btn {
-    background: transparent; border: none; color: var(--muted); cursor: pointer;
-    width: 28px; height: 28px; border-radius: 5px;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'DM Mono', monospace; font-size: .75rem; font-weight: 700;
-    transition: all .15s;
-  }
-  .fmt-btn:hover { background: rgba(255,255,255,.08); color: var(--text); }
-
-  @media print {
-    body::before, header, .panel-left, .panel-header { display: none !important; }
-    main { display: block !important; }
-    .panel-right { height: auto !important; }
-    .preview-scroll { background: transparent !important; padding: 0 !important; gap: 0 !important; overflow: visible !important; }
-    .a4-page { box-shadow: none !important; border-radius: 0 !important; width: 100% !important; min-height: auto !important; padding: 15mm 20mm !important; page-break-after: always; }
-    .a4-page:last-child { page-break-after: avoid; }
-  }
-  @page { size: A4; margin: 0; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MarkPDF — Markdown to PDF Converter</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
 </head>
+
 <body>
 
-<header>
-  <div class="logo">
-    <div class="logo-mark">MD</div>
-    Mark<span>PDF</span>
-  </div>
-  <div class="header-pill">
-    <div class="dot"></div>
-    Markdown → PDF Converter
-  </div>
-  <div class="btn-group">
-    <button class="btn btn-ghost" onclick="clearAll()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.14"/></svg>
-      Reset
-    </button>
-    <button class="btn btn-ghost" onclick="loadSample()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      Contoh
-    </button>
-    <button class="btn btn-accent" onclick="printPDF()">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-      Unduh PDF
-    </button>
-  </div>
-</header>
+  <header>
+    <div class="logo">
+      <div class="logo-mark">MD</div>
+      Mark<span>PDF</span>
+    </div>
+    <div class="header-pill">
+      <div class="dot"></div>
+      Markdown → PDF Converter
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-ghost" onclick="clearAll()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="1 4 1 10 7 10" />
+          <path d="M3.51 15a9 9 0 1 0 .49-3.14" />
+        </svg>
+        Reset
+      </button>
+      <button class="btn btn-ghost" onclick="loadSample()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+        </svg>
+        Contoh
+      </button>
+      <button class="btn btn-accent" onclick="printPDF()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="6 9 6 2 18 2 18 9" />
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+          <rect x="6" y="14" width="12" height="8" />
+        </svg>
+        Unduh PDF
+      </button>
+    </div>
+  </header>
 
-<main>
-  <div class="panel panel-left">
-    <div class="panel-header">
-      <span class="panel-title">Editor</span>
-      <div class="btn-group">
-        <div class="fmt-bar">
-          <button class="fmt-btn" title="Bold" onclick="insertFmt('**','**')"><b>B</b></button>
-          <button class="fmt-btn" title="Italic" onclick="insertFmt('*','*')"><i>I</i></button>
-          <button class="fmt-btn" title="Strikethrough" onclick="insertFmt('~~','~~')"><s>S</s></button>
-          <button class="fmt-btn" title="Code" onclick="insertFmt('`','`')">⌥</button>
-          <button class="fmt-btn" title="Heading 1" onclick="insertLine('# ')">H1</button>
-          <button class="fmt-btn" title="Heading 2" onclick="insertLine('## ')">H2</button>
-          <button class="fmt-btn" title="Link" onclick="insertFmt('[','](url)')">🔗</button>
-          <button class="fmt-btn" title="Blockquote" onclick="insertLine('> ')">❝</button>
-          <button class="fmt-btn" title="Code Block" onclick="insertCodeBlock()">{ }</button>
+  <main>
+    <div class="panel panel-left">
+      <div class="panel-header">
+        <span class="panel-title">Editor</span>
+        <div class="btn-group">
+          <div class="fmt-bar">
+            <button class="fmt-btn" title="Bold" onclick="insertFmt('**','**')"><b>B</b></button>
+            <button class="fmt-btn" title="Italic" onclick="insertFmt('*','*')"><i>I</i></button>
+            <button class="fmt-btn" title="Strikethrough" onclick="insertFmt('~~','~~')"><s>S</s></button>
+            <button class="fmt-btn" title="Code" onclick="insertFmt('`','`')">⌥</button>
+            <button class="fmt-btn" title="Heading 1" onclick="insertLine('# ')">H1</button>
+            <button class="fmt-btn" title="Heading 2" onclick="insertLine('## ')">H2</button>
+            <button class="fmt-btn" title="Link" onclick="insertFmt('[','](url)')">🔗</button>
+            <button class="fmt-btn" title="Blockquote" onclick="insertLine('> ')">❝</button>
+            <button class="fmt-btn" title="Code Block" onclick="insertCodeBlock()">{ }</button>
+          </div>
+          <label class="btn btn-ghost" style="cursor:pointer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+              <polyline points="17 8 12 3 7 8" />
+              <line x1="12" y1="3" x2="12" y2="15" />
+            </svg>
+            Impor .md
+            <input type="file" accept=".md,.txt" onchange="importFile(event)" style="display:none">
+          </label>
+          <span class="badge" id="page-count">0 hal</span>
         </div>
-        <label class="btn btn-ghost" style="cursor:pointer">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          Impor .md
-          <input type="file" accept=".md,.txt" onchange="importFile(event)" style="display:none">
-        </label>
-        <span class="badge" id="page-count">0 hal</span>
+      </div>
+      <div class="editor-wrap" id="editor-wrap">
+        <div class="drop-overlay">Lepaskan file .md di sini</div>
+        <textarea id="md-input"
+          placeholder="Ketik atau tempel Markdown di sini…&#10;&#10;Mendukung: # Headings, **bold**, *italic*, `code`, > blockquote, ``` code block, tabel, list, dll."
+          spellcheck="false"></textarea>
+        <div class="char-count" id="char-count">0 karakter</div>
       </div>
     </div>
-    <div class="editor-wrap" id="editor-wrap">
-      <div class="drop-overlay">Lepaskan file .md di sini</div>
-      <textarea id="md-input" placeholder="Ketik atau tempel Markdown di sini…&#10;&#10;Mendukung: # Headings, **bold**, *italic*, `code`, > blockquote, ``` code block, tabel, list, dll." spellcheck="false"></textarea>
-      <div class="char-count" id="char-count">0 karakter</div>
-    </div>
-  </div>
 
-  <div class="panel panel-right">
-    <div class="panel-header">
-      <span class="panel-title">Preview A4</span>
-      <div class="btn-group">
-        <span class="badge" id="word-count">0 kata</span>
-        <button class="btn btn-ghost" onclick="toggleTheme()" id="theme-btn">🌙 Gelap</button>
+    <div class="panel panel-right">
+      <div class="panel-header">
+        <span class="panel-title">Preview A4</span>
+        <div class="btn-group">
+          <span class="badge" id="word-count">0 kata</span>
+          <button class="btn btn-ghost" onclick="toggleTheme()" id="theme-btn">🌙 Gelap</button>
+        </div>
       </div>
+      <div class="preview-scroll" id="preview-scroll"></div>
     </div>
-    <div class="preview-scroll" id="preview-scroll"></div>
-  </div>
-</main>
+  </main>
 
-<div class="toast" id="toast"></div>
-<iframe id="print-frame" style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;border:none"></iframe>
+  <div class="toast" id="toast"></div>
+  <iframe id="print-frame" style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;border:none"></iframe>
 
-<script>
-/* ── MARKDOWN PARSER ── */
-function parseMarkdown(md) {
-  function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-  function inline(s) {
-    return s
-      .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">')
-      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
-      .replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>')
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/__(.+?)__/g, '<strong>$1</strong>')
-      .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      .replace(/_(.+?)_/g, '<em>$1</em>')
-      .replace(/~~(.+?)~~/g, '<del>$1</del>')
-      .replace(/`([^`]+)`/g, '<code>$1</code>')
-      .replace(/  \n/g, '<br>');
-  }
-
-  const lines = md.split('\n');
-  let html = '', i = 0, inList = null, inTable = false;
-
-  function closeList() { if (inList) { html += `</${inList}>`; inList = null; } }
-  function closeTable() { if (inTable) { html += '</tbody></table>'; inTable = false; } }
-
-  while (i < lines.length) {
-    const line = lines[i];
-
-    // Fenced code block
-    if (/^```/.test(line)) {
-      closeList(); closeTable();
-      const lang = line.slice(3).trim();
-      let code = '';
-      i++;
-      while (i < lines.length && !/^```/.test(lines[i])) { code += esc(lines[i]) + '\n'; i++; }
-      html += `<pre><code class="lang-${lang}">${code.trimEnd()}</code></pre>`;
-      i++; continue;
-    }
-
-    // Headings
-    const hMatch = line.match(/^(#{1,6})\s+(.+)$/);
-    if (hMatch) {
-      closeList(); closeTable();
-      const level = hMatch[1].length;
-      html += `<h${level}>${inline(hMatch[2])}</h${level}>`;
-      i++; continue;
-    }
-
-    // HR
-    if (/^(---+|\*\*\*+|___+)\s*$/.test(line)) {
-      closeList(); closeTable();
-      html += '<hr>'; i++; continue;
-    }
-
-    // Blockquote
-    if (/^>\s?/.test(line)) {
-      closeList(); closeTable();
-      let bq = '';
-      while (i < lines.length && /^>\s?/.test(lines[i])) { bq += lines[i].replace(/^>\s?/, '') + '\n'; i++; }
-      html += `<blockquote>${parseMarkdown(bq.trim())}</blockquote>`;
-      continue;
-    }
-
-    // Table
-    if (!inTable && /\|/.test(line) && i + 1 < lines.length && /^\|?[\s\-|:]+\|?$/.test(lines[i+1])) {
-      closeList();
-      html += '<table><thead><tr>';
-      line.split('|').map(c=>c.trim()).filter(Boolean).forEach(h => { html += `<th>${inline(h)}</th>`; });
-      html += '</tr></thead><tbody>';
-      inTable = true; i += 2; continue;
-    }
-    if (inTable && /\|/.test(line)) {
-      html += '<tr>';
-      line.split('|').map(c=>c.trim()).filter(Boolean).forEach(c => { html += `<td>${inline(c)}</td>`; });
-      html += '</tr>'; i++; continue;
-    }
-    if (inTable && !/\|/.test(line)) closeTable();
-
-    // Unordered list
-    const ulMatch = line.match(/^(\s*)([-*+])\s+(.*)$/);
-    if (ulMatch) {
-      closeTable();
-      const content = ulMatch[3];
-      const taskMatch = content.match(/^\[([ xX])\]\s+(.*)/);
-      if (inList !== 'ul') { if (inList) closeList(); html += '<ul>'; inList = 'ul'; }
-      if (taskMatch) {
-        const checked = taskMatch[1].toLowerCase() === 'x' ? 'checked' : '';
-        html += `<li><input type="checkbox" ${checked} disabled> ${inline(taskMatch[2])}</li>`;
-      } else {
-        html += `<li>${inline(content)}</li>`;
-      }
-      i++; continue;
-    }
-
-    // Ordered list
-    const olMatch = line.match(/^\s*\d+\.\s+(.*)$/);
-    if (olMatch) {
-      closeTable();
-      if (inList !== 'ol') { if (inList) closeList(); html += '<ol>'; inList = 'ol'; }
-      html += `<li>${inline(olMatch[1])}</li>`;
-      i++; continue;
-    }
-
-    // Blank line
-    if (line.trim() === '') { closeList(); closeTable(); i++; continue; }
-
-    // Paragraph
-    closeList(); closeTable();
-    let para = '';
-    while (i < lines.length && lines[i].trim() !== '' &&
-      !/^(#{1,6}\s|>|```|\s*[-*+]\s|\s*\d+\.\s|---+|\*\*\*+|___+)/.test(lines[i])) {
-      para += (para ? ' ' : '') + lines[i]; i++;
-    }
-    if (para) html += `<p>${inline(para)}</p>`;
-  }
-
-  closeList(); closeTable();
-  return html;
-}
-
-/* ── RENDER ── */
-const PAGE_H = 900;
-
-function showEmpty() {
-  const scroll = document.getElementById('preview-scroll');
-  scroll.innerHTML = `
-    <div class="empty-state">
-      <div class="empty-icon">📄</div>
-      <div>Mulai mengetik untuk melihat preview</div>
-      <div style="font-size:.75rem;color:#3a3a50;margin-top:4px">Mendukung semua sintaks Markdown standar</div>
-    </div>`;
-}
-
-function renderPreview() {
-  const md = document.getElementById('md-input').value;
-  const scroll = document.getElementById('preview-scroll');
-  const charCount = document.getElementById('char-count');
-  const wordCount = document.getElementById('word-count');
-  const pageCount = document.getElementById('page-count');
-
-  charCount.textContent = md.length + ' karakter';
-  wordCount.textContent = (md.trim() ? md.trim().split(/\s+/).length : 0) + ' kata';
-
-  scroll.innerHTML = '';
-
-  if (!md.trim()) {
-    pageCount.textContent = '0 hal';
-    showEmpty();
-    return;
-  }
-
-  const fullHTML = parseMarkdown(md);
-
-  // Measure height
-  const measurer = document.createElement('div');
-  measurer.className = 'a4-page';
-  measurer.style.cssText = 'position:absolute;visibility:hidden;left:-9999px;top:-9999px;width:210mm;min-height:auto;pointer-events:none;';
-  measurer.innerHTML = fullHTML;
-  document.body.appendChild(measurer);
-  const totalH = measurer.scrollHeight;
-  document.body.removeChild(measurer);
-
-  const numPages = Math.max(1, Math.ceil(totalH / PAGE_H));
-
-  if (numPages === 1) {
-    const page = makePage(1);
-    page.innerHTML = fullHTML;
-    scroll.appendChild(page);
-    pageCount.textContent = '1 hal';
-    return;
-  }
-
-  // Multi-page split
-  const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = fullHTML;
-
-  let currentPage = makePage(1);
-  scroll.appendChild(currentPage);
-  let currentH = 0, pageNum = 1;
-
-  for (const node of Array.from(tempDiv.childNodes)) {
-    if (node.nodeType !== 1) continue; // skip non-element nodes
-    const clone = node.cloneNode(true);
-    currentPage.appendChild(clone);
-    const h = clone.offsetHeight || estimateH(node);
-    currentH += h + 16;
-    if (currentH > PAGE_H) {
-      currentPage.removeChild(clone);
-      pageNum++;
-      currentPage = makePage(pageNum);
-      scroll.appendChild(currentPage);
-      currentPage.appendChild(clone);
-      currentH = h + 16;
-    }
-  }
-
-  pageCount.textContent = pageNum + ' hal';
-}
-
-function makePage(num) {
-  const p = document.createElement('div');
-  p.className = 'a4-page';
-  p.setAttribute('data-page', num);
-  return p;
-}
-
-function estimateH(node) {
-  const map = { H1:60, H2:44, H3:36, H4:28, H5:24, H6:22, P:64, PRE:110, BLOCKQUOTE:72, UL:48, OL:48, TABLE:90, HR:20, IMG:120 };
-  return map[node.tagName] || 44;
-}
-
-/* ── PDF EXPORT via hidden iframe ── */
-function printPDF() {
-  const md = document.getElementById('md-input').value;
-  if (!md.trim()) { showToast('⚠ Tulis konten dulu!'); return; }
-
-  const pages = document.getElementById('preview-scroll').querySelectorAll('.a4-page');
-  if (!pages.length) { showToast('⚠ Tidak ada konten'); return; }
-
-  let pagesHTML = '';
-  pages.forEach(p => { pagesHTML += p.outerHTML; });
-
-  const css = `
-    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
-    @page{size:A4;margin:0}
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-    .a4-page{width:210mm;min-height:297mm;padding:20mm 22mm;page-break-after:always;position:relative;background:#fff}
-    .a4-page:last-child{page-break-after:avoid}
-    .a4-page::after{content:attr(data-page);position:absolute;bottom:10mm;right:14mm;font-family:'DM Mono',monospace;font-size:8pt;color:#bbb}
-    .a4-page{font-family:'Lora',Georgia,serif;font-size:10.5pt;line-height:1.75;color:#1a1a2e}
-    .a4-page h1{font-family:Arial,sans-serif;font-size:24pt;font-weight:900;line-height:1.2;color:#0d0d0d;margin-bottom:5mm;padding-bottom:3mm;border-bottom:3px solid #0d0d0d}
-    .a4-page h2{font-family:Arial,sans-serif;font-size:16pt;font-weight:700;color:#0d0d0d;margin-top:8mm;margin-bottom:3mm;padding-left:4mm;border-left:4px solid #e8c800}
-    .a4-page h3{font-family:Arial,sans-serif;font-size:13pt;font-weight:700;color:#1a1a2e;margin-top:6mm;margin-bottom:2mm}
-    .a4-page h4{font-family:Arial,sans-serif;font-size:11pt;font-weight:700;color:#2a2a50;margin-top:5mm;margin-bottom:1.5mm;text-transform:uppercase;letter-spacing:1px}
-    .a4-page h5{font-family:Arial,sans-serif;font-size:10pt;font-weight:700;color:#3a3a60;margin-top:4mm;margin-bottom:1mm}
-    .a4-page h6{font-family:Arial,sans-serif;font-size:9.5pt;font-weight:700;color:#555;margin-top:4mm;margin-bottom:1mm;font-style:italic}
-    .a4-page p{margin-bottom:4mm;text-align:justify;hyphens:auto}
-    .a4-page a{color:#1a5cb5;text-decoration:underline}
-    .a4-page strong{font-weight:700;color:#0d0d0d}
-    .a4-page em{font-style:italic;color:#2a2a50}
-    .a4-page del{text-decoration:line-through;color:#888}
-    .a4-page blockquote{margin:4mm 0;padding:3mm 5mm 3mm 6mm;border-left:4px solid #40e0c8;background:#f5fffe;color:#2a4a48;font-style:italic;border-radius:0 4px 4px 0}
-    .a4-page blockquote p{margin-bottom:0;text-align:left}
-    .a4-page code{font-family:'DM Mono',monospace;font-size:8.5pt;background:#f0f0f7;color:#c0392b;padding:1px 5px;border-radius:3px;border:1px solid #e0e0ec}
-    .a4-page pre{background:#1a1a2e;border-radius:6px;padding:4mm 5mm;overflow:hidden;margin:4mm 0}
-    .a4-page pre::before{content:'● ● ●';display:block;color:#555;font-family:'DM Mono',monospace;font-size:7pt;letter-spacing:3px;margin-bottom:3mm}
-    .a4-page pre code{background:transparent;color:#a8e6cf;padding:0;border:none;font-size:8pt;line-height:1.6;white-space:pre-wrap;word-break:break-all}
-    .a4-page ul,.a4-page ol{margin:2mm 0 4mm 6mm;padding-left:5mm}
-    .a4-page li{margin-bottom:1.5mm;line-height:1.6}
-    .a4-page ul li::marker{color:#e8c800;font-size:10pt}
-    .a4-page ol li::marker{font-family:'DM Mono',monospace;color:#40e0c8;font-size:9pt;font-weight:700}
-    .a4-page hr{border:none;height:1px;background:linear-gradient(to right,transparent,#d0d0e0,transparent);margin:6mm 0}
-    .a4-page table{width:100%;border-collapse:collapse;margin:4mm 0;font-size:9.5pt;font-family:Arial,sans-serif}
-    .a4-page th{background:#1a1a2e;color:#fff;padding:2.5mm 3mm;text-align:left;font-weight:700;font-size:8.5pt;letter-spacing:.5px;text-transform:uppercase}
-    .a4-page td{padding:2mm 3mm;border-bottom:1px solid #e0e0ec;font-family:'Lora',serif}
-    .a4-page tr:nth-child(even) td{background:#f8f8fc}
-    .a4-page tr:last-child td{border-bottom:2px solid #1a1a2e}
-    .a4-page img{max-width:100%;height:auto;display:block;margin:4mm auto;border-radius:4px}
-    .a4-page input[type="checkbox"]{appearance:none;-webkit-appearance:none;width:11px;height:11px;border:2px solid #888;border-radius:2px;display:inline-block;vertical-align:middle;margin-right:4px}
-    .a4-page input[type="checkbox"]:checked{background:#40e0c8;border-color:#40e0c8}
-  `;
-
-  const doc = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>MarkPDF</title><style>${css}</style></head><body>${pagesHTML}</body></html>`;
-
-  const iframe = document.getElementById('print-frame');
-  // Reset iframe src to about:blank first to ensure clean state
-  iframe.src = 'about:blank';
-
-  setTimeout(() => {
-    try {
-      const ifrDoc = iframe.contentDocument || iframe.contentWindow.document;
-      ifrDoc.open('text/html', 'replace');
-      ifrDoc.write(doc);
-      ifrDoc.close();
-      setTimeout(() => {
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
-        showToast('🖨 Membuka dialog cetak / simpan PDF…');
-      }, 700);
-    } catch(e) {
-      // Fallback: open in new tab
-      const blob = new Blob([doc], { type: 'text/html' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.target = '_blank';
-      a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 5000);
-      showToast('📄 Dibuka di tab baru — cetak dengan Ctrl+P');
-    }
-  }, 100);
-}
-
-/* ── FORMAT TOOLBAR ── */
-function insertFmt(before, after) {
-  const ta = document.getElementById('md-input');
-  const s = ta.selectionStart, e = ta.selectionEnd;
-  const sel = ta.value.substring(s, e);
-  ta.value = ta.value.substring(0, s) + before + sel + after + ta.value.substring(e);
-  ta.selectionStart = s + before.length;
-  ta.selectionEnd = e + before.length;
-  ta.focus(); renderPreview();
-}
-
-function insertLine(prefix) {
-  const ta = document.getElementById('md-input');
-  const s = ta.selectionStart;
-  const ls = ta.value.lastIndexOf('\n', s - 1) + 1;
-  ta.value = ta.value.substring(0, ls) + prefix + ta.value.substring(ls);
-  ta.selectionStart = ta.selectionEnd = ls + prefix.length;
-  ta.focus(); renderPreview();
-}
-
-function insertCodeBlock() {
-  const ta = document.getElementById('md-input');
-  const s = ta.selectionStart;
-  const ins = '```\n\n```\n';
-  ta.value = ta.value.substring(0, s) + ins + ta.value.substring(s);
-  ta.selectionStart = ta.selectionEnd = s + 4;
-  ta.focus(); renderPreview();
-}
-
-/* ── FILE IMPORT ── */
-function importFile(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    document.getElementById('md-input').value = ev.target.result;
-    renderPreview();
-    showToast('✓ File berhasil diimpor');
-  };
-  reader.readAsText(file);
-}
-
-/* ── DRAG DROP ── */
-const wrap = document.getElementById('editor-wrap');
-wrap.addEventListener('dragover', e => { e.preventDefault(); wrap.classList.add('dragover'); });
-wrap.addEventListener('dragleave', () => wrap.classList.remove('dragover'));
-wrap.addEventListener('drop', e => {
-  e.preventDefault(); wrap.classList.remove('dragover');
-  const file = e.dataTransfer.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    document.getElementById('md-input').value = ev.target.result;
-    renderPreview(); showToast('✓ File berhasil di-drop');
-  };
-  reader.readAsText(file);
-});
-
-/* ── MISC ── */
-function clearAll() { document.getElementById('md-input').value = ''; renderPreview(); showToast('✓ Editor dikosongkan'); }
-
-let darkPrev = true;
-function toggleTheme() {
-  const scroll = document.getElementById('preview-scroll');
-  const btn = document.getElementById('theme-btn');
-  darkPrev = !darkPrev;
-  scroll.style.background = darkPrev ? '#b8b8b8' : '#2a2a3a';
-  btn.textContent = darkPrev ? '🌙 Gelap' : '☀️ Terang';
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2800);
-}
-
-/* ── SAMPLE ── */
-function loadSample() {
-  document.getElementById('md-input').value = `# Laporan Proyek MarkPDF
-
-## Pendahuluan
-
-Ini adalah **contoh dokumen** Markdown yang menampilkan berbagai elemen formatting. Setiap elemen dirancang dengan *tipografi yang berbeda* agar dokumen terasa profesional dan mudah dibaca.
-
-## Fitur yang Didukung
-
-### Teks Dasar
-
-Markdown mendukung berbagai format teks: **tebal**, *miring*, ~~coret~~, dan \`kode inline\`. Anda juga bisa membuat [tautan ke website](https://example.com).
-
-### Daftar Item
-
-Berikut daftar fitur utama:
-
-- Konversi real-time ke format A4
-- Mendukung semua sintaks Markdown standar
-- Layout halaman otomatis
-- Export langsung ke PDF
-
-Langkah penggunaan:
-
-1. Ketik atau tempel teks Markdown
-2. Lihat preview di sebelah kanan
-3. Klik **Unduh PDF** untuk menyimpan
-
-### Task List
-
-- [x] Parser Markdown
-- [x] Preview A4 real-time
-- [x] Export ke PDF
-- [ ] Mode kolaborasi (segera hadir)
-
----
-
-## Kode Program
-
-Contoh kode JavaScript:
-
-\`\`\`javascript
-function helloWorld(name) {
-  const greeting = \`Halo, \${name}!\`;
-  console.log(greeting);
-  return greeting;
-}
-
-helloWorld('MarkPDF');
-\`\`\`
-
-## Kutipan
-
-> "Desain yang baik adalah tentang kejelasan dan keindahan yang bekerja bersama." — Prinsip Tipografi Modern
-
-## Tabel Data
-
-| Fitur | Status | Prioritas |
-|-------|--------|-----------|
-| Parser MD | Selesai | Tinggi |
-| Preview A4 | Selesai | Tinggi |
-| Multi-halaman | Selesai | Sedang |
-| Dark mode | Selesai | Rendah |
-
-## Kesimpulan
-
-MarkPDF adalah alat yang sederhana namun powerful untuk mengonversi dokumen Markdown menjadi PDF yang rapi dan profesional. Cocok untuk laporan, artikel, dokumentasi, dan berbagai kebutuhan lainnya.`;
-  renderPreview(); showToast('✓ Contoh konten dimuat');
-}
-
-/* ── LIVE RENDER ── */
-let renderTimer;
-document.getElementById('md-input').addEventListener('input', () => {
-  clearTimeout(renderTimer);
-  renderTimer = setTimeout(renderPreview, 200);
-});
-
-document.addEventListener('keydown', e => {
-  if ((e.ctrlKey || e.metaKey) && e.key === 'p') { e.preventDefault(); printPDF(); }
-  if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); printPDF(); }
-});
-
-renderPreview();
-</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script type="module" src="app.js"></script>
 </body>
+
 </html>
