@@ -6,8 +6,10 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     /* ── Config ── */
-    const API_KEY = "AIzaSyCjCFCcFo_lX7NqKeO0eD2rqr93ydsgCjw";
-    const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent";
+    // Security Note: API keys are now handled by the Cloudflare Worker backend.
+    // No sensitive keys or direct Gemini URLs are stored in the frontend.
+    const PROXY_URL = "https://api.zanxa.site";
+    const SITE_TOKEN = "zanxa-web-client-v1"; // Custom header for basic worker-side filtering
 
     /* ── DOM refs ── */
     const messagesList = document.getElementById('messages-list');
@@ -256,20 +258,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ═══════════════════════════════════════════════
-       GEMINI API CALL
+       BACKEND PROXY CALL (Cloudflare Worker)
     ═══════════════════════════════════════════════ */
-    async function callGemini(userText) {
-        // Build multi-turn contents
+
+    /**
+     * Optional: Turnstile verification placeholder.
+     * In production, you would generate a token here and send it to the worker.
+     */
+    async function getTurnstileToken() {
+        // Placeholder for cf-turnstile response
+        return "turnstile-placeholder-token";
+    }
+
+    async function callGeminiProxy(userText) {
+        // Build multi-turn contents for the state
         conversationHistory.push({
             role: "user",
             parts: [{ text: userText }]
         });
 
-        const response = await fetch(`${API_URL}?key=${API_KEY}`, {
+        // Add verification token (placeholder)
+        const turnstileToken = await getTurnstileToken();
+
+        const response = await fetch(PROXY_URL, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "x-goog-api-key": API_KEY
+                "x-site-token": SITE_TOKEN,
+                "x-turnstile-token": turnstileToken
             },
             body: JSON.stringify({
                 contents: conversationHistory
@@ -278,13 +294,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!response.ok) {
             const err = await response.json().catch(() => ({}));
-            throw new Error(err?.error?.message || `HTTP ${response.status}`);
+            // Provide clean error message for the UI
+            throw new Error(err?.message || err?.error?.message || `Gateway Error ${response.status}`);
         }
 
         const data = await response.json();
-        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text || "(No response)";
 
-        // Store AI reply in history
+        // Extract AI reply from candidates array
+        const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!aiText) {
+            return "(No response)";
+        }
+
+        // Store AI reply in conversation state
         conversationHistory.push({
             role: "model",
             parts: [{ text: aiText }]
@@ -314,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
         showTyping();
 
         try {
-            const aiReply = await callGemini(text);
+            const aiReply = await callGeminiProxy(text);
             removeTyping();
             appendMessage(aiReply, 'ai');
         } catch (err) {
