@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isGenerating = false;
     let conversationHistory = [];
     let username = localStorage.getItem('zanxa-username') || '';
+    let hasSavedToHistory = false;
 
     // Config marked.js
     if (window.marked) {
@@ -105,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
             conversationHistory = JSON.parse(saved);
             if (conversationHistory.length > 0) {
                 welcomeScreen.style.display = 'none';
+                hasSavedToHistory = true;
                 conversationHistory.forEach(msg => {
                     appendMessage(msg.parts[0].text, msg.role === 'user' ? 'user' : 'ai', false);
                 });
@@ -202,6 +204,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function scrollToBottom() {
         messagesContainer.scrollTo({ top: messagesContainer.scrollHeight, behavior: 'smooth' });
+    }
+
+    /* ═══════════════════════════════════════════════
+       WELCOME TEXT ANIMATION
+    ═══════════════════════════════════════════════ */
+    const welcomeHeading = welcomeScreen.querySelector('h1');
+    const welcomePhrases = [
+        "Ada yang bisa dibantu?",
+        "Mau ngobrol apa hari ini?",
+        "Tanya apa saja ke saya...",
+        "Siap membantu tugasmu!",
+        "Lagi nyari ide apa nih?",
+        "Yuk, mulai percakapan baru!"
+    ];
+    let phraseIndex = 0;
+
+    async function typeWriter(text, element) {
+        element.textContent = '';
+        for (let i = 0; i < text.length; i++) {
+            if (welcomeScreen.style.display === 'none') return;
+            element.textContent += text.charAt(i);
+            await new Promise(resolve => setTimeout(resolve, 70));
+        }
+    }
+
+    async function rotateWelcomePhrases() {
+        if (welcomeScreen.style.display === 'none') return;
+
+        phraseIndex = (phraseIndex + 1) % welcomePhrases.length;
+        await typeWriter(welcomePhrases[phraseIndex], welcomeHeading);
+
+        setTimeout(rotateWelcomePhrases, 5000);
+    }
+
+    async function startWelcomeAnimation() {
+        if (welcomeScreen.style.display === 'none') return;
+        phraseIndex = 0;
+        await typeWriter(welcomePhrases[0], welcomeHeading);
+        setTimeout(rotateWelcomePhrases, 5000);
+    }
+
+    // Start rotation if on welcome screen
+    if (welcomeScreen.style.display !== 'none') {
+        startWelcomeAnimation();
     }
 
     /* ── Funny Typing indicator ── */
@@ -313,6 +359,15 @@ document.addEventListener('DOMContentLoaded', () => {
         appendMessage(text, 'user');
         showTyping();
 
+        // Auto-save to history on first message
+        if (!hasSavedToHistory) {
+            // Delay slightly to ensure conversationHistory has the first message
+            setTimeout(() => {
+                addToHistory();
+                hasSavedToHistory = true;
+            }, 500);
+        }
+
         try {
             const aiReply = await callGeminiProxy(text);
             removeTyping();
@@ -352,16 +407,22 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem('zanxa-chat-history');
             messagesList.innerHTML = '';
             welcomeScreen.style.display = 'flex';
+            hasSavedToHistory = false;
+            // Restart rotation if welcome screen is shown
+            startWelcomeAnimation();
         }
     });
 
     newChatBtn.addEventListener('click', () => {
         if (conversationHistory.length > 0) {
-            addToHistory();
+            if (!hasSavedToHistory) addToHistory();
             conversationHistory = [];
             localStorage.removeItem('zanxa-chat-history');
             messagesList.innerHTML = '';
             welcomeScreen.style.display = 'flex';
+            hasSavedToHistory = false;
+            // Restart rotation if welcome screen is shown
+            startWelcomeAnimation();
         }
     });
 
