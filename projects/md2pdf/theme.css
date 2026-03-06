@@ -24,7 +24,6 @@
 
     /* MD2PDF Specifics */
     --accent-md: #f0e040;
-    /* Keeping the yellow as an option if needed */
     --accent2: #40e0c8;
 
     /* Code Block Themes (Dark) */
@@ -36,27 +35,6 @@
     --mac-red: #ff5f56;
     --mac-yellow: #ffbd2e;
     --mac-green: #27c93f;
-}
-
-[data-theme="light"] {
-    --bg-main: #f7f7f8;
-    --bg-surface: #ffffff;
-    --bg-input: #ffffff;
-    --bg-hover: rgba(0, 0, 0, 0.04);
-    --bg-active: rgba(0, 0, 0, 0.08);
-    --border-color: rgba(0, 0, 0, 0.08);
-    --border-input: rgba(0, 0, 0, 0.15);
-    --text-primary: #111111;
-    --text-secondary: #6b6b6b;
-    --text-muted: #aaa;
-    --accent: #7c3aed;
-    --accent-glow: rgba(124, 58, 237, 0.2);
-    --strong: #030303;
-    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.1);
-
-    --bg-code: #fafafa;
-    --text-code: #1a1a1e;
-    --border-code: rgba(0, 0, 0, 0.1);
 }
 
 *,

@@ -12,7 +12,6 @@ const themeBtn = document.getElementById('theme-btn');
 const iframe = document.getElementById('print-frame');
 
 const PAGE_H = 900;
-let darkPrev = true;
 let renderTimer;
 
 /* ── RENDER ── */
@@ -223,11 +222,7 @@ wrapEl.addEventListener('drop', e => {
 /* ── MISC ── */
 window.clearAll = function () { mdInput.value = ''; renderPreview(); showToast('✓ Editor dikosongkan'); }
 
-window.toggleTheme = function () {
-    darkPrev = !darkPrev;
-    document.documentElement.setAttribute('data-theme', darkPrev ? 'dark' : 'light');
-    themeBtn.textContent = darkPrev ? '🌙 Gelap' : '☀️ Terang';
-}
+// Theme toggle removed per user request
 
 function showToast(msg) {
     toastEl.textContent = msg; toastEl.classList.add('show');
@@ -307,9 +302,23 @@ MarkPDF adalah alat yang sederhana namun powerful untuk mengonversi dokumen Mark
 
 /* ── LIVE RENDER ── */
 mdInput.addEventListener('input', () => {
+    autoResize();
     clearTimeout(renderTimer);
     renderTimer = setTimeout(renderPreview, 200);
 });
+
+function autoResize() {
+    if (window.innerWidth <= 768) {
+        mdInput.style.height = 'auto';
+        mdInput.style.height = mdInput.scrollHeight + 'px';
+    } else {
+        mdInput.style.height = '100%';
+    }
+}
+
+// Initial resize and re-resize on window change
+window.addEventListener('resize', autoResize);
+autoResize();
 
 document.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'p') { e.preventDefault(); printPDF(); }

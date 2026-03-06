@@ -25,19 +25,21 @@
       Markdown → PDF Converter
     </div>
     <div class="btn-group">
-      <button class="btn btn-ghost" onclick="clearAll()">
+      <button class="btn btn-ghost" onclick="document.getElementById('file-input').click()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="1 4 1 10 7 10" />
-          <path d="M3.51 15a9 9 0 1 0 .49-3.14" />
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="17 8 12 3 7 8" />
+          <line x1="12" y1="3" x2="12" y2="15" />
         </svg>
-        Reset
+        <span>Impor .md</span>
+        <input type="file" id="file-input" accept=".md,.txt" onchange="importFile(event)" style="display:none">
       </button>
       <button class="btn btn-ghost" onclick="loadSample()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
           <polyline points="14 2 14 8 20 8" />
         </svg>
-        Contoh
+        <span>Contoh</span>
       </button>
       <button class="btn btn-accent" onclick="printPDF()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -45,7 +47,7 @@
           <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
           <rect x="6" y="14" width="12" height="8" />
         </svg>
-        Unduh PDF
+        <span>Unduh PDF</span>
       </button>
     </div>
   </header>
@@ -55,34 +57,31 @@
       <div class="panel-header">
         <span class="panel-title">Editor</span>
         <div class="btn-group">
-          <div class="fmt-bar">
-            <button class="fmt-btn" title="Bold" onclick="insertFmt('**','**')"><b>B</b></button>
-            <button class="fmt-btn" title="Italic" onclick="insertFmt('*','*')"><i>I</i></button>
-            <button class="fmt-btn" title="Strikethrough" onclick="insertFmt('~~','~~')"><s>S</s></button>
-            <button class="fmt-btn" title="Code" onclick="insertFmt('`','`')">⌥</button>
-            <button class="fmt-btn" title="Heading 1" onclick="insertLine('# ')">H1</button>
-            <button class="fmt-btn" title="Heading 2" onclick="insertLine('## ')">H2</button>
-            <button class="fmt-btn" title="Link" onclick="insertFmt('[','](url)')">🔗</button>
-            <button class="fmt-btn" title="Blockquote" onclick="insertLine('> ')">❝</button>
-            <button class="fmt-btn" title="Code Block" onclick="insertCodeBlock()">{ }</button>
-          </div>
-          <label class="btn btn-ghost" style="cursor:pointer">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="17 8 12 3 7 8" />
-              <line x1="12" y1="3" x2="12" y2="15" />
-            </svg>
-            Impor .md
-            <input type="file" accept=".md,.txt" onchange="importFile(event)" style="display:none">
-          </label>
           <span class="badge" id="page-count">0 hal</span>
         </div>
       </div>
+      <div class="toolbar-row">
+        <div class="fmt-bar">
+          <button class="fmt-btn" title="Bold" onclick="insertFmt('**','**')"><b>B</b></button>
+          <button class="fmt-btn" title="Italic" onclick="insertFmt('*','*')"><i>I</i></button>
+          <button class="fmt-btn" title="Strikethrough" onclick="insertFmt('~~','~~')"><s>S</s></button>
+          <button class="fmt-btn" title="Code" onclick="insertFmt('`','`')">⌥</button>
+          <button class="fmt-btn" title="Heading 1" onclick="insertLine('# ')">H1</button>
+          <button class="fmt-btn" title="Heading 2" onclick="insertLine('## ')">H2</button>
+          <button class="fmt-btn" title="Link" onclick="insertFmt('[','](url)')">🔗</button>
+          <button class="fmt-btn" title="Blockquote" onclick="insertLine('> ')">❝</button>
+          <button class="fmt-btn" title="Code Block" onclick="insertCodeBlock()">{ }</button>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="clearAll()" title="Bersihkan Editor">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+        </button>
+      </div>
       <div class="editor-wrap" id="editor-wrap">
         <div class="drop-overlay">Lepaskan file .md di sini</div>
-        <textarea id="md-input"
-          placeholder="Ketik atau tempel Markdown di sini…&#10;&#10;Mendukung: # Headings, **bold**, *italic*, `code`, > blockquote, ``` code block, tabel, list, dll."
-          spellcheck="false"></textarea>
+        <textarea id="md-input" placeholder="Ketik atau tempel Markdown di sini…" spellcheck="false"></textarea>
         <div class="char-count" id="char-count">0 karakter</div>
       </div>
     </div>
@@ -92,7 +91,6 @@
         <span class="panel-title">Preview A4</span>
         <div class="btn-group">
           <span class="badge" id="word-count">0 kata</span>
-          <button class="btn btn-ghost" onclick="toggleTheme()" id="theme-btn">🌙 Gelap</button>
         </div>
       </div>
       <div class="preview-scroll" id="preview-scroll"></div>
