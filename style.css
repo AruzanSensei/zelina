@@ -1056,8 +1056,8 @@ h4 {
   background: linear-gradient(135deg, #FB923C, #F97316);
 }
 
-.qc-green .icon {
-  background: linear-gradient(135deg, #10B981, #059669);
+.qc-black .icon {
+  background: linear-gradient(135deg, #202020, #000000);
 }
 
 .qc-teal .icon {
