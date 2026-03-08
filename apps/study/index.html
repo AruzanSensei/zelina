@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyLab — Sistem Ujian Sekolah</title>
+    <meta name="description"
+        content="StudyLab — Sistem ujian sekolah online untuk guru dan murid. Kelola ujian, soal, dan nilai dengan mudah.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/theme.css">
+    <link rel="stylesheet" href="assets/css/layout.css">
+    <link rel="stylesheet" href="assets/css/components.css">
+    <link rel="stylesheet" href="assets/css/tables.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <meta name="theme-color" content="#3b82f6">
+</head>
+
+<body>
+
+    <!-- ============ LOGIN SCREEN ============ -->
+    <div class="login-screen" id="login-screen">
+        <div class="login-card">
+            <div class="login-icon">
+                <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="white" stroke-width="1.75"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+                    <path d="M8 7h6" />
+                    <path d="M8 11h8" />
+                </svg>
+            </div>
+            <h1>StudyLab</h1>
+            <p class="login-subtitle">Sistem Ujian Sekolah Online</p>
+
+            <div class="role-selector">
+                <button class="role-btn active" data-role="teacher" id="role-teacher">
+                    <span class="role-icon">👨‍🏫</span>
+                    Guru
+                </button>
+                <button class="role-btn" data-role="student" id="role-student">
+                    <span class="role-icon">🎓</span>
+                    Murid
+                </button>
+            </div>
+
+            <button class="google-login-btn" id="google-login-btn">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
+                        fill="#4285F4" />
+                    <path
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                        fill="#34A853" />
+                    <path
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                        fill="#FBBC05" />
+                    <path
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                        fill="#EA4335" />
+                </svg>
+                Masuk dengan Google
+            </button>
+        </div>
+    </div>
+
+    <!-- ============ APP SHELL ============ -->
+    <div class="app-shell" id="app-shell" style="display:none;">
+
+        <!-- Sidebar Overlay (Mobile) -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="white" stroke-width="1.75"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
+                    </svg>
+                </div>
+                <span class="brand-name">StudyLab</span>
+            </div>
+
+            <!-- Teacher Navigation -->
+            <nav class="sidebar-nav" id="teacher-nav">
+                <p class="nav-label">Menu Utama</p>
+                <button class="nav-item active" data-page="overview">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="7" height="7" rx="1" />
+                            <rect x="14" y="3" width="7" height="7" rx="1" />
+                            <rect x="3" y="14" width="7" height="7" rx="1" />
+                            <rect x="14" y="14" width="7" height="7" rx="1" />
+                        </svg></span>
+                    Overview
+                </button>
+                <button class="nav-item" data-page="exams">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <path d="M14 2v6h6" />
+                            <path d="M16 13H8" />
+                            <path d="M16 17H8" />
+                            <path d="M10 9H8" />
+                        </svg></span>
+                    Ujian
+                    <span class="nav-badge" id="exam-badge">3</span>
+                </button>
+                <button class="nav-item" data-page="questions">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+                            <line x1="12" y1="17" x2="12.01" y2="17" />
+                        </svg></span>
+                    Bank Soal
+                </button>
+                <button class="nav-item" data-page="grades">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
+                        </svg></span>
+                    Nilai
+                </button>
+                <button class="nav-item" data-page="attendance">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg></span>
+                    Absensi
+                </button>
+
+                <p class="nav-label">Data</p>
+                <button class="nav-item" data-page="students">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg></span>
+                    Data Siswa
+                </button>
+                <button class="nav-item" data-page="statistics">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24">
+                            <line x1="18" y1="20" x2="18" y2="10" />
+                            <line x1="12" y1="20" x2="12" y2="4" />
+                            <line x1="6" y1="20" x2="6" y2="14" />
+                        </svg></span>
+                    Statistik
+                </button>
+                <button class="nav-item" data-page="settings">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="3" />
+                            <path
+                                d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                        </svg></span>
+                    Pengaturan
+                </button>
+            </nav>
+
+            <!-- Student Navigation -->
+            <nav class="sidebar-nav" id="student-nav" style="display:none;">
+                <p class="nav-label">Menu</p>
+                <button class="nav-item active" data-page="s-dashboard">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="7" height="7" rx="1" />
+                            <rect x="14" y="3" width="7" height="7" rx="1" />
+                            <rect x="3" y="14" width="7" height="7" rx="1" />
+                            <rect x="14" y="14" width="7" height="7" rx="1" />
+                        </svg></span>
+                    Dashboard
+                </button>
+                <button class="nav-item" data-page="s-exams">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <path d="M14 2v6h6" />
+                            <path d="M16 13H8" />
+                            <path d="M16 17H8" />
+                        </svg></span>
+                    Daftar Ujian
+                </button>
+                <button class="nav-item" data-page="s-grades">
+                    <span class="nav-icon"><svg viewBox="0 0 24 24">
+                            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
+                        </svg></span>
+                    Nilai Saya
+                </button>
+            </nav>
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+                <div class="user-profile" id="user-profile">
+                    <div class="user-avatar" id="user-avatar">G</div>
+                    <div class="user-info">
+                        <div class="user-name" id="user-name">Guru Demo</div>
+                        <div class="user-role" id="user-role-label">Guru</div>
+                    </div>
+                    <button class="btn-icon" id="logout-btn" title="Logout" style="border:none;">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                            <polyline points="16 17 21 12 16 7" />
+                            <line x1="21" y1="12" x2="9" y2="12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Area -->
+        <div class="main-area">
+
+            <!-- Top Bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="hamburger-btn" id="hamburger-btn">
+                        <svg viewBox="0 0 24 24">
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <line x1="3" y1="12" x2="21" y2="12" />
+                            <line x1="3" y1="18" x2="21" y2="18" />
+                        </svg>
+                    </button>
+                    <h1 class="page-title" id="page-title">Overview</h1>
+                </div>
+                <div class="topbar-right">
+                    <button class="icon-btn" id="notif-btn" title="Notifikasi">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+                        </svg>
+                        <span class="notification-dot"></span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="main-content">
+
+                <!-- ======== TEACHER: Overview ======== -->
+                <div class="page active" id="page-overview"></div>
+
+                <!-- ======== TEACHER: Ujian ======== -->
+                <div class="page" id="page-exams"></div>
+
+                <!-- ======== TEACHER: Bank Soal ======== -->
+                <div class="page" id="page-questions"></div>
+
+                <!-- ======== TEACHER: Nilai ======== -->
+                <div class="page" id="page-grades"></div>
+
+                <!-- ======== TEACHER: Absensi ======== -->
+                <div class="page" id="page-attendance"></div>
+
+                <!-- ======== TEACHER: Data Siswa ======== -->
+                <div class="page" id="page-students"></div>
+
+                <!-- ======== TEACHER: Statistik ======== -->
+                <div class="page" id="page-statistics"></div>
+
+                <!-- ======== TEACHER: Settings ======== -->
+                <div class="page" id="page-settings"></div>
+
+                <!-- ======== STUDENT: Dashboard ======== -->
+                <div class="page" id="page-s-dashboard"></div>
+
+                <!-- ======== STUDENT: Daftar Ujian ======== -->
+                <div class="page" id="page-s-exams"></div>
+
+                <!-- ======== STUDENT: Kerjakan Ujian ======== -->
+                <div class="page" id="page-s-take-exam"></div>
+
+                <!-- ======== STUDENT: Nilai Saya ======== -->
+                <div class="page" id="page-s-grades"></div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal Container -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal" id="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Modal</h3>
+                <button class="modal-close" id="modal-close">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+            <div class="modal-footer" id="modal-footer"></div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <!-- JS Modules -->
+    <script src="assets/js/data.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/exams.js"></script>
+    <script src="assets/js/questions.js"></script>
+    <script src="assets/js/grades.js"></script>
+    <script src="assets/js/attendance.js"></script>
+    <script src="assets/js/students.js"></script>
+    <script src="assets/js/statistics.js"></script>
+    <script src="assets/js/student-portal.js"></script>
+    <script src="assets/js/app.js"></script>
+
+</body>
+
+</html>

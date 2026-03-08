@@ -1,0 +1,136 @@
+/* ============================================
+   THEME.CSS — Design Tokens & CSS Variables
+   Light theme with comfortable contrast
+   ============================================ */
+
+:root {
+  /* ---- Primary Palette ---- */
+  --primary-50: #eff6ff;
+  --primary-100: #dbeafe;
+  --primary-200: #bfdbfe;
+  --primary-300: #93c5fd;
+  --primary-400: #60a5fa;
+  --primary-500: #3b82f6;
+  --primary-600: #2563eb;
+  --primary-700: #1d4ed8;
+  --primary-800: #1e40af;
+  --primary-900: #1e3a5f;
+
+  /* ---- Neutral Palette ---- */
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+  --gray-900: #0f172a;
+
+  /* ---- Semantic Colors ---- */
+  --success-light: #ecfdf5;
+  --success: #10b981;
+  --success-dark: #059669;
+
+  --warning-light: #fffbeb;
+  --warning: #f59e0b;
+  --warning-dark: #d97706;
+
+  --danger-light: #fef2f2;
+  --danger: #ef4444;
+  --danger-dark: #dc2626;
+
+  --info-light: #eff6ff;
+  --info: #3b82f6;
+  --info-dark: #2563eb;
+
+  /* ---- Theme Assignments ---- */
+  --bg-body: #f0f4f8;
+  --bg-sidebar: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --bg-input: #ffffff;
+  --bg-header: rgba(255, 255, 255, 0.85);
+  --bg-modal-overlay: rgba(15, 23, 42, 0.4);
+  --bg-tooltip: var(--gray-800);
+  --bg-badge: var(--primary-50);
+
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-tertiary: #94a3b8;
+  --text-inverse: #ffffff;
+  --text-link: var(--primary-600);
+  --text-on-primary: #ffffff;
+
+  --border-color: #e2e8f0;
+  --border-light: #f1f5f9;
+  --border-focus: var(--primary-400);
+
+  --accent: var(--primary-500);
+  --accent-hover: var(--primary-600);
+  --accent-light: var(--primary-50);
+
+  /* ---- Shadows ---- */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+
+  /* ---- Typography ---- */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.8125rem;
+  --text-base: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* ---- Spacing ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* ---- Borders ---- */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  /* ---- Layout ---- */
+  --sidebar-width: 260px;
+  --sidebar-collapsed: 0px;
+  --header-height: 60px;
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
+
+  /* ---- Z-Index ---- */
+  --z-sidebar: 100;
+  --z-header: 90;
+  --z-modal: 200;
+  --z-toast: 300;
+  --z-tooltip: 150;
+}
