@@ -1,0 +1,20 @@
+{
+    "name": "StudyLab",
+    "short_name": "StudyLab",
+    "icons": [
+        {
+            "src": "favicon.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "favicon.ico",
+            "sizes": "175x175 32x32 16x16",
+            "type": "image/x-icon"
+        }
+    ],
+    "start_url": "index.html",
+    "theme_color": "#3b82f6",
+    "background_color": "#f0f4f8",
+    "display": "standalone"
+}
