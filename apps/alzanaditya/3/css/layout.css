@@ -1,0 +1,245 @@
+﻿.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: blur(20px);
+  background: rgba(4, 8, 22, 0.72);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 78px;
+  gap: 18px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.brand-muted {
+  opacity: 0.42;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.nav a {
+  color: #d4dcf9;
+  font-size: 0.94rem;
+  transition: color 180ms ease;
+}
+
+.nav a:hover {
+  color: var(--white);
+}
+
+.menu-toggle,
+.mobile-menu {
+  display: none;
+}
+
+.hero-grid,
+.contact-grid,
+.faq-grid {
+  display: grid;
+  gap: 34px;
+}
+
+.hero-grid {
+  grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+  align-items: center;
+  min-height: calc(100vh - 78px);
+}
+
+.hero-copy {
+  max-width: 620px;
+}
+
+.hero-role-row {
+  display: block;
+  margin-top: 8px;
+  color: #dce7ff;
+}
+
+.hero-description {
+  max-width: 540px;
+  margin-top: 18px;
+  font-size: 1rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.hero-visual {
+  justify-self: end;
+  width: min(100%, 440px);
+}
+
+.hero-photo-card,
+.faq-photo-card {
+  position: relative;
+  border-radius: 32px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow);
+  background: linear-gradient(160deg, rgba(124, 58, 237, 0.1), rgba(37, 99, 235, 0.08));
+}
+
+.hero-photo-card img,
+.faq-photo-card img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+}
+
+.contact-grid {
+  grid-template-columns: minmax(0, 0.9fr) minmax(320px, 0.95fr);
+  align-items: start;
+}
+
+.faq-grid {
+  grid-template-columns: minmax(290px, 0.76fr) minmax(0, 1fr);
+  align-items: start;
+}
+
+.faq-aside {
+  position: sticky;
+  top: 110px;
+}
+
+.faq-aside .faq-photo-card {
+  margin-bottom: 20px;
+}
+
+@media (max-width: 1024px) {
+  .desktop-nav,
+  .desktop-cta {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .menu-toggle span {
+    width: 18px;
+    height: 2px;
+    margin: 0 auto;
+    border-radius: 999px;
+    background: var(--white);
+    transition: transform 180ms ease, opacity 180ms ease;
+  }
+
+  .menu-toggle.is-open span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+
+  .menu-toggle.is-open span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .menu-toggle.is-open span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  .mobile-menu {
+    display: block;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 260ms ease;
+    border-top: 1px solid transparent;
+  }
+
+  .mobile-menu.is-open {
+    max-height: 320px;
+    border-top-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .mobile-nav {
+    width: var(--container);
+    margin: 0 auto;
+    padding: 16px 0 20px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hero-grid,
+  .contact-grid,
+  .faq-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-grid {
+    min-height: auto;
+  }
+
+  .hero-visual,
+  .faq-aside {
+    justify-self: stretch;
+    position: static;
+    width: 100%;
+  }
+}
+
+@media (max-width: 767px) {
+  .topbar-inner {
+    min-height: 72px;
+  }
+
+  .hero-grid {
+    gap: 28px;
+  }
+
+  .hero-visual {
+    order: -1;
+  }
+}
+
+.hero-section {
+  background: radial-gradient(circle at 18% 18%, rgba(124, 58, 237, 0.12), transparent 28%);
+}
+
+.section-about {
+  background: radial-gradient(circle at 85% 15%, rgba(37, 99, 235, 0.1), transparent 24%);
+}
+
+.section-portfolio {
+  background: radial-gradient(circle at 20% 50%, rgba(234, 88, 12, 0.08), transparent 28%);
+}
+
+.section-testimonials {
+  background: radial-gradient(circle at 82% 44%, rgba(124, 58, 237, 0.08), transparent 24%);
+}
+
+.section-contact {
+  background: radial-gradient(circle at 15% 70%, rgba(37, 99, 235, 0.08), transparent 24%);
+}
+
+.section-faq {
+  background: radial-gradient(circle at 80% 20%, rgba(234, 88, 12, 0.08), transparent 22%);
+}

@@ -1,0 +1,68 @@
+﻿const menuToggle = document.querySelector(".menu-toggle");
+const mobileMenu = document.querySelector(".mobile-menu");
+const mobileLinks = document.querySelectorAll(".mobile-nav a");
+
+if (menuToggle && mobileMenu) {
+  menuToggle.addEventListener("click", () => {
+    const isOpen = mobileMenu.classList.toggle("is-open");
+    menuToggle.classList.toggle("is-open", isOpen);
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+  });
+
+  mobileLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      mobileMenu.classList.remove("is-open");
+      menuToggle.classList.remove("is-open");
+      menuToggle.setAttribute("aria-expanded", "false");
+    });
+  });
+}
+
+document.querySelectorAll("[data-accordion-group]").forEach((group) => {
+  const items = Array.from(group.querySelectorAll(".accordion-item"));
+
+  items.forEach((item) => {
+    const trigger = item.querySelector(".accordion-trigger");
+    if (!trigger) return;
+
+    trigger.addEventListener("click", () => {
+      const shouldOpen = !item.classList.contains("is-open");
+
+      items.forEach((currentItem) => {
+        currentItem.classList.remove("is-open");
+        currentItem.querySelector(".accordion-trigger")?.setAttribute("aria-expanded", "false");
+      });
+
+      if (shouldOpen) {
+        item.classList.add("is-open");
+        trigger.setAttribute("aria-expanded", "true");
+      }
+    });
+  });
+});
+
+const filterButtons = document.querySelectorAll(".filter-chip");
+const projectCards = document.querySelectorAll(".project-card");
+
+filterButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const filter = button.dataset.filter;
+
+    filterButtons.forEach((chip) => chip.classList.remove("is-active"));
+    button.classList.add("is-active");
+
+    projectCards.forEach((card) => {
+      const matches = filter === "all" || card.dataset.category === filter;
+      card.classList.toggle("is-hidden", !matches);
+    });
+  });
+});
+
+document.querySelectorAll(".testimonial-row").forEach((row) => {
+  row.innerHTML += row.innerHTML;
+
+  row.addEventListener("click", () => {
+    if (window.innerWidth >= 1024) return;
+    row.classList.toggle("is-paused");
+  });
+});

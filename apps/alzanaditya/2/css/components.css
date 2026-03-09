@@ -1,0 +1,55 @@
+/* ── SECTION HEADINGS ── */
+.section-heading {
+  font-size: clamp(24px, 3.2vw, 36px);
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+.section-heading .accent { color: var(--purple); }
+
+/* ── CONTACT SECTION HEADING ── */
+#contact .section-heading .accent,
+#faq .section-heading .accent { color: var(--blue); }
+
+/* ── GLOWING SECTION BG ── */
+.glow-bg {
+  position: absolute; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0;
+}
+.glow-purple { background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%); }
+.glow-blue { background: radial-gradient(circle, rgba(37,99,235,0.1) 0%, transparent 70%); }
+.glow-orange { background: radial-gradient(circle, rgba(234,88,12,0.1) 0%, transparent 70%); }
+
+/* ── NEBULA BG per section ── */
+#hero::before {
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 50%, rgba(124,58,237,0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 20% 80%, rgba(37,99,235,0.05) 0%, transparent 70%);
+}
+#about::before {
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse 50% 60% at 0% 50%, rgba(124,58,237,0.06) 0%, transparent 65%);
+}
+#gallery::before {
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse 60% 50% at 100% 50%, rgba(234,88,12,0.05) 0%, transparent 65%);
+}
+#testimonials::before {
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(124,58,237,0.05) 0%, transparent 65%);
+}
+#contact::before {
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse 50% 60% at 100% 30%, rgba(37,99,235,0.07) 0%, transparent 65%);
+}
+#faq::before {
+  content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: radial-gradient(ellipse 50% 60% at 50% 50%, rgba(37,99,235,0.05) 0%, transparent 65%);
+}
+
+/* ── ANIMATED GRADIENT LINE ── */
+.gradient-line {
+  height: 1px; width: 100%; margin: 0;
+  background: linear-gradient(90deg, transparent, var(--purple), var(--blue), transparent);
+  opacity: 0.4;
+}
