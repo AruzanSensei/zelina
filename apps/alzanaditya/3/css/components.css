@@ -5,7 +5,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .stat-card,
@@ -23,7 +23,7 @@
 .stat-card {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
   padding: 12px;
   border-radius: var(--radius-md);
 }
@@ -44,6 +44,8 @@
 
 .stat-card strong {
   font-size: 0.86rem;
+  line-height: 0.4;
+  padding-top: 6px;
 }
 
 .stat-card span {

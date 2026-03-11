@@ -85,7 +85,7 @@
 
 .hero-description {
   max-width: 520px;
-  margin-top: 14px;
+  margin-top: 1px;
   font-size: 0.95rem;
 }
 
@@ -233,6 +233,10 @@
     border-bottom: none;
   }
 
+  .hero-section {
+    padding: 0;
+  }
+
   .hero-grid,
   .contact-grid,
   .faq-grid {
@@ -258,6 +262,8 @@
 
   .brand {
     font-size: 0.95rem;
+    margin-left: 12px;
+    font-size: 1rem;
   }
 
   .hero-grid {
@@ -271,7 +277,8 @@
   /* Compact the hero copy on mobile */
   .hero-copy {
     max-width: 100%;
-    display: contents; /* Allow children to be direct grid items of .hero-grid */
+    display: contents;
+    /* Allow children to be direct grid items of .hero-grid */
   }
 
   /* Fix reveal animation when container is display: contents */
@@ -282,7 +289,7 @@
   }
 
   .hero-copy.reveal>* {
-    opacity: 0;
+    opacity: 1;
     transform: translateY(24px);
     transition: opacity 700ms ease, transform 700ms ease;
   }
@@ -296,6 +303,7 @@
   /* Order: 1. Headline (eyebrow + h1), 2. Photo, 3. Description, 4. Stats, 5. Buttons */
   .hero-copy .eyebrow {
     order: 1;
+    margin-bottom: 3px;
   }
 
   .hero-copy h1 {
@@ -304,19 +312,24 @@
 
   .hero-visual {
     order: 3;
-    margin: 10px 0 20px; /* Spacing for the photo */
+    padding-top: 30px;
+    margin: 10px 0 0;
+    /* Spacing for the photo */
   }
 
+
+
   .hero-copy .hero-description {
-    order: 4;
+    display: none;
   }
 
   .hero-copy .stats-grid {
-    order: 5;
+    order: 4;
+    margin-top: 0;
   }
 
   .hero-copy .hero-actions {
-    order: 6;
+    order: 5;
   }
 }
 
