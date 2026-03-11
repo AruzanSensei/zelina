@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   --bg: #050816;
   --bg-soft: rgba(11, 17, 36, 0.8);
   --surface: rgba(13, 20, 39, 0.78);
@@ -17,6 +17,14 @@
   --radius-md: 18px;
   --radius-sm: 14px;
   --container: min(1120px, calc(100vw - 32px));
+
+  /* Timeline CSS variables */
+  --tl-year: #a78bfa;
+  --tl-place: #f5f7ff;
+  --tl-role: #faaf60;
+  --tl-desc: #9ca8ca;
+  --tl-dot: #7c3aed;
+  --tl-line: rgba(124, 58, 237, 0.25);
 }
 
 *,
@@ -112,34 +120,34 @@ p {
 }
 
 h1 {
-  font-size: clamp(2.6rem, 5vw, 4.5rem);
-  line-height: 1.03;
+  font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+  line-height: 1.05;
   letter-spacing: -0.04em;
 }
 
 h2 {
-  font-size: clamp(1.85rem, 3vw, 2.85rem);
+  font-size: clamp(1.7rem, 3vw, 2.6rem);
   line-height: 1.08;
   letter-spacing: -0.03em;
 }
 
 h3 {
-  font-size: 1.02rem;
+  font-size: 1rem;
   line-height: 1.2;
 }
 
 p {
   color: var(--muted);
-  font-size: 0.98rem;
+  font-size: 0.95rem;
 }
 
 .eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   color: #dbe3ff;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -152,15 +160,18 @@ p {
   background: linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.85));
 }
 
+/* =====================
+   BUTTONS
+===================== */
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
-  padding: 0 18px;
+  min-height: 40px;
+  padding: 0 16px;
   border-radius: 999px;
   border: 1px solid transparent;
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 700;
   transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background 180ms ease;
 }
@@ -183,11 +194,75 @@ p {
 .button-light {
   color: var(--bg);
   background: var(--white);
+  padding: 0 14px;
+  min-height: 36px;
+  font-size: 0.85rem;
 }
 
+/* Rainbow outline for portofolio button */
+.rainbow-outline {
+  position: relative;
+  border: none;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.rainbow-outline::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 999px;
+  background: conic-gradient(from var(--angle, 0deg),
+      #ff0000, #ff7700, #ffff00, #00ff00, #0077ff, #8800ff, #ff00ff, #ff0000);
+  z-index: -1;
+  animation: rainbow-spin 2.5s linear infinite;
+}
+
+.rainbow-outline::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: 999px;
+  background: rgba(8, 12, 28, 0.94);
+  z-index: -1;
+}
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes rainbow-spin {
+  to {
+    --angle: 360deg;
+  }
+}
+
+/* Fallback for browsers that don't support @property */
+@supports not (background: conic-gradient(from 0deg, red, red)) {
+  .rainbow-outline::before {
+    background: linear-gradient(90deg, #ff0000, #ff7700, #ffff00, #00ff00, #0077ff, #8800ff, #ff0000);
+    background-size: 200% 200%;
+    animation: rainbow-spin-fallback 2.5s linear infinite;
+  }
+
+  @keyframes rainbow-spin-fallback {
+    0% {
+      background-position: 0% 50%;
+    }
+
+    100% {
+      background-position: 200% 50%;
+    }
+  }
+}
+
+/* =====================
+   MISC
+===================== */
 .star-icon {
-  width: 1rem;
-  height: 1rem;
+  width: 0.9rem;
+  height: 0.9rem;
   fill: currentColor;
   flex: 0 0 auto;
 }
@@ -243,11 +318,13 @@ p {
 }
 
 @keyframes twinkle {
+
   0%,
   100% {
     opacity: 0.2;
     transform: scale(0.8);
   }
+
   50% {
     opacity: 0.9;
     transform: scale(1.15);
@@ -255,10 +332,12 @@ p {
 }
 
 @keyframes blink {
+
   0%,
   50% {
     opacity: 1;
   }
+
   50.01%,
   100% {
     opacity: 0;
@@ -267,7 +346,7 @@ p {
 
 @media (max-width: 767px) {
   .section {
-    padding: 68px 0;
+    padding: 60px 0;
   }
 
   .section-heading {
@@ -275,10 +354,10 @@ p {
   }
 
   h1 {
-    font-size: clamp(2.15rem, 11vw, 3.35rem);
+    font-size: clamp(1.95rem, 10vw, 3rem);
   }
 
   h2 {
-    font-size: clamp(1.55rem, 8vw, 2.15rem);
+    font-size: clamp(1.45rem, 7.5vw, 2rem);
   }
 }

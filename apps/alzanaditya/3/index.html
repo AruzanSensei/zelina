@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 
 <head>
@@ -50,6 +50,8 @@
 
         <a class="button button-light desktop-cta" href="#contact">Kontak</a>
 
+        <!-- Mobile: Kontak button outside burger, then burger -->
+        <a class="button button-light mobile-contact-btn" href="#contact">Kontak</a>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu"
           aria-label="Buka menu">
           <span></span>
@@ -64,12 +66,12 @@
           <a href="#portfolio">Portofolio</a>
           <a href="#testimonials">Testimoni</a>
           <a href="#faq">FAQ</a>
-          <a class="button button-light" href="#contact">Kontak</a>
         </nav>
       </div>
     </header>
 
     <main>
+      <!-- HERO -->
       <section class="section hero-section" id="home">
         <div class="container hero-grid">
           <div class="hero-copy reveal">
@@ -112,7 +114,7 @@
             </div>
 
             <div class="hero-actions">
-              <a class="button button-ghost" href="#portfolio">Portofolio</a>
+              <a class="button button-ghost rainbow-outline" href="#portfolio">Portofolio</a>
               <a class="button button-accent" href="#contact">Kontak</a>
             </div>
           </div>
@@ -120,7 +122,7 @@
           <div class="hero-visual reveal">
             <div class="hero-photo-card">
               <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80"
-                alt="Portrait profesional Alzan Adytia" width="520" height="620">
+                alt="Portrait profesional Alzan Adytia" width="520" height="780">
               <div class="floating-badge badge-code">
                 <i class="fa-solid fa-code" aria-hidden="true"></i>
                 <span>Web</span>
@@ -138,6 +140,7 @@
         </div>
       </section>
 
+      <!-- ABOUT -->
       <section class="section section-about" id="about">
         <div class="container stack">
           <div class="section-heading reveal">
@@ -171,12 +174,47 @@
                 </svg>
               </button>
               <div class="accordion-panel">
-                <p>
-                  • 2026 - Sekarang | Zanxa Studio (Founder)
-                  <br>saya telah mendirikan "Zanxa Studio" untuk menampung semua project yang saya kerjakan. saya telah
-                  membuat banyak web seperti pembuatan
-                  <br> • 2025 - 2026 | Tasnim Property (Content Creator)
-                </p>
+                <div class="timeline-content">
+
+                  <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-body">
+                      <div class="timeline-header">
+                        <span class="timeline-place">Zanxa Studio</span>
+                        <span class="timeline-role">Founder</span>
+                        <span class="timeline-year">2025 – 2026</span>
+                      </div>
+                      <p class="timeline-desc">
+                        Saya mendirikan <a href="https://zanxa.site" target="_blank" rel="noreferrer"
+                          class="tl-link">Zanxa Studio</a>
+                        untuk menampung semua project yang saya kerjakan. Saya telah membuat Web Undangan Digital dan
+                        beberapa
+                        web untuk Company seperti <a href="https://zanxa.site/projects/berkah-maju-elektrik"
+                          target="_blank" rel="noreferrer" class="tl-link">Web Dokumen Invoice</a>
+                        yang terintegrasi dengan AI, dan masih banyak lainnya yang bisa anda lihat di
+                        <a href="https://zanxa.site/projects" target="_blank" rel="noreferrer" class="tl-link">sini</a>.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-body">
+                      <div class="timeline-header">
+                        <span class="timeline-place">Tasnim Property</span>
+                        <span class="timeline-role">Content Creator</span>
+                        <span class="timeline-year">2025 – 2026</span>
+                      </div>
+                      <p class="timeline-desc">
+                        Setelah lulus sekolah saya bekerja di <a href="https://tasnimproperty.id" target="_blank"
+                          rel="noreferrer" class="tl-link">Tasnim Property</a>
+                        sebagai Content Creator. Tasnim sendiri adalah Agensi Perumahan yang tidak hanya menjual rumah
+                        namun juga tersedia Agroeduwisata.
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
               </div>
             </article>
 
@@ -188,16 +226,35 @@
                 </svg>
               </button>
               <div class="accordion-panel">
-                <p>
-                  Saya terus mengasah kemampuan lewat project mandiri, kursus online, dan eksplorasi desain serta
-                  front-end modern yang tetap ringan untuk performa nyata.
-                </p>
+                <div class="timeline-content">
+
+                  <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-body">
+                      <div class="timeline-header">
+                        <span class="timeline-place">SMKN 1 Leuwiliang</span>
+                        <span class="timeline-role">Desain Komunikasi Visual</span>
+                        <span class="timeline-year">2022 – 2025</span>
+                      </div>
+                      <p class="timeline-desc">
+                        Selain dalam pembuatan web, saya pun menguasai bidang desain. <a
+                          href="https://www.instagram.com/smkn1leuwiliang_official/" target="_blank" rel="noreferrer"
+                          class="tl-link">SMKN 1
+                          Leuwiliang</a> telah mengasah
+                        skill saya hingga memenuhi standar industri saat ini. Bisa anda lihat desain yang telah saya
+                        buat <a href="#portfolio" class="tl-link">disini</a>.
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
               </div>
             </article>
           </div>
         </div>
       </section>
 
+      <!-- PORTFOLIO -->
       <section class="section section-portfolio" id="portfolio">
         <div class="container stack">
           <div class="section-heading reveal">
@@ -214,8 +271,10 @@
 
           <div class="project-grid reveal">
             <article class="project-card" data-category="web">
-              <img src="https://picsum.photos/seed/web-one/640/420" alt="Thumbnail project landing page SaaS"
-                width="640" height="420" loading="lazy">
+              <div class="project-img-wrap">
+                <img src="https://picsum.photos/seed/web-one/640/640" alt="Thumbnail project landing page SaaS"
+                  width="640" height="640" loading="lazy">
+              </div>
               <div class="project-body">
                 <span class="category-badge badge-code">Web</span>
                 <h3>Nova SaaS Landing</h3>
@@ -225,8 +284,10 @@
             </article>
 
             <article class="project-card" data-category="design">
-              <img src="https://picsum.photos/seed/design-one/640/420" alt="Thumbnail project brand visual system"
-                width="640" height="420" loading="lazy">
+              <div class="project-img-wrap">
+                <img src="https://picsum.photos/seed/design-one/640/480" alt="Thumbnail project brand visual system"
+                  width="640" height="480" loading="lazy">
+              </div>
               <div class="project-body">
                 <span class="category-badge badge-design">Design</span>
                 <h3>Brand Visual System</h3>
@@ -236,8 +297,10 @@
             </article>
 
             <article class="project-card" data-category="content">
-              <img src="https://picsum.photos/seed/content-one/640/420" alt="Thumbnail project content campaign"
-                width="640" height="420" loading="lazy">
+              <div class="project-img-wrap">
+                <img src="https://picsum.photos/seed/content-one/640/480" alt="Thumbnail project content campaign"
+                  width="640" height="480" loading="lazy">
+              </div>
               <div class="project-body">
                 <span class="category-badge badge-creator">Content</span>
                 <h3>Creator Campaign Kit</h3>
@@ -247,8 +310,10 @@
             </article>
 
             <article class="project-card" data-category="web">
-              <img src="https://picsum.photos/seed/web-two/640/420" alt="Thumbnail project dashboard studio" width="640"
-                height="420" loading="lazy">
+              <div class="project-img-wrap">
+                <img src="https://picsum.photos/seed/web-two/640/480" alt="Thumbnail project dashboard studio"
+                  width="640" height="480" loading="lazy">
+              </div>
               <div class="project-body">
                 <span class="category-badge badge-code">Web</span>
                 <h3>Studio Dashboard</h3>
@@ -258,8 +323,10 @@
             </article>
 
             <article class="project-card" data-category="design">
-              <img src="https://picsum.photos/seed/design-two/640/420" alt="Thumbnail project editorial design"
-                width="640" height="420" loading="lazy">
+              <div class="project-img-wrap">
+                <img src="https://picsum.photos/seed/design-two/640/480" alt="Thumbnail project editorial design"
+                  width="640" height="480" loading="lazy">
+              </div>
               <div class="project-body">
                 <span class="category-badge badge-design">Design</span>
                 <h3>Editorial Motion Boards</h3>
@@ -269,8 +336,10 @@
             </article>
 
             <article class="project-card" data-category="content">
-              <img src="https://picsum.photos/seed/content-two/640/420" alt="Thumbnail project social content system"
-                width="640" height="420" loading="lazy">
+              <div class="project-img-wrap">
+                <img src="https://picsum.photos/seed/content-two/640/480" alt="Thumbnail project social content system"
+                  width="640" height="480" loading="lazy">
+              </div>
               <div class="project-body">
                 <span class="category-badge badge-creator">Content</span>
                 <h3>Social Content System</h3>
@@ -282,6 +351,7 @@
         </div>
       </section>
 
+      <!-- TESTIMONIALS -->
       <section class="section section-testimonials" id="testimonials">
         <div class="container stack">
           <div class="section-heading reveal">
@@ -296,31 +366,61 @@
               <article class="testimonial-card">
                 <p>Alzan bantu kami merapikan website campaign jadi jauh lebih meyakinkan dan enak dilihat di mobile.
                 </p>
-                <img src="https://i.pravatar.cc/100?img=12" alt="Avatar Nadia Rahma" width="56" height="56"
-                  loading="lazy">
-                <div>
-                  <h3>Nadia Rahma</h3>
-                  <span>Founder, Sora Studio</span>
+                <div class="testimonial-author">
+                  <img src="https://i.pravatar.cc/100?img=12" alt="Avatar Nadia Rahma" width="44" height="44"
+                    loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Nadia Rahma</h3>
+                    <span>Founder, Sora Studio</span>
+                  </div>
                 </div>
               </article>
 
               <article class="testimonial-card">
                 <p>Sense desainnya rapi, tidak berisik, dan paling penting proses revisinya enak diajak diskusi.</p>
-                <img src="https://i.pravatar.cc/100?img=32" alt="Avatar Iqbal Fikri" width="56" height="56"
-                  loading="lazy">
-                <div>
-                  <h3>Iqbal Fikri</h3>
-                  <span>Creative Lead, Koma Space</span>
+                <div class="testimonial-author">
+                  <img src="https://i.pravatar.cc/100?img=32" alt="Avatar Iqbal Fikri" width="44" height="44"
+                    loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Iqbal Fikri</h3>
+                    <span>Creative Lead, Koma Space</span>
+                  </div>
                 </div>
               </article>
 
               <article class="testimonial-card">
                 <p>Kontennya jadi lebih konsisten karena Alzan bikin sistem asset yang jelas dari awal.</p>
-                <img src="https://i.pravatar.cc/100?img=24" alt="Avatar Sinta Maharani" width="56" height="56"
-                  loading="lazy">
-                <div>
-                  <h3>Sinta Maharani</h3>
-                  <span>Marketing, Aruna House</span>
+                <div class="testimonial-author">
+                  <img src="https://i.pravatar.cc/100?img=24" alt="Avatar Sinta Maharani" width="44" height="44"
+                    loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Sinta Maharani</h3>
+                    <span>Marketing, Aruna House</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="testimonial-card">
+                <p>Proses kerjanya sangat terstruktur, mulai dari wireframe sampai final delivery selalu on-point.</p>
+                <div class="testimonial-author">
+                  <img src="https://i.pravatar.cc/100?img=53" alt="Avatar Andrean Syah" width="44" height="44"
+                    loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Andrean Syah</h3>
+                    <span>CEO, TechFlow Indonesia</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="testimonial-card">
+                <p>Sangat responsif dan memberikan solusi kreatif untuk masalah User Experience kompleks kami.</p>
+                <div class="testimonial-author">
+                  <img src="https://i.pravatar.cc/100?img=47" alt="Avatar Maya Putri" width="44" height="44"
+                    loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Maya Putri</h3>
+                    <span>Product Manager, Glint App</span>
+                  </div>
                 </div>
               </article>
             </div>
@@ -328,40 +428,82 @@
             <div class="testimonial-row" data-direction="right">
               <article class="testimonial-card">
                 <p>Website yang dibikin compact tapi tetap terasa premium. Leads yang masuk juga jadi lebih serius.</p>
-                <img src="https://i.pravatar.cc/100?img=45" alt="Avatar Kevin Pratama" width="56" height="56"
-                  loading="lazy">
-                <div>
-                  <h3>Kevin Pratama</h3>
-                  <span>Owner, Sevra Auto</span>
+                <div class="testimonial-author">
+                  <img src="https://i.pravatar.cc/100?img=45" alt="Avatar Kevin Pratama" width="44" height="44"
+                    loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Kevin Pratama</h3>
+                    <span>Owner, Sevra Auto</span>
+                  </div>
                 </div>
               </article>
 
               <article class="testimonial-card">
                 <p>Alzan ngerti banget cara bikin visual yang terasa profesional tanpa kehilangan sisi personal brand.
                 </p>
-                <img src="https://i.pravatar.cc/100?img=16" alt="Avatar Rere Oktavia" width="56" height="56"
-                  loading="lazy">
-                <div>
-                  <h3>Rere Oktavia</h3>
-                  <span>Personal Brand Coach</span>
+                <div class="testimonial-author">
+                  <img src="https://i.pravatar.cc/100?img=16" alt="Avatar Rere Oktavia" width="44" height="44"
+                    loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Rere Oktavia</h3>
+                    <span>Personal Brand Coach</span>
+                  </div>
                 </div>
               </article>
 
               <article class="testimonial-card">
                 <p>Eksekusinya cepat, detail spacing terjaga, dan semua komponen terasa jauh lebih clean dari draft
                   awal.</p>
-                <img src="https://i.pravatar.cc/100?img=28" alt="Avatar Dimas Santoso" width="56" height="56"
-                  loading="lazy">
-                <div>
-                  <h3>Dimas Santoso</h3>
-                  <span>Co-Founder, Pixel Forge</span>
+                <div class="testimonial-author">
+                  <img src="https://i.pravatar.cc/100?img=28" alt="Avatar Dimas Santoso" width="44" height="44"
+                    loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Dimas Santoso</h3>
+                    <span>Co-Founder, Pixel Forge</span>
+                  </div>
                 </div>
               </article>
+
+              <article class="testimonial-card">
+                <p>Bukan cuma jago visual, tapi juga paham aspek psikologi warna yang bikin audiens betah scrolling.</p>
+                <div class="testimonial-author">
+                  <img src="https://i.pravatar.cc/100?img=61" alt="Avatar Linda Sari" width="44" height="44"
+                    loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Linda Sari</h3>
+                    <span>Director, Bloom Studio</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="testimonial-card">
+                <p>Landing page buatan Alzan benar-benar mendongkrak konversi iklan kami hingga dua kali lipat!</p>
+                <div class="testimonial-author">
+                  <img src="https://i.pravatar.cc/100?img=33" alt="Avatar Bagas Pamungkas" width="44" height="44"
+                    loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Bagas Pamungkas</h3>
+                    <span>Growth Marketer, Fastly</span>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <!-- CTA Section bawah testimoni -->
+          <div class="cta-project reveal">
+            <div class="cta-project-inner">
+              <span class="eyebrow">Siap berkolaborasi?</span>
+              <h2>Ayo mulai project bersama</h2>
+              <p>Konsultasikan kebutuhan project kamu, saya siap bantu wujudkan dengan desain yang tajam dan eksekusi
+                yang cepat.</p>
+              <a class="button button-accent" href="#contact">Mulai Sekarang</a>
             </div>
           </div>
         </div>
       </section>
 
+      <!-- CONTACT -->
       <section class="section section-contact" id="contact">
         <div class="container contact-grid">
           <div class="contact-copy reveal">
@@ -409,14 +551,15 @@
         </div>
       </section>
 
+      <!-- FAQ -->
       <section class="section section-faq" id="faq">
-        <span class="eyebrow">FAQ</span>
-        <h2>Pertanyaan yang paling sering muncul sebelum project dimulai.</h2>
         <div class="container faq-grid">
+          <span class="eyebrow">FAQ</span>
+          <h2>Pertanyaan yang paling sering muncul sebelum project dimulai.</h2>
           <aside class="faq-aside reveal">
             <div class="faq-photo-card">
               <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80"
-                alt="Foto Alzan Adytia untuk section FAQ" width="480" height="620" loading="lazy">
+                alt="Foto Alzan Adytia untuk section FAQ" width="480" height="720" loading="lazy">
             </div>
           </aside>
 

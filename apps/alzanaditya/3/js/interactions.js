@@ -1,6 +1,14 @@
-﻿const menuToggle = document.querySelector(".menu-toggle");
+const menuToggle = document.querySelector(".menu-toggle");
 const mobileMenu = document.querySelector(".mobile-menu");
 const mobileLinks = document.querySelectorAll(".mobile-nav a");
+const mobileContactBtn = document.querySelector(".mobile-contact-btn");
+
+function closeMobileMenu() {
+  if (!mobileMenu || !menuToggle) return;
+  mobileMenu.classList.remove("is-open");
+  menuToggle.classList.remove("is-open");
+  menuToggle.setAttribute("aria-expanded", "false");
+}
 
 if (menuToggle && mobileMenu) {
   menuToggle.addEventListener("click", () => {
@@ -10,12 +18,12 @@ if (menuToggle && mobileMenu) {
   });
 
   mobileLinks.forEach((link) => {
-    link.addEventListener("click", () => {
-      mobileMenu.classList.remove("is-open");
-      menuToggle.classList.remove("is-open");
-      menuToggle.setAttribute("aria-expanded", "false");
-    });
+    link.addEventListener("click", closeMobileMenu);
   });
+}
+
+if (mobileContactBtn) {
+  mobileContactBtn.addEventListener("click", closeMobileMenu);
 }
 
 document.querySelectorAll("[data-accordion-group]").forEach((group) => {

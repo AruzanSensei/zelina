@@ -1,8 +1,11 @@
-﻿.stats-grid {
+﻿/* =====================
+   STATS
+===================== */
+.stats-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 24px;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .stat-card,
@@ -20,15 +23,15 @@
 .stat-card {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px;
+  gap: 10px;
+  padding: 12px;
   border-radius: var(--radius-md);
 }
 
 .stat-card i,
 .stat-card .star-icon {
-  width: 20px;
-  font-size: 1rem;
+  width: 18px;
+  font-size: 0.9rem;
   color: #dce7ff;
 }
 
@@ -40,36 +43,39 @@
 }
 
 .stat-card strong {
-  font-size: 0.92rem;
+  font-size: 0.86rem;
 }
 
 .stat-card span {
   color: var(--muted);
-  font-size: 0.8rem;
+  font-size: 0.75rem;
 }
 
+/* =====================
+   FLOATING BADGES
+===================== */
 .floating-badge {
   position: absolute;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 13px;
+  gap: 7px;
+  padding: 9px 12px;
   border-radius: 999px;
   color: var(--white);
   background: color-mix(in srgb, var(--badge-color) 28%, rgba(7, 10, 22, 0.92));
   border: 1px solid color-mix(in srgb, var(--badge-color) 36%, rgba(255, 255, 255, 0.08));
   box-shadow: 0 14px 34px color-mix(in srgb, var(--badge-color) 24%, transparent);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 700;
   animation: orbitFloat 6s ease-in-out infinite;
 }
 
 .floating-badge i {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
 }
 
 .floating-badge:nth-of-type(1) {
-  top: 14%;
+  top: 12%;
   left: -5%;
 }
 
@@ -97,9 +103,12 @@
   }
 }
 
+/* =====================
+   ACCORDION
+===================== */
 .accordion-group {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .accordion-item {
@@ -113,12 +122,12 @@
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  padding: 18px 20px;
+  padding: 16px 18px;
   cursor: pointer;
 }
 
 .accordion-label {
-  font-size: 0.98rem;
+  font-size: 0.95rem;
   font-weight: 700;
   text-align: left;
 }
@@ -138,31 +147,130 @@
   transition: grid-template-rows 240ms ease;
 }
 
-.accordion-panel>p {
+.accordion-panel>p,
+.accordion-panel>.timeline-content {
   overflow: hidden;
-  padding: 0 20px 0;
+  padding: 0 18px 0;
 }
 
 .accordion-item.is-open .accordion-panel {
   grid-template-rows: 1fr;
 }
 
-.accordion-item.is-open .accordion-panel>p {
-  padding-bottom: 20px;
+.accordion-item.is-open .accordion-panel>p,
+.accordion-item.is-open .accordion-panel>.timeline-content {
+  padding-bottom: 18px;
 }
 
+/* =====================
+   TIMELINE (Career/Education)
+===================== */
+.timeline-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 16px;
+  position: relative;
+}
+
+.timeline-item:not(:last-child) {
+  padding-bottom: 24px;
+}
+
+.timeline-item:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 7px;
+  top: 18px;
+  bottom: 0;
+  width: 1px;
+  background: var(--tl-line);
+}
+
+.timeline-dot {
+  flex: 0 0 auto;
+  width: 15px;
+  height: 15px;
+  margin-top: 3px;
+  border-radius: 50%;
+  background: var(--tl-dot);
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.5);
+  border: 2px solid rgba(167, 139, 250, 0.3);
+}
+
+.timeline-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.timeline-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin-bottom: 8px;
+}
+
+.timeline-place {
+  color: var(--tl-place);
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.timeline-role {
+  color: var(--tl-role);
+  font-size: 0.82rem;
+  font-weight: 600;
+  background: rgba(250, 245, 96, 0.12);
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(250, 229, 96, 0.2);
+}
+
+.timeline-year {
+  color: var(--tl-year);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin-left: auto;
+}
+
+.timeline-desc {
+  color: var(--tl-desc);
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+
+.tl-link {
+  color: #93c5fd;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 180ms ease;
+}
+
+.tl-link:hover {
+  color: #dbeafe;
+}
+
+/* =====================
+   FILTER
+===================== */
 .filter-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
 }
 
 .filter-chip {
-  min-height: 40px;
-  padding: 0 16px;
+  min-height: 38px;
+  padding: 0 14px;
   border-radius: 999px;
   color: #dfe5fb;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 700;
   cursor: pointer;
   transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
@@ -187,10 +295,13 @@
   box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.18), 0 12px 30px rgba(37, 99, 235, 0.18);
 }
 
+/* =====================
+   PROJECT GRID
+===================== */
 .project-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  gap: 16px;
 }
 
 .project-card {
@@ -216,31 +327,40 @@
   box-shadow: 0 18px 44px rgba(37, 99, 235, 0.25);
 }
 
+/* Fix filter - clean display toggle */
 .project-card.is-hidden {
-  `r`n display: none;
-  `r`n
+  display: none;
 }
 
-.project-card img {
+/* 1:1 Image ratio */
+.project-img-wrap {
   width: 100%;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+.project-img-wrap img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .project-body {
   display: grid;
-  gap: 10px;
-  padding: 16px 16px 18px;
+  gap: 8px;
+  padding: 14px 14px 16px;
 }
 
 .project-body p {
-  font-size: 0.9rem;
+  font-size: 0.86rem;
+  line-height: 1.5;
 }
 
 .project-body a {
   width: fit-content;
   color: #ecf3ff;
-  font-size: 0.88rem;
+  font-size: 0.84rem;
   font-weight: 700;
 }
 
@@ -248,28 +368,61 @@
   display: inline-flex;
   align-items: center;
   width: fit-content;
-  min-height: 28px;
-  padding: 0 11px;
+  min-height: 26px;
+  padding: 0 10px;
   border-radius: 999px;
   color: var(--white);
   background: color-mix(in srgb, var(--badge-color) 30%, rgba(255, 255, 255, 0.04));
-  font-size: 0.76rem;
+  font-size: 0.73rem;
   font-weight: 700;
 }
 
+/* =====================
+   TESTIMONIALS
+===================== */
 .marquee-stack {
+  position: relative;
   display: grid;
   gap: 14px;
   overflow: hidden;
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  padding: 20px 0;
+}
+
+.marquee-stack::before,
+.marquee-stack::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 10vw;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.marquee-stack::before {
+  left: 0;
+  background: linear-gradient(to right, var(--bg), transparent);
+}
+
+.marquee-stack::after {
+  right: 0;
+  background: linear-gradient(to left, var(--bg), transparent);
 }
 
 .testimonial-row {
   display: flex;
   gap: 14px;
   width: max-content;
-  animation-duration: 34s;
+  animation-duration: 80s;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
+  padding-right: 14px;
+  /* Matches gap to ensure seamless loop */
 }
 
 .testimonial-row[data-direction="left"] {
@@ -306,27 +459,40 @@
 }
 
 .testimonial-card {
-  width: min(320px, calc(100vw - 40px));
+  width: min(300px, calc(100vw - 40px));
   display: grid;
-  gap: 12px;
-  padding: 18px;
+  gap: 10px;
+  padding: 16px;
   border-radius: 20px;
   flex: 0 0 auto;
 }
 
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .testimonial-card img {
-  width: 56px;
-  height: 56px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
+  flex: 0 0 auto;
+  object-fit: cover;
 }
 
-.testimonial-card span {
+.testimonial-meta h3 {
+  font-size: 0.9rem;
+  margin-bottom: 2px;
+}
+
+.testimonial-meta span {
   color: var(--muted);
-  font-size: 0.84rem;
+  font-size: 0.78rem;
 }
 
-.testimonial-card p {
-  font-size: 0.92rem;
+.testimonial-card>p {
+  font-size: 0.9rem;
 }
 
 .rating {
@@ -335,20 +501,60 @@
   color: #f8e28e;
 }
 
+/* =====================
+   CTA PROJECT SECTION
+===================== */
+.cta-project {
+  margin-top: 8px;
+}
+
+.cta-project-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  padding: 48px 32px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.12), rgba(37, 99, 235, 0.1));
+  border: 1px solid rgba(124, 58, 237, 0.2);
+  backdrop-filter: blur(20px);
+}
+
+.cta-project-inner .eyebrow {
+  margin-bottom: 0;
+}
+
+.cta-project-inner h2 {
+  font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+  background: linear-gradient(135deg, #fff 30%, #a78bfa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cta-project-inner p {
+  max-width: 480px;
+  font-size: 0.94rem;
+}
+
+/* =====================
+   SOCIAL / CONTACT
+===================== */
 .social-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 24px;
+  gap: 10px;
+  margin-top: 20px;
 }
 
 .social-list a {
   display: flex;
   align-items: center;
   gap: 10px;
-  min-height: 54px;
-  padding: 0 16px;
-  border-radius: 18px;
+  min-height: 50px;
+  padding: 0 14px;
+  border-radius: 16px;
   transition: transform 180ms ease, border-color 180ms ease;
 }
 
@@ -367,21 +573,21 @@
 
 .contact-form label {
   display: grid;
-  gap: 9px;
+  gap: 8px;
 }
 
 .contact-form label span {
   color: #e3ebff;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-weight: 700;
 }
 
 .contact-form input,
 .contact-form textarea {
   width: 100%;
-  padding: 13px 14px;
+  padding: 12px 14px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
+  border-radius: 14px;
   background: rgba(255, 255, 255, 0.03);
   outline: none;
   transition: border-color 180ms ease, box-shadow 180ms ease;
@@ -395,7 +601,7 @@
 
 .form-feedback {
   min-height: 22px;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
 }
 
 .form-feedback.is-error {
@@ -406,6 +612,9 @@
   color: var(--success);
 }
 
+/* =====================
+   MEDIA QUERIES
+===================== */
 @media (max-width: 1024px) {
   .project-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -425,11 +634,15 @@
   }
 
   .floating-badge {
-    padding: 9px 12px;
-    font-size: 0.76rem;
+    padding: 8px 11px;
+    font-size: 0.72rem;
   }
 
   .contact-form {
-    padding: 18px;
+    padding: 16px;
+  }
+
+  .cta-project-inner {
+    padding: 32px 20px;
   }
 }

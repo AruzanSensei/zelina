@@ -1,4 +1,7 @@
-﻿.topbar {
+/* =====================
+   TOPBAR
+===================== */
+.topbar {
   position: sticky;
   top: 0;
   z-index: 20;
@@ -11,15 +14,15 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 78px;
-  gap: 18px;
+  min-height: 62px;
+  gap: 14px;
 }
 
 .brand {
   display: inline-flex;
   align-items: baseline;
   gap: 6px;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 800;
   letter-spacing: -0.03em;
 }
@@ -31,12 +34,12 @@
 .nav {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
 }
 
 .nav a {
   color: #d4dcf9;
-  font-size: 0.94rem;
+  font-size: 0.9rem;
   transition: color 180ms ease;
 }
 
@@ -44,11 +47,19 @@
   color: var(--white);
 }
 
+/* Mobile contact button: hidden on desktop */
+.mobile-contact-btn {
+  display: none;
+}
+
 .menu-toggle,
 .mobile-menu {
   display: none;
 }
 
+/* =====================
+   GRIDS
+===================== */
 .hero-grid,
 .contact-grid,
 .faq-grid {
@@ -59,53 +70,55 @@
 .hero-grid {
   grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
   align-items: center;
-  min-height: calc(100vh - 78px);
+  min-height: calc(100vh - 62px);
 }
 
 .hero-copy {
-  max-width: 620px;
+  max-width: 600px;
 }
 
 .hero-role-row {
   display: block;
-  margin-top: 8px;
+  margin-top: 6px;
   color: #dce7ff;
 }
 
 .hero-description {
-  max-width: 540px;
-  margin-top: 18px;
-  font-size: 1rem;
+  max-width: 520px;
+  margin-top: 14px;
+  font-size: 0.95rem;
 }
 
 .hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 26px;
+  gap: 10px;
+  margin-top: 22px;
 }
 
 .hero-visual {
   justify-self: end;
-  width: min(100%, 440px);
+  width: min(100%, 420px);
 }
 
 .hero-photo-card,
 .faq-photo-card {
   position: relative;
-  border-radius: 32px;
+  border-radius: 28px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: var(--shadow);
   background: linear-gradient(160deg, rgba(124, 58, 237, 0.1), rgba(37, 99, 235, 0.08));
 }
 
+/* 2:3 ratio enforced on hero and faq photo */
 .hero-photo-card img,
 .faq-photo-card img {
   width: 100%;
   height: auto;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1/1;
   object-fit: cover;
+  display: block;
 }
 
 .contact-grid {
@@ -114,23 +127,43 @@
 }
 
 .faq-grid {
-  grid-template-columns: minmax(290px, 0.76fr) minmax(0, 1fr);
+  grid-template-columns: minmax(270px, 0.72fr) minmax(0, 1fr);
   align-items: start;
+}
+
+.faq-grid .eyebrow,
+.faq-grid h2 {
+  grid-column: 1 / -1;
+}
+
+.faq-grid h2 {
+  max-width: 820px;
+  margin-bottom: 8px;
 }
 
 .faq-aside {
   position: sticky;
-  top: 110px;
+  top: 90px;
 }
 
 .faq-aside .faq-photo-card {
   margin-bottom: 20px;
 }
 
+/* =====================
+   TABLET / MOBILE BREAKPOINTS
+===================== */
 @media (max-width: 1024px) {
+
   .desktop-nav,
   .desktop-cta {
     display: none;
+  }
+
+  /* Show mobile contact button */
+  .mobile-contact-btn {
+    display: inline-flex;
+    margin-left: auto;
   }
 
   .menu-toggle {
@@ -138,16 +171,17 @@
     flex-direction: column;
     justify-content: center;
     gap: 4px;
-    width: 42px;
-    height: 42px;
+    width: 38px;
+    height: 38px;
     padding: 0;
     border-radius: 50%;
     border: 1px solid rgba(255, 255, 255, 0.08);
     background: rgba(255, 255, 255, 0.03);
+    flex-shrink: 0;
   }
 
   .menu-toggle span {
-    width: 18px;
+    width: 16px;
     height: 2px;
     margin: 0 auto;
     border-radius: 999px;
@@ -176,16 +210,27 @@
   }
 
   .mobile-menu.is-open {
-    max-height: 320px;
+    max-height: 260px;
     border-top-color: rgba(255, 255, 255, 0.06);
   }
 
   .mobile-nav {
     width: var(--container);
     margin: 0 auto;
-    padding: 16px 0 20px;
+    padding: 12px 0 16px;
     flex-direction: column;
     align-items: stretch;
+    gap: 4px;
+  }
+
+  .mobile-nav a {
+    padding: 9px 4px;
+    font-size: 0.92rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .mobile-nav a:last-child {
+    border-bottom: none;
   }
 
   .hero-grid,
@@ -208,18 +253,37 @@
 
 @media (max-width: 767px) {
   .topbar-inner {
-    min-height: 72px;
+    min-height: 56px;
+  }
+
+  .brand {
+    font-size: 0.95rem;
   }
 
   .hero-grid {
-    gap: 28px;
+    gap: 20px;
   }
 
+  /* On mobile: eyebrow and h1 ABOVE the photo card */
+  /* The hero-copy comes first in DOM (above hero-visual) */
+  /* We need the photo BELOW text on mobile */
+  /* Currently on desktop: text left, photo right */
+  /* On mobile (1024 breakpoint): both are stacked, hero-visual had order:-1 which pushed photo ABOVE */
+  /* Now we REMOVE that - text stays on top, photo below */
   .hero-visual {
-    order: -1;
+    order: 1;
+    /* after text (default) */
+  }
+
+  /* Compact the hero copy on mobile */
+  .hero-copy {
+    max-width: 100%;
   }
 }
 
+/* =====================
+   SECTION BACKGROUNDS
+===================== */
 .hero-section {
   background: radial-gradient(circle at 18% 18%, rgba(124, 58, 237, 0.12), transparent 28%);
 }
