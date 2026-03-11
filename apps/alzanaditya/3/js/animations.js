@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // 1. Fade in Step 1 ("Hi, I'm Alzan")
     setTimeout(() => {
       step1.classList.add("is-visible");
-    }, 500);
+    }, 400);
 
     // 2. Fade in Step 2 ("I'm a...") after Step 1 finishes its 0.8s transition
     setTimeout(() => {
@@ -102,12 +102,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }, 1000);
 
-    }, 1900);
+    }, 1400);
 
     // 3. Reveal rest of the site smoothy after Step 2 finishes
     setTimeout(() => {
       document.body.classList.remove("is-loading");
-    }, 4400);
+    }, 3800);
   } else {
     // Fallback
     document.body.classList.remove("is-loading");
