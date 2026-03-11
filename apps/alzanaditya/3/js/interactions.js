@@ -74,3 +74,26 @@ document.querySelectorAll(".testimonial-row").forEach((row) => {
     row.classList.toggle("is-paused");
   });
 });
+
+// Header Hide on Scroll
+let lastScrollY = window.scrollY;
+const topbar = document.querySelector(".topbar");
+
+if (topbar) {
+  window.addEventListener("scroll", () => {
+    const currentScrollY = window.scrollY;
+    // mobileMenu is defined at the top of this file
+    const isMobileMenuOpen = mobileMenu ? mobileMenu.classList.contains("is-open") : false;
+
+    if (isMobileMenuOpen) return;
+
+    // Scroll Down -> Hide; Scroll Up -> Show
+    if (currentScrollY > lastScrollY && currentScrollY > 100) {
+      topbar.classList.add("topbar-hidden");
+    } else if (currentScrollY < lastScrollY) {
+      topbar.classList.remove("topbar-hidden");
+    }
+
+    lastScrollY = currentScrollY;
+  }, { passive: true });
+}

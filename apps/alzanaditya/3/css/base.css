@@ -361,3 +361,51 @@ p {
     font-size: clamp(1.45rem, 7.5vw, 2rem);
   }
 }
+
+/* =====================
+   INTRO SEQUENCE
+===================== */
+body.is-loading .topbar,
+body.is-loading .hero-copy .eyebrow,
+body.is-loading .hero-description,
+body.is-loading .stats-grid,
+body.is-loading .hero-actions,
+body.is-loading .hero-visual,
+body.is-loading .section:not(.hero-section),
+body.is-loading .footer {
+  opacity: 0 !important;
+  visibility: hidden;
+}
+
+body.is-loading {
+  overflow: hidden;
+}
+
+.topbar,
+.hero-copy .eyebrow,
+.hero-description,
+.stats-grid,
+.hero-actions,
+.hero-visual,
+.section:not(.hero-section),
+.footer {
+  transition: opacity 2.6s ease, visibility 2.6s ease;
+}
+
+.intro-step-1,
+.intro-step-2 {
+  opacity: 0;
+  transform: translateY(16px);
+  will-change: opacity, transform;
+}
+
+.intro-step-1 {
+  display: inline-block;
+}
+
+.intro-step-1.is-visible,
+.intro-step-2.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}

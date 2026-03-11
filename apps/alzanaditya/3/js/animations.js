@@ -1,4 +1,4 @@
-﻿const typedElement = document.querySelector(".typed-text");
+const typedElement = document.querySelector(".typed-text");
 const starfield = document.querySelector(".starfield");
 const revealElements = document.querySelectorAll(".reveal");
 
@@ -39,7 +39,8 @@ if (typedElement) {
     setTimeout(type, 220);
   };
 
-  type();
+  // Assign type to global to be called by intro sequence
+  window.startTyping = type;
 }
 
 if (starfield) {
@@ -75,3 +76,41 @@ if (revealElements.length) {
 
   revealElements.forEach((element) => observer.observe(element));
 }
+
+// =====================
+// INTRO SEQUENCE LOGIC
+// =====================
+document.addEventListener("DOMContentLoaded", () => {
+  const step1 = document.querySelector(".intro-step-1");
+  const step2 = document.querySelector(".intro-step-2");
+  const isBodyLoading = document.body.classList.contains("is-loading");
+
+  if (isBodyLoading && step1 && step2) {
+    // 1. Fade in Step 1 ("Hi, I'm Alzan")
+    setTimeout(() => {
+      step1.classList.add("is-visible");
+    }, 100);
+
+    // 2. Fade in Step 2 ("I'm a...") after Step 1 finishes its 0.8s transition
+    setTimeout(() => {
+      step2.classList.add("is-visible");
+
+      // Give it slightly more time before typing
+      setTimeout(() => {
+        if (typeof window.startTyping === "function") {
+          window.startTyping();
+        }
+      }, 1000);
+
+    }, 1500);
+
+    // 3. Reveal rest of the site smoothy after Step 2 finishes
+    setTimeout(() => {
+      document.body.classList.remove("is-loading");
+    }, 4000);
+  } else {
+    // Fallback
+    document.body.classList.remove("is-loading");
+    if (typeof window.startTyping === "function") window.startTyping();
+  }
+});

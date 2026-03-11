@@ -8,6 +8,12 @@
   backdrop-filter: blur(20px);
   background: rgba(4, 8, 22, 0.72);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.topbar-hidden {
+  transform: translateY(-100%);
 }
 
 .topbar-inner {
@@ -304,6 +310,8 @@
   .hero-copy .eyebrow {
     order: 1;
     margin-bottom: 3px;
+    font-size: 0.6rem;
+    font-weight: 400;
   }
 
   .hero-copy h1 {
@@ -330,6 +338,11 @@
 
   .hero-copy .hero-actions {
     order: 5;
+  }
+
+
+  .section-about {
+    padding-top: 130px;
   }
 }
 
