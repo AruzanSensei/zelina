@@ -389,7 +389,7 @@ body.is-loading {
 .hero-visual,
 .section:not(.hero-section),
 .footer {
-  transition: opacity 2.6s ease, visibility 2.6s ease;
+  transition: opacity 3s ease, visibility 3s ease;
 }
 
 .intro-step-1,

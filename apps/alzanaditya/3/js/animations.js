@@ -18,19 +18,19 @@ if (typedElement) {
 
     if (!deleting && charIndex < currentRole.length) {
       charIndex += 1;
-      setTimeout(type, 95);
+      setTimeout(type, 140);
       return;
     }
 
     if (!deleting && charIndex === currentRole.length) {
       deleting = true;
-      setTimeout(type, 1400);
+      setTimeout(type, 2500);
       return;
     }
 
     if (deleting && charIndex > 0) {
       charIndex -= 1;
-      setTimeout(type, 55);
+      setTimeout(type, 100);
       return;
     }
 
