@@ -268,16 +268,55 @@
   /* The hero-copy comes first in DOM (above hero-visual) */
   /* We need the photo BELOW text on mobile */
   /* Currently on desktop: text left, photo right */
-  /* On mobile (1024 breakpoint): both are stacked, hero-visual had order:-1 which pushed photo ABOVE */
-  /* Now we REMOVE that - text stays on top, photo below */
-  .hero-visual {
-    order: 1;
-    /* after text (default) */
-  }
-
   /* Compact the hero copy on mobile */
   .hero-copy {
     max-width: 100%;
+    display: contents; /* Allow children to be direct grid items of .hero-grid */
+  }
+
+  /* Fix reveal animation when container is display: contents */
+  .hero-copy.reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .hero-copy.reveal>* {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 700ms ease, transform 700ms ease;
+  }
+
+  .hero-copy.reveal.is-visible>* {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Reordering for Mobile Visual Hierarchy */
+  /* Order: 1. Headline (eyebrow + h1), 2. Photo, 3. Description, 4. Stats, 5. Buttons */
+  .hero-copy .eyebrow {
+    order: 1;
+  }
+
+  .hero-copy h1 {
+    order: 2;
+  }
+
+  .hero-visual {
+    order: 3;
+    margin: 10px 0 20px; /* Spacing for the photo */
+  }
+
+  .hero-copy .hero-description {
+    order: 4;
+  }
+
+  .hero-copy .stats-grid {
+    order: 5;
+  }
+
+  .hero-copy .hero-actions {
+    order: 6;
   }
 }
 
