@@ -365,7 +365,12 @@ p {
 /* =====================
    INTRO SEQUENCE
 ===================== */
-body.is-loading .topbar,
+body.is-loading .topbar {
+  opacity: 0 !important;
+  visibility: hidden;
+  transform: translateY(-100%);
+}
+
 body.is-loading .hero-copy .eyebrow,
 body.is-loading .hero-description,
 body.is-loading .stats-grid,
@@ -381,7 +386,6 @@ body.is-loading {
   overflow: hidden;
 }
 
-.topbar,
 .hero-copy .eyebrow,
 .hero-description,
 .stats-grid,

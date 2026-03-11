@@ -18,7 +18,7 @@ if (typedElement) {
 
     if (!deleting && charIndex < currentRole.length) {
       charIndex += 1;
-      setTimeout(type, 140);
+      setTimeout(type, 100);
       return;
     }
 
@@ -30,7 +30,7 @@ if (typedElement) {
 
     if (deleting && charIndex > 0) {
       charIndex -= 1;
-      setTimeout(type, 100);
+      setTimeout(type, 90);
       return;
     }
 
