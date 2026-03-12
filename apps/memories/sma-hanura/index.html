@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dokumentasi SMA Hanura</title>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Nunito:wght@400;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>Dokumentasi SMA Hanura</h1>
+    <div class="header-rule">
+      <span class="header-sub">Buat kenangan aja ya, dan semoga dokumentasinya memuaskan :D</span>
+    </div>
+  </div>
+
+  <!-- MUSIC PLAYER -->
+  <div class="player-wrapper">
+    <div class="player-song-title" id="player-title">Loading...</div>
+    <div class="player-card">
+      <div class="progress-row">
+        <span class="time-label" id="time-current">0:00</span>
+        <div class="progress-wrap" id="progress-wrap">
+          <div class="progress-fill" id="progress-fill"></div>
+          <div class="progress-thumb" id="progress-thumb"></div>
+        </div>
+        <span class="time-label right" id="time-total">0:00</span>
+      </div>
+      <div class="controls-row">
+        <button class="ctrl-btn" id="btn-playlist" title="Playlist" aria-label="Playlist">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M3 18h13v-2H3v2zm0-5h10v-2H3v2zm0-7v2h13V6H3zm18 9.59L17.42 12 21 8.41 19.59 7l-5 5 5 5L21 15.59z" />
+          </svg>
+        </button>
+        <button class="ctrl-btn" id="btn-prev" title="Sebelumnya" aria-label="Sebelumnya">
+          <svg viewBox="0 0 24 24">
+            <path d="M6 6h2v12H6zm3.5 6 8.5 6V6z" />
+          </svg>
+        </button>
+        <button class="ctrl-btn play-btn" id="btn-play" title="Play/Pause" aria-label="Play">
+          <svg id="icon-play" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+          <svg id="icon-pause" viewBox="0 0 24 24" style="display:none">
+            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+          </svg>
+        </button>
+        <button class="ctrl-btn" id="btn-next" title="Selanjutnya" aria-label="Selanjutnya">
+          <svg viewBox="0 0 24 24">
+            <path d="m6 18 8.5-6L6 6v12zM16 6v12h2V6h-2z" />
+          </svg>
+        </button>
+        <button class="ctrl-btn fav-btn" id="btn-fav" title="Suka" aria-label="Suka">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+          </svg>
+        </button>
+      </div>
+      <div class="playlist-panel" id="playlist-panel">
+        <div class="playlist-inner" id="playlist-inner"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GALLERY -->
+  <div class="gallery" id="gallery"></div>
+
+  <div class="footer-deco">✦ setiap momen berharga ✦</div>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-inner">
+      <button class="lightbox-close" id="lb-close">✕</button>
+      <div id="lightbox-media"></div>
+      <div class="lightbox-caption">
+        <div class="caption" id="lb-caption"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts: gallery & player dulu, lalu app.js yang fetch manifest & init -->
+  <script src="js/gallery.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+
+</html>
