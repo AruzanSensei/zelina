@@ -1,647 +1,851 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alzan's Portofolio</title>
-  <meta name="description"
-    content="Portfolio personal Alzan Adytia untuk menampilkan project web, design, dan content creation dengan tampilan galaxy yang profesional.">
-  <meta property="og:title" content="Alzan Adytia Portfolio">
-  <meta property="og:description"
-    content="Showcase project, testimonial, dan kontak Alzan Adytia dalam satu halaman modern.">
-  <meta property="og:image"
-    content="https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=1200&q=80">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alzan Adytia Juniar — Portfolio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+  <link
+    href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-    integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
-    crossorigin="anonymous" referrerpolicy="no-referrer">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/layout.css">
-  <link rel="stylesheet" href="css/components.css">
-  <meta name="theme-color" content="#050816">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* canvas fills parent absolutely */
+    .section-bg-canvas canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+  </style>
 </head>
 
-<body class="is-loading">
-  <svg class="icon-defs" aria-hidden="true" focusable="false">
-    <symbol id="icon-star-pointed" viewBox="0 0 24 24">
-      <path d="M12 1.5 14.9 9.1 22.5 12l-7.6 2.9L12 22.5l-2.9-7.6L1.5 12l7.6-2.9L12 1.5Z"></path>
-    </symbol>
-  </svg>
+<body>
 
-  <div class="site-shell">
-    <div class="starfield" aria-hidden="true"></div>
+  <!-- QR INTRO OVERLAY -->
+  <div id="intro-overlay"></div>
 
-    <header class="topbar">
-      <div class="container topbar-inner">
-        <a class="brand" href="#home" aria-label="Beranda Alzan Adytia">
-          <span>Alzan</span>
-          <span class="brand-muted">Adytia</span>
-        </a>
+  <!-- CURSORS -->
+  <div id="cur"></div>
+  <div id="cur-trail"></div>
 
-        <nav class="nav desktop-nav" aria-label="Navigasi utama">
-          <a href="#about">About Me</a>
-          <a href="#portfolio">Portofolio</a>
-          <a href="#testimonials">Testimoni</a>
-          <a href="#faq">FAQ</a>
-        </nav>
+  <!-- ===================== NAV ===================== -->
+  <nav id="navbar">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-badge">A</div>
+      Alzan Adytia Juniar
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about" class="nav-link">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+          </svg>About
+        </a></li>
+      <li><a href="#projects" class="nav-link">
+          <svg viewBox="0 0 24 24">
+            <rect x="2" y="3" width="20" height="14" rx="2" />
+            <path d="M8 21h8M12 17v4" />
+          </svg>Projects
+        </a></li>
+      <li><a href="#experience" class="nav-link">
+          <svg viewBox="0 0 24 24">
+            <rect x="2" y="7" width="20" height="14" rx="2" />
+            <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+          </svg>Experience
+        </a></li>
+      <li><a href="#contact" class="nav-link">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+            <polyline points="22,6 12,13 2,6" />
+          </svg>Contact
+        </a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Let's Talk ✉️</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
 
-        <a class="button button-light desktop-cta" href="#contact">Kontak</a>
-
-        <!-- Mobile: Kontak button outside burger, then burger -->
-        <a class="button button-light mobile-contact-btn" href="#contact">Kontak</a>
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu"
-          aria-label="Buka menu">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-      </div>
-
-      <div class="mobile-menu" id="mobile-menu">
-        <nav class="nav mobile-nav" aria-label="Navigasi mobile">
-          <a href="#about">About Me</a>
-          <a href="#portfolio">Portofolio</a>
-          <a href="#testimonials">Testimoni</a>
-          <a href="#faq">FAQ</a>
-        </nav>
-      </div>
-    </header>
-
-    <main>
-      <!-- HERO -->
-      <section class="section hero-section" id="home">
-        <div class="container hero-grid">
-          <div class="hero-copy reveal">
-            <span class="eyebrow">Available for new projects</span>
-            <h1>
-              <span class="intro-step-1">Hi, I'm Alzan</span>
-              <span class="hero-role-row intro-step-2">
-                I'm a <span class="typed-text" data-roles="Web Dev,Designer,Creator"></span><span
-                  class="typed-cursor">|</span>
-              </span>
-            </h1>
-            <p class="hero-description">
-              Saya membantu brand, bisnis, dan personal project tampil lebih rapi, jelas, dan meyakinkan lewat website,
-              visual design, dan konten yang terarah.
-            </p>
-
-            <div class="stats-grid">
-              <article class="stat-card">
-                <svg class="star-icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <use href="#icon-star-pointed"></use>
-                </svg>
-                <div>
-                  <strong>1 Tahun</strong>
-                  <span>Pengalaman</span>
-                </div>
-              </article>
-              <article class="stat-card">
-                <i class="fa-regular fa-folder-open" aria-hidden="true"></i>
-                <div>
-                  <strong>20+ Project</strong>
-                  <span>Project selesai</span>
-                </div>
-              </article>
-              <article class="stat-card">
-                <i class="fa-solid fa-user-group" aria-hidden="true"></i>
-                <div>
-                  <strong>14 Client</strong>
-                  <span>Kolaborasi aktif</span>
-                </div>
-              </article>
-            </div>
-
-            <div class="hero-actions">
-              <a class="button button-ghost rainbow-outline" href="#portfolio">Portofolio</a>
-              <a class="button button-accent" href="#contact">Kontak</a>
-            </div>
-          </div>
-
-          <div class="hero-visual reveal">
-            <div class="hero-photo-card">
-              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=900&q=80"
-                alt="Portrait profesional Alzan Adytia" width="520" height="780">
-              <div class="floating-badge badge-code">
-                <i class="fa-solid fa-code" aria-hidden="true"></i>
-                <span>Web</span>
-              </div>
-              <div class="floating-badge badge-design">
-                <i class="fa-solid fa-pen-nib" aria-hidden="true"></i>
-                <span>Design</span>
-              </div>
-              <div class="floating-badge badge-creator">
-                <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
-                <span>Content</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ABOUT -->
-      <section class="section section-about" id="about">
-        <div class="container stack">
-          <div class="section-heading reveal">
-            <span class="eyebrow">About Me</span>
-            <h2>Cerita Singkat Saya</h2>
-          </div>
-
-          <div class="accordion-group reveal" data-accordion-group>
-            <article class="accordion-item is-open">
-              <button class="accordion-trigger" type="button" aria-expanded="true">
-                <span class="accordion-label">Tentang saya</span>
-                <svg class="star-icon accordion-icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <use href="#icon-star-pointed"></use>
-                </svg>
-              </button>
-              <div class="accordion-panel">
-                <p>
-                  <b>saya seorang freelancer yang aktif dalam pengembangan web dan desain grafis.</b>
-                  <br>Saya telah membantu brand, bisnis, dan personal project tampil lebih rapi, jelas, dan meyakinkan
-                  lewat
-                  website, visual design, dan konten yang terarah.
-                </p>
-              </div>
-            </article>
-
-            <article class="accordion-item">
-              <button class="accordion-trigger" type="button" aria-expanded="false">
-                <span class="accordion-label">Perjalanan karir</span>
-                <svg class="star-icon accordion-icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <use href="#icon-star-pointed"></use>
-                </svg>
-              </button>
-              <div class="accordion-panel">
-                <div class="timeline-content">
-
-                  <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-body">
-                      <div class="timeline-header">
-                        <span class="timeline-place">Zanxa Studio</span>
-                        <span class="timeline-role">Founder</span>
-                        <span class="timeline-year">2026 – now</span>
-                      </div>
-                      <p class="timeline-desc">
-                        Saya mendirikan <a href="https://zanxa.site" target="_blank" rel="noreferrer"
-                          class="tl-link">Zanxa Studio</a>
-                        untuk menampung semua project yang saya kerjakan. Saya telah membuat Web Undangan Digital dan
-                        beberapa
-                        web untuk Company seperti <a href="https://zanxa.site/projects/berkah-maju-elektrik"
-                          target="_blank" rel="noreferrer" class="tl-link">Web Dokumen Invoice</a>
-                        yang terintegrasi dengan AI, dan masih banyak lainnya yang bisa anda lihat di
-                        <a href="https://zanxa.site/projects" target="_blank" rel="noreferrer" class="tl-link">sini</a>.
-                      </p>
-                    </div>
-                  </div>
-
-                  <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-body">
-                      <div class="timeline-header">
-                        <span class="timeline-place">Tasnim Property</span>
-                        <span class="timeline-role">Designer</span>
-                        <span class="timeline-year">2025 – 2026</span>
-                      </div>
-                      <p class="timeline-desc">
-                        Setelah lulus sekolah saya bekerja di <a href="https://tasnimproperty.id" target="_blank"
-                          rel="noreferrer" class="tl-link">Tasnim Property</a>
-                        sebagai Content Creator. Tasnim sendiri adalah Agensi Perumahan yang tidak hanya menjual rumah
-                        namun juga tersedia Agroeduwisata.
-                      </p>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </article>
-
-            <article class="accordion-item">
-              <button class="accordion-trigger" type="button" aria-expanded="false">
-                <span class="accordion-label">Pendidikan</span>
-                <svg class="star-icon accordion-icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <use href="#icon-star-pointed"></use>
-                </svg>
-              </button>
-              <div class="accordion-panel">
-                <div class="timeline-content">
-
-                  <div class="timeline-item">
-                    <div class="timeline-dot"></div>
-                    <div class="timeline-body">
-                      <div class="timeline-header">
-                        <span class="timeline-place">SMKN 1 Leuwiliang</span>
-                        <span class="timeline-role">Desain Komunikasi Visual</span>
-                        <span class="timeline-year">2022 – 2025</span>
-                      </div>
-                      <p class="timeline-desc">
-                        Selain dalam pembuatan web, saya pun menguasai bidang desain. <a
-                          href="https://www.instagram.com/smkn1leuwiliang_official/" target="_blank" rel="noreferrer"
-                          class="tl-link">SMKN 1
-                          Leuwiliang</a> telah mengasah
-                        skill saya hingga memenuhi standar industri saat ini. Bisa anda lihat desain yang telah saya
-                        buat <a href="#portfolio" class="tl-link">disini</a>.
-                      </p>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <!-- PORTFOLIO -->
-      <section class="section section-portfolio" id="portfolio">
-        <div class="container stack">
-          <div class="section-heading reveal">
-            <span class="eyebrow">Portofolio</span>
-            <h2>Proyek yang pernah saya kerjakan.</h2>
-          </div>
-
-          <div class="filter-bar reveal" role="tablist" aria-label="Filter project">
-            <button class="filter-chip is-active" type="button" data-filter="all">All</button>
-            <button class="filter-chip" type="button" data-filter="web">Web</button>
-            <button class="filter-chip" type="button" data-filter="design">Design</button>
-            <button class="filter-chip" type="button" data-filter="content">Content</button>
-          </div>
-
-          <div class="project-grid reveal">
-            <article class="project-card" data-category="web">
-              <div class="project-img-wrap">
-                <img src="https://picsum.photos/seed/web-one/640/640" alt="Thumbnail project landing page SaaS"
-                  width="640" height="640" loading="lazy">
-              </div>
-              <div class="project-body">
-                <span class="category-badge badge-code">Web</span>
-                <h3>Nova SaaS Landing</h3>
-                <p>Landing page conversion-focused dengan struktur modular dan performa cepat.</p>
-                <a href="#contact">Lihat Project</a>
-              </div>
-            </article>
-
-            <article class="project-card" data-category="design">
-              <div class="project-img-wrap">
-                <img src="https://picsum.photos/seed/design-one/640/480" alt="Thumbnail project brand visual system"
-                  width="640" height="480" loading="lazy">
-              </div>
-              <div class="project-body">
-                <span class="category-badge badge-design">Design</span>
-                <h3>Brand Visual System</h3>
-                <p>Set identitas visual dengan layout sosial media dan guideline yang konsisten.</p>
-                <a href="#contact">Lihat Project</a>
-              </div>
-            </article>
-
-            <article class="project-card" data-category="content">
-              <div class="project-img-wrap">
-                <img src="https://picsum.photos/seed/content-one/640/480" alt="Thumbnail project content campaign"
-                  width="640" height="480" loading="lazy">
-              </div>
-              <div class="project-body">
-                <span class="category-badge badge-creator">Content</span>
-                <h3>Creator Campaign Kit</h3>
-                <p>Framework konten mingguan untuk menaikkan konsistensi dan engagement brand.</p>
-                <a href="#contact">Lihat Project</a>
-              </div>
-            </article>
-
-            <article class="project-card" data-category="web">
-              <div class="project-img-wrap">
-                <img src="https://picsum.photos/seed/web-two/640/480" alt="Thumbnail project dashboard studio"
-                  width="640" height="480" loading="lazy">
-              </div>
-              <div class="project-body">
-                <span class="category-badge badge-code">Web</span>
-                <h3>Studio Dashboard</h3>
-                <p>Interface dashboard compact untuk memantau order, timeline, dan task kreatif.</p>
-                <a href="#contact">Lihat Project</a>
-              </div>
-            </article>
-
-            <article class="project-card" data-category="design">
-              <div class="project-img-wrap">
-                <img src="https://picsum.photos/seed/design-two/640/480" alt="Thumbnail project editorial design"
-                  width="640" height="480" loading="lazy">
-              </div>
-              <div class="project-body">
-                <span class="category-badge badge-design">Design</span>
-                <h3>Editorial Motion Boards</h3>
-                <p>Template visual untuk kampanye produk yang lebih premium dan terstruktur.</p>
-                <a href="#contact">Lihat Project</a>
-              </div>
-            </article>
-
-            <article class="project-card" data-category="content">
-              <div class="project-img-wrap">
-                <img src="https://picsum.photos/seed/content-two/640/480" alt="Thumbnail project social content system"
-                  width="640" height="480" loading="lazy">
-              </div>
-              <div class="project-body">
-                <span class="category-badge badge-creator">Content</span>
-                <h3>Social Content System</h3>
-                <p>Playbook konten singkat untuk Reels, TikTok, dan carousel edukasi mingguan.</p>
-                <a href="#contact">Lihat Project</a>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <!-- TESTIMONIALS -->
-      <section class="section section-testimonials" id="testimonials">
-        <div class="container stack">
-          <div class="section-heading reveal">
-            <span class="eyebrow">Testimoni</span>
-            <h2>Jangan dengar kata saya,
-              <br>Dengar kata mereka.
-            </h2>
-          </div>
-
-          <div class="marquee-stack reveal">
-            <div class="testimonial-row" data-direction="left">
-              <article class="testimonial-card">
-                <p>Terima kasih banyak untuk zanxa yg selalu memberikan hasil memuaskan dlm proses pembuatan desain yg
-                  diinginkan...sukses terus untuk zanxa dan semoga semakin berkibar.
-                </p>
-                <div class="testimonial-author">
-                  <img src="https://zanxa.site/assets/icon/client-m.arif.mulya.webp" alt="Avatar Muhammad Arif Mulya"
-                    width="44" height="44" loading="lazy">
-                  <div class="testimonial-meta">
-                    <h3>Muhammad Arif Mulya</h3>
-                    <span>Dosen Vokasi IPB</span>
-                  </div>
-                </div>
-              </article>
-
-              <article class="testimonial-card">
-                <p>Saya menggunakan jasa Zanxa untuk mendesain proposal, kartu nama, dan lanyard. Desain yang dihasilkan
-                  sesuai dengan brief yang saya berikan, bahkan melebihi ekspektasi. Harganya juga terjangkau dan sesuai
-                  dengan budget perusahaan.</p>
-                <div class="testimonial-author">
-                  <img src="https://zanxa.site/assets/icon/client-andini nurannisa.webp" alt="Avatar Andini Nurannisa"
-                    width="44" height="44" loading="lazy">
-                  <div class="testimonial-meta">
-                    <h3>Andini Nurannisa</h3>
-                    <span>Marketing at Waru FarmLand</span>
-                  </div>
-                </div>
-              </article>
-
-              <article class="testimonial-card">
-                <p>Kontennya jadi lebih konsisten karena Alzan bikin sistem asset yang jelas dari awal.</p>
-                <div class="testimonial-author">
-                  <img src="https://i.pravatar.cc/100?img=24" alt="Avatar Sinta Maharani" width="44" height="44"
-                    loading="lazy">
-                  <div class="testimonial-meta">
-                    <h3>Sinta Maharani</h3>
-                    <span>Marketing, Aruna House</span>
-                  </div>
-                </div>
-              </article>
-
-              <article class="testimonial-card">
-                <p>Proses kerjanya sangat terstruktur, mulai dari wireframe sampai final delivery selalu on-point.</p>
-                <div class="testimonial-author">
-                  <img src="https://i.pravatar.cc/100?img=53" alt="Avatar Andrean Syah" width="44" height="44"
-                    loading="lazy">
-                  <div class="testimonial-meta">
-                    <h3>Andrean Syah</h3>
-                    <span>CEO, TechFlow Indonesia</span>
-                  </div>
-                </div>
-              </article>
-
-              <article class="testimonial-card">
-                <p>Sangat responsif dan memberikan solusi kreatif untuk masalah User Experience kompleks kami.</p>
-                <div class="testimonial-author">
-                  <img src="https://i.pravatar.cc/100?img=47" alt="Avatar Maya Putri" width="44" height="44"
-                    loading="lazy">
-                  <div class="testimonial-meta">
-                    <h3>Maya Putri</h3>
-                    <span>Product Manager, Glint App</span>
-                  </div>
-                </div>
-              </article>
-            </div>
-
-            <div class="testimonial-row" data-direction="right">
-              <article class="testimonial-card">
-                <p>Website yang dibikin compact tapi tetap terasa premium. Leads yang masuk juga jadi lebih serius.</p>
-                <div class="testimonial-author">
-                  <img src="https://i.pravatar.cc/100?img=45" alt="Avatar Kevin Pratama" width="44" height="44"
-                    loading="lazy">
-                  <div class="testimonial-meta">
-                    <h3>Kevin Pratama</h3>
-                    <span>Owner, Sevra Auto</span>
-                  </div>
-                </div>
-              </article>
-
-              <article class="testimonial-card">
-                <p>Alzan ngerti banget cara bikin visual yang terasa profesional tanpa kehilangan sisi personal brand.
-                </p>
-                <div class="testimonial-author">
-                  <img src="https://i.pravatar.cc/100?img=16" alt="Avatar Rere Oktavia" width="44" height="44"
-                    loading="lazy">
-                  <div class="testimonial-meta">
-                    <h3>Rere Oktavia</h3>
-                    <span>Personal Brand Coach</span>
-                  </div>
-                </div>
-              </article>
-
-              <article class="testimonial-card">
-                <p>Eksekusinya cepat, detail spacing terjaga, dan semua komponen terasa jauh lebih clean dari draft
-                  awal.</p>
-                <div class="testimonial-author">
-                  <img src="https://i.pravatar.cc/100?img=28" alt="Avatar Dimas Santoso" width="44" height="44"
-                    loading="lazy">
-                  <div class="testimonial-meta">
-                    <h3>Dimas Santoso</h3>
-                    <span>Co-Founder, Pixel Forge</span>
-                  </div>
-                </div>
-              </article>
-
-              <article class="testimonial-card">
-                <p>Bukan cuma jago visual, tapi juga paham aspek psikologi warna yang bikin audiens betah scrolling.</p>
-                <div class="testimonial-author">
-                  <img src="https://i.pravatar.cc/100?img=61" alt="Avatar Linda Sari" width="44" height="44"
-                    loading="lazy">
-                  <div class="testimonial-meta">
-                    <h3>Linda Sari</h3>
-                    <span>Director, Bloom Studio</span>
-                  </div>
-                </div>
-              </article>
-
-              <article class="testimonial-card">
-                <p>Landing page buatan Alzan benar-benar mendongkrak konversi iklan kami hingga dua kali lipat!</p>
-                <div class="testimonial-author">
-                  <img src="https://i.pravatar.cc/100?img=33" alt="Avatar Bagas Pamungkas" width="44" height="44"
-                    loading="lazy">
-                  <div class="testimonial-meta">
-                    <h3>Bagas Pamungkas</h3>
-                    <span>Growth Marketer, Fastly</span>
-                  </div>
-                </div>
-              </article>
-            </div>
-          </div>
-
-          <!-- CTA Section bawah testimoni -->
-          <div class="cta-project reveal">
-            <div class="cta-project-inner">
-              <span class="eyebrow">Siap berkolaborasi?</span>
-              <h2>Ayo mulai project bersama</h2>
-              <p>Konsultasikan kebutuhan project kamu, saya siap bantu wujudkan dengan desain yang tajam dan eksekusi
-                yang cepat.</p>
-              <a class="button button-accent" href="#contact">Mulai Sekarang</a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- CONTACT -->
-      <section class="section section-contact" id="contact">
-        <div class="container contact-grid">
-          <div class="contact-copy reveal">
-            <span class="eyebrow">Kontak</span>
-            <h2>Mari bahas project yang butuh tampilan lebih tajam dan lebih siap dipresentasikan.</h2>
-            <p>Saya terbuka untuk freelance project, kolaborasi visual, dan kebutuhan landing page yang cepat tayang.
-            </p>
-
-            <div class="social-list">
-              <a href="https://wa.me/6281234567890" target="_blank" rel="noreferrer">
-                <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
-                <span>WhatsApp</span>
-              </a>
-              <a href="https://www.linkedin.com" target="_blank" rel="noreferrer">
-                <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
-                <span>LinkedIn</span>
-              </a>
-              <a href="https://www.instagram.com" target="_blank" rel="noreferrer">
-                <i class="fa-brands fa-instagram" aria-hidden="true"></i>
-                <span>Instagram</span>
-              </a>
-              <a href="https://www.tiktok.com" target="_blank" rel="noreferrer">
-                <i class="fa-brands fa-tiktok" aria-hidden="true"></i>
-                <span>TikTok</span>
-              </a>
-            </div>
-          </div>
-
-          <form class="contact-form reveal" id="contact-form" novalidate data-email-target="hello@alzanadytia.com">
-            <label>
-              <span>Nama</span>
-              <input type="text" name="name" placeholder="Nama lengkap" required>
-            </label>
-            <label>
-              <span>Email</span>
-              <input type="email" name="email" placeholder="email@domain.com" required>
-            </label>
-            <label>
-              <span>Pesan</span>
-              <textarea name="message" rows="5" placeholder="Ceritakan kebutuhan project kamu..." required></textarea>
-            </label>
-            <button class="button button-accent" type="submit">Kirim Pesan</button>
-            <p class="form-feedback" id="form-feedback" role="status" aria-live="polite"></p>
-          </form>
-        </div>
-      </section>
-
-      <!-- FAQ -->
-      <section class="section section-faq" id="faq">
-        <div class="container faq-grid">
-          <span class="eyebrow">FAQ</span>
-          <h2>Pertanyaan yang paling sering muncul sebelum project dimulai.</h2>
-          <aside class="faq-aside reveal">
-            <div class="faq-photo-card">
-              <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80"
-                alt="Foto Alzan Adytia untuk section FAQ" width="480" height="720" loading="lazy">
-            </div>
-          </aside>
-
-          <div class="accordion-group reveal" data-accordion-group>
-            <article class="accordion-item is-open">
-              <button class="accordion-trigger" type="button" aria-expanded="true">
-                <span class="accordion-label">Berapa lama pengerjaan 1 project web?</span>
-                <svg class="star-icon accordion-icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <use href="#icon-star-pointed"></use>
-                </svg>
-              </button>
-              <div class="accordion-panel">
-                <p>Rata-rata 1 sampai 3 minggu, tergantung jumlah halaman, revisi, dan kesiapan materi dari pihak klien.
-                </p>
-              </div>
-            </article>
-
-            <article class="accordion-item">
-              <button class="accordion-trigger" type="button" aria-expanded="false">
-                <span class="accordion-label">Apakah kamu menerima project freelance?</span>
-                <svg class="star-icon accordion-icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <use href="#icon-star-pointed"></use>
-                </svg>
-              </button>
-              <div class="accordion-panel">
-                <p>Ya, saya menerima freelance project untuk landing page, desain visual pendukung, dan sistem konten
-                  ringan.</p>
-              </div>
-            </article>
-
-            <article class="accordion-item">
-              <button class="accordion-trigger" type="button" aria-expanded="false">
-                <span class="accordion-label">Teknologi apa yang kamu gunakan?</span>
-                <svg class="star-icon accordion-icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <use href="#icon-star-pointed"></use>
-                </svg>
-              </button>
-              <div class="accordion-panel">
-                <p>Saya menyesuaikan stack dengan kebutuhan, tapi banyak menggunakan HTML, CSS, JavaScript, dan tooling
-                  desain untuk eksekusi cepat.</p>
-              </div>
-            </article>
-
-            <article class="accordion-item">
-              <button class="accordion-trigger" type="button" aria-expanded="false">
-                <span class="accordion-label">Bagaimana proses pembayarannya?</span>
-                <svg class="star-icon accordion-icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <use href="#icon-star-pointed"></use>
-                </svg>
-              </button>
-              <div class="accordion-panel">
-                <p>Umumnya DP di awal, pelunasan setelah final approval. Skema bisa disesuaikan berdasarkan ruang
-                  lingkup kerja.</p>
-              </div>
-            </article>
-
-            <article class="accordion-item">
-              <button class="accordion-trigger" type="button" aria-expanded="false">
-                <span class="accordion-label">Apakah tersedia revisi setelah selesai?</span>
-                <svg class="star-icon accordion-icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <use href="#icon-star-pointed"></use>
-                </svg>
-              </button>
-              <div class="accordion-panel">
-                <p>Ada. Revisi minor biasanya termasuk dalam paket, sementara perubahan scope besar akan dibicarakan
-                  terpisah.</p>
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-    </main>
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#about">
+      <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2">
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+      </svg>About
+    </a>
+    <a href="#projects">
+      <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2">
+        <rect x="2" y="3" width="20" height="14" rx="2" />
+        <path d="M8 21h8M12 17v4" />
+      </svg>Projects
+    </a>
+    <a href="#experience">
+      <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2">
+        <rect x="2" y="7" width="20" height="14" rx="2" />
+        <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+      </svg>Experience
+    </a>
+    <a href="#contact">
+      <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+        <polyline points="22,6 12,13 2,6" />
+      </svg>Contact
+    </a>
   </div>
 
-  <script src="js/animations.js" defer></script>
-  <script src="js/interactions.js" defer></script>
-  <script src="js/form.js" defer></script>
+  <!-- ===================== HERO ===================== -->
+  <section class="hero" id="home">
+    <!-- BG Canvas -->
+    <div class="section-bg-canvas"><canvas id="heroBg"></canvas></div>
+
+    <div class="hero-left">
+      <div class="hero-greeting">
+        <div class="dot"></div>Available for new projects
+      </div>
+
+      <!-- Mobile only: avatar mini + h1 side by side -->
+      <div class="hero-mobile-top">
+        <h1 class="hero-name">Hi, I'm <em>Alzan</em><br>Web Developer<br>& Designer.</h1>
+        <div class="avatar-card avatar-card--mobile">
+          <div class="avatar-ring"></div>
+          <div class="avatar-inner">
+            <img
+              src="https://ui-avatars.com/api/?name=Alzan+Adytia&size=200&background=e0d8d0&color=8b5e3c&bold=true&font-size=0.35"
+              alt="Alzan Adytia Juniar">
+          </div>
+          <div class="avatar-badge">✨</div>
+        </div>
+      </div>
+
+      <!-- Desktop only: standalone h1 -->
+      <h1 class="hero-name hero-name--desktop">Hi, I'm <em>Alzan</em><br>Web Developer<br>& Designer.</h1>
+      <p class="hero-bio">
+        Seorang web developer yang suka membangun pengalaman digital yang terasa
+        <strong>hangat, personal, dan menyenangkan</strong>. Dari UI yang cantik
+        sampai backend yang solid — gw seneng ngulik keduanya.
+      </p>
+      <div class="hero-pills">
+        <div class="pill">
+          <imgc src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React">
+            1 Year Experience
+        </div>
+        <div class="pill">
+          <imgc src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node">
+            20 Projects
+        </div>
+        <div class="pill">
+          <imgc src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" alt="UI/UX">
+            23 Clients +
+        </div>
+      </div>
+      <div class="hero-btns">
+        <a href="#projects" class="btn-neu btn-primary">🚀 View My Work</a>
+        <a href="#contact" class="btn-neu btn-secondary">💬 Get In Touch</a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="avatar-card">
+        <div class="avatar-ring"></div>
+        <div class="avatar-inner">
+          <!-- Replace src with your photo URL -->
+          <img
+            src="https://ui-avatars.com/api/?name=Alzan+Adytia&size=200&background=e0d8d0&color=8b5e3c&bold=true&font-size=0.35"
+            alt="Alzan Adytia Juniar">
+        </div>
+        <div class="avatar-badge">✨</div>
+      </div>
+
+      <div class="stat-cards">
+        <div class="stat-card">
+          <div class="stat-num" data-target="1">0</div>
+          <div class="stat-lbl">Years Exp</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" data-target="20">0</div>
+          <div class="stat-lbl">Projects</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num" data-target="10">0</div>
+          <div class="stat-lbl">Clients</div>
+        </div>
+      </div>
+
+      <div class="social-strip">
+        <a href="https://github.com/AlzanAditya" class="social-btn" title="GitHub">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub">
+        </a>
+        <a href="https://linkedin.com" class="social-btn" title="LinkedIn">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn">
+        </a>
+        <a href="https://instagram.com/alzanaditya" class="social-btn" title="Instagram" style="font-size:1.2rem">📸</a>
+        <a href="https://twitter.com" class="social-btn" title="Twitter/X"
+          style="font-size:1rem;font-weight:800;color:var(--text-muted);text-decoration:none">𝕏</a>
+        <a href="mailto:alzanadytia@gmail.com" class="social-btn" title="Email" style="font-size:1.1rem">✉️</a>
+      </div>
+    </div>
+
+    <!-- Scroll indicator — centered via absolute + z-index -->
+    <div class="scroll-ind">
+      <div class="scroll-mouse"></div>
+      Scroll Down
+    </div>
+  </section>
+
+  <!-- ===================== ABOUT ===================== -->
+  <section class="section" id="about">
+    <div class="section-bg-canvas"><canvas id="aboutBg"></canvas></div>
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-badge reveal">👤 About Me</div>
+        <h2 class="section-title reveal">Kenalan Dulu,<em>Yuk.</em></h2>
+        <p class="section-sub reveal">Ini sedikit cerita tentang gw dan perjalanan gw di dunia web development.</p>
+      </div>
+
+      <div class="about-grid">
+        <!-- My Story — Accordion on mobile -->
+        <div class="neu-card reveal accordion-item">
+          <button class="accordion-header" aria-expanded="true">
+            🖊️ My Story <span class="acc-arrow">▼</span>
+          </button>
+          <div class="accordion-body">
+            <div class="card-title" style="display:none">🖊️ My Story</div>
+            <p class="about-story-text">
+              Gw adalah <strong>Alzan Adytia Juniar</strong>, web developer berbasis di Indonesia yang mulai jatuh cinta
+              sama coding sejak semester awal kuliah.
+            </p>
+            <p class="about-story-text" style="margin-top:.7rem">
+              Gw percaya bahwa website yang bagus itu bukan cuma soal tampilan — tapi soal <strong>bagaimana rasanya
+                digunakan</strong>.
+            </p>
+            <p class="about-story-text" style="margin-top:.7rem">
+              Kalau lagi nggak coding, gw biasanya lagi dengerin musik, main game indie, atau nyobain makanan baru 🍜.
+            </p>
+            <div class="fun-facts">
+              <div class="fun-fact">📍 <span>Based in <strong>Indonesia</strong></span></div>
+              <div class="fun-fact">🎓 <span>Informatics Engineering graduate</span></div>
+              <div class="fun-fact">🌱 <span>Currently learning <strong>Next.js & TypeScript</strong></span></div>
+              <div class="fun-fact">☕ <span>Powered by <strong>coffee & lo-fi</strong></span></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:1.2rem">
+          <!-- Skill Levels — Accordion on mobile -->
+          <div class="neu-card reveal reveal-delay-1 accordion-item">
+            <button class="accordion-header">
+              📊 Skill Levels <span class="acc-arrow">▼</span>
+            </button>
+            <div class="accordion-body collapsed">
+              <div class="skills-wrapper" style="margin-top:.4rem">
+                <div class="skill-row">
+                  <div class="skill-header"><span>HTML & CSS</span><span class="skill-pct">95%</span></div>
+                  <div class="skill-bar-track">
+                    <div class="skill-bar-fill" data-pct="95"></div>
+                  </div>
+                </div>
+                <div class="skill-row">
+                  <div class="skill-header"><span>JavaScript</span><span class="skill-pct">88%</span></div>
+                  <div class="skill-bar-track">
+                    <div class="skill-bar-fill" data-pct="88"></div>
+                  </div>
+                </div>
+                <div class="skill-row">
+                  <div class="skill-header"><span>React.js</span><span class="skill-pct">85%</span></div>
+                  <div class="skill-bar-track">
+                    <div class="skill-bar-fill" data-pct="85"></div>
+                  </div>
+                </div>
+                <div class="skill-row">
+                  <div class="skill-header"><span>Node.js / Express</span><span class="skill-pct">80%</span></div>
+                  <div class="skill-bar-track">
+                    <div class="skill-bar-fill" data-pct="80"></div>
+                  </div>
+                </div>
+                <div class="skill-row">
+                  <div class="skill-header"><span>Database (SQL/NoSQL)</span><span class="skill-pct">75%</span></div>
+                  <div class="skill-bar-track">
+                    <div class="skill-bar-fill" data-pct="75"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tech Stack — Accordion on mobile -->
+          <div class="neu-card reveal reveal-delay-2 accordion-item">
+            <button class="accordion-header">
+              🛠️ Tech Stack <span class="acc-arrow">▼</span>
+            </button>
+            <div class="accordion-body collapsed">
+              <div class="tech-grid" style="margin-top:.4rem">
+                <div class="tech-item"><img
+                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React">
+                  <div class="tech-name">React</div>
+                </div>
+                <div class="tech-item"><img
+                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node.js">
+                  <div class="tech-name">Node.js</div>
+                </div>
+                <div class="tech-item"><img
+                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" alt="Next.js">
+                  <div class="tech-name">Next.js</div>
+                </div>
+                <div class="tech-item"><img
+                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg"
+                    alt="TypeScript">
+                  <div class="tech-name">TypeScript</div>
+                </div>
+                <div class="tech-item"><img
+                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" alt="MongoDB">
+                  <div class="tech-name">MongoDB</div>
+                </div>
+                <div class="tech-item"><img
+                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg"
+                    alt="PostgreSQL">
+                  <div class="tech-name">PostgreSQL</div>
+                </div>
+                <div class="tech-item"><img
+                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg" alt="Redis">
+                  <div class="tech-name">Redis</div>
+                </div>
+                <div class="tech-item"><img
+                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker">
+                  <div class="tech-name">Docker</div>
+                </div>
+                <div class="tech-item"><img
+                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg"
+                    alt="Tailwind">
+                  <div class="tech-name">Tailwind</div>
+                </div>
+                <div class="tech-item"><img
+                    src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub">
+                  <div class="tech-name">GitHub</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PROJECTS ===================== -->
+  <section class="section" id="projects">
+    <div class="section-bg-canvas"><canvas id="projectsBg"></canvas></div>
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-badge reveal">🚀 Portfolio</div>
+        <h2 class="section-title reveal">Project yang Pernah<br>Gw <em>Bangun.</em></h2>
+      </div>
+
+      <div class="projects-tabs reveal">
+        <button class="tab-btn active" data-filter="all">All</button>
+        <button class="tab-btn" data-filter="frontend">Frontend</button>
+        <button class="tab-btn" data-filter="fullstack">Full Stack</button>
+        <button class="tab-btn" data-filter="backend">Backend</button>
+      </div>
+
+      <div class="projects-grid" id="projectsGrid">
+        <div class="project-card reveal" data-cat="fullstack">
+          <div class="project-thumb thumb-1">
+            <img class="thumb-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg"
+              alt="">
+          </div>
+          <div class="project-body">
+            <div class="project-title">Docflow - Invoice & Surat Jalan Generator</div>
+            <div class="project-desc">Platform belanja online lengkap dengan manajemen produk, keranjang belanja,
+              payment gateway Midtrans, dan dashboard admin real-time.</div>
+            <div class="project-tags">
+              <span class="proj-tag">HTML</span><span class="proj-tag">CSS</span>
+              <span class="proj-tag">JS Vanilla</span>
+            </div>
+            <div class="project-footer">
+              <a href="https://zanxa.site/projects/berkah-maju-elektrik" class="proj-link primary">🔗 Live Demo</a>
+              <!-- <a href="#" class="proj-link">GitHub →</a> -->
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card reveal reveal-delay-1" data-cat="frontend">
+          <div class="project-thumb thumb-2">
+            <img class="thumb-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg"
+              alt="">
+          </div>
+          <div class="project-body">
+            <div class="project-title">DataViz Dashboard</div>
+            <div class="project-desc">Admin dashboard dengan chart interaktif, filter data real-time, dan export laporan
+              ke PDF/Excel. Responsif di semua device.</div>
+            <div class="project-tags">
+              <span class="proj-tag">Next.js</span><span class="proj-tag">Chart.js</span><span
+                class="proj-tag">Tailwind</span>
+            </div>
+            <div class="project-footer">
+              <a href="#" class="proj-link primary">🔗 Live Demo</a>
+              <a href="#" class="proj-link">GitHub →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card reveal reveal-delay-2" data-cat="fullstack">
+          <div class="project-thumb thumb-3">
+            <img class="thumb-icon"
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/socketio/socketio-original.svg" alt="">
+          </div>
+          <div class="project-body">
+            <div class="project-title">Kantask — Task Manager</div>
+            <div class="project-desc">Aplikasi manajemen tugas tim dengan drag-and-drop kanban board, notifikasi
+              real-time via Socket.io, dan manajemen deadline.</div>
+            <div class="project-tags">
+              <span class="proj-tag">React</span><span class="proj-tag">Socket.io</span><span
+                class="proj-tag">Express</span>
+            </div>
+            <div class="project-footer">
+              <a href="#" class="proj-link primary">🔗 Live Demo</a>
+              <a href="#" class="proj-link">GitHub →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card reveal" data-cat="backend">
+          <div class="project-thumb thumb-4">
+            <img class="thumb-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg"
+              alt="">
+          </div>
+          <div class="project-body">
+            <div class="project-title">NusaAPI</div>
+            <div class="project-desc">RESTful API service dengan JWT auth, rate limiting, Swagger docs, dan auto-deploy
+              ke Railway. Siap dipakai production.</div>
+            <div class="project-tags">
+              <span class="proj-tag">Node.js</span><span class="proj-tag">PostgreSQL</span><span
+                class="proj-tag">Docker</span>
+            </div>
+            <div class="project-footer">
+              <a href="#" class="proj-link primary">📄 Docs</a>
+              <a href="#" class="proj-link">GitHub →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card reveal reveal-delay-1" data-cat="frontend">
+          <div class="project-thumb thumb-5">
+            <img class="thumb-icon"
+              src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="">
+          </div>
+          <div class="project-body">
+            <div class="project-title">CuacaKita</div>
+            <div class="project-desc">Aplikasi cuaca modern dengan animasi berdasarkan kondisi cuaca, prakiraan 7 hari,
+              dan tampilan yang clean dan intuitif.</div>
+            <div class="project-tags">
+              <span class="proj-tag">Vanilla JS</span><span class="proj-tag">OpenWeather API</span><span
+                class="proj-tag">CSS</span>
+            </div>
+            <div class="project-footer">
+              <a href="#" class="proj-link primary">🔗 Live Demo</a>
+              <a href="#" class="proj-link">GitHub →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="project-card reveal reveal-delay-2" data-cat="fullstack">
+          <div class="project-thumb thumb-6">
+            <img class="thumb-icon" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg"
+              alt="">
+          </div>
+          <div class="project-body">
+            <div class="project-title">ChatRoom</div>
+            <div class="project-desc">Aplikasi chat real-time dengan rooms, private messaging, status online, dan
+              penyimpanan history pesan di cloud.</div>
+            <div class="project-tags">
+              <span class="proj-tag">React</span><span class="proj-tag">Firebase</span><span class="proj-tag">Realtime
+                DB</span>
+            </div>
+            <div class="project-footer">
+              <a href="#" class="proj-link primary">🔗 Live Demo</a>
+              <a href="#" class="proj-link">GitHub →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== EXPERIENCE ===================== -->
+  <section class="section" id="experience">
+    <div class="section-bg-canvas"><canvas id="careerBg"></canvas></div>
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-badge reveal">💼 Career</div>
+        <h2 class="section-title reveal">Pengalaman<br><em>Kerja.</em></h2>
+      </div>
+      <div class="exp-timeline">
+        <div class="exp-item reveal">
+          <div class="exp-dot">🏢</div>
+          <div class="exp-card accordion-item">
+            <button class="accordion-header">
+              Frontend Developer <span class="acc-arrow">▼</span>
+            </button>
+            <div class="accordion-body">
+              <div class="exp-meta" style="margin-top:.5rem">
+                <div class="exp-role" style="display:none">Frontend Developer</div>
+                <div class="exp-period">2023 — Sekarang</div>
+              </div>
+              <div class="exp-company">🚀 Tech Startup · Jakarta</div>
+              <div class="exp-desc">Membangun dan maintain aplikasi web berbasis React.js. Berkontribusi pada
+                peningkatan Core Web Vitals hingga skor 95+.</div>
+              <div class="exp-achievements">
+                <span class="achieve-tag">⚡ Performance boost 40%</span>
+                <span class="achieve-tag">👥 8 member team</span>
+                <span class="achieve-tag">📱 Mobile-first</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="exp-item reveal reveal-delay-1">
+          <div class="exp-dot">🎨</div>
+          <div class="exp-card accordion-item">
+            <button class="accordion-header">
+              Web Developer <span class="acc-arrow">▼</span>
+            </button>
+            <div class="accordion-body">
+              <div class="exp-meta" style="margin-top:.5rem">
+                <div class="exp-period">2022 — 2023</div>
+              </div>
+              <div class="exp-company">💡 Digital Agency · Bandung</div>
+              <div class="exp-desc">Mengerjakan berbagai project web untuk klien dari industri retail, F&B, dan jasa.
+                Handle end-to-end dari wireframe hingga backend integration.</div>
+              <div class="exp-achievements">
+                <span class="achieve-tag">🌐 12 client projects</span>
+                <span class="achieve-tag">🔗 API integration</span>
+                <span class="achieve-tag">📊 CMS development</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="exp-item reveal reveal-delay-2">
+          <div class="exp-dot">💻</div>
+          <div class="exp-card accordion-item">
+            <button class="accordion-header">
+              Freelance Web Developer <span class="acc-arrow">▼</span>
+            </button>
+            <div class="accordion-body">
+              <div class="exp-meta" style="margin-top:.5rem">
+                <div class="exp-period">2021 — 2022</div>
+              </div>
+              <div class="exp-company">🏠 Self-employed · Remote</div>
+              <div class="exp-desc">Membangun website untuk UMKM lokal dan personal branding. Dari company profile
+                sederhana sampai toko online.</div>
+              <div class="exp-achievements">
+                <span class="achieve-tag">🏪 UMKM clients</span>
+                <span class="achieve-tag">⭐ 5.0 rating</span>
+                <span class="achieve-tag">🔄 100% repeat clients</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="exp-item reveal">
+          <div class="exp-dot">🎓</div>
+          <div class="exp-card accordion-item">
+            <button class="accordion-header">
+              S1 Teknik Informatika <span class="acc-arrow">▼</span>
+            </button>
+            <div class="accordion-body">
+              <div class="exp-meta" style="margin-top:.5rem">
+                <div class="exp-period">2018 — 2022</div>
+              </div>
+              <div class="exp-company">🏛️ Universitas — Indonesia</div>
+              <div class="exp-desc">Mendalami ilmu komputer, algoritma, dan pengembangan perangkat lunak. Aktif di HMTI
+                sebagai divisi teknologi.</div>
+              <div class="exp-achievements">
+                <span class="achieve-tag">🏆 Cum Laude</span>
+                <span class="achieve-tag">📝 Skripsi web-based</span>
+                <span class="achieve-tag">🤝 HMTI aktif</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== TESTIMONIALS ===================== -->
+  <section class="section" id="testimonials">
+    <div class="section-bg-canvas"><canvas id="testiBg"></canvas></div>
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-badge reveal">💬 Testimonials</div>
+        <h2 class="section-title reveal">Kata Mereka<br>Tentang <em>Gw.</em></h2>
+      </div>
+
+      <!-- Infinite horizontal scroll -->
+      <div class="testi-track-wrapper reveal">
+        <div class="testi-track" id="testiTrack">
+          <!-- Original set -->
+          <div class="testi-card">
+            <div class="testi-quote">"</div>
+            <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+            <p class="testi-text">Alzan orangnya sangat profesional dan hasil kerjanya melebihi ekspektasi. Website yang
+              dia buat clean banget dan loadingnya cepet!</p>
+            <div class="testi-author">
+              <div class="testi-avatar">👩‍💼</div>
+              <div>
+                <div class="testi-name">Rina Cahyani</div>
+                <div class="testi-role">Owner, Toko Batik Nusantara</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-quote">"</div>
+            <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+            <p class="testi-text">Kerjasama yang sangat menyenangkan. Alzan paham betul apa yang klien mau,
+              komunikasinya lancar, dan selalu tepat waktu.</p>
+            <div class="testi-author">
+              <div class="testi-avatar">👨‍💻</div>
+              <div>
+                <div class="testi-name">Budi Santoso</div>
+                <div class="testi-role">CTO, StartupKita</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-quote">"</div>
+            <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+            <p class="testi-text">API yang dia bangun bener-bener solid, dokumentasinya jelas, dan response-nya cepet.
+              Langsung hire lagi buat project berikutnya!</p>
+            <div class="testi-author">
+              <div class="testi-avatar">👨‍🚀</div>
+              <div>
+                <div class="testi-name">Dimas Prayoga</div>
+                <div class="testi-role">Product Manager, TechHub ID</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-quote">"</div>
+            <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+            <p class="testi-text">Dashboard yang dibuat Alzan bikin tim kami jauh lebih produktif. Desainnya intuitif
+              banget, user langsung paham tanpa training!</p>
+            <div class="testi-author">
+              <div class="testi-avatar">👩‍🔬</div>
+              <div>
+                <div class="testi-name">Sari Dewi</div>
+                <div class="testi-role">Head of Ops, GrowthCo</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-quote">"</div>
+            <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+            <p class="testi-text">Website toko online gw naik omzet 3x setelah dibuatin sama Alzan. Tampilan
+              profesional, dan mudah dipakai sama pelanggan.</p>
+            <div class="testi-author">
+              <div class="testi-avatar">🧑‍🍳</div>
+              <div>
+                <div class="testi-name">Hendra Wijaya</div>
+                <div class="testi-role">Owner, Dapur Sehat</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-quote">"</div>
+            <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+            <p class="testi-text">Revisi cepet banget, responsive di semua device, dan hasilnya beneran memuaskan.
+              Pokoknya highly recommended deh!</p>
+            <div class="testi-author">
+              <div class="testi-avatar">👩‍🎨</div>
+              <div>
+                <div class="testi-name">Maya Puspita</div>
+                <div class="testi-role">Creative Director, Indiebrand</div>
+              </div>
+            </div>
+          </div>
+          <!-- Duplicated for infinite loop -->
+          <div class="testi-card">
+            <div class="testi-quote">"</div>
+            <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+            <p class="testi-text">Alzan orangnya sangat profesional dan hasil kerjanya melebihi ekspektasi. Website yang
+              dia buat clean banget dan loadingnya cepet!</p>
+            <div class="testi-author">
+              <div class="testi-avatar">👩‍💼</div>
+              <div>
+                <div class="testi-name">Rina Cahyani</div>
+                <div class="testi-role">Owner, Toko Batik Nusantara</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-quote">"</div>
+            <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+            <p class="testi-text">Kerjasama yang sangat menyenangkan. Alzan paham betul apa yang klien mau,
+              komunikasinya lancar, dan selalu tepat waktu.</p>
+            <div class="testi-author">
+              <div class="testi-avatar">👨‍💻</div>
+              <div>
+                <div class="testi-name">Budi Santoso</div>
+                <div class="testi-role">CTO, StartupKita</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-quote">"</div>
+            <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+            <p class="testi-text">API yang dia bangun bener-bener solid, dokumentasinya jelas, dan response-nya cepet.
+              Langsung hire lagi buat project berikutnya!</p>
+            <div class="testi-author">
+              <div class="testi-avatar">👨‍🚀</div>
+              <div>
+                <div class="testi-name">Dimas Prayoga</div>
+                <div class="testi-role">Product Manager, TechHub ID</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-quote">"</div>
+            <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+            <p class="testi-text">Dashboard yang dibuat Alzan bikin tim kami jauh lebih produktif. Desainnya intuitif
+              banget, user langsung paham tanpa training!</p>
+            <div class="testi-author">
+              <div class="testi-avatar">👩‍🔬</div>
+              <div>
+                <div class="testi-name">Sari Dewi</div>
+                <div class="testi-role">Head of Ops, GrowthCo</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-quote">"</div>
+            <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+            <p class="testi-text">Website toko online gw naik omzet 3x setelah dibuatin sama Alzan. Tampilan
+              profesional, dan mudah dipakai sama pelanggan.</p>
+            <div class="testi-author">
+              <div class="testi-avatar">🧑‍🍳</div>
+              <div>
+                <div class="testi-name">Hendra Wijaya</div>
+                <div class="testi-role">Owner, Dapur Sehat</div>
+              </div>
+            </div>
+          </div>
+          <div class="testi-card">
+            <div class="testi-quote">"</div>
+            <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+            <p class="testi-text">Revisi cepet banget, responsive di semua device, dan hasilnya beneran memuaskan.
+              Pokoknya highly recommended deh!</p>
+            <div class="testi-author">
+              <div class="testi-avatar">👩‍🎨</div>
+              <div>
+                <div class="testi-name">Maya Puspita</div>
+                <div class="testi-role">Creative Director, Indiebrand</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACT ===================== -->
+  <section class="section" id="contact">
+    <div class="section-bg-canvas"><canvas id="contactBg"></canvas></div>
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-badge reveal">✉️ Contact</div>
+        <h2 class="section-title reveal">Let's Work<br><em>Together.</em></h2>
+        <p class="section-sub reveal">Punya ide project? Atau cuma mau ngobrol? Gw selalu terbuka! ☕</p>
+      </div>
+      <div class="contact-wrapper">
+        <div class="contact-info">
+          <div class="contact-item reveal" onclick="copyToClip('alzan.adytia@example.com','Email disalin! 📧')">
+            <div class="contact-icon">
+              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Email"
+                style="width:20px">
+            </div>
+            <div>
+              <div class="contact-label">Email (klik untuk copy)</div>
+              <div class="contact-value">alzanadytia@gmail.com</div>
+            </div>
+          </div>
+          <div class="contact-item reveal reveal-delay-1" onclick="copyToClip('+62 812-3456-7890','Nomor disalin! 📱')">
+            <div class="contact-icon">📱</div>
+            <div>
+              <div class="contact-label">WhatsApp (klik untuk copy)</div>
+              <div class="contact-value">+62 85770631367</div>
+            </div>
+          </div>
+          <div class="contact-item reveal reveal-delay-2" onclick="window.open('https://linkedin.com','_blank')">
+            <div class="contact-icon">
+              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg"
+                alt="LinkedIn">
+            </div>
+            <div>
+              <div class="contact-label">LinkedIn</div>
+              <div class="contact-value">linkedin.com/in/alzan</div>
+            </div>
+          </div>
+          <div class="contact-item reveal" onclick="window.open('https://github.com','_blank')">
+            <div class="contact-icon">
+              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub">
+            </div>
+            <div>
+              <div class="contact-label">GitHub</div>
+              <div class="contact-value">github.com/alzan</div>
+            </div>
+          </div>
+          <div class="contact-item reveal reveal-delay-1">
+            <div class="contact-icon">📄</div>
+            <div>
+              <div class="contact-label">Resume / CV</div>
+              <div class="contact-value">Download PDF →</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="contact-form reveal reveal-delay-2">
+          <div class="form-title">📩 Kirim Pesan</div>
+          <form id="contactForm" onsubmit="handleSubmit(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Nama</label>
+                <input type="text" class="form-control" placeholder="Nama kamu" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" placeholder="email@kamu.com" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Subject</label>
+              <input type="text" class="form-control" placeholder="Topik pesan kamu" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Pesan</label>
+              <textarea class="form-control" placeholder="Hei Alzan, gw mau ngobrolin tentang..."></textarea>
+            </div>
+            <button type="submit" class="submit-btn">
+              <span id="btnText">🚀 Kirim Pesan</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-text">© 2025 Alzan Adytia Juniar. All rights reserved.</div>
+    <div class="footer-love">Made with <span>♥</span> & lots of coffee ☕</div>
+  </footer>
+
+  <button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">⬆</button>
+  <div class="toast" id="toast">✅ <span id="toastMsg">Berhasil!</span></div>
+
+  <script src="main.js"></script>
 </body>
 
 </html>
