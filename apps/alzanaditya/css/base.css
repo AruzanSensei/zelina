@@ -93,6 +93,10 @@ textarea {
   padding: clamp(72px, 9vw, 104px) 0;
 }
 
+section.hero-section {
+  padding-top: 0 !important;
+}
+
 .section::before {
   content: "";
   position: absolute;
