@@ -67,13 +67,137 @@ filterButtons.forEach((button) => {
 });
 
 document.querySelectorAll(".testimonial-row").forEach((row) => {
+  // Clone untuk infinite loop
   row.innerHTML += row.innerHTML;
 
-  row.addEventListener("click", () => {
-    if (window.innerWidth >= 1024) return;
-    row.classList.toggle("is-paused");
+  const RESUME_DELAY = 800;
+  const DRAG_THRESHOLD = 5;
+
+  let isActive = false;
+  let isDragging = false;
+  let startX = 0;
+  let currentDelta = 0;
+  let baseOffset = 0;
+  let resumeTimer = null;
+
+  // Baca posisi visual saat ini dari matrix computed style
+  function getCurrentX() {
+    const mat = new DOMMatrixReadOnly(window.getComputedStyle(row).transform);
+    return mat.m41;
+  }
+
+  // Konversi offset px → animation-delay negatif (ms) untuk resume seamless
+  function offsetToDelay(offsetX) {
+    const halfW = row.scrollWidth / 2;
+    const dur = parseFloat(window.getComputedStyle(row).animationDuration) * 1000;
+    const isRight = row.dataset.direction === "right";
+    let progress;
+    if (isRight) {
+      const x = Math.max(-halfW, Math.min(0, offsetX));
+      progress = (x + halfW) / halfW;
+    } else {
+      const x = Math.max(-halfW, Math.min(0, offsetX));
+      progress = Math.abs(x) / halfW;
+    }
+    return -(progress * dur);
+  }
+
+  // Hentikan CSS animation sepenuhnya — setelah ini style.transform bekerja normal
+  function freeze() {
+    clearTimeout(resumeTimer);
+    baseOffset = getCurrentX();
+    row.style.animationName = "none"; // matikan animasi CSS
+    row.style.transform = `translateX(${baseOffset}px)`; // JS ambil alih posisi
+  }
+
+  // Restart animasi CSS dari offset tertentu
+  function resumeFrom(offsetX) {
+    // Set delay dulu (sebelum animationName dikembalikan) agar tidak flicker di frame awal
+    row.style.animationDelay = `${offsetToDelay(offsetX)}ms`;
+    row.style.transform = "";       // hapus inline transform
+    row.style.animationName = "";   // kembalikan animasi CSS
+    row.style.animationPlayState = "running";
+  }
+
+  function scheduleResume() {
+    clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(() => resumeFrom(baseOffset), RESUME_DELAY);
+  }
+
+  // ── Mouse ──────────────────────────────────────────────
+  row.addEventListener("mousedown", (e) => {
+    isActive = true;
+    isDragging = false;
+    startX = e.clientX;
+    currentDelta = 0;
+    freeze();
+    row.style.cursor = "grabbing";
+    e.preventDefault();
+  });
+
+  window.addEventListener("mousemove", (e) => {
+    if (!isActive) return;
+    currentDelta = e.clientX - startX;
+    if (Math.abs(currentDelta) > DRAG_THRESHOLD) isDragging = true;
+    if (isDragging) {
+      // style.transform bisa dipakai langsung karena animationName sudah "none"
+      row.style.transform = `translateX(${baseOffset + currentDelta}px)`;
+    }
+  });
+
+  window.addEventListener("mouseup", () => {
+    if (!isActive) return;
+    isActive = false;
+    row.style.cursor = "";
+
+    if (isDragging) {
+      baseOffset = baseOffset + currentDelta;
+      scheduleResume(); // resume setelah idle 1.5 detik
+    } else {
+      resumeFrom(baseOffset); // klik biasa: langsung resume di posisi sama
+    }
+
+    isDragging = false;
+    currentDelta = 0;
+  });
+
+  // ── Touch ──────────────────────────────────────────────
+  row.addEventListener("touchstart", (e) => {
+    isActive = true;
+    isDragging = false;
+    startX = e.touches[0].clientX;
+    currentDelta = 0;
+    freeze();
+  }, { passive: true });
+
+  row.addEventListener("touchmove", (e) => {
+    if (!isActive) return;
+    currentDelta = e.touches[0].clientX - startX;
+    if (Math.abs(currentDelta) > DRAG_THRESHOLD) isDragging = true;
+    if (isDragging) {
+      row.style.transform = `translateX(${baseOffset + currentDelta}px)`;
+    }
+  }, { passive: true });
+
+  row.addEventListener("touchend", () => {
+    if (!isActive) return;
+    isActive = false;
+
+    if (isDragging) {
+      baseOffset = baseOffset + currentDelta;
+      scheduleResume();
+    } else {
+      resumeFrom(baseOffset); // tap biasa: langsung resume
+    }
+
+    isDragging = false;
+    currentDelta = 0;
   });
 });
+
+
+
+
 
 // Header Hide on Scroll
 let lastScrollY = window.scrollY;

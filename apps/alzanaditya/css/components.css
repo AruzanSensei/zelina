@@ -1,4 +1,4 @@
-﻿/* =====================
+/* =====================
    STATS
 ===================== */
 .stats-grid {
@@ -425,6 +425,9 @@
   animation-iteration-count: infinite;
   padding-right: 14px;
   /* Matches gap to ensure seamless loop */
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .testimonial-row[data-direction="left"] {
@@ -435,7 +438,7 @@
   animation-name: marqueeRight;
 }
 
-.testimonial-row:hover,
+/* is-paused kept for potential future use */
 .testimonial-row.is-paused {
   animation-play-state: paused;
 }

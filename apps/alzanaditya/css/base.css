@@ -287,11 +287,19 @@ p {
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 700ms ease, transform 700ms ease;
+  will-change: opacity, transform;
 }
 
 .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* Fade out ke atas: kebalikan dari fade in dari bawah */
+.reveal.is-leaving {
+  opacity: 0;
+  transform: translateY(-24px);
+  transition: opacity 600ms ease, transform 600ms ease;
 }
 
 .site-shell {

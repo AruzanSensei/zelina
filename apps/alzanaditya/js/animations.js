@@ -67,15 +67,32 @@ if (starfield) {
 if (revealElements.length) {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
+      const el = entry.target;
+      const rect = entry.boundingClientRect;
+
       if (entry.isIntersecting) {
-        entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
+        // Dalam viewport: tampil
+        el.classList.add("is-visible");
+        el.classList.remove("is-leaving");
+      } else if (rect.bottom < 0) {
+        // Keluar ke ATAS viewport (scroll ke bawah): fade out ke atas
+        el.classList.remove("is-visible");
+        el.classList.add("is-leaving");
+      } else if (rect.top > 0) {
+        // Keluar ke BAWAH viewport (scroll ke atas): reset ke state awal
+        // siap fade in dari bawah lagi saat masuk viewport berikutnya
+        el.classList.remove("is-visible");
+        el.classList.remove("is-leaving");
       }
     });
-  }, { threshold: 0.2 });
+  }, {
+    threshold: 0.12
+  });
 
   revealElements.forEach((element) => observer.observe(element));
 }
+
+
 
 // =====================
 // INTRO SEQUENCE LOGIC
