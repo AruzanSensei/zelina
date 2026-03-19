@@ -270,6 +270,7 @@ p {
 .card,
 .info-panel,
 .testimonial {
+  --surface-pad: clamp(1.2rem, 2.4vw, 1.75rem);
   background: rgba(255, 255, 255, 0.74);
   border: 1px solid var(--line);
   border-radius: 1.05rem;
@@ -280,7 +281,13 @@ p {
 .card,
 .info-panel,
 .testimonial {
-  padding: clamp(1.2rem, 2.4vw, 1.75rem);
+  padding: var(--surface-pad);
+}
+
+.hero-panel,
+.card,
+.info-panel {
+  overflow: hidden;
 }
 
 .hero-panel {
@@ -396,6 +403,61 @@ p {
   position: relative;
 }
 
+.hero-img,
+.card-img,
+.profile-photo,
+.article-thumb,
+.contact-photo,
+.map-image {
+  width: calc(100% + (var(--surface-pad) * 2));
+  max-width: none;
+  margin: calc(var(--surface-pad) * -1) calc(var(--surface-pad) * -1) 1.05rem;
+  object-fit: cover;
+}
+
+.hero-img,
+.card-img,
+.article-thumb,
+.contact-photo,
+.map-image {
+  aspect-ratio: 16 / 10;
+}
+
+.hero-img,
+.card-img,
+.article-thumb {
+  border-radius: 1.05rem 1.05rem 0.85rem 0.85rem;
+}
+
+.profile-photo {
+  aspect-ratio: 4 / 5;
+  border-radius: 1.05rem 1.05rem 0.9rem 0.9rem;
+}
+
+.contact-photo,
+.map-image {
+  border-radius: 0.95rem;
+}
+
+.section-stack {
+  display: grid;
+  gap: 1rem;
+}
+
+.media-frame {
+  overflow: hidden;
+  border-radius: 1.05rem;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: var(--shadow-1);
+}
+
+.section-photo img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
 .card::before {
   content: "";
   position: absolute;
@@ -500,8 +562,71 @@ p {
   padding-top: clamp(2.6rem, 4vw, 3.8rem);
 }
 
-.page-hero h1 {
+.page-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.84fr) minmax(0, 1.16fr);
+  gap: 1.2rem;
+  align-items: stretch;
+}
+
+.page-hero-copy {
+  padding: clamp(1.4rem, 3vw, 2rem);
+  background: rgba(255, 255, 255, 0.58);
+  border-radius: 1.1rem;
+  border: 1px solid rgba(22, 38, 58, 0.13);
+  box-shadow: var(--shadow-1);
+}
+
+.page-hero h1,
+.page-hero-copy h1 {
   max-width: 16ch;
+}
+
+.page-hero-media {
+  position: relative;
+  min-height: 320px;
+  border-radius: 1.1rem;
+  overflow: hidden;
+  border: 1px solid rgba(22, 38, 58, 0.13);
+  box-shadow: var(--shadow-1);
+  background: rgba(255, 255, 255, 0.68);
+}
+
+.page-hero-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 24, 37, 0.03), rgba(15, 24, 37, 0.4));
+}
+
+.page-hero-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.page-hero-note {
+  position: absolute;
+  left: 1.2rem;
+  right: 1.2rem;
+  bottom: 1.2rem;
+  z-index: 1;
+  padding: 0.95rem 1rem;
+  border-radius: 0.9rem;
+  background: rgba(15, 24, 37, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--sand-100);
+  backdrop-filter: blur(8px);
+}
+
+.page-hero-note strong {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-300);
 }
 
 .plain-list {
@@ -523,8 +648,21 @@ p {
   font-weight: 800;
 }
 
+.profile-card h2 {
+  margin-bottom: 0.25rem;
+}
+
 .article-card h2 {
   font-size: clamp(1.35rem, 2.4vw, 2rem);
+}
+
+.article-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.article-card .text-link {
+  margin-top: auto;
 }
 
 .article-meta {
@@ -603,17 +741,9 @@ textarea:focus {
   gap: 1rem;
 }
 
-.map-placeholder {
-  min-height: 180px;
-  display: grid;
-  place-items: center;
-  border-radius: 0.75rem;
-  border: 1px dashed rgba(22, 38, 58, 0.3);
-  background:
-    repeating-linear-gradient(-45deg, rgba(22, 38, 58, 0.06), rgba(22, 38, 58, 0.06) 10px, rgba(180, 137, 73, 0.06) 10px, rgba(180, 137, 73, 0.06) 20px),
-    rgba(255, 255, 255, 0.78);
-  color: var(--ink-700);
-  font-weight: 700;
+.map-card p:last-child,
+.contact-card-copy p:last-child {
+  margin-bottom: 0;
 }
 
 .site-footer {
@@ -666,6 +796,7 @@ textarea:focus {
 
 @media (max-width: 1024px) {
   .hero-grid,
+  .page-hero-grid,
   .split-layout,
   .contact-layout,
   .three-up,
@@ -681,6 +812,10 @@ textarea:focus {
   .cta-band-wrap {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .page-hero-media {
+    min-height: 260px;
   }
 }
 
@@ -719,6 +854,13 @@ textarea:focus {
 
   .brand-text {
     max-width: 62vw;
+  }
+
+  .page-hero-note {
+    left: 0.85rem;
+    right: 0.85rem;
+    bottom: 0.85rem;
+    padding: 0.8rem 0.85rem;
   }
 }
 
