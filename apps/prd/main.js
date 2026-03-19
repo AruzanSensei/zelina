@@ -27,7 +27,7 @@ const SCHEMA = [
         fields: [
           { id: 'meta_versi', label: 'Versi PRD', type: 'text', placeholder: 'v1.0', hint: '' },
           { id: 'meta_tanggal', label: 'Tanggal Dibuat', type: 'text', placeholder: 'YYYY-MM-DD' },
-          { id: 'meta_status', label: 'Status', type: 'select', options: ['Draft','In Review','Approved','Deprecated'] },
+          { id: 'meta_status', label: 'Status', type: 'select', options: ['Draft', 'In Review', 'Approved', 'Deprecated'] },
           { id: 'meta_author', label: 'Author', type: 'text', placeholder: 'Nama pemilik proyek' },
           { id: 'meta_stack', label: 'Tech Stack Ringkas', type: 'text', placeholder: 'HTML5, CSS3, Vanilla JS — no framework' },
         ]
@@ -36,7 +36,7 @@ const SCHEMA = [
   },
   {
     id: 'b1',
-    num: '### BAGIAN 1',
+    num: '1',
     title: 'Konteks & Tujuan',
     subsections: [
       {
@@ -87,7 +87,7 @@ const SCHEMA = [
   },
   {
     id: 'b2',
-    num: '### BAGIAN 2',
+    num: '2',
     title: 'Pengguna',
     subsections: [
       {
@@ -107,8 +107,8 @@ const SCHEMA = [
           { id: 'p1_peran', label: 'Peran / Jabatan', type: 'text', placeholder: 'Pemilik usaha kontraktor listrik skala menengah' },
           { id: 'p1_tujuan', label: 'Tujuan Utama di Website', type: 'textarea', placeholder: 'Menemukan supplier dengan spesifikasi teknis lengkap...' },
           { id: 'p1_pain', label: 'Pain Point', type: 'textarea', placeholder: 'Supplier online sering tidak mencantumkan spesifikasi...' },
-          { id: 'p1_device', label: 'Perangkat', type: 'select', options: ['Mobile (mayoritas)','Desktop (mayoritas)','Mobile & Desktop (50/50)','Tablet'] },
-          { id: 'p1_digital', label: 'Tingkat Literasi Digital', type: 'select', options: ['Rendah','Menengah','Tinggi'] },
+          { id: 'p1_device', label: 'Perangkat', type: 'select', options: ['Mobile (mayoritas)', 'Desktop (mayoritas)', 'Mobile & Desktop (50/50)', 'Tablet'] },
+          { id: 'p1_digital', label: 'Tingkat Literasi Digital', type: 'select', options: ['Rendah', 'Menengah', 'Tinggi'] },
           { id: 'p1_find', label: 'Cara Menemukan Website', type: 'text', placeholder: 'Google search: "battery industri [kota]"' },
         ]
       },
@@ -121,8 +121,8 @@ const SCHEMA = [
           { id: 'p2_peran', label: 'Peran / Jabatan', type: 'text', placeholder: 'Manager procurement perusahaan manufaktur' },
           { id: 'p2_tujuan', label: 'Tujuan Utama', type: 'textarea', placeholder: '' },
           { id: 'p2_pain', label: 'Pain Point', type: 'textarea', placeholder: '' },
-          { id: 'p2_device', label: 'Perangkat', type: 'select', options: ['Mobile (mayoritas)','Desktop (mayoritas)','Mobile & Desktop (50/50)','Tablet'] },
-          { id: 'p2_digital', label: 'Tingkat Literasi Digital', type: 'select', options: ['Rendah','Menengah','Tinggi'] },
+          { id: 'p2_device', label: 'Perangkat', type: 'select', options: ['Mobile (mayoritas)', 'Desktop (mayoritas)', 'Mobile & Desktop (50/50)', 'Tablet'] },
+          { id: 'p2_digital', label: 'Tingkat Literasi Digital', type: 'select', options: ['Rendah', 'Menengah', 'Tinggi'] },
           { id: 'p2_find', label: 'Cara Menemukan Website', type: 'text', placeholder: '' },
         ]
       }
@@ -130,7 +130,7 @@ const SCHEMA = [
   },
   {
     id: 'b3',
-    num: '### BAGIAN 3',
+    num: '3',
     title: 'Scope & Prioritas',
     subsections: [
       {
@@ -175,7 +175,7 @@ const SCHEMA = [
   },
   {
     id: 'b4',
-    num: '### BAGIAN 4',
+    num: '4',
     title: 'Design System',
     subsections: [
       {
@@ -208,16 +208,16 @@ const SCHEMA = [
             label: 'Palette Warna',
             type: 'colorpalette',
             entries: [
-              { id: 'color_primary',   label: 'Primary',        defaultHex: '#0A1F44', usage: 'Background navbar, section gelap, footer' },
-              { id: 'color_accent',    label: 'Accent',         defaultHex: '#007BFF', usage: 'CTA button, link aktif, hover state' },
-              { id: 'color_surface',   label: 'Surface',        defaultHex: '#F4F6F9', usage: 'Background section terang, card background' },
-              { id: 'color_white',     label: 'Base / White',   defaultHex: '#FFFFFF', usage: 'Background halaman, teks pada background gelap' },
-              { id: 'color_text',      label: 'Text Primary',   defaultHex: '#1A1A1A', usage: 'Heading, body text' },
-              { id: 'color_text2',     label: 'Text Secondary', defaultHex: '#6B7280', usage: 'Caption, label, meta info' },
-              { id: 'color_danger',    label: 'Danger',         defaultHex: '#DC2626', usage: 'Error state, form validation' },
-              { id: 'color_success',   label: 'Success',        defaultHex: '#16A34A', usage: 'Konfirmasi, status aktif' },
-              { id: 'color_warning',   label: 'Warning',        defaultHex: '#D97706', usage: 'Peringatan, informasi penting' },
-              { id: 'color_border',    label: 'Border',         defaultHex: '#E5E7EB', usage: 'Border card, divider, input border' },
+              { id: 'color_primary', label: 'Primary', defaultHex: '#0A1F44', usage: 'Background navbar, section gelap, footer' },
+              { id: 'color_accent', label: 'Accent', defaultHex: '#007BFF', usage: 'CTA button, link aktif, hover state' },
+              { id: 'color_surface', label: 'Surface', defaultHex: '#F4F6F9', usage: 'Background section terang, card background' },
+              { id: 'color_white', label: 'Base / White', defaultHex: '#FFFFFF', usage: 'Background halaman, teks pada background gelap' },
+              { id: 'color_text', label: 'Text Primary', defaultHex: '#1A1A1A', usage: 'Heading, body text' },
+              { id: 'color_text2', label: 'Text Secondary', defaultHex: '#6B7280', usage: 'Caption, label, meta info' },
+              { id: 'color_danger', label: 'Danger', defaultHex: '#DC2626', usage: 'Error state, form validation' },
+              { id: 'color_success', label: 'Success', defaultHex: '#16A34A', usage: 'Konfirmasi, status aktif' },
+              { id: 'color_warning', label: 'Warning', defaultHex: '#D97706', usage: 'Peringatan, informasi penting' },
+              { id: 'color_border', label: 'Border', defaultHex: '#E5E7EB', usage: 'Border card, divider, input border' },
             ]
           }
         ]
@@ -268,7 +268,7 @@ const SCHEMA = [
   },
   {
     id: 'b5',
-    num: '### BAGIAN 5',
+    num: '5',
     title: 'Arsitektur & Teknologi',
     subsections: [
       {
@@ -330,7 +330,7 @@ const SCHEMA = [
   },
   {
     id: 'b6',
-    num: '### BAGIAN 6',
+    num: '6',
     title: 'Navigasi & Information Architecture',
     subsections: [
       {
@@ -374,7 +374,7 @@ const SCHEMA = [
   },
   {
     id: 'b7',
-    num: '### BAGIAN 7',
+    num: '7',
     title: 'Detail Halaman',
     subsections: [
       {
@@ -383,7 +383,8 @@ const SCHEMA = [
         title: 'Halaman-Halaman',
         hint: 'Definisikan setiap halaman. Untuk setiap section: layout, konten, behavior, states, acceptance criteria.',
         fields: [
-          { id: 'pages_detail', label: 'Detail Semua Halaman', type: 'textarea',
+          {
+            id: 'pages_detail', label: 'Detail Semua Halaman', type: 'textarea',
             placeholder: `## 7.1 HOME — index.html
 Meta title: [Nama] — Solusi Battery & Kelistrikan Industri
 H1: Reliable Power Solution for Your Business
@@ -402,7 +403,7 @@ Acceptance: [ ] Contrast ratio ≥ 4.5:1, [ ] CTA mengarah ke halaman benar
   },
   {
     id: 'b8',
-    num: '### BAGIAN 8',
+    num: '8',
     title: 'User Stories',
     subsections: [
       {
@@ -424,7 +425,7 @@ Acceptance: [ ] Contrast ratio ≥ 4.5:1, [ ] CTA mengarah ke halaman benar
   },
   {
     id: 'b9',
-    num: '### BAGIAN 9',
+    num: '9',
     title: 'Global Component',
     subsections: [
       {
@@ -446,7 +447,7 @@ Acceptance: [ ] Contrast ratio ≥ 4.5:1, [ ] CTA mengarah ke halaman benar
   },
   {
     id: 'b10',
-    num: '### BAGIAN 10',
+    num: '10',
     title: 'Content Strategy',
     subsections: [
       {
@@ -509,7 +510,7 @@ Acceptance: [ ] Contrast ratio ≥ 4.5:1, [ ] CTA mengarah ke halaman benar
   },
   {
     id: 'b11',
-    num: '### BAGIAN 11',
+    num: '11',
     title: 'Performa & SEO',
     subsections: [
       {
@@ -537,7 +538,8 @@ Acceptance: [ ] Contrast ratio ≥ 4.5:1, [ ] CTA mengarah ke halaman benar
         num: '11.2',
         title: 'Teknik Optimasi',
         fields: [
-          { id: 'optimizations', label: 'Checklist Optimasi', type: 'repeater', placeholder: 'Semua gambar menggunakan format WebP', itemType: 'text',
+          {
+            id: 'optimizations', label: 'Checklist Optimasi', type: 'repeater', placeholder: 'Semua gambar menggunakan format WebP', itemType: 'text',
             defaultValues: [
               'Semua gambar menggunakan format WebP',
               'Semua gambar di bawah fold: atribut loading="lazy"',
@@ -553,7 +555,8 @@ Acceptance: [ ] Contrast ratio ≥ 4.5:1, [ ] CTA mengarah ke halaman benar
         num: '11.3',
         title: 'SEO Requirements',
         fields: [
-          { id: 'seo_reqs', label: 'Checklist SEO', type: 'repeater', placeholder: 'Setiap halaman punya <title> unik, max 60 karakter', itemType: 'text',
+          {
+            id: 'seo_reqs', label: 'Checklist SEO', type: 'repeater', placeholder: 'Setiap halaman punya <title> unik, max 60 karakter', itemType: 'text',
             defaultValues: [
               'Setiap halaman: <title> unik, max 60 karakter',
               'Setiap halaman: <meta name="description"> unik, max 160 karakter',
@@ -570,7 +573,8 @@ Acceptance: [ ] Contrast ratio ≥ 4.5:1, [ ] CTA mengarah ke halaman benar
         num: '11.4',
         title: 'Aksesibilitas',
         fields: [
-          { id: 'a11y_reqs', label: 'Checklist Aksesibilitas', type: 'repeater', placeholder: 'Semua interactive element bisa difokus via keyboard', itemType: 'text',
+          {
+            id: 'a11y_reqs', label: 'Checklist Aksesibilitas', type: 'repeater', placeholder: 'Semua interactive element bisa difokus via keyboard', itemType: 'text',
             defaultValues: [
               'Semua interactive element bisa difokus via keyboard (Tab key)',
               'Focus indicator visible (outline tidak di-remove tanpa alternatif)',
@@ -585,7 +589,7 @@ Acceptance: [ ] Contrast ratio ≥ 4.5:1, [ ] CTA mengarah ke halaman benar
   },
   {
     id: 'b12',
-    num: '### BAGIAN 12',
+    num: '12',
     title: 'Integrasi & Dependensi Eksternal',
     subsections: [
       {
@@ -629,7 +633,7 @@ Acceptance: [ ] Contrast ratio ≥ 4.5:1, [ ] CTA mengarah ke halaman benar
   },
   {
     id: 'b13',
-    num: '### BAGIAN 13',
+    num: '13',
     title: 'Open Issues',
     subsections: [
       {
@@ -655,7 +659,7 @@ Acceptance: [ ] Contrast ratio ≥ 4.5:1, [ ] CTA mengarah ke halaman benar
   },
   {
     id: 'b14',
-    num: '### BAGIAN 14',
+    num: '14',
     title: 'Deliverable & Checklist Final',
     subsections: [
       {
@@ -663,7 +667,8 @@ Acceptance: [ ] Contrast ratio ≥ 4.5:1, [ ] CTA mengarah ke halaman benar
         num: '14.1',
         title: 'Definition of Done',
         fields: [
-          { id: 'dod', label: 'Checklist Done', type: 'repeater', placeholder: 'Kriteria selesai', itemType: 'text',
+          {
+            id: 'dod', label: 'Checklist Done', type: 'repeater', placeholder: 'Kriteria selesai', itemType: 'text',
             defaultValues: [
               'Semua section dari PRD sudah diimplementasikan',
               'Responsive di semua 4 breakpoint yang didefinisikan',
@@ -682,7 +687,8 @@ Acceptance: [ ] Contrast ratio ≥ 4.5:1, [ ] CTA mengarah ke halaman benar
         num: '14.2',
         title: 'Checklist Pre-Deploy',
         fields: [
-          { id: 'predeploy', label: 'Checklist Pre-Deploy', type: 'repeater', placeholder: 'Item checklist', itemType: 'text',
+          {
+            id: 'predeploy', label: 'Checklist Pre-Deploy', type: 'repeater', placeholder: 'Item checklist', itemType: 'text',
             defaultValues: [
               'Meta title & description semua halaman sudah diset',
               'GA4 script terpasang di semua halaman',
@@ -799,14 +805,14 @@ function renderField(f) {
   wrap.className = 'field-group';
 
   switch (f.type) {
-    case 'text':      wrap.appendChild(renderText(f)); break;
-    case 'textarea':  wrap.appendChild(renderTextarea(f)); break;
-    case 'select':    wrap.appendChild(renderSelect(f)); break;
-    case 'repeater':  wrap.appendChild(renderRepeater(f)); break;
-    case 'table':     wrap.appendChild(renderTable(f)); break;
+    case 'text': wrap.appendChild(renderText(f)); break;
+    case 'textarea': wrap.appendChild(renderTextarea(f)); break;
+    case 'select': wrap.appendChild(renderSelect(f)); break;
+    case 'repeater': wrap.appendChild(renderRepeater(f)); break;
+    case 'table': wrap.appendChild(renderTable(f)); break;
     case 'colorpalette': wrap.appendChild(renderColorPalette(f)); break;
-    case 'filetree':  wrap.appendChild(renderFiletree(f)); break;
-    default:          wrap.appendChild(renderText(f));
+    case 'filetree': wrap.appendChild(renderFiletree(f)); break;
+    default: wrap.appendChild(renderText(f));
   }
   return wrap;
 }
