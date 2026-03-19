@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PRD Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     SIDEBAR / TABLE OF CONTENTS
+═══════════════════════════════════════════ -->
+<aside id="sidebar" aria-label="Table of Contents">
+  <div class="sidebar-header">
+    <div class="sidebar-brand">
+      <span class="brand-icon">◈</span>
+      <span class="brand-name">PRD Builder</span>
+    </div>
+    <button id="sidebar-close" class="icon-btn" aria-label="Tutup sidebar">✕</button>
+  </div>
+  <nav id="toc" class="toc-nav" aria-label="Daftar isi"></nav>
+  <div class="sidebar-footer">
+    <button id="btn-preview" class="action-btn action-btn--secondary" title="Preview MD">
+      <span class="btn-icon">👁</span><span>Preview</span>
+    </button>
+    <button id="btn-download" class="action-btn action-btn--primary" title="Unduh .md">
+      <span class="btn-icon">↓</span><span>Unduh .md</span>
+    </button>
+  </div>
+</aside>
+
+<!-- Overlay for mobile sidebar -->
+<div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+<!-- ═══════════════════════════════════════════
+     TOPBAR (mobile)
+═══════════════════════════════════════════ -->
+<header id="topbar">
+  <button id="menu-toggle" class="icon-btn" aria-label="Buka menu">
+    <span class="hamburger"></span>
+  </button>
+  <span class="topbar-title">PRD Builder</span>
+  <div class="topbar-actions">
+    <button id="btn-example-top" class="topbar-pill">Contoh</button>
+    <button id="btn-download-top" class="icon-btn" aria-label="Unduh">↓</button>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════════ -->
+<main id="main">
+
+  <!-- Hero / Intro -->
+  <div class="page-intro">
+    <div class="page-intro-inner">
+      <h1 class="page-title">PRD Builder <span class="title-badge">for AI Agent</span></h1>
+      <p class="page-desc">Buat Product Requirement Document yang eksplisit, terstruktur, dan siap dibaca AI Agent. Isi setiap seksi, lalu unduh hasilnya sebagai <code>.md</code>.</p>
+      <div class="intro-actions">
+        <button id="btn-example" class="pill-btn pill-btn--outline">
+          <span>◎</span> Lihat Contoh PRD
+        </button>
+        <button id="btn-expand-all" class="pill-btn pill-btn--ghost">Buka Semua</button>
+        <button id="btn-collapse-all" class="pill-btn pill-btn--ghost">Tutup Semua</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRD Form — rendered by JS -->
+  <div id="prd-form" class="prd-form"></div>
+
+  <!-- Bottom actions -->
+  <div class="bottom-actions">
+    <button id="btn-preview-bottom" class="action-btn action-btn--secondary">
+      <span>👁</span> Preview Hasil
+    </button>
+    <button id="btn-download-bottom" class="action-btn action-btn--primary">
+      <span>↓</span> Unduh .md
+    </button>
+  </div>
+
+</main>
+
+<!-- ═══════════════════════════════════════════
+     MODAL: PREVIEW
+═══════════════════════════════════════════ -->
+<div id="modal-preview" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-preview-title">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box modal-box--wide">
+    <div class="modal-header">
+      <h2 id="modal-preview-title" class="modal-title">Preview PRD</h2>
+      <div class="modal-header-actions">
+        <button id="btn-preview-toggle" class="pill-btn pill-btn--outline pill-btn--sm">MD Source</button>
+        <button class="icon-btn modal-close" data-modal="modal-preview" aria-label="Tutup">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div id="preview-rendered" class="preview-rendered"></div>
+      <pre id="preview-source" class="preview-source hidden"><code id="preview-source-code"></code></pre>
+    </div>
+    <div class="modal-footer">
+      <button id="btn-download-modal" class="action-btn action-btn--primary">↓ Unduh .md</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     MODAL: CONTOH PRD
+═══════════════════════════════════════════ -->
+<div id="modal-example" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-example-title">
+  <div class="modal-backdrop"></div>
+  <div class="modal-box modal-box--wide">
+    <div class="modal-header">
+      <h2 id="modal-example-title" class="modal-title">Contoh PRD — Website Battery & Electrical</h2>
+      <button class="icon-btn modal-close" data-modal="modal-example" aria-label="Tutup">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="example-rendered" class="preview-rendered"></div>
+    </div>
+    <div class="modal-footer">
+      <button id="btn-use-example" class="action-btn action-btn--primary">Gunakan sebagai Titik Awal</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     TOAST
+═══════════════════════════════════════════ -->
+<div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+<script src="main.js"></script>
+</body>
+</html>
