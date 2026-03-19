@@ -301,9 +301,13 @@
    PROJECT GRID
 ===================== */
 .project-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  columns: 3;
+  column-gap: 16px;
+}
+
+.project-card {
+  break-inside: avoid;
+  margin-bottom: 16px;
 }
 
 .project-card {
@@ -311,6 +315,8 @@
   overflow: hidden;
   box-shadow: var(--shadow);
   transition: transform 220ms ease, box-shadow 220ms ease, opacity 220ms ease;
+  display: inline-block;
+  width: 100%;
 }
 
 .project-card:hover {
@@ -622,16 +628,24 @@
 ===================== */
 @media (max-width: 1024px) {
   .project-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    columns: 2;
   }
 }
 
 @media (max-width: 767px) {
 
   .stats-grid,
-  .social-list,
-  .project-grid {
+  .social-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .project-grid {
+    columns: 2;
+    column-gap: 10px;
+  }
+
+  .project-card {
+    margin-bottom: 10px;
   }
 
   .project-card {
