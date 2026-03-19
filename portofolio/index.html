@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zanxa Studio — White Minimal Portfolio</title>
+  <meta name="description" content="Portfolio putih minimalis dengan layout lega, cover project, logo carousel, testimonial, FAQ accordion, dan struktur yang lebih meyakinkan untuk calon klien." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <div class="paper-lines" aria-hidden="true"></div>
+
+  <header class="site-header" id="top">
+    <div class="container nav-wrap">
+      <a class="brand" href="#top">
+        <span class="brand-main">Zanxa</span><span class="brand-muted">Studio</span>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Navigasi utama">
+        <a href="#about">About</a>
+        <a href="#projects">Portofolio</a>
+        <a href="#testimonials">Testimoni</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a class="nav-contact-btn" href="#contact">Kontak</a>
+        <button class="nav-toggle" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="mobileMenu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#about">About</a>
+      <a href="#projects">Portofolio</a>
+      <a href="#testimonials">Testimoni</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">Kontak</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero-section section-shell">
+      <div class="container hero-grid">
+        <div class="hero-copy reveal">
+          <span class="eyebrow">Available for selected projects</span>
+          <h1 class="hero-title">Portfolio minimalis yang lebih proper, lebih lega, dan lebih meyakinkan.</h1>
+          <p class="hero-description">
+            Untuk brand, bisnis, dan personal project yang ingin tampil rapi, premium, dan siap diajak kerja sama.
+          </p>
+
+          <div class="metric-row">
+            <div class="metric-card"><span>Clean layout</span></div>
+            <div class="metric-card"><span>Project covers</span></div>
+            <div class="metric-card"><span>Stronger trust</span></div>
+          </div>
+
+          <div class="hero-actions">
+            <a class="button button-primary" href="#projects">Lihat karya</a>
+            <a class="button button-secondary" href="#contact">Hubungi sekarang</a>
+          </div>
+        </div>
+
+        <div class="hero-visual reveal">
+          <div class="portrait-panel">
+            <div class="portrait-stack">
+              <article class="hero-shot hero-shot-main">
+                <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80" alt="Studio workspace profesional" />
+                <div class="hero-shot-caption">
+                  <span>White minimalist direction</span>
+                  <strong>Calm layout, strong hierarchy, better trust</strong>
+                </div>
+              </article>
+              <div class="hero-shot-grid">
+                <article class="hero-shot hero-shot-small">
+                  <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1000&q=80" alt="Tim kreatif berdiskusi" />
+                </article>
+                <article class="hero-note-card">
+                  <p>Layout mengikuti ritme dan struktur portfolio referensi, tapi diubah ke nuansa putih yang lebih bersih dan lebih luas.</p>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="logo-marquee section-shell reveal" aria-label="Brand collaboration">
+      <div class="container">
+        <div class="marquee-row marquee-left"><div class="marquee-track" id="logo-row-top"></div></div>
+        <div class="marquee-row marquee-right"><div class="marquee-track" id="logo-row-bottom"></div></div>
+      </div>
+    </section>
+
+    <section class="about-section section-shell" id="about">
+      <div class="container section-grid">
+        <div class="section-heading reveal">
+          <span class="eyebrow">About</span>
+          <h2>Presentasi karya yang lebih rapi biasanya berawal dari struktur yang lebih jujur dan lebih fokus.</h2>
+          <p>
+            Layout halaman ini mengikuti pola yang lebih lega seperti referensi sebelumnya: hero luas, alur section jelas,
+            dan komposisi visual yang memberi ruang napas lebih banyak.
+          </p>
+        </div>
+
+        <div class="about-cards reveal">
+          <article class="about-card">
+            <h3>Clarity first</h3>
+            <p>Pengunjung harus cepat tahu siapa pemilik website ini, apa yang dikerjakan, dan kenapa hasilnya layak dipertimbangkan.</p>
+          </article>
+          <article class="about-card">
+            <h3>Visual confidence</h3>
+            <p>Cover visual, spacing yang lega, dan section proof membuat halaman terasa lebih matang dan tidak kering.</p>
+          </article>
+          <article class="about-card">
+            <h3>Built for business</h3>
+            <p>Setiap section diarahkan untuk membantu presentasi brand, bukan hanya mempercantik tampilan.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="projects-section section-shell" id="projects">
+      <div class="container">
+        <div class="section-heading centered reveal">
+          <span class="eyebrow">Selected projects</span>
+          <h2>Portofolio dengan cover project yang lebih nyata dan lebih enak dipindai.</h2>
+          <p>Setiap kartu dibuat seperti showcase proper: cover, kategori, ringkasan value, dan konteks yang cukup untuk memberi kesan profesional.</p>
+        </div>
+
+        <div class="project-grid" id="projectGrid"></div>
+      </div>
+    </section>
+
+    <section class="testimonials-section section-shell" id="testimonials">
+      <div class="container testimonials-layout">
+        <div class="section-heading reveal">
+          <span class="eyebrow">Testimonials</span>
+          <h2>Bukan cuma terlihat bersih, tapi juga terasa lebih siap dipakai untuk pitching dan branding.</h2>
+          <p>Testimoni ini dipasang untuk membuat halaman punya bobot sosial dan tidak terasa seperti template kosong.</p>
+        </div>
+
+        <div class="testimonial-grid reveal">
+          <blockquote class="testimonial-card">
+            <div class="testimonial-head">
+              <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80" alt="Sarah Wijaya" />
+              <div>
+                <strong>Sarah Wijaya</strong>
+                <span>Founder, Atelier Studio</span>
+              </div>
+            </div>
+            <p>“Strukturnya terasa jauh lebih dewasa. Karya jadi lebih gampang dinikmati dan brand kami terlihat lebih serius.”</p>
+          </blockquote>
+
+          <blockquote class="testimonial-card">
+            <div class="testimonial-head">
+              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80" alt="Raka Mahendra" />
+              <div>
+                <strong>Raka Mahendra</strong>
+                <span>Owner, Nusa Creative Lab</span>
+              </div>
+            </div>
+            <p>“Yang paling saya suka itu layout-nya lega. Minimalis, tapi tidak kosong dan tetap terasa premium.”</p>
+          </blockquote>
+
+          <blockquote class="testimonial-card">
+            <div class="testimonial-head">
+              <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80" alt="Nadya Putri" />
+              <div>
+                <strong>Nadya Putri</strong>
+                <span>Brand Manager, Formea</span>
+              </div>
+            </div>
+            <p>“Bagian hero, project, dan CTA sekarang terasa nyambung. Ini tipe portfolio yang bikin orang lebih cepat percaya.”</p>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <section class="faq-section section-shell" id="faq">
+      <div class="container section-grid faq-layout">
+        <div class="section-heading reveal">
+          <span class="eyebrow">FAQ</span>
+          <h2>Pertanyaan umum sebelum mulai kerja sama.</h2>
+          <p>Accordion ini dibuat fokus: hanya satu pertanyaan yang boleh terbuka dalam satu waktu.</p>
+        </div>
+
+        <div class="accordion-group reveal" id="faqAccordion">
+          <article class="accordion-item is-open">
+            <button class="accordion-trigger" type="button" aria-expanded="true">
+              <span class="accordion-title">Apakah layout seperti ini cocok untuk personal brand dan agency?</span>
+              <span class="accordion-state">01</span>
+            </button>
+            <div class="accordion-panel"><p>Iya. Justru model layout seperti ini sangat fleksibel untuk personal brand, studio, agency kecil, dan bisnis jasa yang ingin terlihat lebih kredibel.</p></div>
+          </article>
+
+          <article class="accordion-item">
+            <button class="accordion-trigger" type="button" aria-expanded="false">
+              <span class="accordion-title">Kalau project yang ditampilkan banyak, apakah tetap rapi?</span>
+              <span class="accordion-state">02</span>
+            </button>
+            <div class="accordion-panel"><p>Bisa. Grid dan ritmenya dibuat supaya banyak karya tetap mudah dipindai, tanpa mengorbankan ruang dan kualitas presentasi.</p></div>
+          </article>
+
+          <article class="accordion-item">
+            <button class="accordion-trigger" type="button" aria-expanded="false">
+              <span class="accordion-title">Apakah elemen visual seperti gambar dan logo bisa diganti dengan aset asli?</span>
+              <span class="accordion-state">03</span>
+            </button>
+            <div class="accordion-panel"><p>Bisa, dan itu malah lebih bagus. Struktur halaman ini memang disiapkan untuk nantinya diisi aset brand dan karya asli agar semakin meyakinkan.</p></div>
+          </article>
+
+          <article class="accordion-item">
+            <button class="accordion-trigger" type="button" aria-expanded="false">
+              <span class="accordion-title">Apakah hasil akhirnya siap dibuka langsung tanpa build step?</span>
+              <span class="accordion-state">04</span>
+            </button>
+            <div class="accordion-panel"><p>Ya. Halaman ini dibuat dengan HTML, CSS, dan JavaScript vanilla sehingga bisa langsung dibuka lokal atau dipasang ke hosting statis.</p></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-section section-shell" id="contact">
+      <div class="container contact-box reveal">
+        <div>
+          <span class="eyebrow">Contact</span>
+          <h2>Kalau kamu butuh portfolio yang lebih proper, kita bisa mulai dari brief sederhana.</h2>
+          <p>Kirim kebutuhanmu, lalu kita susun presentasi visual yang lebih matang untuk branding, pitching, atau penawaran jasa.</p>
+        </div>
+        <div class="contact-actions">
+          <a class="button button-primary" href="mailto:hello@zanxa.site">hello@zanxa.site</a>
+          <a class="button button-secondary" href="https://zanxa.site" target="_blank" rel="noreferrer">zanxa.site</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="assets/js/script.js"></script>
+</body>
+</html>
