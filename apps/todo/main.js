@@ -7,14 +7,14 @@ const STORAGE_KEY = 'taskflow_v4';
 
 let state = {
   mode:         'editor',
-  accentColor:  '#111111',
-  headerColor:  '#F5F0EB',
+  accentColor:  '#007AFF',
+  headerColor:  '#F5F5F7',
   colLayout:    '2',
   itemFontSize: 13,
   showProgress: true,
   wallTheme:    'light',
   itemsPerPage: 10,
-  docTitle:     'TODO LIST',
+  docTitle:     'TODO',
   docSubtitle:  '',
   pages:        []
 };
@@ -206,7 +206,7 @@ function buildItemRow(item, groupId, pageId){
 
   dot.addEventListener('click', ()=>{
     const it=findItem(item.id); if(!it) return;
-    const cy=['','high','mid','low'];
+    const cy=['','urgent','important','moderate','leisure'];
     it.priority = cy[(cy.indexOf(it.priority)+1)%cy.length];
     dot.className = 'todo-priority'+(it.priority?' p-'+it.priority:'');
     saveState();
@@ -455,15 +455,10 @@ function buildWallPage(chunks, pageNum, totalPages){
   const page=document.createElement('div');
   page.className='wall-page';
 
-  /* ── header ── */
+  /* ── header — simple centered title ── */
   const hdr=document.createElement('div');
   hdr.className='wall-page-header';
-  hdr.innerHTML=`
-    <div class="wall-page-title">${esc(state.docTitle||'TODO')}</div>
-    <div class="wall-page-meta">
-      ${state.docSubtitle?`<div class="wall-page-meta-sub">${esc(state.docSubtitle)}</div>`:''}
-      <div class="wall-page-num">${String(pageNum).padStart(2,'0')}<span class="wall-page-num-total"> / ${String(totalPages).padStart(2,'0')}</span></div>
-    </div>`;
+  hdr.innerHTML=`<div class="wall-page-title">${esc(state.docTitle||'TODO')}</div>`;
   page.appendChild(hdr);
 
   /* ── body ── */
@@ -471,26 +466,25 @@ function buildWallPage(chunks, pageNum, totalPages){
   body.className='wall-page-body';
 
   chunks.forEach(({group,from,to,isFirst})=>{
-    const gi=groupGlobalIdx(group.id);
     const block=document.createElement('div');
     block.className='wall-main-item';
 
-    /* main title */
+    /* group title row — large checkbox + bold title */
     const titleRow=document.createElement('div');
     titleRow.className='wall-main-title';
+    const allDone = group.items.length>0 && group.items.every(i=>i.done);
     titleRow.innerHTML=`
-      <span class="wall-main-num">${String(gi+1).padStart(2,'0')}</span>
-      <span class="wall-main-label">${esc(group.name||'Untitled')}</span>
-      ${!isFirst?'<span class="wall-cont-badge">lanjutan</span>':''}`;
+      <div class="wall-check wall-check-lg${allDone?' is-done':''}"></div>
+      <span class="wall-main-label">${esc(group.name||'Untitled')}</span>`;
     block.appendChild(titleRow);
 
-    /* sub items */
+    /* sub items — indented */
     const subList=document.createElement('div');
     subList.className='wall-sub-list';
 
     if(group.items.length===0){
       subList.innerHTML=`<div class="wall-sub-item wall-sub-empty">
-        <div class="wall-check"></div>
+        <div class="wall-check wall-check-sm"></div>
         <div class="wall-sub-text" style="opacity:.35;font-style:italic">Belum ada item</div>
       </div>`;
     } else {
@@ -498,7 +492,7 @@ function buildWallPage(chunks, pageNum, totalPages){
         const row=document.createElement('div');
         row.className='wall-sub-item';
         row.innerHTML=`
-          <div class="wall-check${item.done?' is-done':''}"></div>
+          <div class="wall-check wall-check-sm${item.done?' is-done':''}"></div>
           <div class="wall-sub-text${item.done?' is-done':''}">${esc(item.text)}</div>`;
         subList.appendChild(row);
       });
@@ -509,12 +503,6 @@ function buildWallPage(chunks, pageNum, totalPages){
   });
 
   page.appendChild(body);
-
-  /* ── footer strip ── */
-  const foot=document.createElement('div');
-  foot.className='wall-page-footer';
-  page.appendChild(foot);
-
   return page;
 }
 
@@ -667,9 +655,9 @@ function loadDefaultData(){
       id:uid(), title:'Web Docflow',
       groups:[
         { id:uid(), name:'Selesaikan Web Docflow', items:[
-          {id:uid(),text:'Perbaiki Tampilan preview History',done:false,priority:'high',tag:''},
-          {id:uid(),text:'Menambah detail kecil di mode manual, history, dan setting',done:false,priority:'mid',tag:''},
-          {id:uid(),text:'Memasukan Fitur Download PDF',done:false,priority:'high',tag:'feature'},
+          {id:uid(),text:'Perbaiki Tampilan preview History',done:false,priority:'urgent',tag:''},
+          {id:uid(),text:'Menambah detail kecil di mode manual, history, dan setting',done:false,priority:'important',tag:''},
+          {id:uid(),text:'Memasukan Fitur Download PDF',done:false,priority:'urgent',tag:'feature'},
         ]},
       ]
     },
@@ -677,9 +665,9 @@ function loadDefaultData(){
       id:uid(), title:'Web Memories',
       groups:[
         { id:uid(), name:'Update Web Memories', items:[
-          {id:uid(),text:'Menambahkan Web Memories Generator',done:false,priority:'mid',tag:''},
-          {id:uid(),text:'Music player menjadi floating bottom + mode icon',done:false,priority:'low',tag:'UI'},
-          {id:uid(),text:'Tambahkan 1 atau 2 column view, dan color picker',done:false,priority:'low',tag:'feature'},
+          {id:uid(),text:'Menambahkan Web Memories Generator',done:false,priority:'important',tag:''},
+          {id:uid(),text:'Music player menjadi floating bottom + mode icon',done:false,priority:'leisure',tag:'UI'},
+          {id:uid(),text:'Tambahkan 1 atau 2 column view, dan color picker',done:false,priority:'leisure',tag:'feature'},
         ]},
       ]
     },
@@ -687,14 +675,14 @@ function loadDefaultData(){
       id:uid(), title:'Web Zanxa Site',
       groups:[
         { id:uid(), name:'Update Web Zanxa Site', items:[
-          {id:uid(),text:'Menambahkan Data Real (ig, wa, maps)',done:false,priority:'high',tag:'content'},
-          {id:uid(),text:'Update Tampilannya (Menambah Elemen di header, dll)',done:false,priority:'mid',tag:'UI'},
-          {id:uid(),text:'Menggunakan Foto Real untuk proyek dan komentar',done:false,priority:'high',tag:'content'},
-          {id:uid(),text:'Perbaiki Layout nya',done:false,priority:'mid',tag:'UI'},
-          {id:uid(),text:'Tambahkan halaman lain selain index.html',done:false,priority:'mid',tag:'feature'},
-          {id:uid(),text:'Memasukan Desain Real ke Halaman Design',done:false,priority:'low',tag:'UI'},
-          {id:uid(),text:'Buat Pricelist untuk Web dan Design',done:false,priority:'mid',tag:'feature'},
-          {id:uid(),text:'Tambahkan Blog nyata — minimal 3, dan ada di home',done:false,priority:'mid',tag:'content'},
+          {id:uid(),text:'Menambahkan Data Real (ig, wa, maps)',done:false,priority:'urgent',tag:'content'},
+          {id:uid(),text:'Update Tampilannya (Menambah Elemen di header, dll)',done:false,priority:'important',tag:'UI'},
+          {id:uid(),text:'Menggunakan Foto Real untuk proyek dan komentar',done:false,priority:'urgent',tag:'content'},
+          {id:uid(),text:'Perbaiki Layout nya',done:false,priority:'important',tag:'UI'},
+          {id:uid(),text:'Tambahkan halaman lain selain index.html',done:false,priority:'moderate',tag:'feature'},
+          {id:uid(),text:'Memasukan Desain Real ke Halaman Design',done:false,priority:'leisure',tag:'UI'},
+          {id:uid(),text:'Buat Pricelist untuk Web dan Design',done:false,priority:'moderate',tag:'feature'},
+          {id:uid(),text:'Tambahkan Blog nyata — minimal 3, dan ada di home',done:false,priority:'moderate',tag:'content'},
         ]},
       ]
     },
@@ -702,10 +690,10 @@ function loadDefaultData(){
       id:uid(), title:'Web Undangan Digital',
       groups:[
         { id:uid(), name:'Buat Web Undangan Digital', items:[
-          {id:uid(),text:'Buat Homepage nya',done:false,priority:'high',tag:''},
-          {id:uid(),text:'Buat Template Pertama',done:false,priority:'high',tag:''},
-          {id:uid(),text:'Buat Generator nya',done:false,priority:'mid',tag:'feature'},
-          {id:uid(),text:'Pelajari "Burst Send" (Optional)',done:false,priority:'low',tag:'research'},
+          {id:uid(),text:'Buat Homepage nya',done:false,priority:'urgent',tag:''},
+          {id:uid(),text:'Buat Template Pertama',done:false,priority:'urgent',tag:''},
+          {id:uid(),text:'Buat Generator nya',done:false,priority:'important',tag:'feature'},
+          {id:uid(),text:'Pelajari "Burst Send" (Optional)',done:false,priority:'leisure',tag:'research'},
         ]},
       ]
     },
