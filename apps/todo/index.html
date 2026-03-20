@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo List Builder</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ▸ TOPBAR -->
+<header id="topbar">
+  <div class="topbar-left">
+    <span class="logo">✦ Taskflow</span>
+  </div>
+  <div class="topbar-right">
+    <button id="btn-settings" class="icon-btn" title="Pengaturan Halaman" aria-label="Pengaturan">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.4"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+    </button>
+    <button id="btn-print" class="action-btn action-btn--primary" title="Print / Simpan PDF">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="3" y="1" width="10" height="8" rx="1" stroke="currentColor" stroke-width="1.4"/><path d="M3 9H1.5A.5.5 0 001 9.5v5a.5.5 0 00.5.5h13a.5.5 0 00.5-.5v-5a.5.5 0 00-.5-.5H13" stroke="currentColor" stroke-width="1.4"/><rect x="4" y="11" width="8" height="4" rx=".5" stroke="currentColor" stroke-width="1.4"/><circle cx="12.5" cy="10.5" r=".75" fill="currentColor"/></svg>
+      Print / PDF
+    </button>
+  </div>
+</header>
+
+<!-- ▸ SETTINGS PANEL -->
+<div id="settings-panel" class="settings-panel hidden" role="dialog" aria-label="Pengaturan halaman">
+  <div class="settings-inner">
+    <div class="settings-header">
+      <span class="settings-title">Pengaturan</span>
+      <button id="settings-close" class="icon-btn" aria-label="Tutup">✕</button>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-label">Judul Dokumen</div>
+      <input type="text" id="doc-title" class="settings-input" value="TODO LIST" placeholder="Judul dokumen">
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-label">Subjudul / Tanggal</div>
+      <input type="text" id="doc-subtitle" class="settings-input" placeholder="Q3 2025 · Personal Projects" value="">
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-label">Warna Aksen</div>
+      <div class="color-row">
+        <input type="text" id="color-accent-text" class="settings-input mono" value="#111111" maxlength="9">
+        <div class="color-swatch" id="color-swatch-accent">
+          <input type="color" id="color-accent-picker" value="#111111" aria-label="Pilih warna aksen">
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-label">Warna Header Halaman</div>
+      <div class="color-row">
+        <input type="text" id="color-header-text" class="settings-input mono" value="#F5F0EB" maxlength="9">
+        <div class="color-swatch" id="color-swatch-header">
+          <input type="color" id="color-header-picker" value="#F5F0EB" aria-label="Pilih warna header">
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-label">Tampilan Checkbox</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="checkbox-style" value="square" checked> Kotak</label>
+        <label class="radio-option"><input type="radio" name="checkbox-style" value="circle"> Lingkaran</label>
+        <label class="radio-option"><input type="radio" name="checkbox-style" value="none"> Tanpa kotak</label>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-label">Kolom (layar besar)</div>
+      <div class="radio-group">
+        <label class="radio-option"><input type="radio" name="col-layout" value="1"> 1 Kolom</label>
+        <label class="radio-option"><input type="radio" name="col-layout" value="2" checked> 2 Kolom</label>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-label">Ukuran Font Item</div>
+      <div class="range-row">
+        <input type="range" id="font-size-range" min="11" max="18" value="13" class="range-input">
+        <span id="font-size-label" class="range-label">13px</span>
+      </div>
+    </div>
+
+    <div class="settings-group">
+      <div class="settings-label">Tampilkan progress per group</div>
+      <label class="toggle-label">
+        <input type="checkbox" id="show-progress" checked>
+        <span class="toggle-track"><span class="toggle-thumb"></span></span>
+        <span class="toggle-text">Aktif</span>
+      </label>
+    </div>
+
+  </div>
+</div>
+<div id="settings-overlay" class="settings-overlay hidden"></div>
+
+<!-- ▸ MAIN EDITOR -->
+<main id="main">
+
+  <!-- Toolbar -->
+  <div class="toolbar" id="toolbar">
+    <div class="toolbar-left">
+      <span class="toolbar-stat" id="stat-total">0 item</span>
+      <span class="toolbar-dot">·</span>
+      <span class="toolbar-stat" id="stat-done">0 selesai</span>
+    </div>
+    <div class="toolbar-right">
+      <button class="tool-btn" id="btn-add-page" title="Tambah halaman baru">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><rect x="2" y="1" width="8" height="11" rx="1" stroke="currentColor" stroke-width="1.3"/><path d="M10 4h2M11 3v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        Halaman
+      </button>
+      <button class="tool-btn" id="btn-add-group" title="Tambah group baru">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2v10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Group
+      </button>
+    </div>
+  </div>
+
+  <!-- Pages container -->
+  <div id="pages-container"></div>
+
+</main>
+
+<!-- ▸ TOAST -->
+<div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+<!-- ▸ PRINT AREA (hidden on screen, shown on print) -->
+<div id="print-area" class="print-area"></div>
+
+<script src="main.js"></script>
+</body>
+</html>
