@@ -1,864 +1,772 @@
-/* ═══════════════════════════════════════════════════════════
-   TASKFLOW — main.js
-   Sections:
-   1. STATE
-   2. RENDER
-   3. DOM HELPERS
-   4. EVENTS / INTERACTIONS
-   5. SETTINGS
-   6. DRAG & DROP (groups)
-   7. STATS
-   8. PRINT
-   9. PERSISTENCE
-   10. INIT
-═══════════════════════════════════════════════════════════ */
+'use strict';
 
-/* ─────────────────────────────────────────────
-   1. STATE
-───────────────────────────────────────────── */
+/* ═══════════════════════════════════════
+   STATE
+═══════════════════════════════════════ */
+const STORAGE_KEY = 'taskflow_v4';
+
 let state = {
-  docTitle:       'TODO LIST',
-  docSubtitle:    '',
-  accentColor:    '#111111',
-  headerColor:    '#F5F0EB',
-  checkboxStyle:  'square',   // square | circle | none
-  colLayout:      '2',        // 1 | 2
-  itemFontSize:   13,
-  showProgress:   true,
-  pages: []
+  mode:         'editor',
+  accentColor:  '#111111',
+  headerColor:  '#F5F0EB',
+  colLayout:    '2',
+  itemFontSize: 13,
+  showProgress: true,
+  wallTheme:    'light',
+  itemsPerPage: 10,
+  docTitle:     'TODO LIST',
+  docSubtitle:  '',
+  pages:        []
 };
 
-/* Unique ID generator */
+/* ── helpers ── */
 let _uid = Date.now();
-function uid() { return 'id' + (_uid++).toString(36); }
+const uid = () => 'id' + (_uid++).toString(36);
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
-/* ─────────────────────────────────────────────
-   2. RENDER
-───────────────────────────────────────────── */
-function renderAll() {
+function findGroup(gid){ for(const p of state.pages){ const g=p.groups.find(g=>g.id===gid); if(g) return g; } return null; }
+function findItem(iid){ for(const p of state.pages) for(const g of p.groups){ const i=g.items.find(i=>i.id===iid); if(i) return i; } return null; }
+function autoResize(ta){ ta.style.height='auto'; ta.style.height=ta.scrollHeight+'px'; }
+
+/* ── save / load ── */
+function saveState(){ try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){} }
+function loadSaved(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const saved = JSON.parse(raw);
+      // merge — don't clobber defaults for missing keys
+      Object.keys(saved).forEach(k => { if(k in state) state[k] = saved[k]; });
+      return saved.pages && saved.pages.length > 0;
+    }
+  }catch(e){}
+  return false;
+}
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+let _tt;
+function toast(msg, ms=2200){
+  const el = document.getElementById('toast');
+  if(!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(_tt);
+  _tt = setTimeout(()=>el.classList.remove('show'), ms);
+}
+
+/* ══════════════════════════════════════════
+   STATS (safe — only update if elements exist)
+══════════════════════════════════════════ */
+function updateStats(){
+  let total=0, done=0;
+  state.pages.forEach(p=>p.groups.forEach(g=>{ total+=g.items.length; done+=g.items.filter(i=>i.done).length; }));
+  const t = document.getElementById('stat-total');
+  const d = document.getElementById('stat-done');
+  if(t) t.textContent = total+' item';
+  if(d) d.textContent = done+' selesai';
+}
+
+/* ══════════════════════════════════════════
+   EDITOR — RENDER
+══════════════════════════════════════════ */
+function renderEditor(){
   const container = document.getElementById('pages-container');
+  if(!container) return;
   container.innerHTML = '';
 
-  if (state.pages.length === 0) {
+  if(!state.pages.length){
     container.innerHTML = `<div class="empty-state">
       <div class="empty-state-icon">✦</div>
-      <div class="empty-state-text">Belum ada halaman.<br>Klik "Halaman" untuk mulai.</div>
+      <div class="empty-state-text">Belum ada halaman.<br>Klik "+ Halaman" untuk mulai.</div>
     </div>`;
+    updateStats();
     return;
   }
 
-  state.pages.forEach((page, pi) => {
-    container.appendChild(renderPage(page, pi));
-  });
-
-  applySettings();
+  state.pages.forEach((page,pi) => container.appendChild(buildPageCard(page,pi)));
+  applyEditorCSS();
   updateStats();
 }
 
-function renderPage(page, pi) {
+function buildPageCard(page, pi){
   const card = document.createElement('div');
   card.className = 'page-card';
   card.dataset.pageId = page.id;
-
   card.innerHTML = `
     <div class="page-header">
       <div class="page-header-content">
-        <div class="page-num">Halaman ${pi + 1}</div>
-        <input class="page-title-input" type="text"
-          value="${esc(page.title)}"
-          placeholder="Judul halaman..."
-          data-page-id="${page.id}">
+        <div class="page-num">Halaman ${pi+1}</div>
+        <input class="page-title-input" type="text" value="${esc(page.title)}" placeholder="Judul halaman...">
       </div>
       <div class="page-header-actions">
-        <button class="icon-btn page-move-up" data-page-id="${page.id}" title="Pindah ke atas" ${pi === 0 ? 'disabled' : ''}>↑</button>
-        <button class="icon-btn page-move-down" data-page-id="${page.id}" title="Pindah ke bawah" ${pi === state.pages.length - 1 ? 'disabled' : ''}>↓</button>
-        <button class="icon-btn page-delete" data-page-id="${page.id}" title="Hapus halaman" style="color:var(--text-4)">✕</button>
+        <button class="icon-btn pg-up" title="Naik" ${pi===0?'disabled':''}>↑</button>
+        <button class="icon-btn pg-dn" title="Turun" ${pi===state.pages.length-1?'disabled':''}>↓</button>
+        <button class="icon-btn pg-del" title="Hapus">✕</button>
       </div>
     </div>
     <div class="page-body">
-      <div class="groups-grid ${state.colLayout === '2' ? 'cols-2' : ''}" data-page-id="${page.id}"></div>
+      <div class="groups-grid ${state.colLayout==='2'?'cols-2':''}" data-page-id="${page.id}"></div>
     </div>
     <div class="page-footer">
-      <button class="btn-add-group-inline" data-page-id="${page.id}">+ Tambah Group</button>
-    </div>
-  `;
+      <button class="btn-add-group-inline" data-pid="${page.id}">+ Tambah Group</button>
+    </div>`;
+
+  card.querySelector('.page-title-input').addEventListener('input', e=>{
+    const p=state.pages.find(p=>p.id===page.id); if(p){ p.title=e.target.value; saveState(); }
+  });
+  card.querySelector('.pg-del').addEventListener('click', ()=>deletePage(page.id));
+  card.querySelector('.pg-up').addEventListener('click',  ()=>movePage(page.id,-1));
+  card.querySelector('.pg-dn').addEventListener('click',  ()=>movePage(page.id, 1));
+  card.querySelector('.btn-add-group-inline').addEventListener('click', ()=>addGroup(page.id));
 
   const grid = card.querySelector('.groups-grid');
-  page.groups.forEach(group => {
-    grid.appendChild(renderGroup(group, page.id));
-  });
-
-  // Wire page-level events
-  card.querySelector('.page-title-input').addEventListener('input', e => {
-    const p = state.pages.find(pg => pg.id === page.id);
-    if (p) p.title = e.target.value;
-    saveState();
-    updateStats();
-  });
-
-  card.querySelector('.page-delete').addEventListener('click', () => deletePage(page.id));
-  card.querySelector('.page-move-up').addEventListener('click', () => movePage(page.id, -1));
-  card.querySelector('.page-move-down').addEventListener('click', () => movePage(page.id, 1));
-  card.querySelector('.btn-add-group-inline').addEventListener('click', () => addGroup(page.id));
-
-  setupGroupDragDrop(grid, page.id);
-
+  page.groups.forEach(g => grid.appendChild(buildGroupCard(g, page.id)));
+  setupDragDrop(grid, page.id);
   return card;
 }
 
-function renderGroup(group, pageId) {
+function buildGroupCard(group, pageId){
   const card = document.createElement('div');
   card.className = 'group-card';
   card.dataset.groupId = group.id;
   card.draggable = true;
 
-  const doneCount = group.items.filter(i => i.done).length;
-  const totalCount = group.items.length;
-  const pct = totalCount > 0 ? Math.round((doneCount / totalCount) * 100) : 0;
+  const done  = group.items.filter(i=>i.done).length;
+  const total = group.items.length;
+  const pct   = total>0 ? Math.round(done/total*100) : 0;
 
   card.innerHTML = `
     <div class="group-header">
-      <span class="group-drag-handle" title="Seret untuk atur urutan">⠿</span>
-      <input class="group-name-input" type="text"
-        value="${esc(group.name)}"
-        placeholder="Nama group..."
-        data-group-id="${group.id}">
-      ${state.showProgress && totalCount > 0
-        ? `<span class="group-progress">${doneCount}/${totalCount}</span>`
-        : ''}
+      <span class="group-drag-handle" title="Seret">⠿</span>
+      <input class="group-name-input" type="text" value="${esc(group.name)}" placeholder="Nama group...">
+      ${state.showProgress&&total>0 ? `<span class="group-progress">${done}/${total}</span>` : ''}
       <div class="group-actions">
-        <button class="group-action-btn group-move-up" data-group-id="${group.id}" data-page-id="${pageId}" title="Pindah ke atas">↑</button>
-        <button class="group-action-btn group-move-down" data-group-id="${group.id}" data-page-id="${pageId}" title="Pindah ke bawah">↓</button>
-        <button class="group-action-btn danger group-delete" data-group-id="${group.id}" data-page-id="${pageId}" title="Hapus group">✕</button>
+        <button class="group-action-btn g-up"  title="Naik">↑</button>
+        <button class="group-action-btn g-dn"  title="Turun">↓</button>
+        <button class="group-action-btn danger g-del" title="Hapus">✕</button>
       </div>
     </div>
-    ${state.showProgress && totalCount > 0 ? `
-    <div class="progress-bar-wrap">
-      <div class="progress-bar-fill" style="width:${pct}%"></div>
-    </div>` : ''}
-    <div class="todo-list" data-group-id="${group.id}"></div>
-    <button class="btn-add-item" data-group-id="${group.id}" data-page-id="${pageId}">Tambah item</button>
-  `;
+    ${state.showProgress&&total>0 ? `<div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%"></div></div>` : ''}
+    <div class="todo-list"></div>
+    <button class="btn-add-item">Tambah item</button>`;
+
+  card.querySelector('.group-name-input').addEventListener('input', e=>{
+    const g=findGroup(group.id); if(g){ g.name=e.target.value; saveState(); }
+  });
+  card.querySelector('.g-del').addEventListener('click', ()=>deleteGroup(pageId,group.id));
+  card.querySelector('.g-up').addEventListener('click',  ()=>moveGroup(pageId,group.id,-1));
+  card.querySelector('.g-dn').addEventListener('click',  ()=>moveGroup(pageId,group.id, 1));
+  card.querySelector('.btn-add-item').addEventListener('click', ()=>addItem(pageId,group.id));
 
   const list = card.querySelector('.todo-list');
-  group.items.forEach(item => {
-    list.appendChild(renderItem(item, group.id, pageId));
-  });
-
-  // Group events
-  card.querySelector('.group-name-input').addEventListener('input', e => {
-    const g = findGroup(group.id);
-    if (g) g.name = e.target.value;
-    saveState(); updateStats();
-  });
-
-  card.querySelector('.group-delete').addEventListener('click', () => deleteGroup(pageId, group.id));
-  card.querySelector('.group-move-up').addEventListener('click', () => moveGroup(pageId, group.id, -1));
-  card.querySelector('.group-move-down').addEventListener('click', () => moveGroup(pageId, group.id, 1));
-
-  card.querySelector('.btn-add-item').addEventListener('click', () => {
-    addItem(pageId, group.id);
-  });
-
+  group.items.forEach(item => list.appendChild(buildItemRow(item,group.id,pageId)));
   return card;
 }
 
-function renderItem(item, groupId, pageId) {
+function buildItemRow(item, groupId, pageId){
   const row = document.createElement('div');
-  row.className = 'todo-item' + (item.done ? ' is-done' : '');
+  row.className = 'todo-item'+(item.done?' is-done':'');
   row.dataset.itemId = item.id;
 
-  const checkClass = item.done ? 'todo-check checked' : 'todo-check';
-  const priorityClass = item.priority === 'high' ? 'p-high' : item.priority === 'mid' ? 'p-mid' : item.priority === 'low' ? 'p-low' : '';
-
+  const pc = item.priority ? ' p-'+item.priority : '';
   row.innerHTML = `
-    <div class="${checkClass}" role="checkbox" aria-checked="${item.done}" tabindex="0" data-item-id="${item.id}"></div>
-    <div class="todo-priority ${priorityClass}" title="Klik untuk ganti prioritas (tinggi/sedang/rendah/none)" data-item-id="${item.id}"></div>
-    <textarea class="todo-text-input" rows="1" placeholder="Item baru..." data-item-id="${item.id}">${esc(item.text)}</textarea>
-    ${item.tag ? `<span class="todo-tag" data-item-id="${item.id}" title="Klik untuk edit tag">${esc(item.tag)}</span>` : `<span class="todo-tag todo-tag-empty" data-item-id="${item.id}" title="Klik untuk tambah tag" style="opacity:0">+tag</span>`}
-    <button class="todo-del-btn" data-item-id="${item.id}" data-group-id="${groupId}" data-page-id="${pageId}" title="Hapus">✕</button>
-  `;
+    <div class="${item.done?'todo-check checked':'todo-check'}" role="checkbox" aria-checked="${item.done}" tabindex="0"></div>
+    <div class="todo-priority${pc}" title="Klik untuk ubah prioritas"></div>
+    <textarea class="todo-text-input" rows="1" placeholder="Tulis item...">${esc(item.text)}</textarea>
+    <button class="todo-del-btn" title="Hapus">✕</button>`;
 
-  // Auto-resize textarea
-  const ta = row.querySelector('.todo-text-input');
-  autoResize(ta);
-  ta.addEventListener('input', () => {
-    const it = findItem(item.id);
-    if (it) it.text = ta.value;
-    autoResize(ta);
-    saveState(); updateStats();
-  });
-  ta.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      addItemAfter(pageId, groupId, item.id);
-    }
-    if (e.key === 'Backspace' && ta.value === '') {
-      e.preventDefault();
-      deleteItem(pageId, groupId, item.id);
-    }
-  });
-
-  // Checkbox toggle
+  const ta  = row.querySelector('.todo-text-input');
   const chk = row.querySelector('.todo-check');
-  chk.addEventListener('click', () => toggleItem(item.id, row, chk));
-  chk.addEventListener('keydown', e => {
-    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggleItem(item.id, row, chk); }
+  const dot = row.querySelector('.todo-priority');
+  const del = row.querySelector('.todo-del-btn');
+
+  autoResize(ta);
+  ta.addEventListener('input', ()=>{
+    const it=findItem(item.id); if(it) it.text=ta.value;
+    autoResize(ta); saveState(); updateStats();
+  });
+  ta.addEventListener('keydown', e=>{
+    if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); addItemAfter(pageId,groupId,item.id); }
+    if(e.key==='Backspace'&&ta.value===''){ e.preventDefault(); deleteItem(pageId,groupId,item.id); }
   });
 
-  // Priority cycle
-  const prio = row.querySelector('.todo-priority');
-  prio.addEventListener('click', () => cyclePriority(item.id, prio));
+  const toggle = ()=>{
+    const it=findItem(item.id); if(!it) return;
+    it.done=!it.done;
+    row.classList.toggle('is-done',it.done);
+    chk.classList.toggle('checked',it.done);
+    chk.setAttribute('aria-checked',it.done);
+    refreshGroupProgress(row.closest('.group-card'));
+    saveState(); updateStats();
+  };
+  chk.addEventListener('click', toggle);
+  chk.addEventListener('keydown', e=>{ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); toggle(); } });
 
-  // Tag
-  const tag = row.querySelector('.todo-tag, .todo-tag-empty');
-  tag.addEventListener('click', () => editTag(item.id, tag));
-
-  // Show tag on hover
-  row.addEventListener('mouseenter', () => {
-    const emptyTag = row.querySelector('.todo-tag-empty');
-    if (emptyTag) emptyTag.style.opacity = '.4';
-  });
-  row.addEventListener('mouseleave', () => {
-    const emptyTag = row.querySelector('.todo-tag-empty');
-    if (emptyTag) emptyTag.style.opacity = '0';
-  });
-
-  // Delete
-  row.querySelector('.todo-del-btn').addEventListener('click', () => {
-    deleteItem(pageId, groupId, item.id);
+  dot.addEventListener('click', ()=>{
+    const it=findItem(item.id); if(!it) return;
+    const cy=['','high','mid','low'];
+    it.priority = cy[(cy.indexOf(it.priority)+1)%cy.length];
+    dot.className = 'todo-priority'+(it.priority?' p-'+it.priority:'');
+    saveState();
   });
 
+  del.addEventListener('click', ()=>deleteItem(pageId,groupId,item.id));
   return row;
 }
 
-/* ─────────────────────────────────────────────
-   3. DOM HELPERS
-───────────────────────────────────────────── */
-function esc(str) {
-  if (!str) return '';
-  return String(str)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;')
-    .replace(/'/g,'&#39;');
+function refreshGroupProgress(card){
+  if(!card) return;
+  const g = findGroup(card.dataset.groupId);
+  if(!g) return;
+  const t=g.items.length, d=g.items.filter(i=>i.done).length;
+  const p=card.querySelector('.group-progress');   if(p) p.textContent=`${d}/${t}`;
+  const f=card.querySelector('.progress-bar-fill'); if(f) f.style.width=(t>0?Math.round(d/t*100):0)+'%';
 }
 
-function autoResize(ta) {
-  ta.style.height = 'auto';
-  ta.style.height = ta.scrollHeight + 'px';
+/* refresh a single group in-place (no full re-render) */
+function refreshGroup(groupId, pageId){
+  const g = findGroup(groupId);
+  const old = document.querySelector(`.group-card[data-group-id="${groupId}"]`);
+  if(g && old){ old.replaceWith(buildGroupCard(g, pageId)); applyEditorCSS(); }
 }
 
-function findGroup(groupId) {
-  for (const page of state.pages) {
-    const g = page.groups.find(g => g.id === groupId);
-    if (g) return g;
-  }
-  return null;
+function applyEditorCSS(){
+  document.documentElement.style.setProperty('--accent',    state.accentColor);
+  document.documentElement.style.setProperty('--header-bg', state.headerColor);
+  document.documentElement.style.setProperty('--item-fs',   state.itemFontSize+'px');
+  document.querySelectorAll('.groups-grid').forEach(g=>g.classList.toggle('cols-2',state.colLayout==='2'));
+  document.querySelectorAll('.todo-text-input').forEach(autoResize);
 }
 
-function findItem(itemId) {
-  for (const page of state.pages) {
-    for (const group of page.groups) {
-      const it = group.items.find(i => i.id === itemId);
-      if (it) return it;
-    }
-  }
-  return null;
+/* ══════════════════════════════════════════
+   ITEM CRUD
+══════════════════════════════════════════ */
+function addItem(pageId, groupId){
+  const page=state.pages.find(p=>p.id===pageId); if(!page) return;
+  const g=page.groups.find(g=>g.id===groupId);    if(!g) return;
+  const item={id:uid(),text:'',done:false,priority:'',tag:''};
+  g.items.push(item);
+  saveState(); refreshGroup(groupId,pageId);
+  setTimeout(()=>{ const el=document.querySelector(`.todo-item[data-item-id="${item.id}"] .todo-text-input`); if(el) el.focus(); },40);
+  updateStats();
 }
 
-/* ─────────────────────────────────────────────
-   4. EVENTS / INTERACTIONS
-───────────────────────────────────────────── */
-
-/* Page operations */
-function addPage(title = 'Halaman Baru') {
-  state.pages.push({ id: uid(), title, groups: [] });
-  saveState();
-  renderAll();
-  // Scroll to new page
-  const cards = document.querySelectorAll('.page-card');
-  if (cards.length) cards[cards.length - 1].scrollIntoView({ behavior: 'smooth', block: 'start' });
+function addItemAfter(pageId, groupId, afterId){
+  const page=state.pages.find(p=>p.id===pageId); if(!page) return;
+  const g=page.groups.find(g=>g.id===groupId);    if(!g) return;
+  const idx=g.items.findIndex(i=>i.id===afterId);
+  const item={id:uid(),text:'',done:false,priority:'',tag:''};
+  g.items.splice(idx+1,0,item);
+  saveState(); refreshGroup(groupId,pageId);
+  setTimeout(()=>{ const el=document.querySelector(`.todo-item[data-item-id="${item.id}"] .todo-text-input`); if(el) el.focus(); },40);
+  updateStats();
 }
 
-function deletePage(pageId) {
-  if (state.pages.length <= 1) { toast('Minimal satu halaman harus ada'); return; }
-  if (!confirm('Hapus halaman ini beserta semua isinya?')) return;
-  state.pages = state.pages.filter(p => p.id !== pageId);
-  saveState(); renderAll();
+function deleteItem(pageId, groupId, itemId){
+  const page=state.pages.find(p=>p.id===pageId); if(!page) return;
+  const g=page.groups.find(g=>g.id===groupId);    if(!g) return;
+  const idx=g.items.findIndex(i=>i.id===itemId);
+  const prevId=idx>0?g.items[idx-1].id:null;
+  g.items=g.items.filter(i=>i.id!==itemId);
+  saveState(); refreshGroup(groupId,pageId);
+  if(prevId) setTimeout(()=>{ const el=document.querySelector(`.todo-item[data-item-id="${prevId}"] .todo-text-input`); if(el){el.focus();el.setSelectionRange(el.value.length,el.value.length);} },40);
+  updateStats();
 }
 
-function movePage(pageId, dir) {
-  const idx = state.pages.findIndex(p => p.id === pageId);
-  if (idx < 0) return;
-  const newIdx = idx + dir;
-  if (newIdx < 0 || newIdx >= state.pages.length) return;
-  const arr = [...state.pages];
-  [arr[idx], arr[newIdx]] = [arr[newIdx], arr[idx]];
-  state.pages = arr;
-  saveState(); renderAll();
-}
-
-/* Group operations */
-function addGroup(pageId, name = '') {
-  const page = state.pages.find(p => p.id === pageId);
-  if (!page) return;
-  const g = { id: uid(), name, items: [] };
+/* ══════════════════════════════════════════
+   GROUP CRUD
+══════════════════════════════════════════ */
+function addGroup(pageId){
+  const page=state.pages.find(p=>p.id===pageId); if(!page) return;
+  const g={id:uid(),name:'',items:[]};
   page.groups.push(g);
-  saveState(); renderAll();
-  // Focus the new group name input
-  setTimeout(() => {
-    const el = document.querySelector(`[data-group-id="${g.id}"].group-name-input`);
-    if (el) el.focus();
-  }, 50);
+  saveState(); renderEditor();
+  setTimeout(()=>{ const el=document.querySelector(`.group-card[data-group-id="${g.id}"] .group-name-input`); if(el) el.focus(); },50);
 }
 
-function deleteGroup(pageId, groupId) {
-  const page = state.pages.find(p => p.id === pageId);
-  if (!page) return;
-  const g = page.groups.find(g => g.id === groupId);
-  if (g && g.items.length > 0) {
-    if (!confirm(`Hapus group "${g.name || 'tanpa nama'}" dan ${g.items.length} item di dalamnya?`)) return;
+function deleteGroup(pageId, groupId){
+  const page=state.pages.find(p=>p.id===pageId); if(!page) return;
+  const g=page.groups.find(g=>g.id===groupId);
+  if(g&&g.items.length&&!confirm(`Hapus group "${g.name||'tanpa nama'}" dan ${g.items.length} item?`)) return;
+  page.groups=page.groups.filter(g=>g.id!==groupId);
+  saveState(); renderEditor();
+}
+
+function moveGroup(pageId, groupId, dir){
+  const page=state.pages.find(p=>p.id===pageId); if(!page) return;
+  const idx=page.groups.findIndex(g=>g.id===groupId);
+  const ni=idx+dir;
+  if(ni<0||ni>=page.groups.length) return;
+  [page.groups[idx],page.groups[ni]]=[page.groups[ni],page.groups[idx]];
+  saveState(); renderEditor();
+}
+
+/* ══════════════════════════════════════════
+   PAGE CRUD
+══════════════════════════════════════════ */
+function addPage(){
+  state.pages.push({id:uid(),title:'Halaman Baru',groups:[]});
+  saveState(); renderEditor();
+  setTimeout(()=>{ const cs=document.querySelectorAll('.page-card'); if(cs.length) cs[cs.length-1].scrollIntoView({behavior:'smooth',block:'start'}); },50);
+}
+
+function deletePage(pageId){
+  if(state.pages.length<=1){ toast('Minimal satu halaman'); return; }
+  if(!confirm('Hapus halaman ini?')) return;
+  state.pages=state.pages.filter(p=>p.id!==pageId);
+  saveState(); renderEditor();
+}
+
+function movePage(pageId, dir){
+  const idx=state.pages.findIndex(p=>p.id===pageId);
+  const ni=idx+dir;
+  if(ni<0||ni>=state.pages.length) return;
+  [state.pages[idx],state.pages[ni]]=[state.pages[ni],state.pages[idx]];
+  saveState(); renderEditor();
+}
+
+/* ══════════════════════════════════════════
+   DRAG & DROP
+══════════════════════════════════════════ */
+let _drag=null;
+function setupDragDrop(grid, pageId){
+  grid.addEventListener('dragstart',e=>{
+    const c=e.target.closest('.group-card'); if(!c) return;
+    _drag={gid:c.dataset.groupId,pid:pageId};
+    c.classList.add('dragging'); e.dataTransfer.effectAllowed='move';
+  });
+  grid.addEventListener('dragend',()=>{
+    document.querySelectorAll('.dragging,.drag-over').forEach(el=>el.classList.remove('dragging','drag-over'));
+    _drag=null;
+  });
+  grid.addEventListener('dragover',e=>{
+    e.preventDefault();
+    const c=e.target.closest('.group-card');
+    if(c&&_drag&&c.dataset.groupId!==_drag.gid){
+      document.querySelectorAll('.drag-over').forEach(el=>el.classList.remove('drag-over'));
+      c.classList.add('drag-over');
+    }
+  });
+  grid.addEventListener('dragleave',e=>{ const c=e.target.closest('.group-card'); if(c) c.classList.remove('drag-over'); });
+  grid.addEventListener('drop',e=>{
+    e.preventDefault();
+    const target=e.target.closest('.group-card');
+    if(!target||!_drag||_drag.pid!==pageId) return;
+    const tid=target.dataset.groupId; if(tid===_drag.gid) return;
+    const page=state.pages.find(p=>p.id===pageId); if(!page) return;
+    const si=page.groups.findIndex(g=>g.id===_drag.gid);
+    const ti=page.groups.findIndex(g=>g.id===tid);
+    if(si<0||ti<0) return;
+    const arr=[...page.groups]; const [m]=arr.splice(si,1); arr.splice(ti,0,m);
+    page.groups=arr; saveState();
+    grid.innerHTML='';
+    page.groups.forEach(g=>grid.appendChild(buildGroupCard(g,pageId)));
+    applyEditorCSS();
+  });
+}
+
+/* ══════════════════════════════════════════
+   WALL PRINT — RENDER
+══════════════════════════════════════════ */
+
+/**
+ * Collect every group across all editor pages.
+ * Pack them into wall-pages, respecting itemsPerPage limit.
+ * If a group is too big, split it across multiple wall-pages with "lanjutan" label.
+ */
+function renderWall(){
+  const container = document.getElementById('wall-pages');
+  if(!container) return;
+  container.innerHTML='';
+
+  // Flatten all groups
+  const allGroups=[];
+  state.pages.forEach(p=>p.groups.forEach(g=>{
+    if(g.items.length>0||g.name.trim()) allGroups.push(g);
+  }));
+
+  if(!allGroups.length){
+    container.innerHTML=`<div class="empty-state" style="padding:60px 20px;text-align:center;color:#888">
+      <div style="font-size:28px;margin-bottom:10px">✦</div>
+      <div>Tidak ada data. Tambah item di mode Editor dulu.</div>
+    </div>`;
+    return;
   }
-  page.groups = page.groups.filter(g => g.id !== groupId);
-  saveState(); renderAll();
+
+  const maxSub = Math.max(1, state.itemsPerPage);
+
+  // Build "chunks" = {group, from, to, isFirst}
+  // A chunk is a portion of a group that fits on one wall page
+  // We accumulate chunks until subCount > maxSub, then flush
+  const wallPages=[];  // each: array of chunks
+  let curPage=[], curCount=0;
+
+  function flush(){ if(curPage.length){ wallPages.push(curPage); curPage=[]; curCount=0; } }
+
+  allGroups.forEach(group=>{
+    const items=group.items;
+    const total=items.length;
+
+    if(total===0){
+      // empty group — takes 1 "slot"
+      if(curCount+1>maxSub&&curPage.length) flush();
+      curPage.push({group,from:0,to:0,isFirst:true});
+      curCount+=1;
+      return;
+    }
+
+    let from=0;
+    let isFirst=true;
+
+    while(from<total){
+      const remaining=maxSub-curCount;
+      if(remaining<=0){ flush(); }
+
+      const space=maxSub-curCount;
+      const take=Math.min(space, total-from);
+      const to=from+take;
+
+      curPage.push({group,from,to,isFirst});
+      curCount+=take;
+      isFirst=false;
+      from=to;
+
+      if(curCount>=maxSub&&from<total) flush();
+    }
+  });
+  flush();
+
+  const total=wallPages.length;
+  wallPages.forEach((chunks,pi)=>container.appendChild(buildWallPage(chunks,pi+1,total)));
 }
 
-function moveGroup(pageId, groupId, dir) {
-  const page = state.pages.find(p => p.id === pageId);
-  if (!page) return;
-  const idx = page.groups.findIndex(g => g.id === groupId);
-  if (idx < 0) return;
-  const newIdx = idx + dir;
-  if (newIdx < 0 || newIdx >= page.groups.length) return;
-  const arr = [...page.groups];
-  [arr[idx], arr[newIdx]] = [arr[newIdx], arr[idx]];
-  page.groups = arr;
-  saveState(); renderAll();
-}
-
-/* Item operations */
-function addItem(pageId, groupId, text = '') {
-  const page = state.pages.find(p => p.id === pageId);
-  if (!page) return;
-  const group = page.groups.find(g => g.id === groupId);
-  if (!group) return;
-  const item = { id: uid(), text, done: false, priority: '', tag: '' };
-  group.items.push(item);
-  saveState();
-
-  // Re-render just the group
-  const groupCard = document.querySelector(`[data-group-id="${groupId}"]`).closest('.group-card');
-  if (groupCard) {
-    const newCard = renderGroup(group, pageId);
-    groupCard.replaceWith(newCard);
-    applySettings();
+/* Global index of a group (for numbering) */
+function groupGlobalIdx(gid){
+  let n=0;
+  for(const p of state.pages){
+    for(const g of p.groups){ if(g.id===gid) return n; n++; }
   }
-
-  setTimeout(() => {
-    const newItem = document.querySelector(`.todo-item[data-item-id="${item.id}"] .todo-text-input`);
-    if (newItem) newItem.focus();
-  }, 30);
-  updateStats();
+  return 0;
 }
 
-function addItemAfter(pageId, groupId, afterItemId) {
-  const page = state.pages.find(p => p.id === pageId);
-  if (!page) return;
-  const group = page.groups.find(g => g.id === groupId);
-  if (!group) return;
-  const idx = group.items.findIndex(i => i.id === afterItemId);
-  const newItem = { id: uid(), text: '', done: false, priority: '', tag: '' };
-  group.items.splice(idx + 1, 0, newItem);
-  saveState();
+function buildWallPage(chunks, pageNum, totalPages){
+  const page=document.createElement('div');
+  page.className='wall-page';
 
-  const groupCard = document.querySelector(`[data-group-id="${groupId}"]`).closest('.group-card');
-  if (groupCard) {
-    const newCard = renderGroup(group, pageId);
-    groupCard.replaceWith(newCard);
-    applySettings();
-  }
+  /* ── header ── */
+  const hdr=document.createElement('div');
+  hdr.className='wall-page-header';
+  hdr.innerHTML=`
+    <div class="wall-page-title">${esc(state.docTitle||'TODO')}</div>
+    <div class="wall-page-meta">
+      ${state.docSubtitle?`<div class="wall-page-meta-sub">${esc(state.docSubtitle)}</div>`:''}
+      <div class="wall-page-num">${String(pageNum).padStart(2,'0')}<span class="wall-page-num-total"> / ${String(totalPages).padStart(2,'0')}</span></div>
+    </div>`;
+  page.appendChild(hdr);
 
-  setTimeout(() => {
-    const newInputEl = document.querySelector(`.todo-item[data-item-id="${newItem.id}"] .todo-text-input`);
-    if (newInputEl) newInputEl.focus();
-  }, 30);
-  updateStats();
+  /* ── body ── */
+  const body=document.createElement('div');
+  body.className='wall-page-body';
+
+  chunks.forEach(({group,from,to,isFirst})=>{
+    const gi=groupGlobalIdx(group.id);
+    const block=document.createElement('div');
+    block.className='wall-main-item';
+
+    /* main title */
+    const titleRow=document.createElement('div');
+    titleRow.className='wall-main-title';
+    titleRow.innerHTML=`
+      <span class="wall-main-num">${String(gi+1).padStart(2,'0')}</span>
+      <span class="wall-main-label">${esc(group.name||'Untitled')}</span>
+      ${!isFirst?'<span class="wall-cont-badge">lanjutan</span>':''}`;
+    block.appendChild(titleRow);
+
+    /* sub items */
+    const subList=document.createElement('div');
+    subList.className='wall-sub-list';
+
+    if(group.items.length===0){
+      subList.innerHTML=`<div class="wall-sub-item wall-sub-empty">
+        <div class="wall-check"></div>
+        <div class="wall-sub-text" style="opacity:.35;font-style:italic">Belum ada item</div>
+      </div>`;
+    } else {
+      group.items.slice(from,to).forEach(item=>{
+        const row=document.createElement('div');
+        row.className='wall-sub-item';
+        row.innerHTML=`
+          <div class="wall-check${item.done?' is-done':''}"></div>
+          <div class="wall-sub-text${item.done?' is-done':''}">${esc(item.text)}</div>`;
+        subList.appendChild(row);
+      });
+    }
+
+    block.appendChild(subList);
+    body.appendChild(block);
+  });
+
+  page.appendChild(body);
+
+  /* ── footer strip ── */
+  const foot=document.createElement('div');
+  foot.className='wall-page-footer';
+  page.appendChild(foot);
+
+  return page;
 }
 
-function deleteItem(pageId, groupId, itemId) {
-  const page = state.pages.find(p => p.id === pageId);
-  if (!page) return;
-  const group = page.groups.find(g => g.id === groupId);
-  if (!group) return;
-
-  const idx = group.items.findIndex(i => i.id === itemId);
-  const focusPrevId = idx > 0 ? group.items[idx - 1].id : null;
-  group.items = group.items.filter(i => i.id !== itemId);
-  saveState();
-
-  const groupCard = document.querySelector(`[data-group-id="${groupId}"]`).closest('.group-card');
-  if (groupCard) {
-    const newCard = renderGroup(group, pageId);
-    groupCard.replaceWith(newCard);
-    applySettings();
-  }
-
-  if (focusPrevId) {
-    setTimeout(() => {
-      const prev = document.querySelector(`.todo-item[data-item-id="${focusPrevId}"] .todo-text-input`);
-      if (prev) { prev.focus(); const len = prev.value.length; prev.setSelectionRange(len, len); }
-    }, 30);
-  }
-  updateStats();
+/* ══════════════════════════════════════════
+   THEME
+══════════════════════════════════════════ */
+function applyWallTheme(theme){
+  const view=document.getElementById('wall-view');
+  if(!view) return;
+  view.classList.remove('wall-light','wall-gray','wall-dark');
+  view.classList.add('wall-'+(theme||'light'));
 }
 
-function toggleItem(itemId, row, chk) {
-  const item = findItem(itemId);
-  if (!item) return;
-  item.done = !item.done;
-  row.classList.toggle('is-done', item.done);
-  chk.classList.toggle('checked', item.done);
-  chk.setAttribute('aria-checked', item.done);
+/* ══════════════════════════════════════════
+   MODE SWITCH
+══════════════════════════════════════════ */
+function switchMode(mode){
+  state.mode=mode;
+  document.body.className='mode-'+mode;
 
-  // Update progress on parent group
-  const groupCard = row.closest('.group-card');
-  if (groupCard) updateGroupProgress(groupCard);
-  saveState(); updateStats();
-}
+  const editorView = document.getElementById('editor-view');
+  const wallView   = document.getElementById('wall-view');
 
-function cyclePriority(itemId, dot) {
-  const item = findItem(itemId);
-  if (!item) return;
-  const cycle = ['', 'high', 'mid', 'low'];
-  const cur = cycle.indexOf(item.priority);
-  item.priority = cycle[(cur + 1) % cycle.length];
-  dot.className = 'todo-priority' + (item.priority ? ' p-' + item.priority : '');
-  const labels = { high: 'Prioritas tinggi', mid: 'Prioritas sedang', low: 'Prioritas rendah', '': 'Tanpa prioritas' };
-  toast(labels[item.priority]);
-  saveState();
-}
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
 
-function editTag(itemId, tagEl) {
-  const item = findItem(itemId);
-  if (!item) return;
-  const current = item.tag || '';
-  const val = prompt('Tag (kosongkan untuk hapus):', current);
-  if (val === null) return;
-  item.tag = val.trim().slice(0, 20);
+  // settings sections
+  const eSet=document.getElementById('editor-settings');
+  const wSet=document.getElementById('wall-settings');
 
-  if (item.tag) {
-    tagEl.textContent = item.tag;
-    tagEl.className = 'todo-tag';
-    tagEl.style.opacity = '1';
-    tagEl.title = 'Klik untuk edit tag';
+  if(mode==='editor'){
+    if(editorView) editorView.classList.remove('hidden');
+    if(wallView)   wallView.classList.add('hidden');
+    if(eSet) eSet.style.display='';
+    if(wSet) wSet.style.display='none';
+    renderEditor();
   } else {
-    tagEl.textContent = '+tag';
-    tagEl.className = 'todo-tag todo-tag-empty';
-    tagEl.style.opacity = '0';
-    tagEl.title = 'Klik untuk tambah tag';
+    if(editorView) editorView.classList.add('hidden');
+    if(wallView)   wallView.classList.remove('hidden');
+    if(eSet) eSet.style.display='none';
+    if(wSet) wSet.style.display='';
+    applyWallTheme(state.wallTheme);
+    renderWall();
   }
   saveState();
 }
 
-function updateGroupProgress(groupCard) {
-  const groupId = groupCard.querySelector('[data-group-id]').dataset.groupId;
-  const group = findGroup(groupId);
-  if (!group) return;
-  const total = group.items.length;
-  const done = group.items.filter(i => i.done).length;
-  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-
-  const progress = groupCard.querySelector('.group-progress');
-  if (progress) progress.textContent = `${done}/${total}`;
-
-  const fill = groupCard.querySelector('.progress-bar-fill');
-  if (fill) fill.style.width = pct + '%';
-}
-
-/* ─────────────────────────────────────────────
-   5. SETTINGS
-───────────────────────────────────────────── */
-function initSettings() {
-  const panel = document.getElementById('settings-panel');
+/* ══════════════════════════════════════════
+   SETTINGS INIT
+══════════════════════════════════════════ */
+function initSettings(){
+  /* open/close */
+  const panel   = document.getElementById('settings-panel');
   const overlay = document.getElementById('settings-overlay');
+  const closeBtn= document.getElementById('settings-close');
 
-  document.getElementById('btn-settings').addEventListener('click', () => {
+  document.getElementById('btn-settings').addEventListener('click',()=>{
     panel.classList.toggle('hidden');
     overlay.classList.toggle('hidden');
   });
-  document.getElementById('settings-close').addEventListener('click', closeSettings);
+  closeBtn.addEventListener('click', closeSettings);
   overlay.addEventListener('click', closeSettings);
 
-  // Doc title
-  const titleEl = document.getElementById('doc-title');
-  titleEl.value = state.docTitle;
-  titleEl.addEventListener('input', () => { state.docTitle = titleEl.value; saveState(); });
+  /* doc title */
+  const dtEl=document.getElementById('doc-title');
+  dtEl.addEventListener('input',()=>{ state.docTitle=dtEl.value; saveState(); if(state.mode==='wall') renderWall(); });
 
-  // Subtitle
-  const subtitleEl = document.getElementById('doc-subtitle');
-  subtitleEl.value = state.docSubtitle;
-  subtitleEl.addEventListener('input', () => { state.docSubtitle = subtitleEl.value; saveState(); });
+  /* doc subtitle */
+  const dsEl=document.getElementById('doc-subtitle');
+  dsEl.addEventListener('input',()=>{ state.docSubtitle=dsEl.value; saveState(); if(state.mode==='wall') renderWall(); });
 
-  // Accent color
-  setupColorPair('color-accent-text', 'color-accent-picker', 'color-swatch-accent', (val) => {
-    state.accentColor = val;
-    document.documentElement.style.setProperty('--accent', val);
-    saveState();
+  /* accent color */
+  wireColorPair('color-accent-text','color-accent-picker','csw-accent', v=>{
+    state.accentColor=v; document.documentElement.style.setProperty('--accent',v); saveState();
   }, state.accentColor);
 
-  // Header color
-  setupColorPair('color-header-text', 'color-header-picker', 'color-swatch-header', (val) => {
-    state.headerColor = val;
-    document.documentElement.style.setProperty('--header-bg', val);
-    saveState();
+  /* header color */
+  wireColorPair('color-header-text','color-header-picker','csw-header', v=>{
+    state.headerColor=v; document.documentElement.style.setProperty('--header-bg',v); saveState();
   }, state.headerColor);
 
-  // Checkbox style
-  document.querySelectorAll('[name="checkbox-style"]').forEach(radio => {
-    radio.checked = radio.value === state.checkboxStyle;
-    radio.addEventListener('change', () => {
-      state.checkboxStyle = radio.value;
-      applyCheckboxStyle();
+  /* col layout */
+  document.querySelectorAll('[name="col-layout"]').forEach(r=>{
+    r.checked=(r.value===state.colLayout);
+    r.addEventListener('change',()=>{
+      state.colLayout=r.value;
+      document.querySelectorAll('.groups-grid').forEach(g=>g.classList.toggle('cols-2',r.value==='2'));
       saveState();
     });
   });
 
-  // Column layout
-  document.querySelectorAll('[name="col-layout"]').forEach(radio => {
-    radio.checked = radio.value === state.colLayout;
-    radio.addEventListener('change', () => {
-      state.colLayout = radio.value;
-      document.querySelectorAll('.groups-grid').forEach(g => {
-        g.classList.toggle('cols-2', state.colLayout === '2');
-      });
+  /* font size */
+  wireRange('font-size-range','font-size-label', v=>{
+    state.itemFontSize=v; document.documentElement.style.setProperty('--item-fs',v+'px'); saveState();
+  }, state.itemFontSize, v=>v+'px');
+
+  /* show progress */
+  const pgEl=document.getElementById('show-progress');
+  pgEl.checked=state.showProgress;
+  pgEl.addEventListener('change',()=>{ state.showProgress=pgEl.checked; saveState(); renderEditor(); });
+
+  /* wall theme */
+  document.querySelectorAll('[name="wall-theme"]').forEach(r=>{
+    r.checked=(r.value===state.wallTheme);
+    r.addEventListener('change',()=>{
+      state.wallTheme=r.value;
+      applyWallTheme(r.value);
+      if(state.mode==='wall') renderWall();
       saveState();
     });
   });
 
-  // Font size
-  const rangeEl = document.getElementById('font-size-range');
-  const labelEl = document.getElementById('font-size-label');
-  rangeEl.value = state.itemFontSize;
-  labelEl.textContent = state.itemFontSize + 'px';
-  rangeEl.addEventListener('input', () => {
-    state.itemFontSize = parseInt(rangeEl.value);
-    labelEl.textContent = state.itemFontSize + 'px';
-    document.documentElement.style.setProperty('--item-font-size', state.itemFontSize + 'px');
-    saveState();
-  });
-
-  // Show progress
-  const progressToggle = document.getElementById('show-progress');
-  progressToggle.checked = state.showProgress;
-  progressToggle.addEventListener('change', () => {
-    state.showProgress = progressToggle.checked;
-    saveState(); renderAll();
-  });
+  /* items per page */
+  wireRange('items-per-page','ipp-label', v=>{
+    state.itemsPerPage=v; if(state.mode==='wall') renderWall(); saveState();
+  }, state.itemsPerPage, v=>String(v));
 }
 
-function setupColorPair(textId, pickerId, swatchId, onChange, initialVal) {
-  const textEl = document.getElementById(textId);
-  const pickerEl = document.getElementById(pickerId);
-  const swatchEl = document.getElementById(swatchId);
-
-  textEl.value = initialVal;
-  pickerEl.value = initialVal;
-  swatchEl.style.background = initialVal;
-
-  pickerEl.addEventListener('input', () => {
-    const val = pickerEl.value.toUpperCase();
-    textEl.value = val;
-    swatchEl.style.background = val;
-    onChange(val);
-  });
-  textEl.addEventListener('input', () => {
-    const val = textEl.value.trim();
-    if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
-      pickerEl.value = val;
-      swatchEl.style.background = val;
-      onChange(val.toUpperCase());
-    }
-  });
-}
-
-function closeSettings() {
+function closeSettings(){
   document.getElementById('settings-panel').classList.add('hidden');
   document.getElementById('settings-overlay').classList.add('hidden');
 }
 
-function applySettings() {
-  document.documentElement.style.setProperty('--accent', state.accentColor);
-  document.documentElement.style.setProperty('--header-bg', state.headerColor);
-  document.documentElement.style.setProperty('--item-font-size', state.itemFontSize + 'px');
-
-  applyCheckboxStyle();
-
-  document.querySelectorAll('.groups-grid').forEach(g => {
-    g.classList.toggle('cols-2', state.colLayout === '2');
-  });
-
-  // Sync all textareas heights
-  document.querySelectorAll('.todo-text-input').forEach(ta => autoResize(ta));
-}
-
-function applyCheckboxStyle() {
-  const style = state.checkboxStyle;
-  const r = style === 'circle' ? '50%' : style === 'none' ? '0' : '3px';
-  const border = style === 'none' ? '1.5px solid transparent' : '1.5px solid var(--border-2)';
-  document.querySelectorAll('.todo-check').forEach(el => {
-    el.style.borderRadius = r;
-    el.style.border = el.classList.contains('checked') ? 'none' : border;
-    if (style === 'none') {
-      el.style.background = el.classList.contains('checked') ? 'none' : 'transparent';
-    }
-  });
-  document.documentElement.style.setProperty('--checkbox-radius', r);
-}
-
-/* ─────────────────────────────────────────────
-   6. DRAG & DROP (groups within a page)
-───────────────────────────────────────────── */
-let dragSrcGroupId = null;
-let dragSrcPageId  = null;
-
-function setupGroupDragDrop(grid, pageId) {
-  grid.addEventListener('dragstart', e => {
-    const groupCard = e.target.closest('.group-card');
-    if (!groupCard) return;
-    dragSrcGroupId = groupCard.dataset.groupId;
-    dragSrcPageId  = pageId;
-    groupCard.classList.add('dragging');
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', dragSrcGroupId);
-  });
-
-  grid.addEventListener('dragend', e => {
-    document.querySelectorAll('.group-card.dragging').forEach(el => el.classList.remove('dragging'));
-    document.querySelectorAll('.group-card.drag-over').forEach(el => el.classList.remove('drag-over'));
-    dragSrcGroupId = null;
-    dragSrcPageId  = null;
-  });
-
-  grid.addEventListener('dragover', e => {
-    e.preventDefault();
-    const groupCard = e.target.closest('.group-card');
-    if (groupCard && groupCard.dataset.groupId !== dragSrcGroupId) {
-      document.querySelectorAll('.group-card.drag-over').forEach(el => el.classList.remove('drag-over'));
-      groupCard.classList.add('drag-over');
-    }
-  });
-
-  grid.addEventListener('dragleave', e => {
-    const groupCard = e.target.closest('.group-card');
-    if (groupCard) groupCard.classList.remove('drag-over');
-  });
-
-  grid.addEventListener('drop', e => {
-    e.preventDefault();
-    const targetCard = e.target.closest('.group-card');
-    if (!targetCard || !dragSrcGroupId) return;
-    const targetGroupId = targetCard.dataset.groupId;
-    if (targetGroupId === dragSrcGroupId) return;
-    if (pageId !== dragSrcPageId) return; // only within same page
-
-    const page = state.pages.find(p => p.id === pageId);
-    if (!page) return;
-    const srcIdx = page.groups.findIndex(g => g.id === dragSrcGroupId);
-    const tgtIdx = page.groups.findIndex(g => g.id === targetGroupId);
-    if (srcIdx < 0 || tgtIdx < 0) return;
-
-    const arr = [...page.groups];
-    const [moved] = arr.splice(srcIdx, 1);
-    arr.splice(tgtIdx, 0, moved);
-    page.groups = arr;
-    saveState();
-
-    // Re-render just this grid
-    grid.innerHTML = '';
-    page.groups.forEach(g => grid.appendChild(renderGroup(g, pageId)));
-    applySettings();
+function wireColorPair(textId, pickerId, swatchId, onChange, initial){
+  const t=document.getElementById(textId);
+  const p=document.getElementById(pickerId);
+  const s=document.getElementById(swatchId);
+  if(!t||!p||!s) return;
+  t.value=initial; p.value=initial; s.style.background=initial;
+  p.addEventListener('input',()=>{ const v=p.value.toUpperCase(); t.value=v; s.style.background=v; onChange(v); });
+  t.addEventListener('input',()=>{
+    const v=t.value.trim();
+    if(/^#[0-9A-Fa-f]{6}$/.test(v)){ p.value=v; s.style.background=v; onChange(v.toUpperCase()); }
   });
 }
 
-/* ─────────────────────────────────────────────
-   7. STATS
-───────────────────────────────────────────── */
-function updateStats() {
-  let total = 0, done = 0;
-  state.pages.forEach(p => p.groups.forEach(g => {
-    total += g.items.length;
-    done  += g.items.filter(i => i.done).length;
-  }));
-  document.getElementById('stat-total').textContent = `${total} item`;
-  document.getElementById('stat-done').textContent  = `${done} selesai`;
+function wireRange(rangeId, labelId, onChange, initial, fmt){
+  const r=document.getElementById(rangeId);
+  const l=document.getElementById(labelId);
+  if(!r||!l) return;
+  r.value=initial; l.textContent=fmt(initial);
+  r.addEventListener('input',()=>{ const v=parseInt(r.value); l.textContent=fmt(v); onChange(v); });
 }
 
-/* ─────────────────────────────────────────────
-   8. PRINT
-───────────────────────────────────────────── */
-document.getElementById('btn-print').addEventListener('click', () => {
-  window.print();
-});
-
-/* ─────────────────────────────────────────────
-   9. PERSISTENCE (localStorage)
-───────────────────────────────────────────── */
-const STORAGE_KEY = 'taskflow_state_v2';
-
-function saveState() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch (e) {
-    // storage full or unavailable
-  }
-}
-
-function loadState() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const loaded = JSON.parse(raw);
-      Object.assign(state, loaded);
-      return true;
-    }
-  } catch (e) {}
-  return false;
-}
-
-/* ─────────────────────────────────────────────
-   TOAST
-───────────────────────────────────────────── */
-let toastTimer;
-function toast(msg, duration = 2000) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => el.classList.remove('show'), duration);
-}
-
-/* ─────────────────────────────────────────────
-   10. INIT
-───────────────────────────────────────────── */
-function loadDefaultData() {
-  state.pages = [
+/* ══════════════════════════════════════════
+   DEFAULT DATA
+══════════════════════════════════════════ */
+function loadDefaultData(){
+  state.pages=[
     {
-      id: uid(),
-      title: 'Web Docflow',
-      groups: [
-        {
-          id: uid(),
-          name: 'UI & TAMPILAN',
-          items: [
-            { id: uid(), text: 'Perbaiki Tampilan preview History', done: false, priority: 'high', tag: 'UI' },
-            { id: uid(), text: 'Menambah detail kecil di mode manual, history, dan setting', done: false, priority: 'mid', tag: '' },
-          ]
-        },
-        {
-          id: uid(),
-          name: 'FITUR',
-          items: [
-            { id: uid(), text: 'Memasukan Fitur Download PDF', done: false, priority: 'high', tag: 'feature' },
-          ]
-        },
+      id:uid(), title:'Web Docflow',
+      groups:[
+        { id:uid(), name:'Selesaikan Web Docflow', items:[
+          {id:uid(),text:'Perbaiki Tampilan preview History',done:false,priority:'high',tag:''},
+          {id:uid(),text:'Menambah detail kecil di mode manual, history, dan setting',done:false,priority:'mid',tag:''},
+          {id:uid(),text:'Memasukan Fitur Download PDF',done:false,priority:'high',tag:'feature'},
+        ]},
       ]
     },
     {
-      id: uid(),
-      title: 'Web Memories',
-      groups: [
-        {
-          id: uid(),
-          name: 'UPDATE',
-          items: [
-            { id: uid(), text: 'Update Web Memories', done: false, priority: 'mid', tag: '' },
-            { id: uid(), text: 'Menambahkan Web Memories Generator', done: false, priority: 'mid', tag: 'feature' },
-            { id: uid(), text: 'Music player menjadi floating bottom + mode icon', done: false, priority: 'low', tag: 'UI' },
-            { id: uid(), text: 'Tambahkan 1 atau 2 column view, dan color picker', done: false, priority: 'low', tag: 'feature' },
-          ]
-        },
+      id:uid(), title:'Web Memories',
+      groups:[
+        { id:uid(), name:'Update Web Memories', items:[
+          {id:uid(),text:'Menambahkan Web Memories Generator',done:false,priority:'mid',tag:''},
+          {id:uid(),text:'Music player menjadi floating bottom + mode icon',done:false,priority:'low',tag:'UI'},
+          {id:uid(),text:'Tambahkan 1 atau 2 column view, dan color picker',done:false,priority:'low',tag:'feature'},
+        ]},
       ]
     },
     {
-      id: uid(),
-      title: 'Web Zanxa Site',
-      groups: [
-        {
-          id: uid(),
-          name: 'KONTEN NYATA',
-          items: [
-            { id: uid(), text: 'Menambahkan Data Real (ig, wa, maps)', done: false, priority: 'high', tag: 'content' },
-            { id: uid(), text: 'Menggunakan Foto Real untuk proyek dan komentar', done: false, priority: 'high', tag: 'content' },
-            { id: uid(), text: 'Tambahkan Blog nyata — minimal 3, dan ada di home', done: false, priority: 'mid', tag: 'content' },
-          ]
-        },
-        {
-          id: uid(),
-          name: 'TAMPILAN & LAYOUT',
-          items: [
-            { id: uid(), text: 'Update Tampilannya (Menambah Elemen di header, dll)', done: false, priority: 'mid', tag: 'UI' },
-            { id: uid(), text: 'Perbaiki Layout nya', done: false, priority: 'mid', tag: 'UI' },
-            { id: uid(), text: 'Memasukan Desain Real ke Halaman Design', done: false, priority: 'low', tag: 'UI' },
-          ]
-        },
-        {
-          id: uid(),
-          name: 'HALAMAN BARU',
-          items: [
-            { id: uid(), text: 'Tambahkan halaman lain selain index.html', done: false, priority: 'mid', tag: 'feature' },
-            { id: uid(), text: 'Buat Pricelist untuk Web dan Design', done: false, priority: 'mid', tag: 'feature' },
-          ]
-        },
+      id:uid(), title:'Web Zanxa Site',
+      groups:[
+        { id:uid(), name:'Update Web Zanxa Site', items:[
+          {id:uid(),text:'Menambahkan Data Real (ig, wa, maps)',done:false,priority:'high',tag:'content'},
+          {id:uid(),text:'Update Tampilannya (Menambah Elemen di header, dll)',done:false,priority:'mid',tag:'UI'},
+          {id:uid(),text:'Menggunakan Foto Real untuk proyek dan komentar',done:false,priority:'high',tag:'content'},
+          {id:uid(),text:'Perbaiki Layout nya',done:false,priority:'mid',tag:'UI'},
+          {id:uid(),text:'Tambahkan halaman lain selain index.html',done:false,priority:'mid',tag:'feature'},
+          {id:uid(),text:'Memasukan Desain Real ke Halaman Design',done:false,priority:'low',tag:'UI'},
+          {id:uid(),text:'Buat Pricelist untuk Web dan Design',done:false,priority:'mid',tag:'feature'},
+          {id:uid(),text:'Tambahkan Blog nyata — minimal 3, dan ada di home',done:false,priority:'mid',tag:'content'},
+        ]},
       ]
     },
     {
-      id: uid(),
-      title: 'Web Undangan Digital',
-      groups: [
-        {
-          id: uid(),
-          name: 'BUILD',
-          items: [
-            { id: uid(), text: 'Buat Homepage nya', done: false, priority: 'high', tag: '' },
-            { id: uid(), text: 'Buat Template Pertama', done: false, priority: 'high', tag: '' },
-            { id: uid(), text: 'Buat Generator nya', done: false, priority: 'mid', tag: 'feature' },
-            { id: uid(), text: 'Pelajari "Burst Send" (Optional)', done: false, priority: 'low', tag: 'research' },
-          ]
-        },
+      id:uid(), title:'Web Undangan Digital',
+      groups:[
+        { id:uid(), name:'Buat Web Undangan Digital', items:[
+          {id:uid(),text:'Buat Homepage nya',done:false,priority:'high',tag:''},
+          {id:uid(),text:'Buat Template Pertama',done:false,priority:'high',tag:''},
+          {id:uid(),text:'Buat Generator nya',done:false,priority:'mid',tag:'feature'},
+          {id:uid(),text:'Pelajari "Burst Send" (Optional)',done:false,priority:'low',tag:'research'},
+        ]},
       ]
     },
   ];
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const hasState = loadState();
-  if (!hasState) loadDefaultData();
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded',()=>{
+  // Clear old storage keys that might be corrupt
+  ['taskflow_state_v2','taskflow_v3'].forEach(k=>{ try{ localStorage.removeItem(k); }catch(e){} });
+
+  const hasData = loadSaved();
+  if(!hasData) loadDefaultData();
 
   initSettings();
-  renderAll();
 
-  // Wire toolbar buttons
-  document.getElementById('btn-add-page').addEventListener('click', () => addPage());
-  document.getElementById('btn-add-group').addEventListener('click', () => {
-    if (state.pages.length === 0) { addPage(); return; }
-    // Add to last page
-    addGroup(state.pages[state.pages.length - 1].id);
+  // Sync input values from state
+  const dtEl=document.getElementById('doc-title');
+  const dsEl=document.getElementById('doc-subtitle');
+  if(dtEl) dtEl.value=state.docTitle||'TODO LIST';
+  if(dsEl) dsEl.value=state.docSubtitle||'';
+
+  // Mode switch
+  document.querySelectorAll('.mode-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>switchMode(btn.dataset.mode));
   });
 
-  // Apply saved CSS vars
-  document.documentElement.style.setProperty('--accent', state.accentColor);
+  // Toolbar
+  document.getElementById('btn-add-page').addEventListener('click', addPage);
+  document.getElementById('btn-add-group').addEventListener('click',()=>{
+    if(!state.pages.length){ addPage(); return; }
+    addGroup(state.pages[state.pages.length-1].id);
+  });
+
+  // Print
+  document.getElementById('btn-print').addEventListener('click',()=>window.print());
+  document.addEventListener('keydown',e=>{ if((e.ctrlKey||e.metaKey)&&e.key==='p'){ e.preventDefault(); window.print(); } });
+
+  // Apply CSS vars
+  document.documentElement.style.setProperty('--accent',    state.accentColor);
   document.documentElement.style.setProperty('--header-bg', state.headerColor);
-  document.documentElement.style.setProperty('--item-font-size', state.itemFontSize + 'px');
+  document.documentElement.style.setProperty('--item-fs',   state.itemFontSize+'px');
 
-  // Keyboard shortcuts
-  document.addEventListener('keydown', e => {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
-      e.preventDefault();
-      window.print();
-    }
-  });
+  // Sync range/radio initial values
+  const ipp=document.getElementById('items-per-page');
+  const ippl=document.getElementById('ipp-label');
+  if(ipp)  ipp.value=state.itemsPerPage;
+  if(ippl) ippl.textContent=state.itemsPerPage;
 
-  toast('✦ Data todo dimuat. Ctrl+P untuk print.');
+  const fsr=document.getElementById('font-size-range');
+  const fsl=document.getElementById('font-size-label');
+  if(fsr)  fsr.value=state.itemFontSize;
+  if(fsl)  fsl.textContent=state.itemFontSize+'px';
+
+  document.querySelectorAll('[name="col-layout"]').forEach(r=>{ r.checked=r.value===state.colLayout; });
+  document.querySelectorAll('[name="wall-theme"]').forEach(r=>{ r.checked=r.value===state.wallTheme; });
+
+  // Initial render — always start in editor to avoid flash
+  switchMode('editor');
+
+  toast('✦ Taskflow siap. Klik "Wall Print" untuk mode cetak tempel.');
 });
