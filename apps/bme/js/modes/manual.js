@@ -76,7 +76,7 @@ export function initManualMode() {
                     <div class="input-group" style="margin-bottom: 8px;">
                         <label class="field-label">Barang</label>
                         <div class="input-with-icon">
-                            <input type="text" class="form-input item-name" value="${item.name}" data-index="${index}" placeholder="Nama Barang">
+                            <textarea class="form-input item-name" data-index="${index}" placeholder="Nama Barang" rows="1" style="resize:none; overflow:hidden; padding-right:30px; font-family:inherit; white-space:pre-wrap;">${item.name || ''}</textarea>
                             <button class="input-icon-btn template-picker-btn" data-index="${index}"><i class="fa-solid fa-list-ul"></i></button>
                         </div>
                     </div>
@@ -123,9 +123,9 @@ export function initManualMode() {
             `;
             container.appendChild(div);
 
-            // Init resize for this item's textarea
-            const textarea = div.querySelector('.item-note');
-            if (textarea) autoResize(textarea);
+            // Init resize for this item's textareas
+            const textareas = div.querySelectorAll('textarea');
+            textareas.forEach(ta => autoResize(ta));
         });
     };
 
@@ -152,7 +152,7 @@ export function initManualMode() {
                 <tr>
                     <td>
                         <div class="input-with-icon">
-                            <input type="text" class="item-name" value="${item.name}" data-index="${index}" placeholder="Nama Barang">
+                            <textarea class="item-name" data-index="${index}" placeholder="Nama Barang" rows="1" style="width:100%; border:none; background:transparent; font-size:0.9rem; resize:none; overflow:hidden; font-family:inherit; padding:4px; padding-right:24px; word-break:break-word; white-space:pre-wrap;">${item.name || ''}</textarea>
                             <button class="input-icon-btn template-picker-btn" data-index="${index}" style="right:0; padding:2px;"><i class="fa-solid fa-list-ul" style="font-size:0.8rem;"></i></button>
                         </div>
                     </td>
@@ -175,6 +175,7 @@ export function initManualMode() {
             </tbody>
         `;
         container.appendChild(table);
+        container.querySelectorAll('textarea').forEach(ta => autoResize(ta));
     };
 
     const render = () => {
@@ -282,7 +283,10 @@ export function initManualMode() {
             const index = parseInt(target.dataset.index);
             const val = target.value;
 
-            if (target.classList.contains('item-name')) items[index].name = val;
+            if (target.classList.contains('item-name')) {
+                items[index].name = val;
+                if (target.tagName.toLowerCase() === 'textarea') autoResize(target);
+            }
 
             if (target.classList.contains('item-tipe')) items[index].tipe = val;
 

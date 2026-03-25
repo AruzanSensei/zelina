@@ -478,6 +478,63 @@ export function initHistoryMode() {
 
         invoiceCard.appendChild(makePreviewBtn('invoice'));
         suratCard.appendChild(makePreviewBtn('surat'));
+
+        // Per-card download buttons (orange, left of Preview)
+        const makeDownloadBtn = (type) => {
+            const btn = document.createElement('button');
+            btn.className = 'btn';
+            btn.innerHTML = '<i class="fa-solid fa-download"></i>';
+            btn.style.cssText = 'position:absolute; right:10px; bottom:8px; padding:7px 11px; font-size:0.78rem; z-index:2; background:#e67e22; border-color:#d35400; color:white;';
+            btn.title = type === 'invoice' ? 'Unduh Invoice' : 'Unduh Surat Jalan';
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const html = type === 'invoice' ? invoiceHTML : suratJalanHTML;
+                const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
+                const formats = appState.state.settings.fileNameFormat || { invoice: 'Invoice-{judul}', suratJalan: 'Surat Jalan-{judul}' };
+                const template = type === 'surat' ? formats.suratJalan : formats.invoice;
+                const now = new Date();
+                const filename = template
+                    .replace(/\{judul\}/gi, title)
+                    .replace(/%YYYY/g, String(now.getFullYear()))
+                    .replace(/%MM/g, String(now.getMonth() + 1).padStart(2, '0'))
+                    .replace(/%DD/g, String(now.getDate()).padStart(2, '0'))
+                    .replace(/%HH/g, String(now.getHours()).padStart(2, '0'))
+                    .replace(/%mm/g, String(now.getMinutes()).padStart(2, '0'))
+                    .replace(/%ss/g, String(now.getSeconds()).padStart(2, '0'));
+
+                if (defaultMethod === 'pdf') {
+                    const w = window.open('', '_blank');
+                    if (!w) return;
+                    w.document.open();
+                    w.document.write(html);
+                    w.document.close();
+                    w.document.title = title;
+                    setTimeout(() => { w.focus(); w.print(); }, 300);
+                } else {
+                    const alertEl = document.getElementById('custom-alert');
+                    const messageEl = document.getElementById('alert-message');
+                    if (alertEl && messageEl) {
+                        messageEl.innerHTML = 'Mengekspor... <i class="fa-solid fa-spinner fa-spin"></i>';
+                        alertEl.classList.remove('hidden');
+                        alertEl.style.animation = 'alert-in 0.3s ease-out forwards';
+                    }
+                    if (defaultMethod === 'jpeg') {
+                        await exportToJPEG(html, filename);
+                    } else {
+                        await exportToPNG(html, filename);
+                    }
+                    if (alertEl) alertEl.classList.add('hidden');
+                }
+            });
+            return btn;
+        };
+
+        // Adjust Preview button to not overlap with download button
+        invoiceCard.querySelectorAll('.btn.btn-outline').forEach(b => { b.style.right = '52px'; });
+        suratCard.querySelectorAll('.btn.btn-outline').forEach(b => { b.style.right = '52px'; });
+
+        invoiceCard.appendChild(makeDownloadBtn('invoice'));
+        suratCard.appendChild(makeDownloadBtn('surat'));
         cardsRow.appendChild(invoiceCard);
         cardsRow.appendChild(suratCard);
     };

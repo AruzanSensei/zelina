@@ -398,6 +398,11 @@ small {
     transition: border-color 0.2s;
 }
 
+.form-textarea.item-note {
+    padding: 12px;
+    margin-top: 6px;
+}
+
 .form-input:focus,
 .form-textarea:focus {
     outline: none;
@@ -492,7 +497,7 @@ small {
 }
 
 .qty-btn {
-    padding: 8px 12px;
+    padding: 14px 12px;
     background: #f0f0f0;
     border: none;
     cursor: pointer;
@@ -1105,7 +1110,7 @@ details[open]>summary.setting-item::after {
 
 .copy-icon-btn {
     position: absolute;
-    top: 8px;
+    top: 14px;
     right: 8px;
     background: rgba(255, 255, 255, 0.8);
     border: 1px solid #ddd;

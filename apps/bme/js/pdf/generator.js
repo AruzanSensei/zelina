@@ -950,7 +950,9 @@ export function initPDFGenerator() {
             liveDownloadBtn.onclick = async () => {
                 const title = document.getElementById('manual-title')?.value || '';
                 const items = appState.state.invoiceItems;
-                if (!items || items.length === 0 || !title) return;
+                if (!items || items.length === 0) return showAlert('Belum ada item!');
+                const titleRequired = appState.state.settings?.titleRequired !== false;
+                if (titleRequired && !title) return showAlert('Harap isi Judul Invoice terlebih dahulu!');
 
                 // Resolve default method and filename regardless of edit mode
                 const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
@@ -1022,6 +1024,72 @@ export function initPDFGenerator() {
             e.stopPropagation();
             const type = btn.dataset.previewType === 'surat' ? 'surat' : 'invoice';
             openFullPreview(type);
+        });
+    });
+
+    // Per-card download buttons
+    const cardDownloadButtons = document.querySelectorAll('.preview-card-download-btn');
+    cardDownloadButtons.forEach((btn) => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const type = btn.dataset.downloadType === 'surat' ? 'surat' : 'invoice';
+
+            const title = document.getElementById('manual-title')?.value || '';
+            const items = appState.state.invoiceItems;
+
+            if (!items || items.length === 0) return showAlert('Belum ada item!');
+            const titleRequired = appState.state.settings?.titleRequired !== false;
+            if (titleRequired && !title) return showAlert('Harap isi Judul Invoice terlebih dahulu!');
+
+            const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
+            const formats = appState.state.settings.fileNameFormat || { invoice: 'Invoice-{judul}', suratJalan: 'Surat Jalan-{judul}' };
+            const template = type === 'surat' ? formats.suratJalan : formats.invoice;
+            const now = new Date();
+            const filename = template
+                .replace(/\{judul\}/gi, title)
+                .replace(/%YYYY/g, String(now.getFullYear()))
+                .replace(/%MM/g, String(now.getMonth() + 1).padStart(2, '0'))
+                .replace(/%DD/g, String(now.getDate()).padStart(2, '0'))
+                .replace(/%HH/g, String(now.getHours()).padStart(2, '0'))
+                .replace(/%mm/g, String(now.getMinutes()).padStart(2, '0'))
+                .replace(/%ss/g, String(now.getSeconds()).padStart(2, '0'));
+
+            const editKey = type === 'surat' ? 'letter' : 'invoice';
+            const htmlDoc = manualEdits[editKey]
+                ? manualEdits[editKey]
+                : (type === 'invoice' ? buildInvoiceHTML(items, title) : buildSuratJalanHTML(items));
+
+            if (defaultMethod === 'pdf') {
+                const w = window.open('', '_blank');
+                if (!w) return;
+                w.document.open();
+                w.document.write(htmlDoc);
+                w.document.close();
+                w.document.title = title;
+                setTimeout(() => {
+                    w.focus();
+                    w.print();
+                    document.dispatchEvent(new CustomEvent('download-complete'));
+                }, 300);
+            } else {
+                const alertEl = document.getElementById('custom-alert');
+                const messageEl = document.getElementById('alert-message');
+                if (alertEl && messageEl) {
+                    messageEl.innerHTML = 'Mengekspor... <i class="fa-solid fa-spinner fa-spin"></i>';
+                    alertEl.classList.remove('hidden');
+                    alertEl.style.animation = 'alert-in 0.3s ease-out forwards';
+                }
+
+                if (defaultMethod === 'jpeg') {
+                    await exportToJPEG(htmlDoc, filename);
+                } else {
+                    await exportToPNG(htmlDoc, filename);
+                }
+
+                if (alertEl) {
+                    alertEl.classList.add('hidden');
+                }
+            }
         });
     });
 
