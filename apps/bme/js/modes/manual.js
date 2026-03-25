@@ -56,6 +56,18 @@ export function initManualMode() {
         navigator.clipboard.writeText(text).then(() => {
             btn.classList.add('copied');
             setTimeout(() => btn.classList.remove('copied'), 1500);
+
+            const alertEl = document.getElementById('custom-alert');
+            const messageEl = document.getElementById('alert-message');
+            if (alertEl && messageEl) {
+                messageEl.innerHTML = 'Teks disalin <i class="fa-solid fa-check" style="color: #27AE60; margin-left: 5px;"></i>';
+                alertEl.classList.remove('hidden');
+                alertEl.style.animation = 'alert-in 0.3s ease-out forwards';
+                
+                setTimeout(() => {
+                    alertEl.classList.add('hidden');
+                }, 1500);
+            }
         });
     };
 
