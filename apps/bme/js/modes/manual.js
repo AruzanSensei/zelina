@@ -38,8 +38,34 @@ export function initManualMode() {
             if (!e.target.value.trim()) e.target.classList.add('required-empty-red');
             else e.target.classList.remove('required-empty-red');
             render();
+            updateEmptyFieldsInfo();
         });
     }
+
+    const updateEmptyFieldsInfo = () => {
+        const indicator = document.getElementById('required-fields-indicator');
+        const badge = indicator?.querySelector('.indicator-badge');
+        
+        let emptyCount = 0;
+
+        // Count title if empty
+        if (!titleInput?.value.trim()) emptyCount++;
+        
+        // Count empty items
+        items.forEach(item => {
+            if (!item.name?.trim()) emptyCount++;
+            if (!item.price || item.price <= 0) emptyCount++;
+            if (!item.tipe?.trim()) emptyCount++;
+            if (!item.note?.trim()) emptyCount++;
+        });
+
+        if (emptyCount > 0) {
+            indicator?.classList.remove('hidden');
+            if (badge) badge.textContent = emptyCount;
+        } else {
+            indicator?.classList.add('hidden');
+        }
+    };
 
     // ============================================
     // MICRO UX HANDLERS
@@ -63,7 +89,7 @@ export function initManualMode() {
                 messageEl.innerHTML = 'Teks disalin <i class="fa-solid fa-check" style="color: #27AE60; margin-left: 5px;"></i>';
                 alertEl.classList.remove('hidden');
                 alertEl.style.animation = 'alert-in 0.3s ease-out forwards';
-                
+
                 setTimeout(() => {
                     alertEl.classList.add('hidden');
                 }, 1500);
@@ -88,19 +114,20 @@ export function initManualMode() {
                     <div class="input-group" style="margin-bottom: 8px;">
                         <label class="field-label">Barang</label>
                         <div class="input-with-icon">
-                            <textarea class="form-input item-name" data-index="${index}" placeholder="Nama Barang" rows="1" style="resize:none; overflow:hidden; padding-right:30px; font-family:inherit; white-space:pre-wrap;">${item.name || ''}</textarea>
+                            <textarea class="form-input item-name ${!item.name ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Nama Barang" rows="1" style="resize:none; overflow:hidden; padding-right:30px; font-family:inherit; white-space:pre-wrap;">${item.name || ''}</textarea>
                             <button class="input-icon-btn template-picker-btn" data-index="${index}"><i class="fa-solid fa-list-ul"></i></button>
                         </div>
                     </div>
                     
                     <div class="item-row">
-                        <div style="flex: 1.7;">
+                        <div style="flex: 2.7;">
                             <label class="field-label">Harga</label>
-                            <input type="text" class="form-input item-price-format" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="0" inputmode="numeric">
+                            <input type="text" class="form-input item-price-format ${!item.price || item.price <= 0 ? 'required-empty-orange' : ''}" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="0" inputmode="numeric">
                         </div>
                         <div style="flex: 2.2;">
                             <label class="field-label">Tipe</label>
-                            <select class="form-input item-tipe" data-index="${index}">
+                            <select class="form-input item-tipe ${!item.tipe ? 'required-empty-orange' : ''}" data-index="${index}">
+                                <option value="" ${!item.tipe ? 'selected' : ''}>Pilih Tipe</option>
                                 <option value="ICA" ${item.tipe === 'ICA' ? 'selected' : ''}>ICA</option>
                                 <option value="Protecta" ${item.tipe === 'Protecta' ? 'selected' : ''}>Protecta</option>
                                 <option value="Prolink" ${item.tipe === 'Prolink' ? 'selected' : ''}>Prolink</option>
@@ -164,13 +191,14 @@ export function initManualMode() {
                 <tr>
                     <td>
                         <div class="input-with-icon">
-                            <textarea class="item-name" data-index="${index}" placeholder="Nama Barang" rows="1" style="width:100%; border:none; background:transparent; font-size:0.9rem; resize:none; overflow:hidden; font-family:inherit; padding:4px; padding-right:24px; word-break:break-word; white-space:pre-wrap;">${item.name || ''}</textarea>
+                            <textarea class="item-name ${!item.name ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Nama Barang" rows="1" style="width:100%; border:none; background:transparent; font-size:0.9rem; resize:none; overflow:hidden; font-family:inherit; padding:4px; padding-right:24px; word-break:break-word; white-space:pre-wrap;">${item.name || ''}</textarea>
                             <button class="input-icon-btn template-picker-btn" data-index="${index}" style="right:0; padding:2px;"><i class="fa-solid fa-list-ul" style="font-size:0.8rem;"></i></button>
                         </div>
                     </td>
-                    <td><input type="text" class="item-price-format" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="0" inputmode="numeric"></td>
+                    <td><input type="text" class="item-price-format ${!item.price || item.price <= 0 ? 'required-empty-orange' : ''}" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="0" inputmode="numeric"></td>
                     <td>
-                        <select class="item-tipe" data-index="${index}" style="width:100%; padding:4px; border:none; background:transparent;">
+                        <select class="item-tipe ${!item.tipe ? 'required-empty-orange' : ''}" data-index="${index}" style="width:100%; padding:4px; border:none; background:transparent;">
+                            <option value="" ${!item.tipe ? 'selected' : ''}>Pilih Tipe</option>
                             <option value="ICA" ${item.tipe === 'ICA' ? 'selected' : ''}>ICA</option>
                             <option value="Protecta" ${item.tipe === 'Protecta' ? 'selected' : ''}>Protecta</option>
                             <option value="Prolink" ${item.tipe === 'Prolink' ? 'selected' : ''}>Prolink</option>
@@ -207,6 +235,7 @@ export function initManualMode() {
 
         // Update State
         appState.updateItems(items);
+        updateEmptyFieldsInfo();
         // manualTitle is updated via its own listener
     };
 
@@ -342,6 +371,7 @@ export function initManualMode() {
             }
 
             appState.updateItems(items);
+            updateEmptyFieldsInfo();
         }
     });
 
@@ -372,5 +402,6 @@ export function initManualMode() {
         addItem();
     } else {
         render();
+        updateEmptyFieldsInfo();
     }
 }

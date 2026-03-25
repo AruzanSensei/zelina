@@ -1399,12 +1399,44 @@ export function initPDFGenerator() {
     // ============================================
     // VALIDATION
     // ============================================
-    const validate = () => {
+    // Show custom confirm modal
+    const showCustomConfirm = (title) => {
+        return new Promise((resolve) => {
+            const modal = document.getElementById('custom-confirm');
+            const message = document.getElementById('confirm-message');
+            const btnCancel = document.getElementById('confirm-cancel');
+            const btnProceed = document.getElementById('confirm-proceed');
+
+            if (!modal || !message || !btnCancel || !btnProceed) {
+                // Fallback to native confirm if UI missing
+                resolve(confirm(`Data dengan judul "${title}" sudah ada di riwayat. Tetap simpan?`));
+                return;
+            }
+
+            message.textContent = `Data dengan judul "${title}" sudah ada di riwayat. Tetap simpan?`;
+            modal.classList.remove('hidden');
+
+            const cleanup = (result) => {
+                modal.classList.add('hidden');
+                btnCancel.removeEventListener('click', onCancel);
+                btnProceed.removeEventListener('click', onProceed);
+                resolve(result);
+            };
+
+            const onCancel = () => cleanup(false);
+            const onProceed = () => cleanup(true);
+
+            btnCancel.addEventListener('click', onCancel);
+            btnProceed.addEventListener('click', onProceed);
+        });
+    };
+
+    const validate = async () => {
         const titleInput = document.getElementById('manual-title');
-        const title = titleInput?.value.trim();
+        const title = titleInput?.value.trim() || 'Untitled';
         const titleRequired = appState.state.settings.titleRequired !== false;
 
-        if (titleRequired && !title) {
+        if (titleRequired && !titleInput?.value.trim()) {
             titleInput?.classList.add('blink-error');
             titleInput?.focus();
             showAlert("Harap isi Judul Invoice terlebih dahulu!");
@@ -1429,13 +1461,22 @@ export function initPDFGenerator() {
             }
         }
 
-        return title || 'Untitled';
+        // Check for duplicate title in history
+        const history = appState.state.history || [];
+        const isDuplicate = history.some(h => (h.title || 'Untitled').toLowerCase() === title.toLowerCase());
+        
+        if (isDuplicate) {
+            const proceed = await showCustomConfirm(title);
+            if (!proceed) return false;
+        }
+
+        return title;
     };
 
     const btnSave = document.getElementById('btn-save-only');
     if (btnSave) {
-        btnSave.addEventListener('click', () => {
-            const title = validate();
+        btnSave.addEventListener('click', async () => {
+            const title = await validate();
             if (!title) return;
             const items = appState.state.invoiceItems;
             if (items.length === 0 && !manualEdits.invoice && !manualEdits.letter) return showAlert("Belum ada item!");
@@ -1481,7 +1522,7 @@ export function initPDFGenerator() {
 
             // Prevent ghost click (touch fires both touchend + mouseup)
             e.preventDefault();
-            const title = validate();
+            const title = await validate();
             if (!title) return;
             const items = appState.state.invoiceItems;
             if (items.length === 0) return showAlert("Belum ada item!");
@@ -1507,9 +1548,9 @@ export function initPDFGenerator() {
             if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) return;
             startPress(e);
         });
-        btnDownload.addEventListener('mouseup', (e) => {
+        btnDownload.addEventListener('mouseup', async (e) => {
             if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) return;
-            handlePress(e);
+            await handlePress(e);
         });
         btnDownload.addEventListener('mouseleave', cancelPress);
     }

@@ -15,12 +15,13 @@ const DEFAULTS = {
     settings: {
         language: 'id',
         theme: 'light',
+        onboarded: false,
         downloadFormats: {
             png: true,
             jpeg: true,
-            pdf: false
+            pdf: true
         },
-        defaultDownloadMethod: 'png',
+        defaultDownloadMethod: 'pdf',
         titleRequired: true,
         fileNameFormat: {
             invoice: 'Invoice-{judul}',

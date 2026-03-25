@@ -72,10 +72,20 @@ export function initSettings() {
         });
     });
 
-    // Init Theme
+    // Init Theme & Sync
     const currentTheme = appState.state.settings.theme;
     document.documentElement.setAttribute('data-theme', currentTheme);
-    document.querySelector(`[data-theme="${currentTheme}"]`).classList.add('active');
+    const initialThemeBtn = document.querySelector(`[data-theme="${currentTheme}"]`);
+    if (initialThemeBtn) initialThemeBtn.classList.add('active');
+
+    // Sync UI when settings change (e.g. from global theme toggle)
+    appState.subscribe('settings', (settings) => {
+        if (settings.theme) {
+            document.querySelectorAll('[data-theme]').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === settings.theme);
+            });
+        }
+    });
 
     // ===================================
     // DOWNLOAD FORMAT SETTINGS
@@ -86,8 +96,8 @@ export function initSettings() {
     const defaultMethodSelect = document.getElementById('default-download-method');
 
     // Initialize from state
-    const formats = appState.state.settings.downloadFormats || { png: true, jpeg: true, pdf: false };
-    const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
+    const formats = appState.state.settings.downloadFormats || { png: true, jpeg: true, pdf: true };
+    const defaultMethod = appState.state.settings.defaultDownloadMethod || 'pdf';
 
     if (enablePNG) enablePNG.checked = formats.png;
     if (enableJPEG) enableJPEG.checked = formats.jpeg;

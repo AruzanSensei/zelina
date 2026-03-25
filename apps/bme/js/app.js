@@ -126,7 +126,64 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener(evt, resetIdleTimer, { passive: true });
     });
 
+    // ============================================
+    // ONBOARDING LOGIC
+    // ============================================
+    const initOnboarding = () => {
+        const modal = document.getElementById('onboarding-modal');
+        const select = document.getElementById('onboarding-download-method');
+        const btnStart = document.getElementById('btn-onboarding-start');
+
+        if (!appState.state.settings.onboarded) {
+            modal.classList.remove('hidden');
+        }
+
+        btnStart.addEventListener('click', () => {
+            const method = select.value;
+            appState.updateSettings({
+                onboarded: true,
+                defaultDownloadMethod: method
+            });
+            modal.classList.add('hidden');
+            
+            // Sync setting dropdown UI if exists
+            const settingSelect = document.getElementById('default-download-method');
+            if (settingSelect) settingSelect.value = method;
+        });
+    };
+
+    initSafely('Onboarding', initOnboarding);
+
+    // ============================================
+    // THEME TOGGLE LOGIC
+    // ============================================
+    const themeToggleBtn = document.getElementById('btn-theme-toggle');
+    const updateThemeUI = (theme) => {
+        document.body.classList.toggle('dark-mode', theme === 'dark');
+        document.documentElement.setAttribute('data-theme', theme);
+        const icon = themeToggleBtn.querySelector('i');
+        if (icon) {
+            icon.className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        }
+        
+        // Update settings panel buttons if they exist
+        const themeBtns = document.querySelectorAll('[data-theme]');
+        themeBtns.forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.theme === theme);
+        });
+    };
+
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+            const newTheme = appState.state.settings.theme === 'light' ? 'dark' : 'light';
+            appState.updateSettings({ theme: newTheme });
+            updateThemeUI(newTheme);
+        });
+    }
+
+    // Apply initial theme
+    updateThemeUI(appState.state.settings.theme);
+
     // Initial show
     showFooter();
-
 });
