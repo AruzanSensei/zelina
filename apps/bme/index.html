@@ -67,13 +67,30 @@
             </div>
 
             <div style="display:flex; justify-content:flex-end; align-items: center;">
-                <div class="view-toggle-container">
-                    <span class="view-label">Tampilan</span>
-                    <div class="toggle-group orange-theme">
-                        <button class="toggle-btn active" id="view-card-btn" title="Card View"><i
-                                class="fa-solid fa-list"></i></button>
-                        <button class="toggle-btn" id="view-table-btn" title="Table View"><i
-                                class="fa-solid fa-table"></i></button>
+                <div class="view-toggle-container"
+                    style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                    <!-- Tampilan (List & Table View) -->
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="view-label" style="margin:0;">Tampilan</span>
+                        <div class="toggle-group orange-theme">
+                            <button class="toggle-btn active" id="view-card-btn" title="Card View"><i
+                                    class="fa-solid fa-list-ul"></i></button>
+                            <button class="toggle-btn" id="view-table-btn" title="Table View"><i
+                                    class="fa-solid fa-table-cells-large"></i></button>
+                        </div>
+                    </div>
+
+                    <div style="width: 1px; height: 16px; background-color: var(--border-color); margin: 0 4px;"></div>
+
+                    <!-- Mode (Simple & Advance Card Mode) -->
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="view-label" style="margin:0;">Mode</span>
+                        <div class="toggle-group orange-theme">
+                            <button class="toggle-btn active" id="mode-simple-btn" title="Simple Mode"><i
+                                    class="fa-solid fa-th-large"></i></button>
+                            <button class="toggle-btn" id="mode-advance-btn" title="Advance Mode"><i
+                                    class="fa-solid fa-th"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>

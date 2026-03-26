@@ -8,7 +8,8 @@ const STORAGE_KEYS = {
     HISTORY: 'bme_history',
     TEMPLATES: 'bme_templates',
     MANUAL_ITEMS: 'bme_manual_items',
-    MANUAL_TITLE: 'bme_manual_title'
+    MANUAL_TITLE: 'bme_manual_title',
+    MANUAL_CARD_MODE: 'bme_manual_card_mode'
 };
 
 const DEFAULTS = {
@@ -48,6 +49,7 @@ class StateManager {
         this.state = {
             currentMode: 'manual', // manual, ai, history
             manualViewMode: 'card', // card, table
+            manualCardMode: this.load(STORAGE_KEYS.MANUAL_CARD_MODE, 'simple'), // simple, advance
             invoiceItems: this.load(STORAGE_KEYS.MANUAL_ITEMS, DEFAULTS.manualItems),
             manualTitle: this.load(STORAGE_KEYS.MANUAL_TITLE, DEFAULTS.manualTitle),
             settings: this.load(STORAGE_KEYS.SETTINGS, DEFAULTS.settings),

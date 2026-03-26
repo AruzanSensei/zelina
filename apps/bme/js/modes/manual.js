@@ -25,6 +25,10 @@ export function initManualMode() {
     const btnCardView = document.getElementById('view-card-btn');
     const btnTableView = document.getElementById('view-table-btn');
 
+    // Mode Toggles
+    const btnModeSimple = document.getElementById('mode-simple-btn');
+    const btnModeAdvance = document.getElementById('mode-advance-btn');
+
     let items = appState.state.invoiceItems || [];
     if (titleInput) {
         titleInput.value = appState.state.manualTitle || '';
@@ -53,10 +57,17 @@ export function initManualMode() {
 
         // Count empty items
         items.forEach(item => {
-            if (!item.name?.trim()) emptyCount++;
-            if (!item.price || item.price <= 0) emptyCount++;
-            if (!item.tipe?.trim()) emptyCount++;
-            if (!item.note?.trim()) emptyCount++;
+            if (appState.state.manualCardMode === 'advance') {
+                if (!item.invKeterangan?.trim()) emptyCount++;
+                if (!item.name?.trim()) emptyCount++;
+                if (!item.price || item.price <= 0) emptyCount++;
+                if (!item.sjKeterangan?.trim()) emptyCount++;
+            } else {
+                if (!item.name?.trim()) emptyCount++;
+                if (!item.price || item.price <= 0) emptyCount++;
+                if (!item.tipe?.trim()) emptyCount++;
+                if (!item.note?.trim()) emptyCount++;
+            }
         });
 
         if (emptyCount > 0) {
@@ -101,7 +112,69 @@ export function initManualMode() {
     // RENDER LOGIC
     // ============================================
 
+    const renderAdvancedCardView = () => {
+        container.innerHTML = '';
+        container.classList.remove('table-view-container');
+
+        items.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'item-card';
+            div.innerHTML = `
+                <button class="remove-item-btn" data-index="${index}"><i class="fa-solid fa-trash"></i></button>
+                    
+                <div class="input-group" style="margin-bottom: 8px;">
+                    <label class="field-label"><strong>Invoice</strong> - Keterangan</label>
+                    <textarea class="form-input item-inv-keterangan ${!item.invKeterangan ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Keterangan untuk Invoice" rows="1" style="resize:none; overflow:hidden; font-family:inherit; white-space:pre-wrap;">${item.invKeterangan || ''}</textarea>
+                </div>
+
+                <div class="item-row">
+                    <div style="flex: 1;">
+                        <label class="field-label"><strong>SurJal</strong> - Nama Barang</label>
+                        <div class="input-with-icon">
+                            <textarea class="form-input item-name ${!item.name ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Nama Barang" rows="1" style="resize:none; overflow:hidden; padding-right:30px; font-family:inherit; white-space:pre-wrap;">${item.name || ''}</textarea>
+                            <button class="input-icon-btn template-picker-btn" data-index="${index}"><i class="fa-solid fa-list-ul"></i></button>
+                        </div>
+                    </div>
+                    <div style="width: 100px;">
+                        <label class="field-label">Pcs</label>
+                        <div class="qty-control">
+                            <button class="qty-btn minus" data-index="${index}">-</button>
+                            <input type="number" class="qty-input item-qty" value="${item.qty}" data-index="${index}" min="1">
+                            <button class="qty-btn plus" data-index="${index}">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group" style="margin-bottom: 8px;">
+                    <label class="field-label"><strong>SurJal</strong> - Keterangan</label>
+                    <textarea class="form-input item-sj-keterangan ${!item.sjKeterangan ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Keterangan untuk Surat Jalan" rows="1" style="resize:none; overflow:hidden; font-family:inherit; white-space:pre-wrap;">${item.sjKeterangan || ''}</textarea>
+                </div>
+
+                <div class="item-row" style="align-items: flex-end; margin-bottom: 0; justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+                        <div style="font-size: 1rem; color: var(--bg-card); background-color: var(--muted); padding: 4px 10px; border-radius: 4px; font-weight: 600; margin-bottom: -15px;">
+                            ${index + 1}
+                        </div>
+                        <div style="flex: 1; max-width: 160px;">
+                            <!--<label class="field-label" style="margin-bottom: 4px;">Harga</label>-->
+                            <input type="text" class="form-input item-price-format ${!item.price || item.price <= 0 ? 'required-empty-orange' : ''}" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="Harga" inputmode="numeric">
+                        </div>
+                    </div>
+                    <div style="font-weight: 600; color: var(--primary); padding-bottom: 4px;">
+                        ${formatCurrency(item.price * item.qty)}
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+            div.querySelectorAll('textarea').forEach(ta => autoResize(ta));
+        });
+    };
+
     const renderCardView = () => {
+        if (appState.state.manualCardMode === 'advance') {
+            renderAdvancedCardView();
+            return;
+        }
         container.innerHTML = '';
         container.classList.remove('table-view-container');
 
@@ -229,6 +302,15 @@ export function initManualMode() {
             btnTableView.classList.remove('active');
         }
 
+        // Mode Toggles Sync
+        if (appState.state.manualCardMode === 'advance') {
+            btnModeAdvance?.classList.add('active');
+            btnModeSimple?.classList.remove('active');
+        } else {
+            btnModeAdvance?.classList.remove('active');
+            btnModeSimple?.classList.add('active');
+        }
+
         // Calculate Total
         const total = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
         document.getElementById('grand-total').textContent = formatCurrency(total);
@@ -246,6 +328,18 @@ export function initManualMode() {
     // View Switching
     btnCardView.addEventListener('click', () => { appState.state.manualViewMode = 'card'; render(); });
     btnTableView.addEventListener('click', () => { appState.state.manualViewMode = 'table'; render(); });
+
+    // Mode Switching
+    btnModeSimple?.addEventListener('click', () => {
+        appState.state.manualCardMode = 'simple';
+        appState.save('bme_manual_card_mode', 'simple');
+        render();
+    });
+    btnModeAdvance?.addEventListener('click', () => {
+        appState.state.manualCardMode = 'advance';
+        appState.save('bme_manual_card_mode', 'advance');
+        render();
+    });
 
     // Add Item
     const addItem = () => {
@@ -360,6 +454,16 @@ export function initManualMode() {
                 // Toggle orange outline based on content
                 if (!val.trim()) target.classList.add('required-empty-orange');
                 else target.classList.remove('required-empty-orange');
+                autoResize(target);
+            }
+
+            if (target.classList.contains('item-inv-keterangan')) {
+                items[index].invKeterangan = val;
+                autoResize(target);
+            }
+
+            if (target.classList.contains('item-sj-keterangan')) {
+                items[index].sjKeterangan = val;
                 autoResize(target);
             }
 
