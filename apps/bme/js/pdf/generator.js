@@ -1464,7 +1464,7 @@ export function initPDFGenerator() {
         // Check for duplicate title in history
         const history = appState.state.history || [];
         const isDuplicate = history.some(h => (h.title || 'Untitled').toLowerCase() === title.toLowerCase());
-        
+
         if (isDuplicate) {
             const proceed = await showCustomConfirm(title);
             if (!proceed) return false;

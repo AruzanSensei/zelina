@@ -617,7 +617,7 @@ export function initSettings() {
                                             <button class="swipe-btn swipe-edit" data-index="${idx}" style="background-color:#F5A623; border:none; color:white; padding:0 20px; cursor:pointer;"><i class="fa-solid fa-pen-to-square"></i></button>
                                             <button class="swipe-btn swipe-delete" data-index="${idx}" style="background-color:#ff4d4f; border:none; color:white; padding:0 20px; cursor:pointer; border-radius:0 var(--radius-sm) var(--radius-sm) 0;"><i class="fa-solid fa-trash"></i></button>
                                         </div>
-                                        <div class="item-card picker-item" data-index="${idx}" style="padding:12px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border:1px solid var(--border-color); background:var(--bg-card); z-index:2; position:relative; transition:transform 0.2s;">
+                                        <div class="item-card picker-item" data-index="${idx}" style="padding:12px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border:1px solid var(--border-color); box-shadow: var(--shadow-sm) !important; background:var(--bg-card); z-index:2; position:relative; transition:transform 0.2s;">
                                             <div style="font-weight:500; pointer-events:none;">${t.name}</div>
                                             <div style="font-weight:600; color:var(--primary); pointer-events:none;">${formatCurrency(t.price)}</div>
                                         </div>

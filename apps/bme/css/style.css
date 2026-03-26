@@ -200,7 +200,7 @@ small {
 }
 
 .required-empty-orange {
-    outline: 1.5px solid #f39c12 !important;
+    outline: 1.5px solid #fbb647 !important;
     /* outline-offset: -1px; */
 }
 
@@ -458,14 +458,15 @@ small {
 .field-label {
     display: block;
     margin-bottom: 4px;
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-size: 0.7rem;
+    font-weight: 400;
     color: var(--text-muted);
 }
 
 .form-input,
 .form-textarea {
     width: 100%;
+    height: 46px;
     padding: 12px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
@@ -475,6 +476,14 @@ small {
     color: var(--text-main);
     font-size: 0.95rem;
     transition: border-color 0.2s;
+}
+
+.form-input.title {
+    box-shadow: var(--shadow-sm);
+}
+
+.form-input.item-name {
+    font-weight: 600;
 }
 
 .form-textarea.item-note {
@@ -536,7 +545,7 @@ small {
 .item-card {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-top: 3px solid var(--text-muted);
+    /* border-top: 3px solid var(--text-muted); */
     border-radius: var(--radius-sm);
     padding: var(--spacing-md);
     /* margin-bottom: 12px; REMOVED in favor of gap */
@@ -1443,23 +1452,26 @@ details[open]>summary.setting-item::after {
 
 /* Floating Required Fields Indicator */
 .floating-indicator {
-    position: fixed;
+    position: absolute;
     right: 20px;
-    bottom: 90px;
-    /* Above action bar */
+    bottom: calc(100% + 15px);
+    /* Exactly 15px above action bar */
     background: #ff4d4f;
     color: white;
     padding: 10px 16px;
     border-radius: 30px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     box-shadow: 0 4px 15px rgba(255, 77, 79, 0.4);
     z-index: 85;
     cursor: default;
-    font-weight: 600;
-    font-size: 0.9rem;
+    font-weight: 400;
+    font-size: 0.6rem;
+    letter-spacing: 1px;
     animation: bounce-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+    white-space: nowrap;
 }
 
 .floating-indicator.hidden {
@@ -1471,13 +1483,13 @@ details[open]>summary.setting-item::after {
 .indicator-badge {
     background: white;
     color: #ff4d4f;
-    width: 22px;
-    height: 22px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.8rem;
+    font-size: 0.6rem;
     font-weight: 800;
 }
 

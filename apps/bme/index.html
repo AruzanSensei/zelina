@@ -63,7 +63,7 @@
         <section id="manual-view" class="view client-view active">
             <div class="input-group">
                 <label class="field-label">Judul Invoice</label>
-                <input type="text" id="manual-title" class="form-input" placeholder="Contoh: Invoice #001">
+                <input type="text" id="manual-title" class="form-input title" placeholder="Contoh: Invoice #001">
             </div>
 
             <div style="display:flex; justify-content:flex-end; align-items: center;">
@@ -175,6 +175,12 @@
             </div>
 
             <div class="action-bar-sticky">
+                <!-- Floating Required Fields Indicator (Inside to sync position) -->
+                <div id="required-fields-indicator" class="floating-indicator hidden">
+                    <div class="indicator-badge">0</div>
+                    <span>Data Kosong</span>
+                </div>
+
                 <div class="total-display">
                     <small>Total</small>
                     <span id="grand-total">Rp 0</span>
@@ -478,16 +484,6 @@
 
     <!-- Custom Alert Notification -->
     <div id="custom-alert" class="custom-alert hidden">
-        <div class="alert-content">
-            <span id="alert-message"></span>
-        </div>
-    </div>
-
-    <!-- Floating Required Fields Indicator -->
-    <div id="required-fields-indicator" class="floating-indicator hidden">
-        <div class="indicator-badge">0</div>
-        <span>Data Kosong</span>
-    </div>
 
     <!-- Custom Confirm Modal (Duplicate Title) -->
     <div id="custom-confirm" class="custom-confirm-overlay hidden">
@@ -505,16 +501,19 @@
     </div>
 
     <!-- Onboarding Modal -->
-    <div id="onboarding-modal" class="modal hidden" style="z-index: 9999; display: flex; align-items: center; justify-content: center;">
-        <div class="modal-content" style="max-width: 400px; text-align: center; padding: 30px; border-radius: var(--radius-md);">
+    <div id="onboarding-modal" class="modal hidden"
+        style="z-index: 9999; display: flex; align-items: center; justify-content: center;">
+        <div class="modal-content"
+            style="max-width: 400px; text-align: center; padding: 30px; border-radius: var(--radius-md);">
             <div class="onboarding-icon" style="font-size: 3.5rem; color: var(--primary); margin-bottom: 20px;">
                 <i class="fa-solid fa-face-smile-beam"></i>
             </div>
             <h2 style="margin-bottom: 15px;">Halo! Selamat Datang</h2>
             <p style="margin-bottom: 25px; color: var(--text-muted); line-height: 1.6;">
-                Mari atur preferensi unduhan Anda untuk pertama kali. Anda tetap bisa mengubahnya nanti di menu pengaturan.
+                Mari atur preferensi unduhan Anda untuk pertama kali. Anda tetap bisa mengubahnya nanti di menu
+                pengaturan.
             </p>
-            
+
             <div class="input-group" style="text-align: left;">
                 <label class="field-label">Metode Unduhan Utama</label>
                 <select id="onboarding-download-method" class="form-input" style="background-color: #f9f9f9;">

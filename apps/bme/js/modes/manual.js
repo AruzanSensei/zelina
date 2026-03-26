@@ -45,12 +45,12 @@ export function initManualMode() {
     const updateEmptyFieldsInfo = () => {
         const indicator = document.getElementById('required-fields-indicator');
         const badge = indicator?.querySelector('.indicator-badge');
-        
+
         let emptyCount = 0;
 
         // Count title if empty
         if (!titleInput?.value.trim()) emptyCount++;
-        
+
         // Count empty items
         items.forEach(item => {
             if (!item.name?.trim()) emptyCount++;
@@ -111,7 +111,7 @@ export function initManualMode() {
             div.innerHTML = `
                 <button class="remove-item-btn" data-index="${index}"><i class="fa-solid fa-trash"></i></button>
                     
-                    <div class="input-group" style="margin-bottom: 8px;">
+                    <div class="input-group" style="margin-bottom: 6px;">
                         <label class="field-label">Barang</label>
                         <div class="input-with-icon">
                             <textarea class="form-input item-name ${!item.name ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Nama Barang" rows="1" style="resize:none; overflow:hidden; padding-right:30px; font-family:inherit; white-space:pre-wrap;">${item.name || ''}</textarea>
@@ -127,7 +127,7 @@ export function initManualMode() {
                         <div style="flex: 2.2;">
                             <label class="field-label">Tipe</label>
                             <select class="form-input item-tipe ${!item.tipe ? 'required-empty-orange' : ''}" data-index="${index}">
-                                <option value="" ${!item.tipe ? 'selected' : ''}>Pilih Tipe</option>
+                                <option value="" ${!item.tipe ? 'selected' : ''}>Tipe</option>
                                 <option value="ICA" ${item.tipe === 'ICA' ? 'selected' : ''}>ICA</option>
                                 <option value="Protecta" ${item.tipe === 'Protecta' ? 'selected' : ''}>Protecta</option>
                                 <option value="Prolink" ${item.tipe === 'Prolink' ? 'selected' : ''}>Prolink</option>
@@ -152,7 +152,7 @@ export function initManualMode() {
                     </div>
                     
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
-                        <div style="font-size: 0.85rem; color: var(--bg-card); background-color: var(--tertiary); margin: 0 2px; padding: 2px 8px; border-radius: 4px; font-weight: 600;">
+                        <div style="font-size: 0.85rem; color: var(--bg-card); background-color: var(--muted); margin: 0 2px; padding: 2px 8px; border-radius: 4px; font-weight: 600;">
                             ${index + 1}
                         </div>
                         <div style="font-weight: 600; color: var(--primary);">

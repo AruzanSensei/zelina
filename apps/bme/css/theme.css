@@ -4,6 +4,7 @@
     --primary-dark: #357ABD;
     --secondary: #9B51E0;
     --tertiary: #F5A623;
+    --muted: #bebebe;
 
     --bg-body: #F4F7F6;
     --bg-card: #FFFFFF;
@@ -17,7 +18,8 @@
     --invoice-bg: #E3F2FD;
     --letter-bg: #F3E5F5;
 
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --shadow-xs: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-sm: 0 3px 8px rgba(0, 0, 0, 0.12);
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
 
     --radius-sm: 8px;
@@ -40,7 +42,7 @@
     --border-color: #333333;
 
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-    
+
     --invoice-bg: #1A237E;
     --letter-bg: #4A148C;
 }
