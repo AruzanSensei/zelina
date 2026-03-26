@@ -1554,3 +1554,87 @@ details[open]>summary.setting-item::after {
         transform: rotate(0deg);
     }
 }
+
+/* Minimalist Mobile Settings UI */
+.settings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 4px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.setting-row:last-child {
+    border-bottom: none;
+}
+
+.setting-info {
+    flex: 1;
+    padding-right: 12px;
+}
+
+.setting-label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 2px;
+}
+
+.setting-subtext {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.setting-control {
+    flex-shrink: 0;
+}
+
+.settings-section-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin: 24px 4px 8px 4px;
+}
+
+/* Segmented Control for Download Format */
+.segmented-control {
+    display: flex;
+    background: var(--bg-body);
+    padding: 3px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+}
+
+.segmented-btn {
+    flex: 1;
+    padding: 6px 12px;
+    border: none;
+    background: transparent;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: calc(var(--radius-md) - 2px);
+    transition: all 0.2s;
+}
+
+.segmented-btn.active {
+    background: white;
+    color: var(--primary);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+[data-theme="dark"] .segmented-btn.active {
+    background: var(--bg-card);
+    color: var(--primary);
+}

@@ -224,137 +224,79 @@
 
                 <div id="settings-general">
 
-                    <!-- Group 1: Tampilan -->
-                    <!-- <div class="settings-card">
-                        <div class="setting-item" style="border-bottom: none; padding-bottom: 4px;">
-                            <label style="font-size: 0.95rem; font-weight: 600;">Tema / Theme</label>
-                            <div class="toggle-group">
-                                <button class="toggle-btn active" data-theme="light">Light</button>
-                                <button class="toggle-btn" data-theme="dark">Dark</button>
+                    <!-- Group 1: General Settings -->
+                    <!-- <div class="settings-section-title">Umum</div> -->
+                    <div class="settings-list">
+                        <!-- Theme Toggle (Simplified) -->
+                        <!-- <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Tema Gelap</span>
+                                <span class="setting-subtext">Gunakan tampilan malam.</span>
                             </div>
-                        </div>
-                    </div> -->
-
-                    <!-- Group 2: Format & Unduh (Accordion) -->
-                    <details class="settings-card" open>
-                        <summary class="setting-item" style="border-bottom: none; outline: none; padding-bottom: 4px;">
-                            <label
-                                style="font-size: 0.95rem; font-weight: 600; margin: 0; display: inline-block; cursor: pointer;">Format
-                                Download</label>
-                        </summary>
-                        <div class="setting-item" style="padding-top: 12px; border-top: 1px solid var(--border-color);">
-                            <div
-                                style="display: flex; flex-direction: column; gap: 0; margin-top: 4px; padding-left: 12px;">
-                                <label class="toggle-switch-wrapper"
-                                    style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding: 10px 0; border-bottom: 1px solid var(--border-color);">
-                                    <div>
-                                        <span style="font-size: 0.85rem; font-weight: 600;">PNG</span>
-                                        <small class="setting-desc" style="display:block; margin:0;">Gambar tanpa
-                                            kompresi, kualitas terbaik</small>
-                                    </div>
-                                    <div class="ios-switch">
-                                        <input type="checkbox" id="enable-png" checked>
-                                        <span class="ios-slider"></span>
-                                    </div>
-                                </label>
-
-                                <label class="toggle-switch-wrapper"
-                                    style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding: 10px 0; border-bottom: 1px solid var(--border-color);">
-                                    <div>
-                                        <span style="font-size: 0.85rem; font-weight: 600;">JPEG</span>
-                                        <small class="setting-desc" style="display:block; margin:0;">Gambar terkompresi,
-                                            ukuran lebih kecil</small>
-                                    </div>
-                                    <div class="ios-switch">
-                                        <input type="checkbox" id="enable-jpeg" checked>
-                                        <span class="ios-slider"></span>
-                                    </div>
-                                </label>
-
-                                <label class="toggle-switch-wrapper"
-                                    style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding: 10px 0; opacity: 1;">
-                                    <div>
-                                        <span style="font-size: 0.85rem; font-weight: 600;">PDF <small
-                                                style="color:#f3b600; opacity:1;">(Dalam tahap
-                                                pengembangan)</small></span>
-                                        <small class="setting-desc" style="display:block; margin:0;">Print to PDF via
-                                            browser</small>
-                                    </div>
-                                    <div class="ios-switch">
-                                        <input type="checkbox" id="enable-pdf">
-                                        <span class="ios-slider"></span>
-                                    </div>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="setting-item" style="padding-bottom: 12px; border-bottom: none;">
-                            <label style="font-size: 0.85rem; padding-left: 12px;">Metode Download Default</label>
-                            <div style="padding-left: 12px;">
-                                <select id="default-download-method" class="form-input"
-                                    style="margin-top: 6px; font-size: 0.85rem;">
-                                    <option value="png">PNG</option>
-                                    <option value="jpeg">JPEG</option>
-                                    <option value="pdf">PDF (Browser Print)</option>
-                                </select>
-                            </div>
-                        </div>
-                    </details>
-
-                    <!-- Group 3: Validasi & Nama File (Accordion) -->
-                    <details class="settings-card" open>
-                        <summary class="setting-item" style="border-bottom: none; outline: none; padding-bottom: 4px;">
-                            <label
-                                style="font-size: 0.95rem; font-weight: 600; margin: 0; display: inline-block; cursor: pointer;">Format
-                                Nama File & Validasi</label>
-                        </summary>
-                        <div class="setting-item" style="padding-top: 12px; border-top: 1px solid var(--border-color);">
-                            <label class="toggle-switch-wrapper"
-                                style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding-left: 12px;">
-                                <div>
-                                    <span style="font-size: 0.85rem; font-weight: 600; display: block;">Judul Wajib
-                                        Diisi</span>
-                                    <small class="setting-desc" style="margin:0;">Cegah unduhan tanpa judul
-                                        invoice.</small>
+                            <div class="setting-control">
+                                <div class="ios-switch">
+                                    <input type="checkbox" id="setting-theme-toggle">
+                                    <span class="ios-slider"></span>
                                 </div>
+                            </div>
+                        </div> -->
+
+                        <!-- Download Format (Segmented Control) -->
+                        <div class="setting-row" style="flex-direction: column; align-items: flex-start; gap: 12px;">
+                            <div class="setting-info">
+                                <span class="setting-label">Format Unduhan</span>
+                                <span class="setting-subtext">Pilih format file utama saat mengunduh.</span>
+                            </div>
+                            <div class="setting-control" style="width: 100%;">
+                                <div class="segmented-control" id="download-format-selector">
+                                    <button class="segmented-btn active" data-value="pdf">PDF</button>
+                                    <button class="segmented-btn" data-value="png">PNG</button>
+                                    <button class="segmented-btn" data-value="jpeg">JPG</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Group 2: Validation & Filenames -->
+                    <!-- <div class="settings-section-title">Validasi & File</div> -->
+                    <div class="settings-list">
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Judul Wajib Diisi</span>
+                                <span class="setting-subtext">Cegah unduhan tanpa judul invoice.</span>
+                            </div>
+                            <div class="setting-control">
                                 <div class="ios-switch">
                                     <input type="checkbox" id="setting-title-required" checked>
                                     <span class="ios-slider"></span>
                                 </div>
-                            </label>
+                            </div>
                         </div>
 
-                        <div class="setting-item" style="padding-bottom: 12px; border-bottom: none;">
-                            <label
-                                style="display:flex; align-items:center; gap:6px; font-size:0.85rem; font-weight:600; padding-left: 12px;">
-                                Format Nama File
-                                <button id="btn-format-help" class="icon-btn"
-                                    style="font-size:0.75rem; width:20px; height:20px; border-radius:50%; background:var(--bg-card); border:1px solid var(--border-color);"
-                                    title="Bantuan format">
-                                    <i class="fa-solid fa-question"></i>
-                                </button>
-                            </label>
-                            <small class="setting-desc" style="padding-left: 12px;">Gunakan <code
-                                    style="background:var(--bg-card); padding: 1px 5px; border-radius:3px; font-size:0.75rem; border: 1px solid var(--border-color);">{judul}</code>
-                                sebagai placeholder untuk judul.</small>
-                            <div
-                                style="display:flex; flex-direction:column; gap:10px; margin-top:10px; padding-left: 12px;">
-                                <div>
+                        <div class="setting-row"
+                            style="flex-direction: column; align-items: flex-start; gap: 8px; border-bottom: none;">
+                            <div class="setting-info">
+                                <span class="setting-label">Format Nama File</span>
+                                <span class="setting-subtext">Gunakan <code>{judul}</code> sebagai placeholder.</span>
+                            </div>
+                            <div style="width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
+                                <div style="position: relative;">
                                     <small
-                                        style="color:var(--text-muted); font-weight:600; font-size:0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Invoice</small>
+                                        style="position: absolute; right: 8px; top: -14px; color: var(--text-muted); font-size: 0.65rem; font-weight: 700; text-transform: uppercase;">Invoice</small>
                                     <input type="text" id="format-invoice" class="form-input" value="Invoice-{judul}"
-                                        style="margin-top:4px; font-size:0.85rem;">
+                                        placeholder="Invoice-{judul}" style="font-size: 0.85rem;">
                                 </div>
-                                <div>
+                                <div style="position: relative;">
                                     <small
-                                        style="color:var(--text-muted); font-weight:600; font-size:0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Surat
+                                        style="position: absolute; right: 8px; top: -14px; color: var(--text-muted); font-size: 0.65rem; font-weight: 700; text-transform: uppercase;">Surat
                                         Jalan</small>
                                     <input type="text" id="format-surat-jalan" class="form-input"
-                                        value="Surat Jalan-{judul}" style="margin-top:4px; font-size:0.85rem;">
+                                        value="Surat Jalan-{judul}" placeholder="Surat Jalan-{judul}"
+                                        style="font-size: 0.85rem;">
                                 </div>
                             </div>
                         </div>
-                    </details>
+                    </div>
 
                     <!-- Danger Zone -->
                     <button id="btn-reset-settings" class="btn btn-outline btn-full"
@@ -520,15 +462,14 @@
 
             <div class="input-group" style="text-align: left;">
                 <label class="field-label">Metode Unduhan Utama</label>
-                <select id="onboarding-download-method" class="form-input" style="background-color: #f9f9f9;">
-                    <option value="pdf">PDF (Sangat Disarankan)</option>
-                    <option value="png">PNG (Gambar Tinggi)</option>
-                    <option value="jpeg">JPEG (Gambar Ringan)</option>
-                </select>
+                <div class="segmented-control" id="onboarding-format-selector" style="margin-top: 10px;">
+                    <button class="segmented-btn active" data-value="pdf">PDF</button>
+                    <button class="segmented-btn" data-value="png">PNG</button>
+                    <button class="segmented-btn" data-value="jpeg">JPG</button>
+                </div>
             </div>
 
-            <button id="btn-onboarding-start" class="btn btn-primary btn-full"
-                style="margin-top: 20px; padding: 14px;">
+            <button id="btn-onboarding-start" class="btn btn-primary btn-full" style="margin-top: 20px; padding: 14px;">
                 Mulai Sekarang <i class="fa-solid fa-arrow-right"></i>
             </button>
         </div>

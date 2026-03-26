@@ -127,7 +127,7 @@ export function initManualMode() {
                         <div style="flex: 2.2;">
                             <label class="field-label">Tipe</label>
                             <select class="form-input item-tipe ${!item.tipe ? 'required-empty-orange' : ''}" data-index="${index}">
-                                <option value="" ${!item.tipe ? 'selected' : ''}>Tipe</option>
+                                <option value="" ${!item.tipe ? 'selected' : ''}></option>
                                 <option value="ICA" ${item.tipe === 'ICA' ? 'selected' : ''}>ICA</option>
                                 <option value="Protecta" ${item.tipe === 'Protecta' ? 'selected' : ''}>Protecta</option>
                                 <option value="Prolink" ${item.tipe === 'Prolink' ? 'selected' : ''}>Prolink</option>
@@ -324,7 +324,7 @@ export function initManualMode() {
             const index = parseInt(target.dataset.index);
             const val = target.value;
             // Real-time validation sync: remove orange outline if filled
-            const isFilled = target.classList.contains('item-price-format') 
+            const isFilled = target.classList.contains('item-price-format')
                 ? (items[index].price > 0)
                 : (val.trim() !== '');
 

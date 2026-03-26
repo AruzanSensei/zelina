@@ -1302,100 +1302,18 @@ export function initPDFGenerator() {
         const sourceInvoice = manualEdits.invoice || buildInvoiceHTML;
         const sourceLetter = manualEdits.letter || buildSuratJalanHTML;
 
-        if (format === 'pdf') {
+        const formatToUse = format || appState.state.settings.defaultDownloadMethod || 'pdf';
+
+        if (formatToUse === 'pdf') {
             printInvoicePDF(items, title);
-        } else if (format === 'png') {
+        } else if (formatToUse === 'png') {
             await exportBothDocuments(sourceInvoice, sourceLetter, items, title, 'png');
-        } else if (format === 'jpeg') {
+        } else if (formatToUse === 'jpeg' || formatToUse === 'jpg') {
             await exportBothDocuments(sourceInvoice, sourceLetter, items, title, 'jpeg');
         }
     };
 
-    // Show format selection menu
-    const showFormatMenu = () => {
-
-        const formats = appState.state.settings.downloadFormats || { png: true, jpeg: true, pdf: true };
-        const enabledFormats = Object.keys(formats).filter(f => formats[f]);
-
-        if (enabledFormats.length === 0) {
-            showAlert("Tidak ada format yang aktif! Silakan aktifkan di Pengaturan.");
-            return;
-        }
-
-        // Remove existing menu if any
-        const existingMenu = document.getElementById('format-menu');
-        if (existingMenu) existingMenu.remove();
-
-        // Create menu
-        const menu = document.createElement('div');
-        menu.id = 'format-menu';
-        menu.className = 'format-menu';
-        menu.style.cssText = `
-            position: fixed;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 8px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-            z-index: 1000;
-            min-width: 200px;
-            animation: slideUp 0.2s ease-out;
-        `;
-
-        const formatLabels = {
-            png: 'PNG (Gambar)',
-            jpeg: 'JPEG (Gambar)',
-            pdf: 'PDF (Print)'
-        };
-
-        const formatIcons = {
-            png: 'fa-file-image',
-            jpeg: 'fa-file-image',
-            pdf: 'fa-file-pdf'
-        };
-
-        enabledFormats.forEach(format => {
-            const btn = document.createElement('button');
-            btn.className = 'btn btn-outline btn-full';
-            btn.style.cssText = 'margin-bottom: 4px; text-align: left; justify-content: flex-start; gap: 8px;';
-            btn.innerHTML = `<i class="fa-solid ${formatIcons[format]}"></i> ${formatLabels[format]}`;
-            btn.onclick = async () => {
-                menu.remove();
-                const title = validate();
-                if (!title) return;
-                const items = appState.state.invoiceItems;
-                if (items.length === 0) return showAlert("Belum ada item!");
-                saveToHistory(items, title);
-                await executeDownload(items, title, format);
-            };
-            menu.appendChild(btn);
-        });
-
-        // Add cancel button
-        const cancelBtn = document.createElement('button');
-        cancelBtn.className = 'btn btn-outline btn-full';
-        cancelBtn.style.cssText = 'margin-top: 4px; border-color: var(--text-muted);';
-        cancelBtn.textContent = 'Batal';
-        cancelBtn.onclick = () => menu.remove();
-        menu.appendChild(cancelBtn);
-
-        document.body.appendChild(menu);
-
-        // Close menu when clicking outside
-        setTimeout(() => {
-            const closeOnClickOutside = (e) => {
-                if (!menu.contains(e.target)) {
-                    menu.remove();
-                    document.removeEventListener('click', closeOnClickOutside);
-                }
-            };
-            document.addEventListener('click', closeOnClickOutside);
-        }, 100);
-    };
-
+    // Download format menu is removed in favor of Settings selection.
     // ============================================
     // VALIDATION
     // ============================================
@@ -1508,18 +1426,10 @@ export function initPDFGenerator() {
 
     const btnDownload = document.getElementById('btn-download');
     if (btnDownload) {
-        let pressTimer = null;
-        let isLongPress = false;
         let isDownloading = false;
 
-        const handlePress = async (e) => {
-            if (pressTimer) clearTimeout(pressTimer);
+        btnDownload.addEventListener('click', async (e) => {
             if (isDownloading) return;
-
-            if (isLongPress) {
-                isLongPress = false;
-                return;
-            }
 
             // Prevent ghost click
             if (e && e.cancelable) e.preventDefault();
@@ -1542,42 +1452,12 @@ export function initPDFGenerator() {
             isDownloading = true;
             try {
                 saveToHistory(items, title);
-                const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
+                const defaultMethod = appState.state.settings.defaultDownloadMethod || 'pdf';
                 await executeDownload(items, title, defaultMethod);
             } finally {
                 isDownloading = false;
             }
-        };
-
-        const startPress = (e) => {
-            if (isDownloading) return;
-            isLongPress = false;
-            pressTimer = setTimeout(() => {
-                isLongPress = true;
-                showFormatMenu();
-                if (navigator.vibrate) navigator.vibrate(50);
-            }, 500);
-        };
-
-        const cancelPress = () => {
-            clearTimeout(pressTimer);
-        };
-
-        // Touch events
-        btnDownload.addEventListener('touchstart', startPress, { passive: true });
-        btnDownload.addEventListener('touchend', handlePress);
-        btnDownload.addEventListener('touchcancel', cancelPress);
-
-        // Mouse fallback (desktop)
-        btnDownload.addEventListener('mousedown', (e) => {
-            if (e.button !== 0) return; // Only left click
-            startPress(e);
         });
-        btnDownload.addEventListener('mouseup', (e) => {
-            if (e.button !== 0) return;
-            handlePress(e);
-        });
-        btnDownload.addEventListener('mouseleave', cancelPress);
     }
 }
 

@@ -56,118 +56,62 @@ export function initSettings() {
     });
 
     // ===================================
-    // GENERAL SETTINGS
+    // THEME TOGGLE
     // ===================================
-    document.querySelectorAll('.setting-item .toggle-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const parent = e.target.parentElement;
-            parent.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-
-            if (e.target.dataset.theme) {
-                const theme = e.target.dataset.theme;
-                document.documentElement.setAttribute('data-theme', theme);
-                appState.updateSettings({ theme });
-            }
+    const themeToggle = document.getElementById('setting-theme-toggle');
+    const syncThemeUI = (theme) => {
+        document.documentElement.setAttribute('data-theme', theme);
+        if (themeToggle) themeToggle.checked = (theme === 'dark');
+        
+        // Sync secondary toggles (if any)
+        document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.theme === theme);
         });
-    });
+    };
 
-    // Init Theme & Sync
-    const currentTheme = appState.state.settings.theme;
-    document.documentElement.setAttribute('data-theme', currentTheme);
-    const initialThemeBtn = document.querySelector(`[data-theme="${currentTheme}"]`);
-    if (initialThemeBtn) initialThemeBtn.classList.add('active');
+    if (themeToggle) {
+        themeToggle.checked = (appState.state.settings.theme === 'dark');
+        themeToggle.addEventListener('change', (e) => {
+            const theme = e.target.checked ? 'dark' : 'light';
+            appState.updateSettings({ theme });
+        });
+    }
 
     // Sync UI when settings change (e.g. from global theme toggle)
     appState.subscribe('settings', (settings) => {
-        if (settings.theme) {
-            document.querySelectorAll('[data-theme]').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.theme === settings.theme);
+        if (settings.theme) syncThemeUI(settings.theme);
+        
+        if (settings.defaultDownloadMethod) {
+            document.querySelectorAll('#download-format-selector .segmented-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.value === settings.defaultDownloadMethod);
             });
         }
     });
 
+    // Init Theme on load
+    syncThemeUI(appState.state.settings.theme);
+
     // ===================================
-    // DOWNLOAD FORMAT SETTINGS
+    // DOWNLOAD FORMAT SETTINGS (Segmented)
     // ===================================
-    const enablePNG = document.getElementById('enable-png');
-    const enableJPEG = document.getElementById('enable-jpeg');
-    const enablePDF = document.getElementById('enable-pdf');
-    const defaultMethodSelect = document.getElementById('default-download-method');
+    const formatSelector = document.getElementById('download-format-selector');
+    const currentMethod = appState.state.settings.defaultDownloadMethod || 'pdf';
 
-    // Initialize from state
-    const formats = appState.state.settings.downloadFormats || { png: true, jpeg: true, pdf: true };
-    const defaultMethod = appState.state.settings.defaultDownloadMethod || 'pdf';
-
-    if (enablePNG) enablePNG.checked = formats.png;
-    if (enableJPEG) enableJPEG.checked = formats.jpeg;
-    if (enablePDF) enablePDF.checked = formats.pdf;
-    if (defaultMethodSelect) defaultMethodSelect.value = defaultMethod;
-
-    // Update default method options based on enabled formats
-    const updateDefaultMethodOptions = () => {
-        if (!defaultMethodSelect) return;
-
-        const currentFormats = appState.state.settings.downloadFormats || { png: true, jpeg: true, pdf: false };
-        const options = defaultMethodSelect.querySelectorAll('option');
-
-        options.forEach(opt => {
-            const format = opt.value;
-            if (!currentFormats[format]) {
-                opt.disabled = true;
-                opt.style.color = 'var(--text-muted)';
-            } else {
-                opt.disabled = false;
-                opt.style.color = '';
-            }
-        });
-
-        // If current default is disabled, auto-switch to first enabled
-        if (!currentFormats[defaultMethodSelect.value]) {
-            const firstEnabled = ['png', 'jpeg', 'pdf'].find(f => currentFormats[f]);
-            if (firstEnabled) {
-                defaultMethodSelect.value = firstEnabled;
-                appState.updateSettings({ defaultDownloadMethod: firstEnabled });
-            }
-        }
-    };
-
-    // Handle format toggle changes
-    const handleFormatToggle = (e) => {
-        const formatType = e.target.id.replace('enable-', '');
-        const isChecked = e.target.checked;
-
-        // Ensure at least one format is enabled
-        const currentFormats = appState.state.settings.downloadFormats || { png: true, jpeg: true, pdf: false };
-        const enabledCount = Object.values(currentFormats).filter(v => v).length;
-
-        if (!isChecked && enabledCount === 1) {
-            e.target.checked = true;
-            alert('Minimal satu format harus aktif!');
-            return;
-        }
-
-        // Update state
-        const newFormats = { ...currentFormats, [formatType]: isChecked };
-        appState.updateSettings({ downloadFormats: newFormats });
-
-        // Update default method options
-        updateDefaultMethodOptions();
-    };
-
-    if (enablePNG) enablePNG.addEventListener('change', handleFormatToggle);
-    if (enableJPEG) enableJPEG.addEventListener('change', handleFormatToggle);
-    if (enablePDF) enablePDF.addEventListener('change', handleFormatToggle);
-
-    // Handle default method change
-    if (defaultMethodSelect) {
-        defaultMethodSelect.addEventListener('change', (e) => {
-            appState.updateSettings({ defaultDownloadMethod: e.target.value });
+    if (formatSelector) {
+        // Init active state from appState
+        formatSelector.querySelectorAll('.segmented-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.value === currentMethod);
+            
+            btn.addEventListener('click', () => {
+                const value = btn.dataset.value;
+                appState.updateSettings({ defaultDownloadMethod: value });
+                
+                // Update UI visually
+                formatSelector.querySelectorAll('.segmented-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
         });
     }
-
-    // Initialize options state
-    updateDefaultMethodOptions();
 
     // ===================================
     // TITLE REQUIRED TOGGLE
@@ -260,21 +204,25 @@ export function initSettings() {
             if (!confirm('Reset semua pengaturan ke default?')) return;
             appState.resetSettings();
 
-            // Re-render UI
+            // Re-render UI from the new reset state
             const s = appState.state.settings;
-            if (enablePNG) enablePNG.checked = s.downloadFormats.png;
-            if (enableJPEG) enableJPEG.checked = s.downloadFormats.jpeg;
-            if (enablePDF) enablePDF.checked = s.downloadFormats.pdf;
-            if (defaultMethodSelect) defaultMethodSelect.value = s.defaultDownloadMethod;
+            
+            // Sync Theme
+            if (themeToggle) themeToggle.checked = (s.theme === 'dark');
+            syncThemeUI(s.theme);
+
+            // Sync Download Format
+            if (formatSelector) {
+                formatSelector.querySelectorAll('.segmented-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.value === s.defaultDownloadMethod);
+                });
+            }
+
+            // Sync Validation & File Naming
             if (titleRequiredToggle) titleRequiredToggle.checked = s.titleRequired !== false;
             if (formatInvoice) formatInvoice.value = (s.fileNameFormat || {}).invoice || 'Invoice-{judul}';
             if (formatSuratJalan) formatSuratJalan.value = (s.fileNameFormat || {}).suratJalan || 'Surat Jalan-{judul}';
 
-            document.documentElement.setAttribute('data-theme', s.theme);
-            document.querySelectorAll('[data-theme]').forEach(b => b.classList.remove('active'));
-            document.querySelector(`[data-theme="${s.theme}"]`)?.classList.add('active');
-
-            updateDefaultMethodOptions();
             alert('Pengaturan telah direset!');
         });
     }
