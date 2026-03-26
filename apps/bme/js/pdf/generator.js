@@ -1431,7 +1431,7 @@ export function initPDFGenerator() {
         });
     };
 
-    const validate = async () => {
+    const validateSync = () => {
         const titleInput = document.getElementById('manual-title');
         const title = titleInput?.value.trim() || 'Untitled';
         const titleRequired = appState.state.settings.titleRequired !== false;
@@ -1460,6 +1460,12 @@ export function initPDFGenerator() {
                 return false;
             }
         }
+        return title;
+    };
+
+    const validate = async () => {
+        const title = validateSync();
+        if (!title) return false;
 
         // Check for duplicate title in history
         const history = appState.state.history || [];
@@ -1476,8 +1482,18 @@ export function initPDFGenerator() {
     const btnSave = document.getElementById('btn-save-only');
     if (btnSave) {
         btnSave.addEventListener('click', async () => {
-            const title = await validate();
+            const title = validateSync();
             if (!title) return;
+
+            // Check for duplicate
+            const history = appState.state.history || [];
+            const isDuplicate = history.some(h => (h.title || 'Untitled').toLowerCase() === title.toLowerCase());
+
+            if (isDuplicate) {
+                const proceed = await showCustomConfirm(title);
+                if (!proceed) return;
+            }
+
             const items = appState.state.invoiceItems;
             if (items.length === 0 && !manualEdits.invoice && !manualEdits.letter) return showAlert("Belum ada item!");
             saveToHistory(items, title);
@@ -1496,7 +1512,43 @@ export function initPDFGenerator() {
         let isLongPress = false;
         let isDownloading = false;
 
-        // Long-press detection
+        const handlePress = async (e) => {
+            if (pressTimer) clearTimeout(pressTimer);
+            if (isDownloading) return;
+
+            if (isLongPress) {
+                isLongPress = false;
+                return;
+            }
+
+            // Prevent ghost click
+            if (e && e.cancelable) e.preventDefault();
+
+            const title = validateSync();
+            if (!title) return;
+
+            const items = appState.state.invoiceItems;
+            if (items.length === 0) return showAlert("Belum ada item!");
+
+            // Check for duplicate synchronously
+            const history = appState.state.history || [];
+            const isDuplicate = history.some(h => (h.title || 'Untitled').toLowerCase() === title.toLowerCase());
+
+            if (isDuplicate) {
+                const proceed = await showCustomConfirm(title);
+                if (!proceed) return;
+            }
+
+            isDownloading = true;
+            try {
+                saveToHistory(items, title);
+                const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
+                await executeDownload(items, title, defaultMethod);
+            } finally {
+                isDownloading = false;
+            }
+        };
+
         const startPress = (e) => {
             if (isDownloading) return;
             isLongPress = false;
@@ -1511,32 +1563,6 @@ export function initPDFGenerator() {
             clearTimeout(pressTimer);
         };
 
-        const handlePress = async (e) => {
-            cancelPress();
-            if (isDownloading) return;
-
-            if (isLongPress) {
-                isLongPress = false;
-                return;
-            }
-
-            // Prevent ghost click (touch fires both touchend + mouseup)
-            e.preventDefault();
-            const title = await validate();
-            if (!title) return;
-            const items = appState.state.invoiceItems;
-            if (items.length === 0) return showAlert("Belum ada item!");
-
-            isDownloading = true;
-            try {
-                saveToHistory(items, title);
-                const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
-                await executeDownload(items, title, defaultMethod);
-            } finally {
-                isDownloading = false;
-            }
-        };
-
         // Touch events
         btnDownload.addEventListener('touchstart', startPress, { passive: true });
         btnDownload.addEventListener('touchend', handlePress);
@@ -1544,13 +1570,12 @@ export function initPDFGenerator() {
 
         // Mouse fallback (desktop)
         btnDownload.addEventListener('mousedown', (e) => {
-            // Skip if touch already handled it
-            if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) return;
+            if (e.button !== 0) return; // Only left click
             startPress(e);
         });
-        btnDownload.addEventListener('mouseup', async (e) => {
-            if (e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) return;
-            await handlePress(e);
+        btnDownload.addEventListener('mouseup', (e) => {
+            if (e.button !== 0) return;
+            handlePress(e);
         });
         btnDownload.addEventListener('mouseleave', cancelPress);
     }

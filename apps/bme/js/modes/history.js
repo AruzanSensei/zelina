@@ -100,8 +100,8 @@ export function initHistoryMode() {
                 </div>
                 <div class="history-item ${timeClass}" data-index="${realIndex}" style="cursor:pointer; transition:transform 0.2s; position:relative; z-index:2; background:var(--bg-card); display:flex; align-items:center;">
                     ${checkboxHTML}
-                    <div class="history-info" style="flex:1; pointer-events:none;">
-                        <h4>${entry.title || 'Tanpa Judul'}</h4>
+                    <div class="history-info" style="flex:1;">
+                        <h4 class="history-title-text" data-id="${entry.id}">${entry.title || 'Tanpa Judul'}</h4>
                         <p><small>${entry.date} | ${entry.items.length} Item</small></p>
                     </div>
                     <div class="history-actions">
@@ -633,11 +633,73 @@ export function initHistoryMode() {
             return;
         }
 
+        // Double Click to Rename
+        const titleEl = e.target.closest('.history-title-text');
+        if (titleEl && e.type === 'dblclick') {
+            e.stopPropagation();
+            const originalTitle = titleEl.textContent;
+            const itemId = parseInt(titleEl.dataset.id);
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = originalTitle === 'Tanpa Judul' ? '' : originalTitle;
+            input.className = 'form-input';
+            input.style.cssText = 'height:auto; padding:4px 8px; font-size:1rem; font-weight:600; width:100%; border-color:var(--primary);';
+
+            const finishEdit = (save = true) => {
+                const newTitle = input.value.trim();
+                if (save && newTitle && newTitle !== originalTitle) {
+                    appState.updateHistoryTitle(itemId, newTitle);
+                } else {
+                    titleEl.textContent = originalTitle;
+                }
+                input.remove();
+                titleEl.style.display = 'block';
+            };
+
+            input.onkeydown = (ev) => {
+                if (ev.key === 'Enter') finishEdit(true);
+                if (ev.key === 'Escape') finishEdit(false);
+            };
+
+            input.onblur = () => finishEdit(true);
+
+            titleEl.style.display = 'none';
+            titleEl.parentNode.insertBefore(input, titleEl);
+            input.focus();
+            input.select();
+            return;
+        }
+
         // Handle Item Click (Detail) — only if not in multi-select mode
         const itemEl = e.target.closest('.history-item');
         if (itemEl && !itemEl.classList.contains('swiped-left') && !isMultiSelectMode) {
             const index = itemEl.dataset.index;
-            openDetail(index);
+            
+            // To prevent conflict with dblclick, we can check if it was a title click
+            if (e.target.closest('.history-title-text')) {
+                // If double clicked, dblclick handler will fire and stop propagation
+                // But click fires first. Let's use a small delay.
+                if (this.clickTimer) {
+                    clearTimeout(this.clickTimer);
+                    this.clickTimer = null;
+                } else {
+                    this.clickTimer = setTimeout(() => {
+                        openDetail(index);
+                        this.clickTimer = null;
+                    }, 250);
+                }
+            } else {
+                openDetail(index);
+            }
+        }
+    });
+
+    container.addEventListener('dblclick', (e) => {
+        // Just trigger the same click handler but it will catch dblclick
+        if (this.clickTimer) {
+            clearTimeout(this.clickTimer);
+            this.clickTimer = null;
         }
     });
 }

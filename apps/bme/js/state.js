@@ -115,6 +115,15 @@ class StateManager {
         this.notify('manualTitle', title);
     }
 
+    updateHistoryTitle(id, newTitle) {
+        const item = this.state.history.find(h => h.id === id);
+        if (item) {
+            item.title = newTitle;
+            this.save(STORAGE_KEYS.HISTORY, this.state.history);
+            this.notify('history', this.state.history);
+        }
+    }
+
     removeFromHistory(index) {
         this.state.history.splice(index, 1);
         this.save(STORAGE_KEYS.HISTORY, this.state.history);
