@@ -200,7 +200,7 @@ small {
 }
 
 .required-empty-orange {
-    outline: 1.5px solid #fbb647 !important;
+    outline: 1px solid #ffc66a !important;
     /* outline-offset: -1px; */
 }
 
