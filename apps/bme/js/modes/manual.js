@@ -28,15 +28,15 @@ export function initManualMode() {
     let items = appState.state.invoiceItems || [];
     if (titleInput) {
         titleInput.value = appState.state.manualTitle || '';
-        // Show red outline if empty on load
-        if (!titleInput.value.trim()) titleInput.classList.add('required-empty-red');
-        else titleInput.classList.remove('required-empty-red');
+        // Show orange outline if empty on load
+        if (!titleInput.value.trim()) titleInput.classList.add('required-empty-orange');
+        else titleInput.classList.remove('required-empty-orange');
 
         titleInput.addEventListener('input', (e) => {
             appState.updateManualTitle(e.target.value);
-            // Toggle red outline based on content
-            if (!e.target.value.trim()) e.target.classList.add('required-empty-red');
-            else e.target.classList.remove('required-empty-red');
+            // Toggle orange outline based on content
+            if (!e.target.value.trim()) e.target.classList.add('required-empty-orange');
+            else e.target.classList.remove('required-empty-orange');
             render();
             updateEmptyFieldsInfo();
         });
@@ -249,7 +249,7 @@ export function initManualMode() {
 
     // Add Item
     const addItem = () => {
-        items.push({ name: '', price: 0, qty: 1, note: '', tipe: 'Prolink' });
+        items.push({ name: '', price: 0, qty: 1, note: '', tipe: '' });
         render();
     };
     addBtn.addEventListener('click', addItem);
@@ -323,6 +323,16 @@ export function initManualMode() {
         if (target.dataset.index !== undefined) {
             const index = parseInt(target.dataset.index);
             const val = target.value;
+            // Real-time validation sync: remove orange outline if filled
+            const isFilled = target.classList.contains('item-price-format') 
+                ? (items[index].price > 0)
+                : (val.trim() !== '');
+
+            if (isFilled) {
+                target.classList.remove('required-empty-orange');
+            } else {
+                target.classList.add('required-empty-orange');
+            }
 
             if (target.classList.contains('item-name')) {
                 items[index].name = val;

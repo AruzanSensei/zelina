@@ -37,6 +37,9 @@ export function initHistoryMode() {
     // Search state
     let searchQuery = '';
 
+    // Click timer to prevent click/dblclick conflict
+    let clickTimer = null;
+
     // ===================================
     // TIME HELPERS
     // ===================================
@@ -680,13 +683,13 @@ export function initHistoryMode() {
             if (e.target.closest('.history-title-text')) {
                 // If double clicked, dblclick handler will fire and stop propagation
                 // But click fires first. Let's use a small delay.
-                if (this.clickTimer) {
-                    clearTimeout(this.clickTimer);
-                    this.clickTimer = null;
+                if (clickTimer) {
+                    clearTimeout(clickTimer);
+                    clickTimer = null;
                 } else {
-                    this.clickTimer = setTimeout(() => {
+                    clickTimer = setTimeout(() => {
                         openDetail(index);
-                        this.clickTimer = null;
+                        clickTimer = null;
                     }, 250);
                 }
             } else {
@@ -697,9 +700,9 @@ export function initHistoryMode() {
 
     container.addEventListener('dblclick', (e) => {
         // Just trigger the same click handler but it will catch dblclick
-        if (this.clickTimer) {
-            clearTimeout(this.clickTimer);
-            this.clickTimer = null;
+        if (clickTimer) {
+            clearTimeout(clickTimer);
+            clickTimer = null;
         }
     });
 }
