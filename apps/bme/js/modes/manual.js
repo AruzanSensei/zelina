@@ -331,19 +331,27 @@ export function initManualMode() {
 
     // Mode Switching
     btnModeSimple?.addEventListener('click', () => {
-        appState.state.manualCardMode = 'simple';
-        appState.save('bme_manual_card_mode', 'simple');
+        console.log('[BME] Switching to Simple Mode');
+        appState.updateManualCardMode('simple');
         render();
     });
     btnModeAdvance?.addEventListener('click', () => {
-        appState.state.manualCardMode = 'advance';
-        appState.save('bme_manual_card_mode', 'advance');
+        console.log('[BME] Switching to Advance Mode');
+        appState.updateManualCardMode('advance');
         render();
     });
 
     // Add Item
     const addItem = () => {
-        items.push({ name: '', price: 0, qty: 1, note: '', tipe: '' });
+        items.push({ 
+            name: '', 
+            price: 0, 
+            qty: 1, 
+            note: '', 
+            tipe: '',
+            invKeterangan: '',
+            sjKeterangan: '' 
+        });
         render();
     };
     addBtn.addEventListener('click', addItem);

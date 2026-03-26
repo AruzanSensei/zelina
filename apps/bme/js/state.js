@@ -117,6 +117,12 @@ class StateManager {
         this.notify('manualTitle', title);
     }
 
+    updateManualCardMode(mode) {
+        this.state.manualCardMode = mode;
+        this.save(STORAGE_KEYS.MANUAL_CARD_MODE, mode);
+        this.notify('manualCardMode', mode);
+    }
+
     updateHistoryTitle(id, newTitle) {
         const item = this.state.history.find(h => h.id === id);
         if (item) {
