@@ -225,7 +225,7 @@
                 <div id="settings-general">
 
                     <!-- Group 1: Tampilan -->
-                    <div class="settings-card">
+                    <!-- <div class="settings-card">
                         <div class="setting-item" style="border-bottom: none; padding-bottom: 4px;">
                             <label style="font-size: 0.95rem; font-weight: 600;">Tema / Theme</label>
                             <div class="toggle-group">
@@ -233,7 +233,7 @@
                                 <button class="toggle-btn" data-theme="dark">Dark</button>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- Group 2: Format & Unduh (Accordion) -->
                     <details class="settings-card" open>
@@ -485,52 +485,53 @@
     <!-- Custom Alert Notification -->
     <div id="custom-alert" class="custom-alert hidden">
 
-    <!-- Custom Confirm Modal (Duplicate Title) -->
-    <div id="custom-confirm" class="custom-confirm-overlay hidden">
-        <div class="custom-confirm-box">
-            <div class="confirm-icon">
-                <i class="fa-solid fa-copy"></i>
-            </div>
-            <h3 id="confirm-title">Judul Sudah Ada</h3>
-            <p id="confirm-message">Data dengan judul ini sudah ada di riwayat. Tetap simpan?</p>
-            <div class="confirm-actions">
-                <button id="confirm-cancel" class="btn btn-outline">Batal</button>
-                <button id="confirm-proceed" class="btn btn-primary">Lanjutkan</button>
+        <!-- Custom Confirm Modal (Duplicate Title) -->
+        <div id="custom-confirm" class="custom-confirm-overlay hidden">
+            <div class="custom-confirm-box">
+                <div class="confirm-icon">
+                    <i class="fa-solid fa-copy"></i>
+                </div>
+                <h3 id="confirm-title">Judul Sudah Ada</h3>
+                <p id="confirm-message">Data dengan judul ini sudah ada di riwayat. Tetap simpan?</p>
+                <div class="confirm-actions">
+                    <button id="confirm-cancel" class="btn btn-outline">Batal</button>
+                    <button id="confirm-proceed" class="btn btn-primary">Lanjutkan</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Onboarding Modal -->
-    <div id="onboarding-modal" class="modal hidden"
-        style="z-index: 9999; display: flex; align-items: center; justify-content: center;">
-        <div class="modal-content"
-            style="max-width: 400px; text-align: center; padding: 30px; border-radius: var(--radius-md);">
-            <div class="onboarding-icon" style="font-size: 3.5rem; color: var(--primary); margin-bottom: 20px;">
-                <i class="fa-solid fa-face-smile-beam"></i>
+        <!-- Onboarding Modal -->
+        <div id="onboarding-modal" class="modal hidden"
+            style="z-index: 9999; display: flex; align-items: center; justify-content: center;">
+            <div class="modal-content"
+                style="max-width: 400px; text-align: center; padding: 30px; border-radius: var(--radius-md);">
+                <div class="onboarding-icon" style="font-size: 3.5rem; color: var(--primary); margin-bottom: 20px;">
+                    <i class="fa-solid fa-face-smile-beam"></i>
+                </div>
+                <h2 style="margin-bottom: 15px;">Halo! Selamat Datang</h2>
+                <p style="margin-bottom: 25px; color: var(--text-muted); line-height: 1.6;">
+                    Mari atur preferensi unduhan Anda untuk pertama kali. Anda tetap bisa mengubahnya nanti di menu
+                    pengaturan.
+                </p>
+
+                <div class="input-group" style="text-align: left;">
+                    <label class="field-label">Metode Unduhan Utama</label>
+                    <select id="onboarding-download-method" class="form-input" style="background-color: #f9f9f9;">
+                        <option value="pdf">PDF (Sangat Disarankan)</option>
+                        <option value="png">PNG (Gambar Tinggi)</option>
+                        <option value="jpeg">JPEG (Gambar Ringan)</option>
+                    </select>
+                </div>
+
+                <button id="btn-onboarding-start" class="btn btn-primary btn-full"
+                    style="margin-top: 20px; padding: 14px;">
+                    Mulai Sekarang <i class="fa-solid fa-arrow-right"></i>
+                </button>
             </div>
-            <h2 style="margin-bottom: 15px;">Halo! Selamat Datang</h2>
-            <p style="margin-bottom: 25px; color: var(--text-muted); line-height: 1.6;">
-                Mari atur preferensi unduhan Anda untuk pertama kali. Anda tetap bisa mengubahnya nanti di menu
-                pengaturan.
-            </p>
-
-            <div class="input-group" style="text-align: left;">
-                <label class="field-label">Metode Unduhan Utama</label>
-                <select id="onboarding-download-method" class="form-input" style="background-color: #f9f9f9;">
-                    <option value="pdf">PDF (Sangat Disarankan)</option>
-                    <option value="png">PNG (Gambar Tinggi)</option>
-                    <option value="jpeg">JPEG (Gambar Ringan)</option>
-                </select>
-            </div>
-
-            <button id="btn-onboarding-start" class="btn btn-primary btn-full" style="margin-top: 20px; padding: 14px;">
-                Mulai Sekarang <i class="fa-solid fa-arrow-right"></i>
-            </button>
         </div>
-    </div>
 
-    <!-- Scripts -->
-    <script type="module" src="js/app.js"></script>
+        <!-- Scripts -->
+        <script type="module" src="js/app.js"></script>
 </body>
 
 </html>

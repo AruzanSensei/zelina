@@ -474,16 +474,18 @@ small {
     /* Fixed resize behavior */
     background-color: var(--bg-input);
     color: var(--text-main);
+    font-weight: 500;
     font-size: 0.95rem;
     transition: border-color 0.2s;
 }
 
 .form-input.title {
     box-shadow: var(--shadow-sm);
+    font-weight: 700;
 }
 
 .form-input.item-name {
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .form-textarea.item-note {
@@ -590,6 +592,10 @@ small {
     border: none;
     cursor: pointer;
     font-weight: bold;
+}
+
+.qty-input.item-qty {
+    font-weight: 500;
 }
 
 .qty-input {
