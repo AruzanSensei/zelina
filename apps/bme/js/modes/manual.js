@@ -198,7 +198,7 @@ export function initManualMode() {
                     <td><input type="text" class="item-price-format ${!item.price || item.price <= 0 ? 'required-empty-orange' : ''}" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="0" inputmode="numeric"></td>
                     <td>
                         <select class="item-tipe ${!item.tipe ? 'required-empty-orange' : ''}" data-index="${index}" style="width:100%; padding:4px; border:none; background:transparent;">
-                            <option value="" ${!item.tipe ? 'selected' : ''}>Pilih Tipe</option>
+                            <option value="" ${!item.tipe ? 'selected' : ''}></option>
                             <option value="ICA" ${item.tipe === 'ICA' ? 'selected' : ''}>ICA</option>
                             <option value="Protecta" ${item.tipe === 'Protecta' ? 'selected' : ''}>Protecta</option>
                             <option value="Prolink" ${item.tipe === 'Prolink' ? 'selected' : ''}>Prolink</option>
