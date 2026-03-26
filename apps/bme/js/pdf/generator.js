@@ -490,7 +490,7 @@ ${INVOICE_STYLE}
 
         <div class="company-info">
             <div class="company-left">
-                <img src="assets/Logo berkah maju elektrik.png" alt="Berkah Maju Elektrik Logo" class="company-logo">
+                <img src="assets/logo-bme.png" alt="Berkah Maju Elektrik Logo" class="company-logo">
                 <div class="company-details">
                     <h2>BERKAH MAJU ELEKTRIK</h2>
                     <p>Jl. Raya Karehkel, Parung Panjang Atas Leuwiliang, Bogor</p>
@@ -571,7 +571,7 @@ ${SURAT_JALAN_STYLE}
     <div class="page-container">
         <div class="header-container">
             <div class="company-info">
-                <img src="assets/Logo berkah maju elektrik.png" alt="Berkah Maju Elektrik Logo" class="company-logo">
+                <img src="assets/logo-bme.png" alt="Berkah Maju Elektrik Logo" class="company-logo">
                 <div class="company-details">
                     <h2>BERKAH MAJU ELEKTRIK</h2>
                     <p>Jl. Raya Karehkel, Parung Panjang Atas Leuwiliang, Bogor</p>

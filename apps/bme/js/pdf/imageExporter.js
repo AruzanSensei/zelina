@@ -65,7 +65,7 @@ async function imageToDataURL(imagePath) {
 // Create off-screen iframe with complete HTML (includes styles)
 async function createOffscreenIframe(htmlString) {
     // Convert relative logo path to data URL
-    const logoPath = 'assets/Logo berkah maju elektrik.png';
+    const logoPath = 'assets/logo-bme.png';
     let logoDataURL = '';
 
     try {
@@ -77,7 +77,7 @@ async function createOffscreenIframe(htmlString) {
     // Replace logo src with data URL if available
     if (logoDataURL) {
         htmlString = htmlString.replace(
-            /src="assets\/Logo berkah maju elektrik\.png"/g,
+            /src="assets\/logo-bme\.png"/g,
             `src="${logoDataURL}"`
         );
     }
