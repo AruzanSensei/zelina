@@ -65,7 +65,7 @@ async function imageToDataURL(imagePath) {
 // Create off-screen iframe with complete HTML (includes styles)
 async function createOffscreenIframe(htmlString) {
     // Convert relative logo path to data URL
-    const logoPath = 'assets/logo-bme.png';
+    const logoPath = 'assets/icons/logo-bme.png';
     let logoDataURL = '';
 
     try {

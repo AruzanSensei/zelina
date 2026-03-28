@@ -7,7 +7,7 @@ const ASSETS = [
     '/css/theme.css',
     '/css/style.css',
     '/js/app.js',
-    '/assets/logo-bme.png',
+    '/assets/icons/logo-bme.png',
     '/assets/icons/android-chrome-192x192.png',
     '/assets/icons/android-chrome-512x512.png',
     '/assets/icons/apple-touch-icon.png',
