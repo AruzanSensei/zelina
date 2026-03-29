@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ETS — Product Management System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=Barlow+Condensed:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface2: #181818;
+    --border: #2a2a2a;
+    --border-bright: #404040;
+    --gold: #c8a84b;
+    --gold-dim: #8a6f2e;
+    --gold-bright: #e8c96a;
+    --white: #f0ede6;
+    --white-dim: #a0998c;
+    --red: #c0392b;
+    --green: #27ae60;
+    --text: #d4cfc8;
+    --text-dim: #6a6560;
+    --mono: 'JetBrains Mono', monospace;
+    --display: 'Barlow Condensed', sans-serif;
+    --ui: 'Rajdhani', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--ui);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── GRID TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(200,168,75,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,168,75,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── TOPBAR ── */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    height: 56px;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .logo-mark {
+    width: 32px; height: 32px;
+    border: 2px solid var(--gold);
+    display: grid;
+    place-items: center;
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 14px;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+  }
+  .logo-text {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.15em;
+    color: var(--white);
+    text-transform: uppercase;
+  }
+  .logo-sub {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 1px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .sys-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .counter-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--gold);
+    border: 1px solid var(--gold-dim);
+    padding: 2px 8px;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── LAYOUT ── */
+  .app {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: calc(100vh - 56px);
+  }
+
+  /* ── SIDEBAR ── */
+  aside {
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .nav-section {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+  }
+  .nav-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-left: 4px;
+  }
+
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    background: none;
+    border: 1px solid transparent;
+    color: var(--text-dim);
+    font-family: var(--ui);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s;
+    margin-bottom: 2px;
+  }
+  .nav-btn svg { flex-shrink: 0; opacity: 0.6; }
+  .nav-btn:hover {
+    background: var(--surface2);
+    color: var(--white);
+    border-color: var(--border);
+  }
+  .nav-btn:hover svg { opacity: 1; }
+  .nav-btn.active {
+    background: rgba(200,168,75,0.08);
+    border-color: var(--gold-dim);
+    color: var(--gold-bright);
+  }
+  .nav-btn.active svg { opacity: 1; color: var(--gold); }
+
+  .filter-panel {
+    padding: 0 20px;
+    flex: 1;
+  }
+
+  .filter-group { margin-bottom: 16px; }
+  .filter-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .filter-select, .filter-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 8px 10px;
+    outline: none;
+    letter-spacing: 0.05em;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .filter-select:focus, .filter-input:focus {
+    border-color: var(--gold-dim);
+  }
+  .filter-select option {
+    background: var(--surface2);
+  }
+
+  .btn-clear {
+    width: 100%;
+    padding: 8px;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-top: 8px;
+  }
+  .btn-clear:hover {
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  /* ── MAIN ── */
+  main {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .search-wrap {
+    flex: 1;
+    position: relative;
+    max-width: 400px;
+  }
+  .search-wrap svg {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    pointer-events: none;
+  }
+  .search-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 9px 12px 9px 38px;
+    outline: none;
+    letter-spacing: 0.05em;
+    transition: border-color 0.15s;
+  }
+  .search-input::placeholder { color: var(--text-dim); }
+  .search-input:focus { border-color: var(--gold-dim); }
+
+  .toolbar-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+
+  .view-btn {
+    width: 32px; height: 32px;
+    display: grid;
+    place-items: center;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .view-btn.active, .view-btn:hover {
+    border-color: var(--gold-dim);
+    color: var(--gold);
+    background: rgba(200,168,75,0.06);
+  }
+
+  .btn-primary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 20px;
+    background: var(--gold);
+    color: #000;
+    border: none;
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn-primary:hover { background: var(--gold-bright); }
+  .btn-primary svg { color: #000; }
+
+  /* ── PRODUCT TABLE ── */
+  .content-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 28px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+  .section-count {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead tr {
+    border-bottom: 1px solid var(--border-bright);
+  }
+  th {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+  th:first-child { padding-left: 0; }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.12s;
+  }
+  tbody tr:hover { background: rgba(200,168,75,0.04); }
+
+  td {
+    padding: 13px 12px;
+    vertical-align: middle;
+    font-family: var(--ui);
+    font-size: 14px;
+    font-weight: 500;
+  }
+  td:first-child { padding-left: 0; }
+
+  .td-product-name {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.08em;
+    color: var(--white);
+  }
+  .td-serial {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+  }
+  .td-model {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    display: inline-block;
+    padding: 2px 8px;
+    letter-spacing: 0.1em;
+  }
+  .td-capacity {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    letter-spacing: 0.05em;
+  }
+
+  .action-icon {
+    width: 28px; height: 28px;
+    display: inline-grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.12s;
+    vertical-align: middle;
+  }
+  .action-icon:hover {
+    border-color: var(--gold-dim);
+    color: var(--gold);
+  }
+  .action-icon.del:hover {
+    border-color: var(--red);
+    color: var(--red);
+  }
+
+  /* ── GRID VIEW ── */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+  .product-card {
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+    transition: all 0.15s;
+    padding: 16px;
+  }
+  .product-card:hover {
+    border-color: var(--gold-dim);
+    background: var(--surface2);
+  }
+  .card-name {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .card-serial {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+  }
+  .card-meta {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .card-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+  }
+  .empty-icon {
+    width: 64px; height: 64px;
+    margin: 0 auto 20px;
+    border: 2px dashed var(--border-bright);
+    display: grid;
+    place-items: center;
+    color: var(--border-bright);
+  }
+  .empty-title {
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .empty-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 200;
+    display: none;
+    place-items: center;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: grid; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border-bright);
+    width: 100%;
+    max-width: 560px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    animation: modalIn 0.2s ease;
+  }
+  @keyframes modalIn {
+    from { transform: translateY(16px); opacity: 0; }
+    to { transform: none; opacity: 1; }
+  }
+
+  .modal::before {
+    content: '';
+    display: block;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+
+  .modal-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .modal-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+  .modal-close {
+    width: 28px; height: 28px;
+    display: grid;
+    place-items: center;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .modal-close:hover { border-color: var(--red); color: var(--red); }
+
+  .modal-body { padding: 24px; }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .form-control {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--white);
+    font-family: var(--mono);
+    font-size: 13px;
+    padding: 10px 12px;
+    outline: none;
+    letter-spacing: 0.05em;
+    transition: border-color 0.15s;
+    width: 100%;
+  }
+  .form-control:focus { border-color: var(--gold-dim); }
+  .form-control::placeholder { color: var(--text-dim); }
+
+  .modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .btn-secondary {
+    padding: 8px 20px;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-secondary:hover { border-color: var(--border-bright); color: var(--text); }
+
+  /* ── DETAIL MODAL ── */
+  .detail-label-wrap {
+    background: #0c0c0c;
+    border: 2px solid #333;
+    padding: 20px;
+    font-family: var(--display);
+    margin-bottom: 16px;
+  }
+
+  .label-title-bar {
+    text-align: center;
+    border: 2px solid var(--white-dim);
+    padding: 12px;
+    margin-bottom: 0;
+  }
+  .label-main-title {
+    font-family: var(--display);
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white);
+  }
+
+  .label-body {
+    border: 2px solid var(--white-dim);
+    border-top: none;
+    display: grid;
+    grid-template-columns: 1fr 140px;
+  }
+
+  .label-left { border-right: 2px solid var(--white-dim); }
+
+  .label-row {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    border-bottom: 1px solid #333;
+  }
+  .label-row:last-child { border-bottom: none; }
+  .label-key {
+    font-family: var(--ui);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--white-dim);
+    padding: 10px 12px;
+    border-right: 1px solid #333;
+    letter-spacing: 0.03em;
+  }
+  .label-val {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.05em;
+    color: var(--white);
+    padding: 10px 14px;
+  }
+
+  .label-right {
+    display: flex;
+    flex-direction: column;
+  }
+  .label-right-cell {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 8px;
+    text-align: center;
+    border-bottom: 2px solid var(--white-dim);
+  }
+  .label-right-cell:last-child { border-bottom: none; }
+  .label-right-key {
+    font-family: var(--ui);
+    font-size: 11px;
+    color: var(--white-dim);
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+  .label-right-val {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: 0.05em;
+    color: var(--white);
+  }
+
+  .label-bottom-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 2px solid var(--white-dim);
+    border-top: none;
+  }
+  .label-bottom-cell {
+    padding: 10px 14px;
+  }
+  .label-bottom-cell:first-child {
+    border-right: 2px solid var(--white-dim);
+  }
+  .label-bottom-text {
+    font-family: var(--ui);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--white-dim);
+    line-height: 1.6;
+  }
+  .label-bottom-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .label-made-in {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.1em;
+    color: var(--white);
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .detail-meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 16px;
+  }
+  .detail-meta-cell {
+    background: var(--bg);
+    padding: 12px 16px;
+  }
+  .detail-meta-key {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .detail-meta-val {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--white);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border-bright); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--gold-dim); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999;
+    padding: 12px 20px;
+    background: var(--surface2);
+    border: 1px solid var(--border-bright);
+    border-left: 3px solid var(--gold);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    display: none;
+    animation: toastIn 0.2s ease;
+    max-width: 320px;
+  }
+  .toast.show { display: block; }
+  .toast.error { border-left-color: var(--red); }
+  @keyframes toastIn {
+    from { transform: translateX(20px); opacity: 0; }
+    to { transform: none; opacity: 1; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .app { grid-template-columns: 1fr; }
+    aside { display: none; }
+    .form-grid { grid-template-columns: 1fr; }
+    .label-body { grid-template-columns: 1fr; }
+    .label-right { flex-direction: row; border-top: 2px solid var(--white-dim); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <div class="logo-mark">ETS</div>
+    <div>
+      <div class="logo-text">Product Management</div>
+      <div class="logo-sub">Electricity Treatment System</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="sys-status">
+      <div class="status-dot"></div>
+      SYSTEM ONLINE
+    </div>
+    <div class="counter-badge" id="totalBadge">0 RECORDS</div>
+  </div>
+</header>
+
+<!-- APP -->
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside>
+    <div class="nav-section">
+      <div class="nav-label">Navigation</div>
+      <button class="nav-btn active" onclick="setView('list')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+          <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+        </svg>
+        All Products
+      </button>
+      <button class="nav-btn" onclick="openAddModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
+        </svg>
+        Add Product
+      </button>
+    </div>
+
+    <div class="filter-panel">
+      <div class="nav-label">Filter</div>
+
+      <div class="filter-group">
+        <span class="filter-label">Model</span>
+        <select class="filter-select" id="filterModel" onchange="applyFilters()">
+          <option value="">All Models</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Capacity</span>
+        <select class="filter-select" id="filterCapacity" onchange="applyFilters()">
+          <option value="">All Capacities</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <span class="filter-label">Voltage</span>
+        <select class="filter-select" id="filterVoltage" onchange="applyFilters()">
+          <option value="">All Voltages</option>
+        </select>
+      </div>
+
+      <button class="btn-clear" onclick="clearFilters()">
+        ✕ Clear Filters
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main>
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" class="search-input" id="searchInput" placeholder="Serial No., Prod. No., Product Name..." oninput="handleSearch()">
+      </div>
+      <div class="toolbar-right">
+        <button class="view-btn active" id="btnTable" onclick="switchView('table')" title="Table View">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="1"/><line x1="3" y1="9" x2="21" y2="9"/>
+            <line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/>
+          </svg>
+        </button>
+        <button class="view-btn" id="btnGrid" onclick="switchView('grid')" title="Grid View">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+            <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+          </svg>
+        </button>
+        <button class="btn-primary" onclick="openAddModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Add Product
+        </button>
+      </div>
+    </div>
+
+    <div class="content-area" id="contentArea">
+      <!-- injected by JS -->
+    </div>
+  </main>
+</div>
+
+<!-- ADD PRODUCT MODAL -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">New Product Entry</span>
+      <button class="modal-close" onclick="closeModal('addModal')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Capacity <span style="color:var(--red)">*</span></label>
+          <input type="text" class="form-control" id="fCapacity" placeholder="e.g. 5000">
+        </div>
+        <div class="form-group">
+          <label>Voltage <span style="color:var(--red)">*</span></label>
+          <input type="text" class="form-control" id="fVoltage" placeholder="e.g. AC 220V">
+        </div>
+        <div class="form-group">
+          <label>Frequency <span style="color:var(--red)">*</span></label>
+          <input type="text" class="form-control" id="fFrequency" placeholder="e.g. 50 Hz">
+        </div>
+        <div class="form-group">
+          <label>Model <span style="color:var(--red)">*</span></label>
+          <input type="text" class="form-control" id="fModel" placeholder="e.g. AIZ">
+        </div>
+        <div class="form-group full">
+          <label>Password</label>
+          <input type="password" class="form-control" id="fPassword" placeholder="Optional password">
+        </div>
+      </div>
+      <div style="margin-top:16px; padding:10px 12px; background:var(--bg); border:1px solid var(--border); font-family:var(--mono); font-size:10px; color:var(--text-dim); letter-spacing:0.08em; line-height:1.8;">
+        ◈ Product Name, Serial Number & Product Number will be auto-generated<br>
+        ◈ Serial Number is guaranteed unique across all records
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('addModal')">Cancel</button>
+      <button class="btn-primary" onclick="saveProduct()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Save Product
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal" style="max-width:620px;">
+    <div class="modal-header">
+      <span class="modal-title" id="detailModalTitle">Product Detail</span>
+      <button class="modal-close" onclick="closeModal('detailModal')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body" id="detailModalBody">
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal('detailModal')">Close</button>
+      <button class="btn-primary" id="detailDeleteBtn" onclick="" style="background:var(--red); color:#fff;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
+          <path d="M10 11v6"/><path d="M14 11v6"/>
+        </svg>
+        Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DB ──
+const DB_KEY = 'ets_products';
+let viewMode = 'table';
+let currentFiltered = [];
+let currentProductId = null;
+
+function getAll() {
+  try { return JSON.parse(localStorage.getItem(DB_KEY)) || []; }
+  catch { return []; }
+}
+function save(arr) {
+  localStorage.setItem(DB_KEY, JSON.stringify(arr));
+}
+
+// ── GENERATE ──
+function randomStr(len, chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') {
+  return Array.from({length:len}, () => chars[Math.floor(Math.random()*chars.length)]).join('');
+}
+
+function generateProductName(capacity, model) {
+  return `ETS-${capacity}.${model.toUpperCase()}`;
+}
+
+function generateSerial(capacity) {
+  const all = getAll();
+  const serials = new Set(all.map(p => p.serial_number));
+  let serial;
+  let attempts = 0;
+  do {
+    const r1 = randomStr(2, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ') + randomStr(3, '0123456789');
+    const r2 = String(Math.floor(Math.random()*9000)+1000).padStart(4,'0');
+    serial = `XSI-${r1}-B-${capacity}-1-${r2}`;
+    attempts++;
+  } while (serials.has(serial) && attempts < 100);
+  return serial;
+}
+
+function generateProductNumber() {
+  const all = getAll();
+  const id = all.length + 1;
+  const code = randomStr(1,'ABCDEFGHIJKLMNOPQRSTUVWXYZ') + randomStr(3,'0123456789') + randomStr(1,'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+  return `${code}-${String(id).padStart(6,'0')}`;
+}
+
+// ── CRUD ──
+function addProduct(data) {
+  const all = getAll();
+  const product = {
+    id: Date.now().toString(),
+    product_name: generateProductName(data.capacity, data.model),
+    serial_number: generateSerial(data.capacity),
+    product_number: generateProductNumber(),
+    capacity: data.capacity,
+    voltage: data.voltage,
+    frequency: data.frequency,
+    model: data.model.toUpperCase(),
+    password: data.password || '',
+    created_at: new Date().toISOString()
+  };
+  all.push(product);
+  save(all);
+  return product;
+}
+
+function deleteProduct(id) {
+  const all = getAll().filter(p => p.id !== id);
+  save(all);
+}
+
+function findProduct(query) {
+  if (!query) return getAll();
+  const q = query.toLowerCase();
+  return getAll().filter(p =>
+    p.serial_number.toLowerCase().includes(q) ||
+    p.product_number.toLowerCase().includes(q) ||
+    p.product_name.toLowerCase().includes(q)
+  );
+}
+
+function filterProducts(products, filters) {
+  return products.filter(p => {
+    if (filters.model && p.model !== filters.model) return false;
+    if (filters.capacity && p.capacity !== filters.capacity) return false;
+    if (filters.voltage && p.voltage !== filters.voltage) return false;
+    return true;
+  });
+}
+
+// ── RENDER ──
+function render() {
+  const query = document.getElementById('searchInput').value;
+  const filters = {
+    model: document.getElementById('filterModel').value,
+    capacity: document.getElementById('filterCapacity').value,
+    voltage: document.getElementById('filterVoltage').value,
+  };
+  let products = findProduct(query);
+  products = filterProducts(products, filters);
+  currentFiltered = products;
+
+  const total = getAll().length;
+  document.getElementById('totalBadge').textContent = `${total} RECORD${total !== 1 ? 'S' : ''}`;
+  updateFilterOptions();
+
+  const area = document.getElementById('contentArea');
+
+  if (products.length === 0) {
+    area.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="2" y="3" width="20" height="14" rx="1"/><line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <div class="empty-title">No Products Found</div>
+        <div class="empty-sub">Add a product or adjust your search filters</div>
+      </div>`;
+    return;
+  }
+
+  if (viewMode === 'table') {
+    area.innerHTML = `
+      <div class="section-header">
+        <span class="section-title">Products</span>
+        <span class="section-count">${products.length} RESULT${products.length !== 1 ? 'S' : ''}</span>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Serial Number</th>
+            <th>Prod. No</th>
+            <th>Model</th>
+            <th>Capacity</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="productTbody">
+        </tbody>
+      </table>`;
+    const tbody = document.getElementById('productTbody');
+    products.forEach(p => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="td-product-name">${p.product_name}</td>
+        <td class="td-serial">${p.serial_number}</td>
+        <td style="font-family:var(--mono);font-size:11px;color:var(--text-dim);letter-spacing:0.05em;">${p.product_number}</td>
+        <td><span class="td-model">${p.model}</span></td>
+        <td class="td-capacity">${p.capacity} VA</td>
+        <td>
+          <button class="action-icon" onclick="event.stopPropagation();openDetail('${p.id}')" title="View Detail">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+          </button>
+          <button class="action-icon del" onclick="event.stopPropagation();confirmDelete('${p.id}')" title="Delete">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
+            </svg>
+          </button>
+        </td>`;
+      tr.onclick = () => openDetail(p.id);
+      tbody.appendChild(tr);
+    });
+  } else {
+    area.innerHTML = `
+      <div class="section-header">
+        <span class="section-title">Products</span>
+        <span class="section-count">${products.length} RESULT${products.length !== 1 ? 'S' : ''}</span>
+      </div>
+      <div class="product-grid" id="productGrid"></div>`;
+    const grid = document.getElementById('productGrid');
+    products.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <div class="card-name">${p.product_name}</div>
+        <div class="card-serial">${p.serial_number}</div>
+        <div class="card-meta">
+          <span class="card-tag">${p.model}</span>
+          <span class="card-tag">${p.capacity} VA</span>
+          <span class="card-tag">${p.voltage}</span>
+        </div>`;
+      card.onclick = () => openDetail(p.id);
+      grid.appendChild(card);
+    });
+  }
+}
+
+function updateFilterOptions() {
+  const all = getAll();
+  const models = [...new Set(all.map(p => p.model))].sort();
+  const capacities = [...new Set(all.map(p => p.capacity))].sort();
+  const voltages = [...new Set(all.map(p => p.voltage))].sort();
+
+  const fModel = document.getElementById('filterModel');
+  const fCap = document.getElementById('filterCapacity');
+  const fVolt = document.getElementById('filterVoltage');
+
+  const current = { model: fModel.value, cap: fCap.value, volt: fVolt.value };
+
+  fModel.innerHTML = '<option value="">All Models</option>' + models.map(m => `<option value="${m}" ${current.model===m?'selected':''}>${m}</option>`).join('');
+  fCap.innerHTML = '<option value="">All Capacities</option>' + capacities.map(c => `<option value="${c}" ${current.cap===c?'selected':''}>${c} VA</option>`).join('');
+  fVolt.innerHTML = '<option value="">All Voltages</option>' + voltages.map(v => `<option value="${v}" ${current.volt===v?'selected':''}>${v}</option>`).join('');
+}
+
+// ── DETAIL ──
+function openDetail(id) {
+  const p = getAll().find(x => x.id === id);
+  if (!p) return;
+  currentProductId = id;
+
+  document.getElementById('detailModalTitle').textContent = p.product_name;
+
+  const body = document.getElementById('detailModalBody');
+  body.innerHTML = `
+    <div class="detail-label-wrap">
+      <div class="label-title-bar">
+        <div class="label-main-title">Electricity Treatment System</div>
+      </div>
+      <div class="label-body">
+        <div class="label-left">
+          <div class="label-row">
+            <div class="label-key">Product Name.</div>
+            <div class="label-val">${p.product_name}</div>
+          </div>
+          <div class="label-row">
+            <div class="label-key">Serial No.</div>
+            <div class="label-val">${p.serial_number}</div>
+          </div>
+          <div class="label-row">
+            <div class="label-key">Capacity :</div>
+            <div class="label-val">${p.capacity} VA / ${(parseInt(p.capacity)/1000).toFixed(0)} KVA</div>
+          </div>
+          <div class="label-row">
+            <div class="label-key">Prod. No :</div>
+            <div class="label-val">${p.product_number}</div>
+          </div>
+        </div>
+        <div class="label-right">
+          <div class="label-right-cell">
+            <div class="label-right-key">Model.</div>
+            <div class="label-right-val">${p.model}</div>
+          </div>
+          <div class="label-right-cell">
+            <div class="label-right-val">1-Phase</div>
+          </div>
+        </div>
+      </div>
+      <div class="label-bottom-row">
+        <div class="label-bottom-cell">
+          <div class="label-bottom-text">Voltage &nbsp;: ${p.voltage}<br>Frequency : ${p.frequency}</div>
+        </div>
+        <div class="label-bottom-cell label-bottom-right">
+          <div class="label-made-in">Made in INDONESIA</div>
+        </div>
+      </div>
+    </div>
+    <div class="detail-meta-grid">
+      <div class="detail-meta-cell">
+        <div class="detail-meta-key">Created</div>
+        <div class="detail-meta-val">${new Date(p.created_at).toLocaleDateString('en-GB', {day:'2-digit',month:'short',year:'numeric'})}</div>
+      </div>
+      <div class="detail-meta-cell">
+        <div class="detail-meta-key">Password</div>
+        <div class="detail-meta-val">${p.password ? '●●●●●●' : '— not set —'}</div>
+      </div>
+    </div>`;
+
+  document.getElementById('detailDeleteBtn').onclick = () => confirmDelete(id);
+  document.getElementById('detailModal').classList.add('open');
+}
+
+// ── ACTIONS ──
+function confirmDelete(id) {
+  if (confirm('Delete this product record? This cannot be undone.')) {
+    deleteProduct(id);
+    closeModal('detailModal');
+    render();
+    showToast('Product deleted.');
+  }
+}
+
+function saveProduct() {
+  const capacity = document.getElementById('fCapacity').value.trim();
+  const voltage = document.getElementById('fVoltage').value.trim();
+  const frequency = document.getElementById('fFrequency').value.trim();
+  const model = document.getElementById('fModel').value.trim();
+  const password = document.getElementById('fPassword').value;
+
+  if (!capacity || !voltage || !frequency || !model) {
+    showToast('Please fill all required fields.', true);
+    return;
+  }
+
+  const p = addProduct({ capacity, voltage, frequency, model, password });
+  closeModal('addModal');
+  document.getElementById('fCapacity').value = '';
+  document.getElementById('fVoltage').value = '';
+  document.getElementById('fFrequency').value = '';
+  document.getElementById('fModel').value = '';
+  document.getElementById('fPassword').value = '';
+  render();
+  showToast(`Product saved: ${p.product_name}`);
+}
+
+function openAddModal() {
+  document.getElementById('addModal').classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+
+function handleSearch() { render(); }
+function applyFilters() { render(); }
+function clearFilters() {
+  document.getElementById('filterModel').value = '';
+  document.getElementById('filterCapacity').value = '';
+  document.getElementById('filterVoltage').value = '';
+  document.getElementById('searchInput').value = '';
+  render();
+}
+
+function switchView(mode) {
+  viewMode = mode;
+  document.getElementById('btnTable').classList.toggle('active', mode === 'table');
+  document.getElementById('btnGrid').classList.toggle('active', mode === 'grid');
+  render();
+}
+
+function setView(v) { render(); }
+
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('open');
+  });
+});
+
+// ── INIT ──
+render();
+</script>
+</body>
+</html>
