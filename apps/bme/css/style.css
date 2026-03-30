@@ -450,6 +450,22 @@ small {
     width: 100%;
 }
 
+/* History view breaks out of padding to fill full width */
+#history-view {
+    margin-left: calc(-1 * var(--spacing-md));
+    margin-right: calc(-1 * var(--spacing-md));
+}
+
+#history-view .history-toolbar {
+    margin-left: var(--spacing-md);
+    margin-right: var(--spacing-md);
+}
+
+/* History list: full-bleed, no outer padding */
+.history-list {
+    overflow: hidden;
+}
+
 .view.hidden {
     display: none;
 }
@@ -776,44 +792,227 @@ small {
 /* History */
 .history-item {
     background: var(--bg-card);
-    padding: var(--spacing-md);
-    border-radius: var(--radius-sm);
-    margin-bottom: var(--spacing-sm);
-    display: flex;
-    justify-content: space-between;
+    padding: 11px 20px;
+    border-radius: 0;
+    margin-bottom: 0;
+    display: block;
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    transition: background 0.15s ease;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Context-active state (highlighted item) */
+.history-item.context-active {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="dark"] .history-item.context-active {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* ============================================
+   AGE BADGE
+   ============================================ */
+.age-badge {
+    display: inline-flex;
     align-items: center;
-    border: 1px solid var(--border-color);
+    padding: 2px 9px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+    flex-shrink: 0;
 }
 
-/* History Time-based Colors */
-.history-today {
-    border-left: 4px solid #27AE60;
-    background: #ECF8F2;
+/* Hari ini */
+.age-today {
+    background: #ecfdf5;
+    border-color: #22c55e;
+    color: #166534;
 }
 
-.history-yesterday {
-    border-left: 4px solid #5DADE2;
-    background: #EEF4FB;
+/* Kemarin */
+.age-yesterday {
+    background: #f0fdf4;
+    border-color: #4ade80;
+    color: #166534;
 }
 
-.history-week {
-    border-left: 4px solid #AF7AC5;
-    background: #F1EFF6;
+/* Minggu ini (2-7 hari) */
+.age-week {
+    background: #fefce8;
+    border-color: #facc15;
+    color: #854d0e;
 }
 
-.history-month {
-    border-left: 4px solid #F5B041;
-    background: #FBF7ED;
+/* Minggu lalu (8-29 hari) */
+.age-last-week {
+    background: #fff7ed;
+    border-color: #fb923c;
+    color: #9a3412;
 }
 
-.history-year {
-    border-left: 4px solid #95A5A6;
-    background: #F6F6F6;
+/* Bulan lalu (30-364 hari) */
+.age-month {
+    background: #fef2f2;
+    border-color: #f87171;
+    color: #7f1d1d;
+}
+
+/* Tahun lalu (≥ 365 hari) */
+.age-year {
+    background: #f9fafb;
+    border-color: #d1d5db;
+    color: #6b7280;
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .age-today {
+    background: rgba(34, 197, 94, 0.15);
+    border-color: rgba(34, 197, 94, 0.5);
+    color: #86efac;
+}
+
+[data-theme="dark"] .age-yesterday {
+    background: rgba(74, 222, 128, 0.12);
+    border-color: rgba(74, 222, 128, 0.4);
+    color: #86efac;
+}
+
+[data-theme="dark"] .age-week {
+    background: rgba(250, 204, 21, 0.12);
+    border-color: rgba(250, 204, 21, 0.4);
+    color: #fde047;
+}
+
+[data-theme="dark"] .age-last-week {
+    background: rgba(251, 146, 60, 0.12);
+    border-color: rgba(251, 146, 60, 0.4);
+    color: #fdba74;
+}
+
+[data-theme="dark"] .age-month {
+    background: rgba(248, 113, 113, 0.12);
+    border-color: rgba(248, 113, 113, 0.4);
+    color: #fca5a5;
+}
+
+[data-theme="dark"] .age-year {
+    background: rgba(209, 213, 219, 0.08);
+    border-color: rgba(209, 213, 219, 0.3);
+    color: #9ca3af;
 }
 
 .history-info h4 {
     margin-bottom: 4px;
     font-size: 0.95rem;
+}
+
+/* ============================================
+   iOS CONTEXT MENU
+   ============================================ */
+#bme-context-menu {
+    position: fixed;
+    z-index: 9999;
+    min-width: 210px;
+    background: rgba(242, 242, 247, 0.82);
+    backdrop-filter: blur(40px) saturate(200%) brightness(1.05);
+    -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(1.05);
+    border-radius: 14px;
+    border: 0.5px solid rgba(0, 0, 0, 0.12);
+    box-shadow:
+        0 0 0 0.5px rgba(0, 0, 0, 0.05),
+        0 8px 32px rgba(0, 0, 0, 0.14),
+        0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 6px;
+    opacity: 0;
+    transform: scale(0.88) translateY(-6px);
+    transform-origin: top left;
+    transition: opacity 0.15s ease, transform 0.18s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    pointer-events: none;
+    font-size: 0.9rem;
+}
+
+#bme-context-menu.visible {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: all;
+}
+
+[data-theme="dark"] #bme-context-menu {
+    background: rgba(44, 44, 46, 0.85);
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow:
+        0 0 0 0.5px rgba(255, 255, 255, 0.06),
+        0 8px 32px rgba(0, 0, 0, 0.45),
+        0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.ctx-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 14px;
+    border-radius: 9px;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: background 0.08s ease;
+    font-weight: 400;
+    border: none;
+    width: 100%;
+    background: transparent;
+    text-align: left;
+    font-family: inherit;
+    font-size: 0.9rem;
+    letter-spacing: -0.01em;
+}
+
+.ctx-item:active {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .ctx-item:active {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.ctx-item i {
+    width: 18px;
+    text-align: center;
+    font-size: 0.85rem;
+    opacity: 0.5;
+    flex-shrink: 0;
+}
+
+.ctx-item.danger {
+    color: #ef4444;
+}
+
+.ctx-item.danger i {
+    opacity: 0.5;
+    color: #ef4444;
+}
+
+.ctx-item.orange {
+    color: #F5A623;
+}
+
+.ctx-item.orange i {
+    opacity: 0.5;
+    color: #F5A623;
+}
+
+.ctx-separator {
+    height: 0.5px;
+    background: rgba(60, 60, 67, 0.29);
+    margin: 4px 0;
+}
+
+[data-theme="dark"] .ctx-separator {
+    background: rgba(255, 255, 255, 0.15);
 }
 
 /* Modal & Bottom Sheet */

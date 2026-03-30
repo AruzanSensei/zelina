@@ -33,6 +33,7 @@ export function initHistoryMode() {
     let touchStartX = 0;
     let activeSwipeCard = null;
     let swipeInitialized = false;
+    let longPressInitialized = false;
 
     // Search state
     let searchQuery = '';
@@ -40,21 +41,179 @@ export function initHistoryMode() {
     // Click timer to prevent click/dblclick conflict
     let clickTimer = null;
 
+    // Context menu state
+    let contextActiveItem = null;
+    let longPressTimer = null;
+    let longPressTriggered = false;
+
     // ===================================
-    // TIME HELPERS
+    // DATA AGE HELPERS
     // ===================================
-    const getTimeClass = (timestamp) => {
-        if (!timestamp) return '';
+    const getDataAge = (timestamp) => {
+        if (!timestamp) return { label: '', cls: '' };
         const now = new Date();
         const itemDate = new Date(timestamp);
-        const diffDays = Math.floor((now - itemDate) / (1000 * 60 * 60 * 24));
+        // Compare calendar days, not just 24h
+        const nowDay  = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const itemDay = new Date(itemDate.getFullYear(), itemDate.getMonth(), itemDate.getDate());
+        const diffDays = Math.round((nowDay - itemDay) / (1000 * 60 * 60 * 24));
 
-        if (diffDays === 0) return 'history-today';
-        if (diffDays === 1) return 'history-yesterday';
-        if (diffDays <= 7) return 'history-week';
-        if (diffDays <= 30) return 'history-month';
-        return 'history-year';
+        if (diffDays === 0) return { label: 'Hari ini',  cls: 'age-today' };
+        if (diffDays === 1) return { label: 'Kemarin',   cls: 'age-yesterday' };
+        if (diffDays <= 7)  return { label: `${diffDays} hari lalu`,  cls: 'age-week' };
+        if (diffDays < 30) {
+            const weeks = Math.floor(diffDays / 7);
+            return { label: weeks === 1 ? 'Minggu lalu' : `${weeks} minggu lalu`, cls: 'age-last-week' };
+        }
+        if (diffDays < 365) {
+            const months = Math.floor(diffDays / 30);
+            return { label: months === 1 ? 'Bulan lalu' : `${months} bulan lalu`, cls: 'age-month' };
+        }
+        const years = Math.floor(diffDays / 365);
+        return { label: years === 1 ? 'Tahun lalu' : `${years} tahun lalu`, cls: 'age-year' };
     };
+
+    // ===================================
+    // CONTEXT MENU DOM SETUP
+    // ===================================
+    let contextMenu = document.getElementById('bme-context-menu');
+    if (!contextMenu) {
+        contextMenu = document.createElement('div');
+        contextMenu.id = 'bme-context-menu';
+        document.body.appendChild(contextMenu);
+    }
+
+    const showContextMenu = (x, y, entry, realIndex) => {
+        // Build menu content
+        contextMenu.innerHTML = `
+            <button class="ctx-item" data-action="download">
+                <i class="fa-solid fa-download"></i> Unduh
+            </button>
+            <button class="ctx-item" data-action="print">
+                <i class="fa-solid fa-print"></i> Print
+            </button>
+            <div class="ctx-separator"></div>
+            <button class="ctx-item" data-action="preview">
+                <i class="fa-solid fa-eye"></i> Pratinjau...
+            </button>
+            <button class="ctx-item orange" data-action="edit">
+                <i class="fa-solid fa-pen-to-square"></i> Edit...
+            </button>
+            <button class="ctx-item" data-action="multiselect">
+                <i class="fa-solid fa-check-double"></i> Pilih beberapa...
+            </button>
+            <div class="ctx-separator"></div>
+            <button class="ctx-item" data-action="rename">
+                <i class="fa-solid fa-i-cursor"></i> Ubah nama
+            </button>
+            <button class="ctx-item danger" data-action="delete">
+                <i class="fa-solid fa-trash"></i> Hapus
+            </button>
+        `;
+
+        // Attach action handlers
+        contextMenu.querySelectorAll('.ctx-item').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                handleContextAction(btn.dataset.action, entry, realIndex);
+                closeContextMenu();
+            });
+        });
+
+        // Position: show offscreen first to measure size
+        contextMenu.style.left = '-9999px';
+        contextMenu.style.top  = '-9999px';
+        contextMenu.classList.add('visible');
+
+        // Smart positioning (keep inside viewport)
+        const SAFE = 10;
+        const mw = contextMenu.offsetWidth  || 210;
+        const mh = contextMenu.offsetHeight || 300;
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        let left = x;
+        let top  = y;
+        if (left + mw + SAFE > vw) left = vw - mw - SAFE;
+        if (top  + mh + SAFE > vh) top  = vh - mh - SAFE;
+        if (left < SAFE) left = SAFE;
+        if (top  < SAFE) top  = SAFE;
+
+        contextMenu.style.left = `${left}px`;
+        contextMenu.style.top  = `${top}px`;
+        contextMenu.style.transformOrigin = x > vw / 2 ? 'top right' : 'top left';
+    };
+
+    const closeContextMenu = () => {
+        contextMenu.classList.remove('visible');
+        // Remove active highlight
+        if (contextActiveItem) {
+            contextActiveItem.classList.remove('context-active');
+            contextActiveItem = null;
+        }
+    };
+
+    const handleContextAction = (action, entry, index) => {
+        switch (action) {
+            case 'preview':
+                openDetail(index);
+                break;
+
+            case 'edit': {
+                if (!confirm('Pindah ke Mode Manual untuk mengedit data ini?')) return;
+                document.dispatchEvent(new CustomEvent('template-selected', { detail: { items: JSON.parse(JSON.stringify(entry.items)) } }));
+                const manualTitleEl = document.getElementById('manual-title');
+                if (manualTitleEl) {
+                    manualTitleEl.value = entry.title || '';
+                    appState.updateManualTitle(entry.title || '');
+                    manualTitleEl.dispatchEvent(new Event('input'));
+                }
+                document.querySelector('[data-tab="manual"]')?.click();
+                break;
+            }
+
+            case 'multiselect':
+                if (!isMultiSelectMode) toggleMultiSelect();
+                // Pre-select this item
+                selectedIndices.add(index);
+                render(appState.state.history);
+                break;
+
+            case 'rename': {
+                const newTitle = prompt('Ubah nama:', entry.title || '');
+                if (newTitle !== null && newTitle.trim() !== '') {
+                    appState.updateHistoryTitle(entry.id, newTitle.trim());
+                }
+                break;
+            }
+
+            case 'download': {
+                const defaultMethod = appState.state.settings.defaultDownloadMethod || 'pdf';
+                if (defaultMethod === 'pdf') {
+                    printInvoicePDF(entry.items, entry.title);
+                } else {
+                    exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML, entry.items, entry.title, defaultMethod);
+                }
+                break;
+            }
+
+            case 'print':
+                printInvoicePDF(entry.items, entry.title);
+                break;
+
+            case 'delete':
+                if (confirm('Hapus riwayat ini?')) {
+                    appState.removeFromHistory(index);
+                }
+                break;
+        }
+    };
+
+    // Close on outside click or scroll
+    document.addEventListener('click', (e) => {
+        if (!contextMenu.contains(e.target)) closeContextMenu();
+    }, true);
+    document.addEventListener('scroll', closeContextMenu, true);
 
     // ===================================
     // RENDER LIST
@@ -83,34 +242,45 @@ export function initHistoryMode() {
             return;
         }
 
-        filtered.forEach((entry) => {
+        filtered.forEach((entry, filteredIdx) => {
             const realIndex = appState.state.history.findIndex(h => h.id === entry.id || h.timestamp === entry.timestamp);
-            const timeClass = getTimeClass(entry.timestamp);
+            const age = getDataAge(entry.timestamp);
 
-            // Swipe container wrapping each history item
+            // Format total for display
+            const total = (entry.items || []).reduce((s, i) => s + (i.price * i.qty), 0);
+            const totalStr = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(total);
+
+            // Swipe container — flush, no gap, no radius
             const swipeContainer = document.createElement('div');
             swipeContainer.className = 'item-swipe-container';
-            swipeContainer.style.cssText = 'position:relative; overflow:hidden; border-radius:var(--radius-sm); margin-bottom:8px;';
+            // Add top border for very first item to close the list visually
+            const topBorder = filteredIdx === 0 ? 'border-top: 1px solid var(--border-color);' : '';
+            swipeContainer.style.cssText = `position:relative; overflow:hidden; margin-bottom:0; ${topBorder}`;
 
             const checkboxHTML = isMultiSelectMode
-                ? `<input type="checkbox" class="history-checkbox" data-index="${realIndex}" ${selectedIndices.has(realIndex) ? 'checked' : ''} style="margin-right:10px;">`
+                ? `<input type="checkbox" class="history-checkbox" data-index="${realIndex}" ${selectedIndices.has(realIndex) ? 'checked' : ''} style="margin-right:10px; margin-top:2px; flex-shrink:0;">`
                 : '';
 
             swipeContainer.innerHTML = `
                 <div class="swipe-actions" style="position:absolute; top:0; bottom:0; right:0; display:flex; z-index:1;">
                     <button class="swipe-btn swipe-edit-history" data-index="${realIndex}" style="background-color:#F5A623; border:none; color:white; padding:0 20px; cursor:pointer;"><i class="fa-solid fa-pen-to-square"></i></button>
-                    <button class="swipe-btn swipe-delete-history" data-index="${realIndex}" style="background-color:#ff4d4f; border:none; color:white; padding:0 20px; cursor:pointer; border-radius:0 var(--radius-sm) var(--radius-sm) 0;"><i class="fa-solid fa-trash"></i></button>
+                    <button class="swipe-btn swipe-delete-history" data-index="${realIndex}" style="background-color:#ff4d4f; border:none; color:white; padding:0 20px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
                 </div>
-                <div class="history-item ${timeClass}" data-index="${realIndex}" style="cursor:pointer; transition:transform 0.2s; position:relative; z-index:2; background:var(--bg-card); display:flex; align-items:center;">
-                    ${checkboxHTML}
-                    <div class="history-info" style="flex:1;">
-                        <h4 class="history-title-text" data-id="${entry.id}">${entry.title || 'Tanpa Judul'}</h4>
-                        <p><small>${entry.date} | ${entry.items.length} Item</small></p>
-                    </div>
-                    <div class="history-actions">
-                        <button class="icon-btn btn-download" data-index="${realIndex}" title="Download PDF">
-                            <i class="fa-solid fa-download"></i>
-                        </button>
+                <div class="history-item" data-index="${realIndex}" style="cursor:pointer; transition:transform 0.2s; position:relative; z-index:2; background:var(--bg-card);">
+                    <div style="display:flex; align-items:flex-start; gap:8px;">
+                        ${checkboxHTML}
+                        <div style="flex:1; min-width:0;">
+                            <!-- Row 1: Title + Badge -->
+                            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:3px;">
+                                <h4 class="history-title-text" data-id="${entry.id}" style="margin:0; font-size:0.95rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0;">${entry.title || 'Tanpa Judul'}</h4>
+                                ${age.label ? `<span class="age-badge ${age.cls}" style="flex-shrink:0;">${age.label}</span>` : ''}
+                            </div>
+                            <!-- Row 2: Date + Price -->
+                            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                                <span style="font-size:0.78rem; color:var(--text-muted);">${entry.date} | ${entry.items.length} Item</span>
+                                <span style="font-weight:700; color:var(--primary); font-size:0.88rem; white-space:nowrap; flex-shrink:0;">${totalStr}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             `;
@@ -121,6 +291,7 @@ export function initHistoryMode() {
             initHistorySwipe();
         }
         updateBatchBar();
+        initLongPress();
     };
 
     render(appState.state.history);
@@ -206,12 +377,19 @@ export function initHistoryMode() {
             if (!activeSwipeCard) return;
             const touchCurrentX = e.touches[0].clientX;
             const diff = touchCurrentX - touchStartX;
+            // Cancel long-press if finger moves
+            if (Math.abs(diff) > 8) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
             if (diff < 0 && diff > -150) {
                 activeSwipeCard.style.transform = `translateX(${diff}px)`;
             }
         }, { passive: true });
 
         container.addEventListener('touchend', () => {
+            clearTimeout(longPressTimer);
+            longPressTimer = null;
             if (!activeSwipeCard) return;
             const transform = activeSwipeCard.style.transform;
             const match = transform.match(/translateX\((-?\d+)/);
@@ -229,6 +407,44 @@ export function initHistoryMode() {
             }
             activeSwipeCard = null;
         });
+    }
+
+    // ===================================
+    // LONG PRESS (Mobile Context Menu)
+    // ===================================
+    function initLongPress() {
+        if (longPressInitialized) return;
+        longPressInitialized = true;
+        container.addEventListener('touchstart', (e) => {
+            const card = e.target.closest('.history-item');
+            if (!card) return;
+            if (e.target.closest('button') || e.target.closest('input')) return;
+
+            const index = parseInt(card.dataset.index);
+            const entry = appState.state.history[index];
+            if (!entry) return;
+
+            longPressTriggered = false;
+            longPressTimer = setTimeout(() => {
+                longPressTriggered = true;
+                // Haptic feedback (if supported)
+                if (navigator.vibrate) navigator.vibrate(30);
+
+                closeContextMenu();
+                contextActiveItem = card;
+                card.classList.add('context-active');
+
+                const touch = e.touches[0];
+                showContextMenu(touch.clientX, touch.clientY, entry, index);
+            }, 400);
+        }, { passive: true });
+
+        container.addEventListener('touchend', () => {
+            if (!longPressTriggered) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
+        }, { passive: true });
     }
 
     // ===================================
@@ -588,21 +804,27 @@ export function initHistoryMode() {
     // ===================================
     // EVENTS
     // ===================================
-    container.addEventListener('click', (e) => {
-        // Download button
-        const btnDownloadEl = e.target.closest('.btn-download');
-        if (btnDownloadEl) {
-            e.stopPropagation();
-            const index = btnDownloadEl.dataset.index;
-            const entry = appState.state.history[index];
+    // Right-click context menu (Desktop)
+    container.addEventListener('contextmenu', (e) => {
+        const card = e.target.closest('.history-item');
+        if (!card) return;
+        e.preventDefault();
+        e.stopPropagation();
 
-            const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
-            if (defaultMethod === 'pdf') {
-                printInvoicePDF(entry.items, entry.title);
-            } else {
-                // For main list download button, we download BOTH
-                exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML, entry.items, entry.title, defaultMethod);
-            }
+        const index = parseInt(card.dataset.index);
+        const entry = appState.state.history[index];
+        if (!entry) return;
+
+        closeContextMenu();
+        contextActiveItem = card;
+        card.classList.add('context-active');
+        showContextMenu(e.clientX, e.clientY, entry, index);
+    });
+
+    container.addEventListener('click', (e) => {
+        // If long press was triggered, suppress click
+        if (longPressTriggered) {
+            longPressTriggered = false;
             return;
         }
 
