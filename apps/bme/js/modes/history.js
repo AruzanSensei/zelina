@@ -242,13 +242,21 @@ export function initHistoryMode() {
             return;
         }
 
+        // Track which exact age labels have already been shown (dedup by label string)
+        const shownAgeLabels = new Set();
+
         filtered.forEach((entry, filteredIdx) => {
             const realIndex = appState.state.history.findIndex(h => h.id === entry.id || h.timestamp === entry.timestamp);
             const age = getDataAge(entry.timestamp);
 
-            // Format total for display
+            // Badge dedup: show label only for first occurrence of each exact label
+            const badgeLabel = (age.label && !shownAgeLabels.has(age.label)) ? age.label : '';
+            if (age.label) shownAgeLabels.add(age.label);
+
+            // Format total: number only (formatted), Rp as inline superscript
             const total = (entry.items || []).reduce((s, i) => s + (i.price * i.qty), 0);
-            const totalStr = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(total);
+            const numStr = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(total);
+            const totalHTML = `<sup style="font-size:0.6em; font-weight:500; vertical-align:super; letter-spacing:0; opacity:0.75;">Rp</sup>${numStr}`;
 
             // Swipe container — flush, no gap, no radius
             const swipeContainer = document.createElement('div');
@@ -273,12 +281,12 @@ export function initHistoryMode() {
                             <!-- Row 1: Title + Badge -->
                             <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:3px;">
                                 <h4 class="history-title-text" data-id="${entry.id}" style="margin:0; font-size:0.95rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0;">${entry.title || 'Tanpa Judul'}</h4>
-                                ${age.label ? `<span class="age-badge ${age.cls}" style="flex-shrink:0;">${age.label}</span>` : ''}
+                                <span class="age-badge ${age.cls}" style="flex-shrink:0;">${badgeLabel}</span>
                             </div>
                             <!-- Row 2: Date + Price -->
                             <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
                                 <span style="font-size:0.78rem; color:var(--text-muted);">${entry.date} | ${entry.items.length} Item</span>
-                                <span style="font-weight:700; color:var(--primary); font-size:0.88rem; white-space:nowrap; flex-shrink:0;">${totalStr}</span>
+                                <span style="font-weight:700; color:var(--primary); font-size:0.92rem; white-space:nowrap; flex-shrink:0; line-height:1;">${totalHTML}</span>
                             </div>
                         </div>
                     </div>

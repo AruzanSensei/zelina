@@ -828,6 +828,15 @@ small {
     flex-shrink: 0;
 }
 
+/* Empty badge — collapse to small square dot, keeps layout alignment */
+.age-badge:empty {
+    padding: 0;
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    align-self: center;
+}
+
 /* Hari ini */
 .age-today {
     background: #ecfdf5;
