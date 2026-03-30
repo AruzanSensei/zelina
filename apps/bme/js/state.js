@@ -23,6 +23,7 @@ const DEFAULTS = {
             pdf: true
         },
         defaultDownloadMethod: 'pdf',
+        downloadAndSave: false,
         titleRequired: true,
         fileNameFormat: {
             invoice: 'Invoice-{judul}',

@@ -1364,18 +1364,27 @@ export function initPDFGenerator() {
             return false;
         }
 
-        // Validate item descriptions are filled
+        // Validate item descriptions are filled based on mode
         const items = appState.state.invoiceItems;
+        const mode = appState.state.manualCardMode || 'simple';
+        
         for (let i = 0; i < items.length; i++) {
-            if (!items[i].note || !items[i].note.trim()) {
-                const noteFields = document.querySelectorAll('.item-note');
-                if (noteFields[i]) {
-                    noteFields[i].classList.add('blink-error');
-                    noteFields[i].focus();
-                    setTimeout(() => noteFields[i]?.classList.remove('blink-error'), 1500);
+            if (mode === 'advance') {
+                if (!items[i].invKeterangan?.trim() || !items[i].name?.trim() || !items[i].sjKeterangan?.trim() || !items[i].price || items[i].price <= 0) {
+                    showAlert(`Ada kolom yang kosong pada Item ${i + 1}!`);
+                    return false;
                 }
-                showAlert(`Deskripsi Item ${i + 1} wajib diisi!`);
-                return false;
+            } else {
+                if (!items[i].name?.trim() || !items[i].price || items[i].price <= 0 || !items[i].tipe?.trim() || !items[i].note?.trim()) {
+                    const noteFields = document.querySelectorAll('.item-note');
+                    if (noteFields[i] && !items[i].note?.trim()) {
+                        noteFields[i].classList.add('blink-error');
+                        noteFields[i].focus();
+                        setTimeout(() => noteFields[i]?.classList.remove('blink-error'), 1500);
+                    }
+                    showAlert(`Ada kolom yang kosong pada Item ${i + 1}!`);
+                    return false;
+                }
             }
         }
         return title;
@@ -1440,18 +1449,24 @@ export function initPDFGenerator() {
             const items = appState.state.invoiceItems;
             if (items.length === 0) return showAlert("Belum ada item!");
 
-            // Check for duplicate synchronously
-            const history = appState.state.history || [];
-            const isDuplicate = history.some(h => (h.title || 'Untitled').toLowerCase() === title.toLowerCase());
+            const shouldSave = appState.state.settings.downloadAndSave === true;
 
-            if (isDuplicate) {
-                const proceed = await showCustomConfirm(title);
-                if (!proceed) return;
+            if (shouldSave) {
+                // Check for duplicate synchronously
+                const history = appState.state.history || [];
+                const isDuplicate = history.some(h => (h.title || 'Untitled').toLowerCase() === title.toLowerCase());
+
+                if (isDuplicate) {
+                    const proceed = await showCustomConfirm(title);
+                    if (!proceed) return;
+                }
             }
 
             isDownloading = true;
             try {
-                saveToHistory(items, title);
+                if (shouldSave) {
+                    saveToHistory(items, title);
+                }
                 const defaultMethod = appState.state.settings.defaultDownloadMethod || 'pdf';
                 await executeDownload(items, title, defaultMethod);
             } finally {
@@ -1470,7 +1485,7 @@ function saveToHistory(items, title) {
         id: Date.now(),
         title: title,
         date: `${today.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' })} | ${today.getHours()}.${String(today.getMinutes()).padStart(2, '0')}`,
-        items: items,
+        items: JSON.parse(JSON.stringify(items)),
         timestamp: Date.now()
     });
 }

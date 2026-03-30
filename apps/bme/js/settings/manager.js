@@ -125,6 +125,17 @@ export function initSettings() {
     }
 
     // ===================================
+    // DOWNLOAD & SAVE TOGGLE
+    // ===================================
+    const downloadSaveToggle = document.getElementById('setting-download-save');
+    if (downloadSaveToggle) {
+        downloadSaveToggle.checked = appState.state.settings.downloadAndSave === true;
+        downloadSaveToggle.addEventListener('change', (e) => {
+            appState.updateSettings({ downloadAndSave: e.target.checked });
+        });
+    }
+
+    // ===================================
     // FILE NAMING FORMAT
     // ===================================
     const formatInvoice = document.getElementById('format-invoice');
@@ -220,6 +231,7 @@ export function initSettings() {
 
             // Sync Validation & File Naming
             if (titleRequiredToggle) titleRequiredToggle.checked = s.titleRequired !== false;
+            if (downloadSaveToggle) downloadSaveToggle.checked = s.downloadAndSave === true;
             if (formatInvoice) formatInvoice.value = (s.fileNameFormat || {}).invoice || 'Invoice-{judul}';
             if (formatSuratJalan) formatSuratJalan.value = (s.fileNameFormat || {}).suratJalan || 'Surat Jalan-{judul}';
 
@@ -518,11 +530,25 @@ export function initSettings() {
                         <div class="modal-body">
                             <div class="input-group">
                                 <label class="field-label">Nama Barang</label>
-                                <input type="text" id="edit-item-name" class="form-input" value="${item.name}">
+                                <input type="text" id="edit-item-name" class="form-input" value="${item.name || ''}">
                             </div>
                             <div class="input-group">
                                 <label class="field-label">Harga (Rp)</label>
-                                <input type="number" id="edit-item-price" class="form-input" value="${item.price}">
+                                <input type="number" id="edit-item-price" class="form-input" value="${item.price || ''}">
+                            </div>
+                            <div class="input-group">
+                                <label class="field-label">Tipe (Opsional)</label>
+                                <select id="edit-item-tipe" class="form-input">
+                                    <option value="" ${!item.tipe ? 'selected' : ''}>-</option>
+                                    <option value="ICA" ${item.tipe === 'ICA' ? 'selected' : ''}>ICA</option>
+                                    <option value="Protecta" ${item.tipe === 'Protecta' ? 'selected' : ''}>Protecta</option>
+                                    <option value="Prolink" ${item.tipe === 'Prolink' ? 'selected' : ''}>Prolink</option>
+                                    <option value="APC" ${item.tipe === 'APC' ? 'selected' : ''}>APC</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label class="field-label">Note (Opsional)</label>
+                                <input type="text" id="edit-item-note" class="form-input" value="${item.note || ''}" placeholder="Deskripsi item">
                             </div>
                             <button id="btn-save-edit-item" data-index="${editItem}" class="btn btn-primary btn-full" style="margin-top:10px;">Simpan Perubahan</button>
                             <button id="btn-back-picker" class="btn btn-outline btn-full" style="margin-top:8px;">Batal</button>
@@ -544,6 +570,20 @@ export function initSettings() {
                             <div class="input-group">
                                 <label class="field-label">Harga (Rp)</label>
                                 <input type="number" id="new-item-price" class="form-input" placeholder="0">
+                            </div>
+                            <div class="input-group">
+                                <label class="field-label">Tipe (Opsional)</label>
+                                <select id="new-item-tipe" class="form-input">
+                                    <option value="" selected>-</option>
+                                    <option value="ICA">ICA</option>
+                                    <option value="Protecta">Protecta</option>
+                                    <option value="Prolink">Prolink</option>
+                                    <option value="APC">APC</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label class="field-label">Note (Opsional)</label>
+                                <input type="text" id="new-item-note" class="form-input" placeholder="Deskripsi item">
                             </div>
                             <button id="btn-save-new-item" class="btn btn-primary btn-full" style="margin-top:10px;">Simpan & Pilih</button>
                             <button id="btn-back-picker" class="btn btn-outline btn-full" style="margin-top:8px;">Kembali</button>
@@ -682,10 +722,12 @@ export function initSettings() {
             if (target.id === 'btn-save-new-item') {
                 const name = document.getElementById('new-item-name').value;
                 const price = document.getElementById('new-item-price').value;
+                const tipe = document.getElementById('new-item-tipe').value;
+                const note = document.getElementById('new-item-note').value;
 
                 if (!name) return alert("Nama harus diisi");
 
-                const newItem = { name, price: parseInt(price) || 0 };
+                const newItem = { name, price: parseInt(price) || 0, tipe, note };
                 itemTemplates.push(newItem);
                 saveItemTemplates();
 
@@ -698,10 +740,12 @@ export function initSettings() {
                 const idx = parseInt(target.dataset.index);
                 const name = document.getElementById('edit-item-name').value;
                 const price = document.getElementById('edit-item-price').value;
+                const tipe = document.getElementById('edit-item-tipe').value;
+                const note = document.getElementById('edit-item-note').value;
 
                 if (!name) return alert("Nama harus diisi");
 
-                itemTemplates[idx] = { name, price: parseInt(price) || 0 };
+                itemTemplates[idx] = { name, price: parseInt(price) || 0, tipe, note };
                 saveItemTemplates();
                 pickerOverlay.innerHTML = renderPickerContent(false);
                 initPickerSwipe();

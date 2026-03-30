@@ -400,8 +400,10 @@ export function initManualMode() {
             const event = new CustomEvent('request-item-picker', {
                 detail: {
                     callback: (templateItem) => {
-                        items[idx].name = templateItem.name;
-                        items[idx].price = templateItem.price;
+                        items[idx].name = templateItem.name || '';
+                        items[idx].price = templateItem.price || 0;
+                        if (templateItem.tipe) items[idx].tipe = templateItem.tipe;
+                        if (templateItem.note) items[idx].note = templateItem.note;
                         render();
                     }
                 }
