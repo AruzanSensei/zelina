@@ -35,16 +35,102 @@ export function initHistoryMode() {
     let swipeInitialized = false;
     let longPressInitialized = false;
 
-    // Search state
+    // Search & Filter state
     let searchQuery = '';
+    let filterSortDate = 'terbaru';
+    let filterSortPrice = 'none';
+    let filterMinPrice = '';
+    let filterMaxPrice = '';
 
     // Click timer to prevent click/dblclick conflict
     let clickTimer = null;
 
-    // Context menu state
+    // Context menu & Focus state
     let contextActiveItem = null;
     let longPressTimer = null;
     let longPressTriggered = false;
+
+    // ===================================
+    // FILTER MENU DOM SETUP
+    // ===================================
+    const btnHistoryFilter = document.getElementById('btn-history-filter');
+    let filterMenu = document.getElementById('history-filter-menu');
+    if (!filterMenu) {
+        filterMenu = document.createElement('div');
+        filterMenu.id = 'history-filter-menu';
+        filterMenu.style.display = 'none';
+        filterMenu.innerHTML = `
+            <div class="filter-section">
+                <label class="filter-label">Urutan Waktu</label>
+                <select id="filter-sort-date">
+                    <option value="terbaru">Terbaru (Default)</option>
+                    <option value="terlama">Terlama</option>
+                </select>
+            </div>
+            <div class="filter-section">
+                <label class="filter-label">Urutan Harga</label>
+                <select id="filter-sort-price">
+                    <option value="none">- Bawaan -</option>
+                    <option value="asc">Terendah ke Tertinggi</option>
+                    <option value="desc">Tertinggi ke Terendah</option>
+                </select>
+            </div>
+            <div class="filter-section">
+                <label class="filter-label">Rentang Harga</label>
+                <div style="display:flex; gap:8px;">
+                    <input type="number" id="filter-min-price" placeholder="Min" style="width:100%; padding:6px; border:1px solid var(--border-color); border-radius:4px; font-size:0.85rem;">
+                    <input type="number" id="filter-max-price" placeholder="Max" style="width:100%; padding:6px; border:1px solid var(--border-color); border-radius:4px; font-size:0.85rem;">
+                </div>
+            </div>
+        `;
+        document.body.appendChild(filterMenu);
+
+        // Events for filter changes
+        const triggerFilterUpdate = () => {
+            filterSortDate = document.getElementById('filter-sort-date').value;
+            filterSortPrice = document.getElementById('filter-sort-price').value;
+            filterMinPrice = document.getElementById('filter-min-price').value;
+            filterMaxPrice = document.getElementById('filter-max-price').value;
+            render(appState.state.history);
+        };
+
+        document.getElementById('filter-sort-date').addEventListener('change', triggerFilterUpdate);
+        document.getElementById('filter-sort-price').addEventListener('change', triggerFilterUpdate);
+        document.getElementById('filter-min-price').addEventListener('input', triggerFilterUpdate);
+        document.getElementById('filter-max-price').addEventListener('input', triggerFilterUpdate);
+    }
+
+    if (btnHistoryFilter) {
+        btnHistoryFilter.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (filterMenu.style.display === 'block') {
+                filterMenu.style.display = 'none';
+                btnHistoryFilter.style.color = '';
+            } else {
+                const rect = btnHistoryFilter.getBoundingClientRect();
+                filterMenu.style.top = `${rect.bottom + 8}px`;
+                filterMenu.style.right = `${window.innerWidth - rect.right}px`;
+                filterMenu.style.display = 'block';
+                btnHistoryFilter.style.color = '#F5A623'; // Active color
+            }
+        });
+    }
+
+    // Hide menus on outside click/scroll
+    document.addEventListener('click', (e) => {
+        if (!contextMenu.contains(e.target)) closeContextMenu();
+        if (filterMenu && filterMenu.style.display === 'block' && !filterMenu.contains(e.target) && !e.target.closest('#btn-history-filter')) {
+            filterMenu.style.display = 'none';
+            if (btnHistoryFilter) btnHistoryFilter.style.color = '';
+        }
+    }, true);
+    document.addEventListener('scroll', () => {
+        closeContextMenu();
+        if (filterMenu && filterMenu.style.display === 'block') {
+            filterMenu.style.display = 'none';
+            if (btnHistoryFilter) btnHistoryFilter.style.color = '';
+        }
+    }, true);
 
     // ===================================
     // DATA AGE HELPERS
@@ -54,13 +140,13 @@ export function initHistoryMode() {
         const now = new Date();
         const itemDate = new Date(timestamp);
         // Compare calendar days, not just 24h
-        const nowDay  = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const nowDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
         const itemDay = new Date(itemDate.getFullYear(), itemDate.getMonth(), itemDate.getDate());
         const diffDays = Math.round((nowDay - itemDay) / (1000 * 60 * 60 * 24));
 
-        if (diffDays === 0) return { label: 'Hari ini',  cls: 'age-today' };
-        if (diffDays === 1) return { label: 'Kemarin',   cls: 'age-yesterday' };
-        if (diffDays <= 7)  return { label: `${diffDays} hari lalu`,  cls: 'age-week' };
+        if (diffDays === 0) return { label: 'Hari ini', cls: 'age-today' };
+        if (diffDays === 1) return { label: 'Kemarin', cls: 'age-yesterday' };
+        if (diffDays <= 7) return { label: `${diffDays} hari lalu`, cls: 'age-week' };
         if (diffDays < 30) {
             const weeks = Math.floor(diffDays / 7);
             return { label: weeks === 1 ? 'Minggu lalu' : `${weeks} minggu lalu`, cls: 'age-last-week' };
@@ -122,35 +208,35 @@ export function initHistoryMode() {
 
         // Position: show offscreen first to measure size
         contextMenu.style.left = '-9999px';
-        contextMenu.style.top  = '-9999px';
+        contextMenu.style.top = '-9999px';
         contextMenu.classList.add('visible');
 
         // Smart positioning (keep inside viewport)
         const SAFE = 10;
-        const mw = contextMenu.offsetWidth  || 210;
+        const mw = contextMenu.offsetWidth || 210;
         const mh = contextMenu.offsetHeight || 300;
         const vw = window.innerWidth;
         const vh = window.innerHeight;
 
         let left = x;
-        let top  = y;
+        let top = y;
         if (left + mw + SAFE > vw) left = vw - mw - SAFE;
-        if (top  + mh + SAFE > vh) top  = vh - mh - SAFE;
+        if (top + mh + SAFE > vh) top = vh - mh - SAFE;
         if (left < SAFE) left = SAFE;
-        if (top  < SAFE) top  = SAFE;
+        if (top < SAFE) top = SAFE;
 
         contextMenu.style.left = `${left}px`;
-        contextMenu.style.top  = `${top}px`;
+        contextMenu.style.top = `${top}px`;
         contextMenu.style.transformOrigin = x > vw / 2 ? 'top right' : 'top left';
     };
 
     const closeContextMenu = () => {
         contextMenu.classList.remove('visible');
-        // Remove active highlight
         if (contextActiveItem) {
             contextActiveItem.classList.remove('context-active');
             contextActiveItem = null;
         }
+        updateFocusState();
     };
 
     const handleContextAction = (action, entry, index) => {
@@ -174,7 +260,6 @@ export function initHistoryMode() {
 
             case 'multiselect':
                 if (!isMultiSelectMode) toggleMultiSelect();
-                // Pre-select this item
                 selectedIndices.add(index);
                 render(appState.state.history);
                 break;
@@ -209,15 +294,34 @@ export function initHistoryMode() {
         }
     };
 
-    // Close on outside click or scroll
-    document.addEventListener('click', (e) => {
-        if (!contextMenu.contains(e.target)) closeContextMenu();
-    }, true);
-    document.addEventListener('scroll', closeContextMenu, true);
-
     // ===================================
     // RENDER LIST
     // ===================================
+    const updateFocusState = () => {
+        if (contextMenu && contextMenu.classList.contains('visible')) {
+            container.classList.add('is-focused');
+            // Remove focused class from all, apply only to active item
+            document.querySelectorAll('.item-swipe-container').forEach(c => c.classList.remove('focused'));
+            if (contextActiveItem) {
+                const parentSwipe = contextActiveItem.closest('.item-swipe-container');
+                if (parentSwipe) parentSwipe.classList.add('focused');
+            }
+        } else if (isMultiSelectMode) {
+            container.classList.add('is-focused');
+            // Highlight selected items
+            document.querySelectorAll('.item-swipe-container').forEach(c => {
+                const idx = parseInt(c.querySelector('.history-item').dataset.index);
+                if (selectedIndices.has(idx)) {
+                    c.classList.add('focused');
+                } else {
+                    c.classList.remove('focused');
+                }
+            });
+        } else {
+            container.classList.remove('is-focused');
+        }
+    };
+
     const render = (history) => {
         container.innerHTML = '';
 
@@ -227,15 +331,47 @@ export function initHistoryMode() {
             return;
         }
 
-        const sortedHistory = [...history].sort((a, b) => b.timestamp - a.timestamp);
+        // Apply advanced filtering & sorting
+        let resultData = [...history];
 
-        // Apply search filter
-        const filtered = searchQuery
-            ? sortedHistory.filter(e =>
+        // 1. Sort Date
+        if (filterSortDate === 'terbaru') {
+            resultData.sort((a, b) => b.timestamp - a.timestamp);
+        } else {
+            resultData.sort((a, b) => a.timestamp - b.timestamp);
+        }
+
+        // Compute total values once per item so we can filter and sort by it
+        resultData.forEach(h => {
+            h._totalPrice = (h.items || []).reduce((s, i) => s + (i.price * i.qty), 0);
+        });
+
+        // 2. Price Range Filter
+        if (filterMinPrice) {
+            const min = parseFloat(filterMinPrice);
+            resultData = resultData.filter(h => h._totalPrice >= min);
+        }
+        if (filterMaxPrice) {
+            const max = parseFloat(filterMaxPrice);
+            resultData = resultData.filter(h => h._totalPrice <= max);
+        }
+
+        // 3. Search text
+        if (searchQuery) {
+            resultData = resultData.filter(e =>
                 (e.title || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
                 (e.date || '').toLowerCase().includes(searchQuery.toLowerCase())
-            )
-            : sortedHistory;
+            );
+        }
+
+        // 4. Sort Price
+        if (filterSortPrice === 'asc') {
+            resultData.sort((a, b) => a._totalPrice - b._totalPrice);
+        } else if (filterSortPrice === 'desc') {
+            resultData.sort((a, b) => b._totalPrice - a._totalPrice);
+        }
+
+        const filtered = resultData;
 
         if (filtered.length === 0) {
             container.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted);">Tidak ditemukan.</div>';
@@ -254,7 +390,7 @@ export function initHistoryMode() {
             if (age.label) shownAgeLabels.add(age.label);
 
             // Format total: number only (formatted), Rp as inline superscript
-            const total = (entry.items || []).reduce((s, i) => s + (i.price * i.qty), 0);
+            const total = entry._totalPrice || 0;
             const numStr = new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(total);
             const totalHTML = `<sup style="font-size:0.6em; font-weight:500; vertical-align:super; letter-spacing:0; opacity:0.75;">Rp</sup>${numStr}`;
 
@@ -285,7 +421,7 @@ export function initHistoryMode() {
                             </div>
                             <!-- Row 2: Date + Price -->
                             <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
-                                <span style="font-size:0.78rem; color:var(--text-muted);">${entry.date} | ${entry.items.length} Item</span>
+                                <span style="font-size:0.78rem; color:var(--muted);">${entry.date} | ${entry.items.length} Item</span>
                                 <span style="font-weight:700; color:var(--primary); font-size:0.92rem; white-space:nowrap; flex-shrink:0; line-height:1;">${totalHTML}</span>
                             </div>
                         </div>
@@ -300,6 +436,7 @@ export function initHistoryMode() {
         }
         updateBatchBar();
         initLongPress();
+        updateFocusState();
     };
 
     render(appState.state.history);
@@ -441,6 +578,7 @@ export function initHistoryMode() {
                 closeContextMenu();
                 contextActiveItem = card;
                 card.classList.add('context-active');
+                updateFocusState();
 
                 const touch = e.touches[0];
                 showContextMenu(touch.clientX, touch.clientY, entry, index);
@@ -908,7 +1046,7 @@ export function initHistoryMode() {
         const itemEl = e.target.closest('.history-item');
         if (itemEl && !itemEl.classList.contains('swiped-left') && !isMultiSelectMode) {
             const index = itemEl.dataset.index;
-            
+
             // To prevent conflict with dblclick, we can check if it was a title click
             if (e.target.closest('.history-title-text')) {
                 // If double clicked, dblclick handler will fire and stop propagation

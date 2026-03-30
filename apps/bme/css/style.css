@@ -1804,7 +1804,7 @@ details[open]>summary.setting-item::after {
 .setting-subtext {
     display: block;
     font-size: 0.85rem;
-    color: var(--text-muted);
+    color: var(--muted);
 }
 
 .setting-control {

@@ -62,7 +62,7 @@ export function initSettings() {
     const syncThemeUI = (theme) => {
         document.documentElement.setAttribute('data-theme', theme);
         if (themeToggle) themeToggle.checked = (theme === 'dark');
-        
+
         // Sync secondary toggles (if any)
         document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.theme === theme);
@@ -80,7 +80,7 @@ export function initSettings() {
     // Sync UI when settings change (e.g. from global theme toggle)
     appState.subscribe('settings', (settings) => {
         if (settings.theme) syncThemeUI(settings.theme);
-        
+
         if (settings.defaultDownloadMethod) {
             document.querySelectorAll('#download-format-selector .segmented-btn').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.value === settings.defaultDownloadMethod);
@@ -101,11 +101,11 @@ export function initSettings() {
         // Init active state from appState
         formatSelector.querySelectorAll('.segmented-btn').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.value === currentMethod);
-            
+
             btn.addEventListener('click', () => {
                 const value = btn.dataset.value;
                 appState.updateSettings({ defaultDownloadMethod: value });
-                
+
                 // Update UI visually
                 formatSelector.querySelectorAll('.segmented-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
@@ -217,7 +217,7 @@ export function initSettings() {
 
             // Re-render UI from the new reset state
             const s = appState.state.settings;
-            
+
             // Sync Theme
             if (themeToggle) themeToggle.checked = (s.theme === 'dark');
             syncThemeUI(s.theme);
@@ -238,6 +238,222 @@ export function initSettings() {
             alert('Pengaturan telah direset!');
         });
     }
+
+    const btnDeleteAll = document.getElementById('btn-delete-all-data');
+    if (btnDeleteAll) {
+        btnDeleteAll.addEventListener('click', () => {
+            if (confirm('PERINGATAN! Semua riwayat dan pengaturan akan dihapus permanen. Lanjutkan?')) {
+                localStorage.clear();
+                window.location.reload();
+            }
+        });
+    }
+
+    // ===================================
+    // SYNC DATA (IMPORT / EXPORT)
+    // ===================================
+    const btnImport = document.getElementById('btn-import-data');
+    const btnExport = document.getElementById('btn-export-data');
+
+    // Context menu untuk Import/Export
+    let syncContextMenu = document.getElementById('bme-sync-context-menu');
+    if (!syncContextMenu) {
+        syncContextMenu = document.createElement('div');
+        syncContextMenu.id = 'bme-sync-context-menu';
+        syncContextMenu.className = 'visible'; // To hide initially
+        syncContextMenu.classList.remove('visible');
+        document.body.appendChild(syncContextMenu);
+
+        // Styling is reused from #bme-context-menu via ID or similar. 
+        // We will just copy the CSS classes used by #bme-context-menu
+    }
+
+    const showSyncMenu = (x, y, isImport) => {
+        syncContextMenu.innerHTML = isImport ? `
+            <button class="ctx-item" data-action="import-json">
+                <i class="fa-solid fa-file-code"></i> Data JSON
+            </button>
+        ` : `
+            <button class="ctx-item" data-action="export-json">
+                <i class="fa-solid fa-file-code"></i> Data JSON
+            </button>
+            <button class="ctx-item" data-action="export-csv">
+                <i class="fa-solid fa-file-csv"></i> Tabel CSV
+            </button>
+            <div class="ctx-separator"></div>
+            <button class="ctx-item orange" data-action="export-zip">
+                <i class="fa-solid fa-file-zipper"></i> Semua (ZIP)
+            </button>
+        `;
+
+        syncContextMenu.id = 'bme-context-menu'; // Use existing css
+
+        syncContextMenu.querySelectorAll('.ctx-item').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                handleSyncAction(btn.dataset.action);
+                syncContextMenu.classList.remove('visible');
+            });
+        });
+
+        syncContextMenu.style.left = '-9999px';
+        syncContextMenu.style.top = '-9999px';
+        syncContextMenu.classList.add('visible');
+
+        const mw = syncContextMenu.offsetWidth || 180;
+        const mh = syncContextMenu.offsetHeight || 150;
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        let left = x - mw / 2;
+        let top = y + 10;
+        if (left + mw > vw) left = vw - mw - 10;
+        if (top + mh > vh) top = y - mh - 10;
+        if (left < 10) left = 10;
+        if (top < 10) top = 10;
+
+        syncContextMenu.style.left = `${left}px`;
+        syncContextMenu.style.top = `${top}px`;
+    };
+
+    if (btnImport) {
+        btnImport.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const rect = btnImport.getBoundingClientRect();
+            showSyncMenu(rect.left + rect.width / 2, rect.bottom, true);
+        });
+    }
+
+    if (btnExport) {
+        btnExport.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const rect = btnExport.getBoundingClientRect();
+            showSyncMenu(rect.left + rect.width / 2, rect.bottom, false);
+        });
+    }
+
+    document.addEventListener('click', (e) => {
+        if (syncContextMenu && syncContextMenu.classList.contains('visible') && !syncContextMenu.contains(e.target)) {
+            syncContextMenu.classList.remove('visible');
+        }
+    }, true);
+    document.addEventListener('scroll', () => {
+        if (syncContextMenu && syncContextMenu.classList.contains('visible')) syncContextMenu.classList.remove('visible');
+    }, true);
+
+    const handleSyncAction = async (action) => {
+        const d = new Date();
+        const dateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+
+        if (action === 'import-json') {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = ev => {
+                    try {
+                        const data = JSON.parse(ev.target.result);
+                        if (Array.isArray(data)) {
+                            // Merge history: deduplicate by id OR timestamp
+                            const existing = appState.state.history;
+                            const existingMap = new Map();
+                            existing.forEach(h => {
+                                existingMap.set(h.id, h);
+                                existingMap.set(h.timestamp, h); // Also map by timestamp just to be safe
+                            });
+
+                            data.forEach(item => {
+                                if (!existingMap.has(item.id) && !existingMap.has(item.timestamp)) {
+                                    existing.unshift(item); // Add new ones
+                                    existingMap.set(item.id, item);
+                                }
+                            });
+                            appState.save('bme_history', existing);
+                            appState.notify('history', existing);
+                            alert(`Import berhasil: ${data.length} item diproses.`);
+                        } else {
+                            alert("Format JSON tidak valid!");
+                        }
+                    } catch (err) {
+                        alert("Gagal membaca file JSON.");
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        } 
+        else if (action === 'export-json') {
+            const hist = appState.state.history || [];
+            if(hist.length === 0) return alert('History kosong!');
+            const jsonStr = JSON.stringify(hist, null, 2);
+            downloadBlob(new Blob([jsonStr], {type: 'application/json'}), `BME-Backup-${dateStr}.json`);
+        }
+        else if (action === 'export-csv') {
+            const hist = appState.state.history || [];
+            if(hist.length === 0) return alert('History kosong!');
+            
+            let csvContent = "Judul,Tanggal,Barang,Harga,Qty,Total\n";
+            hist.forEach(h => {
+                const title = `"${(h.title || 'Untitled').replace(/"/g, '""')}"`;
+                h.items.forEach(item => {
+                    const name = `"${(item.name || '').replace(/"/g, '""')}"`;
+                    csvContent += `${title},${h.date},${name},${item.price},${item.qty},${item.price * item.qty}\n`;
+                });
+            });
+            downloadBlob(new Blob([csvContent], {type: 'text/csv;charset=utf-8;'}), `BME-Data-${dateStr}.csv`);
+        }
+        else if (action === 'export-zip') {
+            if (typeof JSZip === 'undefined') return alert('Library JSZip belum dimuat. Mohon cek koneksi internet!');
+            const hist = appState.state.history || [];
+            if(hist.length === 0) return alert('History kosong!');
+
+            const zip = new JSZip();
+            
+            // Backup JSON
+            zip.file("backup.json", JSON.stringify(hist, null, 2));
+
+            // Backup CSV
+            let csvContent = "Judul,Tanggal,Barang,Harga,Qty,Total\n";
+            hist.forEach(h => {
+                const title = `"${(h.title || 'Untitled').replace(/"/g, '""')}"`;
+                h.items.forEach(item => {
+                    const name = `"${(item.name || '').replace(/"/g, '""')}"`;
+                    csvContent += `${title},${h.date},${name},${item.price},${item.qty},${item.price * item.qty}\n`;
+                });
+            });
+            zip.file("data.csv", csvContent);
+
+            // Notify user
+            const btnAlert = document.getElementById('custom-alert');
+            const msgAlert = document.getElementById('alert-message');
+            if (btnAlert && msgAlert) {
+                msgAlert.innerHTML = 'Memproses ZIP... <i class="fa-solid fa-spinner fa-spin"></i>';
+                btnAlert.classList.remove('hidden');
+                btnAlert.style.animation = 'alert-in 0.3s ease-out forwards';
+            }
+
+            zip.generateAsync({type:"blob"}).then(function(content) {
+                downloadBlob(content, `BME-Archive-${dateStr}.zip`);
+                if(btnAlert) btnAlert.classList.add('hidden');
+            });
+        }
+    };
+
+    const downloadBlob = (blob, filename) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }, 100);
+    };
 
     // ===================================
     // TEMPLATE MANAGEMENT (FULL INVOICE)
@@ -269,21 +485,21 @@ export function initSettings() {
             div.style.userSelect = 'none';
 
             div.innerHTML = `
-                <div style="pointer-events:none;">
+            < div style = "pointer-events:none;" >
                     <div style="font-weight:600; font-size:0.95rem;">${t.name}</div>
                     <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
                         ${t.items.length} Barang &bull; ${formatCurrency(t.items.reduce((s, x) => s + (x.price * x.qty), 0))}
                     </div>
-                </div>
-                <div class="template-actions">
-                    <button class="btn btn-sm btn-outline use-template" data-index="${i}" title="Pakai">
-                        <i class="fa-solid fa-check"></i> 
-                    </button>
-                    <button class="btn btn-sm btn-outline delete-template" data-index="${i}" style="color:#ff4d4f; border-color:#ff4d4f; margin-left:4px;">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </div>
-            `;
+                </div >
+        <div class="template-actions">
+            <button class="btn btn-sm btn-outline use-template" data-index="${i}" title="Pakai">
+                <i class="fa-solid fa-check"></i>
+            </button>
+            <button class="btn btn-sm btn-outline delete-template" data-index="${i}" style="color:#ff4d4f; border-color:#ff4d4f; margin-left:4px;">
+                <i class="fa-solid fa-trash"></i>
+            </button>
+        </div>
+    `;
             templateList.appendChild(div);
         });
 
@@ -324,7 +540,7 @@ export function initSettings() {
         overlay.className = 'modal active';
         overlay.style.zIndex = '300';
         overlay.innerHTML = `
-            <div class="modal-content" style="max-width:300px;">
+        < div class="modal-content" style = "max-width:300px;" >
                 <h3>Nama Template</h3>
                 <input type="text" id="new-template-name" class="form-input" placeholder="Misal: Paket Rumah Tipe 36" style="margin:15px 0;" autofocus>
                 <div style="display:flex; gap:10px;">
@@ -335,7 +551,7 @@ export function initSettings() {
                     Menyimpan ${appState.state.invoiceItems.length} item dari Manual Mode.
                 </p>
             </div>
-        `;
+    `;
         document.body.appendChild(overlay);
 
         const input = overlay.querySelector('input');
@@ -397,7 +613,7 @@ export function initSettings() {
                     clone.style.opacity = '0.9';
                     clone.style.boxShadow = '0 10px 20px rgba(0,0,0,0.2)';
                     clone.style.background = 'var(--bg-card)';
-                    clone.style.transform = `translateY(${e.touches[0].clientY - 30}px)`; // Offset slightly
+                    clone.style.transform = `translateY(${ e.touches[0].clientY - 30 }px)`; // Offset slightly
                     clone.style.left = card.getBoundingClientRect().left + 'px';
                     clone.style.pointerEvents = 'none'; // Pass through to underlying elements
                     document.body.appendChild(clone);
@@ -522,7 +738,7 @@ export function initSettings() {
                 // Edit Mode
                 const item = itemTemplates[editItem];
                 return `
-                    <div class="modal-content">
+        < div class="modal-content" >
                         <div class="modal-header">
                             <h2>Edit Item</h2>
                             <button class="close-picker"><i class="fa-solid fa-times"></i></button>
@@ -553,11 +769,11 @@ export function initSettings() {
                             <button id="btn-save-edit-item" data-index="${editItem}" class="btn btn-primary btn-full" style="margin-top:10px;">Simpan Perubahan</button>
                             <button id="btn-back-picker" class="btn btn-outline btn-full" style="margin-top:8px;">Batal</button>
                         </div>
-                    </div>
-                `;
+                    </div >
+        `;
             } else if (isAdding) {
                 return `
-                    <div class="modal-content">
+        < div class="modal-content" >
                         <div class="modal-header">
                             <h2>Tambah Item Baru</h2>
                             <button class="close-picker"><i class="fa-solid fa-times"></i></button>
@@ -588,11 +804,11 @@ export function initSettings() {
                             <button id="btn-save-new-item" class="btn btn-primary btn-full" style="margin-top:10px;">Simpan & Pilih</button>
                             <button id="btn-back-picker" class="btn btn-outline btn-full" style="margin-top:8px;">Kembali</button>
                         </div>
-                    </div>
-                `;
+                    </div >
+        `;
             } else {
                 return `
-                    <div class="modal-content">
+        < div class="modal-content" >
                         <div class="modal-header">
                             <h2>Pilih Barang</h2>
                             <button class="close-picker"><i class="fa-solid fa-times"></i></button>
@@ -616,8 +832,8 @@ export function initSettings() {
                                 <i class="fa-solid fa-plus"></i> Tambah Item Baru
                             </button>
                         </div>
-                    </div>
-                `;
+                    </div >
+        `;
             }
         };
 
@@ -644,7 +860,7 @@ export function initSettings() {
                 const touchCurrentX = e.touches[0].clientX;
                 const diff = touchCurrentX - touchStartX;
                 if (diff < 0 && diff > -150) {
-                    activePickerCard.style.transform = `translateX(${diff}px)`;
+                    activePickerCard.style.transform = `translateX(${ diff }px)`;
                 }
             }, { passive: true });
 

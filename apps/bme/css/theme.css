@@ -119,3 +119,61 @@ input:focus+.ios-slider {
 input:checked+.ios-slider:before {
     transform: translateX(20px);
 }
+
+/* History Sticky Search & Dimming Effect */
+.history-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--bg-body);
+    padding-bottom: 10px;
+}
+
+.history-list.is-focused .item-swipe-container,
+.history-list:hover .item-swipe-container {
+    transition: opacity 0.2s ease;
+}
+
+.history-list.is-focused .item-swipe-container:not(.focused):not(:hover),
+.history-list:hover .item-swipe-container:not(:hover) {
+    opacity: 0.7;
+}
+
+/* History Filter Styles (Notion-like) */
+#history-filter-menu {
+    position: absolute;
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    z-index: 20;
+    min-width: 220px;
+}
+
+#history-filter-menu .filter-section {
+    margin-bottom: 15px;
+}
+
+#history-filter-menu .filter-section:last-child {
+    margin-bottom: 0;
+}
+
+#history-filter-menu .filter-label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+#history-filter-menu select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--bg-input);
+    color: var(--text-main);
+    font-size: 0.9rem;
+}

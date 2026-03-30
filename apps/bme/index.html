@@ -143,8 +143,8 @@
                     <input type="text" id="history-search" class="form-input" placeholder="Cari riwayat..."
                         style="padding-left:36px; font-size:0.9rem;">
                 </div>
-                <button id="btn-multi-select" class="icon-btn" title="Pilih beberapa"><i
-                        class="fa-solid fa-check-double"></i></button>
+                <button id="btn-history-filter" class="icon-btn" title="Filter Riwayat"><i
+                        class="fa-solid fa-filter"></i></button>
             </div>
             <div id="history-list" class="history-list">
                 <!-- History items will be injected here -->
@@ -304,6 +304,19 @@
                             </div>
                         </div>
 
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-label">Sync Data</span>
+                                <span class="setting-subtext">Impor / Ekspor riwayat aplikasi.</span>
+                            </div>
+                            <div class="setting-control" style="flex: 1; max-width: 140px;">
+                                <div class="segmented-control" style="width: 100%;">
+                                    <button id="btn-import-data" class="segmented-btn" style="flex:1;">Import</button>
+                                    <button id="btn-export-data" class="segmented-btn" style="flex:1;">Export</button>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="setting-row"
                             style="flex-direction: column; align-items: flex-start; gap: 8px; border-bottom: none;">
                             <div class="setting-info">
@@ -331,8 +344,12 @@
 
                     <!-- Danger Zone -->
                     <button id="btn-reset-settings" class="btn btn-outline btn-full"
-                        style="color:#ff4d4f; border-color:#ff4d4f; margin-top: 4px; margin-bottom: 8px;">
+                        style="color:#f39c12; border-color:#f39c12; margin-top: 4px; margin-bottom: 8px;">
                         <i class="fa-solid fa-rotate-left"></i> Reset Semua Pengaturan
+                    </button>
+                    <button id="btn-delete-all-data" class="btn btn-outline btn-full"
+                        style="color:#ff4d4f; border-color:#ff4d4f; margin-bottom: 8px;">
+                        <i class="fa-solid fa-trash-alt"></i> Hapus Semua Data
                     </button>
                 </div>
 
@@ -507,6 +524,7 @@
     </div>
 
     <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script type="module" src="js/app.js?v=1.4"></script>
 </body>
 
