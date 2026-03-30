@@ -2,6 +2,7 @@
  * Settings & Template Logic
  */
 import { appState } from '../state.js';
+import { buildInvoiceHTML } from '../pdf/generator.js';
 
 export function initSettings() {
     // ===================================
@@ -280,6 +281,9 @@ export function initSettings() {
             <button class="ctx-item" data-action="export-csv">
                 <i class="fa-solid fa-file-csv"></i> Tabel CSV
             </button>
+            <button class="ctx-item" data-action="export-pdf">
+                <i class="fa-solid fa-file-pdf"></i> Dokumen PDF
+            </button>
             <div class="ctx-separator"></div>
             <button class="ctx-item orange" data-action="export-zip">
                 <i class="fa-solid fa-file-zipper"></i> Semua (ZIP)
@@ -405,6 +409,43 @@ export function initSettings() {
             });
             downloadBlob(new Blob([csvContent], {type: 'text/csv;charset=utf-8;'}), `BME-Data-${dateStr}.csv`);
         }
+        else if (action === 'export-pdf') {
+            const hist = appState.state.history || [];
+            if(hist.length === 0) return alert('History kosong!');
+            
+            let combinedHtml = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>BME Backup Invoices - ${dateStr}</title>
+                <style>
+                    body { font-family: 'Inter', sans-serif; background: #fff; margin:0; padding:0; }
+                    .invoice-chunk { page-break-after: always; max-width: 800px; margin: 0 auto; padding: 20px; }
+                    .invoice-chunk:last-child { page-break-after: auto; }
+                    @media print {
+                        body { background: white; }
+                        .invoice-chunk { box-shadow: none; max-width: none; }
+                    }
+                </style>
+            </head>
+            <body>`;
+
+            hist.forEach(h => {
+                combinedHtml += `<div class="invoice-chunk">${buildInvoiceHTML(h.items, h.title)}</div>`;
+            });
+            
+            combinedHtml += `</body></html>`;
+
+            const blob = new Blob([combinedHtml], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const w = window.open(url, '_blank');
+            if (w) {
+                w.onload = () => { w.focus(); w.print(); };
+            } else {
+                downloadBlob(blob, `BME-Printable-Backup-${dateStr}.html`);
+            }
+        }
         else if (action === 'export-zip') {
             if (typeof JSZip === 'undefined') return alert('Library JSZip belum dimuat. Mohon cek koneksi internet!');
             const hist = appState.state.history || [];
@@ -425,6 +466,12 @@ export function initSettings() {
                 });
             });
             zip.file("data.csv", csvContent);
+
+            // Backup PDF (HTML Printable)
+            let combinedHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8"><style>.chunk { page-break-after: always; padding: 20px; }</style></head><body>`;
+            hist.forEach(h => combinedHtml += `<div class="chunk">${buildInvoiceHTML(h.items, h.title)}</div>`);
+            combinedHtml += `</body></html>`;
+            zip.file("print_backup.html", combinedHtml);
 
             // Notify user
             const btnAlert = document.getElementById('custom-alert');
