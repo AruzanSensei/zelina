@@ -457,8 +457,9 @@ small {
 }
 
 #history-view .history-toolbar {
-    margin-left: var(--spacing-md);
-    margin-right: var(--spacing-md);
+    padding: 14px 20px;
+    /* margin-left: var(--spacing-md);
+    margin-right: var(--spacing-md); */
 }
 
 /* History list: full-bleed, no outer padding */
@@ -501,6 +502,7 @@ small {
     opacity: 0.7;
 }
 
+
 .form-input.title {
     box-shadow: var(--shadow-sm);
     font-weight: 700;
@@ -524,6 +526,10 @@ small {
 .input-group {
     margin-bottom: var(--spacing-md);
     position: relative;
+}
+
+.search-history {
+    box-shadow: var(--shadow-sm);
 }
 
 /* Reduce spacing in Manual View */
@@ -928,8 +934,8 @@ small {
     position: fixed;
     z-index: 9999;
     min-width: 210px;
-    background: rgba(242, 242, 247, 0.82);
-    backdrop-filter: blur(40px) saturate(200%) brightness(1.05);
+    background: rgba(242, 242, 247, 0.50);
+    backdrop-filter: blur(10px) saturate(200%) brightness(1.05);
     -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(1.05);
     border-radius: 14px;
     border: 0.5px solid rgba(0, 0, 0, 0.12);
@@ -976,6 +982,7 @@ small {
     background: transparent;
     text-align: left;
     font-family: inherit;
+    font-weight: 500;
     font-size: 0.9rem;
     letter-spacing: -0.01em;
 }
@@ -992,7 +999,7 @@ small {
     width: 18px;
     text-align: center;
     font-size: 0.85rem;
-    opacity: 0.5;
+    opacity: 0.3;
     flex-shrink: 0;
 }
 
@@ -1016,8 +1023,10 @@ small {
 
 .ctx-separator {
     height: 0.5px;
-    background: rgba(60, 60, 67, 0.29);
-    margin: 4px 0;
+    background: rgba(60, 60, 67, 0.20);
+    margin: 6px 0;
+    width: 90%;
+    margin-left: 5%;
 }
 
 [data-theme="dark"] .ctx-separator {
@@ -1566,8 +1575,9 @@ details[open]>summary.setting-item::after {
 .history-toolbar {
     display: flex;
     gap: 8px;
-    margin-bottom: 12px;
+    /* margin-bottom: 12px; */
     align-items: center;
+    margin-top: -16px;
 }
 
 .history-search-wrapper {

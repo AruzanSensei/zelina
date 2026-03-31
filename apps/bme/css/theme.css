@@ -7,6 +7,7 @@
     --muted: #bebebe;
 
     --bg-body: #F4F7F6;
+    --bg-transparent: #FFFFFF;
     --bg-card: #FFFFFF;
     --bg-input: #FFFFFF;
 
@@ -33,6 +34,7 @@
 
 [data-theme="dark"] {
     --bg-body: #121212;
+    --bg-transparent: #121212;
     --bg-card: #1E1E1E;
     --bg-input: #2D2D2D;
 
@@ -226,8 +228,9 @@ input:checked+.ios-slider:before {
 
 .detail-info-bar .detail-date-time .date-chip,
 .detail-info-bar .detail-date-time .time-chip {
-    background: var(--bg-body);
+    background: var(--bg-transparent);
     border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-xs);
     border-radius: 6px;
     padding: 4px 10px;
     font-size: 0.8rem;
@@ -250,8 +253,9 @@ input:checked+.ios-slider:before {
 }
 
 .detail-item-card {
-    background: var(--bg-body);
+    background: var(--bg-transparent);
     border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
     padding: 12px 14px;
     margin-bottom: 8px;
     border: 1px solid var(--border-color);
@@ -337,4 +341,108 @@ input:checked+.ios-slider:before {
 .btn-action-faded {
     opacity: 0.35 !important;
     pointer-events: none !important;
+}
+
+/* =========================================
+   Custom Date Picker
+   ========================================= */
+.datepicker-content {
+    width: 310px;
+    padding: 16px;
+    border-radius: var(--radius-md);
+}
+
+.datepicker-header {
+    margin-bottom: 12px;
+}
+
+.datepicker-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.dp-nav-controls {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.dp-nav-controls button {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.dp-nav-controls #dp-btn-today {
+    color: var(--primary);
+    text-decoration: underline;
+    margin-right: 8px;
+}
+
+.dp-nav-controls button:hover {
+    background: var(--border-color);
+}
+
+.datepicker-grid .dp-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.datepicker-grid .dp-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    gap: 2px;
+}
+
+.date-chip:hover, .time-chip:hover {
+    background: var(--border-color) !important;
+    opacity: 0.9;
+}
+
+.dp-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
+    user-select: none;
+}
+
+.dp-day.faded {
+    opacity: 0.4;
+    color: var(--text-muted);
+}
+
+.dp-day:not(.faded):hover {
+    background: var(--bg-hover, #e0e0e0);
+}
+
+.dp-day.today {
+    background: var(--primary-error, #ff4d4f);
+    color: #fff;
+    font-weight: bold;
+}
+
+.dp-day.selected {
+    background: var(--primary);
+    color: #fff;
+    font-weight: bold;
 }

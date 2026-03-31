@@ -140,9 +140,11 @@
                 <div class="history-search-wrapper">
                     <i class="fa-solid fa-search"
                         style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:0.85rem;"></i>
-                    <input type="text" id="history-search" class="form-input" placeholder="Cari riwayat..."
-                        style="padding-left:36px; font-size:0.9rem;">
+                    <input type="text" id="history-search" class="form-input search-history"
+                        placeholder="Cari riwayat..." style="padding-left:36px; font-size:0.9rem;">
                 </div>
+                <button id="btn-multi-select" class="icon-btn" title="Pilih Semua / Beberapa"><i
+                        class="fa-solid fa-check-double"></i></button>
                 <button id="btn-history-filter" class="icon-btn" title="Filter Riwayat"><i
                         class="fa-solid fa-filter"></i></button>
             </div>
@@ -437,9 +439,9 @@
     <!-- Bottom Sheet for History Details -->
     <div id="detail-sheet" class="modal hidden">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="detail-title" style="flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Detail Invoice</h2>
-                <div style="display:flex; gap:8px; margin-left:auto; margin-right:8px;">
+            <div class="modal-header" style="align-items: flex-start;">
+                <h2 id="detail-title" style="flex:1; min-width:0; line-height:1.2; padding-top:4px;">Detail Invoice</h2>
+                <div style="display:flex; gap:8px; margin-left:auto; margin-right:8px; align-items: flex-start;">
                     <button id="btn-detail-download" class="btn btn-action-green"
                         style="padding:6px 10px; font-size:0.85rem; border-radius:8px;" title="Unduh">
                         <i class="fa-solid fa-download"></i>
@@ -457,6 +459,53 @@
             </div>
             <div id="detail-content" class="modal-body">
                 <!-- Content injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Date Picker Modal -->
+    <div id="custom-date-picker" class="modal">
+        <div class="modal-content datepicker-content">
+            <div class="datepicker-header">
+                <input type="text" id="dp-input" class="form-input" placeholder="dd/mm/yyyy"
+                    style="text-align: center; font-size: 1.1rem; letter-spacing: 1px; width:100%;" inputmode="numeric">
+            </div>
+            <div class="datepicker-nav">
+                <span id="dp-month-year">May 2026</span>
+                <div class="dp-nav-controls">
+                    <button id="dp-btn-today">Hari ini</button>
+                    <button id="dp-btn-prev"><i class="fa-solid fa-chevron-left"></i></button>
+                    <button id="dp-btn-next"><i class="fa-solid fa-chevron-right"></i></button>
+                </div>
+            </div>
+            <div class="datepicker-grid">
+                <div class="dp-weekdays">
+                    <span>Min</span><span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span>
+                </div>
+                <div id="dp-days" class="dp-days">
+                    <!-- Days injected via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Time Picker Modal -->
+    <div id="custom-time-picker" class="modal">
+        <div class="modal-content datepicker-content" style="max-width:auto;">
+            <div class="modal-header" style="border-bottom:none; padding-bottom:5px;">
+                <h2 style="font-size:1.1rem;">Atur Waktu</h2>
+                <button class="close-timepicker"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="timepicker-body"
+                style="display:flex; align-items:center; justify-content:center; gap:20px; padding:20px 0;">
+                <input type="number" id="tp-hour" class="form-input" min="0" max="23"
+                    style="width:70px; text-align:center; font-size:2rem; padding:10px;" placeholder="00">
+                <span style="font-size:2rem; font-weight:bold;">:</span>
+                <input type="number" id="tp-minute" class="form-input" min="0" max="59"
+                    style="width:70px; text-align:center; font-size:2rem; padding:10px;" placeholder="00">
+            </div>
+            <div style="padding: 16px;">
+                <button id="tp-btn-save" class="btn btn-primary" style="width:100%; padding:12px;">Simpan Waktu</button>
             </div>
         </div>
     </div>

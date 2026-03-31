@@ -91,6 +91,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Header Logic
     if (header) {
         window.addEventListener('scroll', () => {
+            if (appState && appState.state && appState.state.currentMode === 'history') {
+                header.classList.remove('hide');
+                lastScrollY = window.scrollY;
+                return;
+            }
+
             const currentScrollY = window.scrollY;
 
             if (currentScrollY > lastScrollY && currentScrollY > 50) {

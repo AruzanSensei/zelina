@@ -174,14 +174,14 @@ export function initHistoryMode() {
     const showContextMenu = (x, y, entry, realIndex) => {
         // Build menu content
         contextMenu.innerHTML = `
-            <button class="ctx-item" data-action="duplicate">
-                <i class="fa-solid fa-copy"></i> Duplikat
-            </button>
             <button class="ctx-item" data-action="download">
-                <i class="fa-solid fa-download"></i> Unduh
+            <i class="fa-solid fa-download"></i> Unduh
             </button>
             <button class="ctx-item" data-action="print">
-                <i class="fa-solid fa-print"></i> Print
+            <i class="fa-solid fa-print"></i> Print
+            </button>
+            <button class="ctx-item" data-action="duplicate">
+                <i class="fa-solid fa-copy"></i> Duplikat
             </button>
             <div class="ctx-separator"></div>
             <button class="ctx-item" data-action="preview">
@@ -609,6 +609,161 @@ export function initHistoryMode() {
     }
 
     // ===================================
+    // CUSTOM PICKERS LOGIC
+    // ===================================
+    const dpModal = document.getElementById('custom-date-picker');
+    const tpModal = document.getElementById('custom-time-picker');
+    
+    let dpCallback = null, tpCallback = null;
+    let dpCurrentViewDate = new Date();
+    let dpSelectedDate = new Date();
+
+    const renderDP = () => {
+        const dpInput = document.getElementById('dp-input');
+        const dpMonthYear = document.getElementById('dp-month-year');
+        const dpDays = document.getElementById('dp-days');
+        
+        const m = dpCurrentViewDate.getMonth();
+        const y = dpCurrentViewDate.getFullYear();
+        
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"];
+        dpMonthYear.textContent = `${monthNames[m]} ${y}`;
+        
+        const firstDay = new Date(y, m, 1).getDay();
+        const daysInMonth = new Date(y, m + 1, 0).getDate();
+        const daysInPrevMonth = new Date(y, m, 0).getDate();
+        
+        dpDays.innerHTML = '';
+        
+        // Prev month faded
+        for(let i = firstDay - 1; i >= 0; i--) {
+            const d = document.createElement('div');
+            d.className = 'dp-day faded';
+            d.textContent = daysInPrevMonth - i;
+            dpDays.appendChild(d);
+        }
+        
+        // Current month
+        const today = new Date();
+        for(let i = 1; i <= daysInMonth; i++) {
+            const d = document.createElement('div');
+            d.className = 'dp-day';
+            d.textContent = i;
+            
+            // Highlight today
+            if (today.getDate() === i && today.getMonth() === m && today.getFullYear() === y) {
+                d.classList.add('today');
+            }
+            // Highlight selected
+            if (dpSelectedDate && dpSelectedDate.getDate() === i && dpSelectedDate.getMonth() === m && dpSelectedDate.getFullYear() === y) {
+                d.classList.add('selected');
+            }
+            
+            d.addEventListener('click', () => {
+                dpSelectedDate = new Date(y, m, i);
+                const val = `${String(i).padStart(2,'0')}/${String(m+1).padStart(2,'0')}/${y}`;
+                dpInput.value = val;
+                if(dpCallback) dpCallback(val);
+                dpModal.classList.remove('active');
+            });
+            dpDays.appendChild(d);
+        }
+        
+        // Next month faded
+        const totalCells = firstDay + daysInMonth;
+        const remaining = (7 - (totalCells % 7)) % 7;
+        for(let i = 1; i <= remaining; i++) {
+            const d = document.createElement('div');
+            d.className = 'dp-day faded';
+            d.textContent = i;
+            dpDays.appendChild(d);
+        }
+    };
+
+    if(dpModal) {
+        document.getElementById('dp-btn-prev').addEventListener('click', () => {
+            dpCurrentViewDate.setMonth(dpCurrentViewDate.getMonth() - 1);
+            renderDP();
+        });
+        document.getElementById('dp-btn-next').addEventListener('click', () => {
+            dpCurrentViewDate.setMonth(dpCurrentViewDate.getMonth() + 1);
+            renderDP();
+        });
+        document.getElementById('dp-btn-today').addEventListener('click', () => {
+            const t = new Date();
+            dpSelectedDate = new Date(t.getFullYear(), t.getMonth(), t.getDate());
+            const val = `${String(t.getDate()).padStart(2,'0')}/${String(t.getMonth()+1).padStart(2,'0')}/${t.getFullYear()}`;
+            document.getElementById('dp-input').value = val;
+            if(dpCallback) dpCallback(val);
+            dpModal.classList.remove('active');
+        });
+        document.getElementById('dp-input').addEventListener('input', (e) => {
+            const parts = e.target.value.split('/');
+            if(parts.length === 3 && parts[2].length === 4) {
+                const d = parseInt(parts[0]), m = parseInt(parts[1])-1, y = parseInt(parts[2]);
+                if(!isNaN(d) && !isNaN(m) && !isNaN(y) && d>0 && m>=0 && m<12 && d<=31) {
+                    dpSelectedDate = new Date(y, m, d);
+                    dpCurrentViewDate = new Date(y, m, 1);
+                    renderDP();
+                }
+            }
+        });
+        document.getElementById('dp-input').addEventListener('blur', (e) => {
+            const parts = e.target.value.split('/');
+            if(parts.length === 3 && parts[2].length === 4 && dpCallback) {
+                dpCallback(e.target.value);
+            }
+        });
+        dpModal.addEventListener('click', (e) => { if(e.target === dpModal) dpModal.classList.remove('active'); });
+    }
+
+    if(tpModal) {
+        document.querySelector('.close-timepicker').addEventListener('click', () => {
+            tpModal.classList.remove('active');
+        });
+        document.getElementById('tp-btn-save').addEventListener('click', () => {
+            let h = document.getElementById('tp-hour').value;
+            let m = document.getElementById('tp-minute').value;
+            if(!h) h = '00'; if(!m) m = '00';
+            const val = `${h.padStart(2,'0')}.${m.padStart(2,'0')}`;
+            if(tpCallback) tpCallback(val);
+            tpModal.classList.remove('active');
+        });
+        tpModal.addEventListener('click', (e) => { if(e.target === tpModal) tpModal.classList.remove('active'); });
+    }
+
+    const openDatePicker = (currentStr, callback) => {
+        dpCallback = callback;
+        if(currentStr) {
+            const parts = currentStr.split('/');
+            if(parts.length === 3) {
+                const d = parseInt(parts[0]), m = parseInt(parts[1])-1, y = parseInt(parts[2]);
+                dpSelectedDate = new Date(y, m, d);
+                dpCurrentViewDate = new Date(y, m, 1);
+                document.getElementById('dp-input').value = currentStr;
+            }
+        } else {
+            dpSelectedDate = new Date();
+            dpCurrentViewDate = new Date();
+            document.getElementById('dp-input').value = '';
+        }
+        renderDP();
+        dpModal.classList.add('active');
+    };
+
+    const openTimePicker = (currentStr, callback) => {
+        tpCallback = callback;
+        if(currentStr) {
+            const parts = currentStr.split('.');
+            if(parts.length === 2) {
+                document.getElementById('tp-hour').value = parts[0];
+                document.getElementById('tp-minute').value = parts[1];
+            }
+        }
+        tpModal.classList.add('active');
+    };
+
+    // ===================================
     // DETAIL VIEW LOGIC
     // ===================================
     const formatNum = (n) => new Intl.NumberFormat('id-ID').format(n);
@@ -618,6 +773,14 @@ export function initHistoryMode() {
         if (!dateStr) return { datePart: '', timePart: '' };
         const parts = dateStr.split('|').map(s => s.trim());
         return { datePart: parts[0] || '', timePart: parts[1] || '' };
+    };
+
+    const getTimestampFromDateStr = (str) => {
+        const { datePart, timePart } = parseDateString(str);
+        const d = datePart.split('/');
+        const t = timePart.split('.');
+        if (d.length !== 3 || t.length !== 2) return Date.now();
+        return new Date(d[2], d[1] - 1, d[0], t[0], t[1]).getTime();
     };
 
     const renderDetailContent = () => {
@@ -636,58 +799,41 @@ export function initHistoryMode() {
         infoBar.className = 'detail-info-bar';
         infoBar.innerHTML = `
             <div class="detail-date-time">
-                <span class="date-chip" id="detail-date-chip">${datePart}</span>
-                <span class="time-chip" id="detail-time-chip">${timePart}</span>
+                <span class="date-chip" id="detail-date-chip" style="cursor:pointer; display:inline-flex; align-items:center; padding:4px 10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:12px; font-weight:600; font-size:0.85rem; transition: background 0.2s;">${datePart}</span>
+                <span class="time-chip" id="detail-time-chip" style="cursor:pointer; display:inline-flex; align-items:center; padding:4px 10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:12px; font-weight:600; font-size:0.85rem; transition: background 0.2s;">${timePart}</span>
             </div>
             <div class="detail-total">${totalHTML}</div>
         `;
         detailContent.appendChild(infoBar);
 
-        // Date chip click → native date picker
+        // Date chip click → custom date picker
         const dateChip = infoBar.querySelector('#detail-date-chip');
         dateChip.addEventListener('click', () => {
-            const inp = document.createElement('input');
-            inp.type = 'date';
-            inp.style.cssText = 'position:absolute; opacity:0; width:0; height:0;';
-            // Try to parse existing DD/MM/YYYY to YYYY-MM-DD
-            const dParts = datePart.split('/');
-            if (dParts.length === 3) inp.value = `${dParts[2]}-${dParts[1]}-${dParts[0]}`;
-            document.body.appendChild(inp);
-            inp.addEventListener('change', () => {
-                if (inp.value) {
-                    const [y, m, d] = inp.value.split('-');
-                    const newDatePart = `${d}/${m}/${y}`;
-                    const newDateStr = `${newDatePart} | ${timePart}`;
-                    currentDetailItem.date = newDateStr;
-                    appState.updateHistoryEntry(currentDetailItem.id, { date: newDateStr });
-                    dateChip.textContent = newDatePart;
-                }
-                inp.remove();
+            openDatePicker(datePart, (newDatePart) => {
+                const newDateStr = `${newDatePart} | ${timePart}`;
+                const newTimestamp = getTimestampFromDateStr(newDateStr);
+                currentDetailItem.date = newDateStr;
+                currentDetailItem.timestamp = newTimestamp;
+                appState.updateHistoryEntry(currentDetailItem.id, { date: newDateStr, timestamp: newTimestamp });
+                dateChip.textContent = newDatePart;
+                // update local variable for future edits
+                datePart = newDatePart;
             });
-            inp.showPicker();
         });
 
-        // Time chip click → native time picker
+        // Time chip click → custom time picker
         const timeChip = infoBar.querySelector('#detail-time-chip');
         timeChip.addEventListener('click', () => {
-            const inp = document.createElement('input');
-            inp.type = 'time';
-            inp.style.cssText = 'position:absolute; opacity:0; width:0; height:0;';
-            // Parse HH.MM to HH:MM
-            const tParts = timePart.split('.');
-            if (tParts.length === 2) inp.value = `${tParts[0].padStart(2,'0')}:${tParts[1].padStart(2,'0')}`;
-            document.body.appendChild(inp);
-            inp.addEventListener('change', () => {
-                if (inp.value) {
-                    const newTimePart = inp.value.replace(':', '.');
-                    const newDateStr = `${datePart} | ${newTimePart}`;
-                    currentDetailItem.date = newDateStr;
-                    appState.updateHistoryEntry(currentDetailItem.id, { date: newDateStr });
-                    timeChip.textContent = newTimePart;
-                }
-                inp.remove();
+            openTimePicker(timePart, (newTimePart) => {
+                const newDateStr = `${datePart} | ${newTimePart}`;
+                const newTimestamp = getTimestampFromDateStr(newDateStr);
+                currentDetailItem.date = newDateStr;
+                currentDetailItem.timestamp = newTimestamp;
+                appState.updateHistoryEntry(currentDetailItem.id, { date: newDateStr, timestamp: newTimestamp });
+                timeChip.textContent = newTimePart;
+                // update local variable for future edits
+                timePart = newTimePart;
             });
-            inp.showPicker();
         });
 
         // === ITEM CARDS ===
@@ -704,9 +850,15 @@ export function initHistoryMode() {
                     <div style="margin-bottom:6px;">
                         <input class="edit-input edit-name" value="${item.name || ''}" placeholder="Nama Barang" data-idx="${idx}">
                     </div>
-                    <div style="display:flex; gap:8px; margin-bottom:6px;">
+                    <div style="display:flex; gap:8px; margin-bottom:6px; align-items:center;">
                         <input class="edit-input edit-qty" type="number" value="${item.qty}" min="1" style="width:60px;" data-idx="${idx}">
-                        <span style="align-self:center; font-size:0.82rem; color:var(--text-muted);">${unit} •</span>
+                        
+                        <div class="unit-switch edit-unit-switch" data-idx="${idx}" style="margin:0; height:24px;">
+                            <span class="unit-opt ${unit === 'pcs' ? 'active' : ''}" data-unit="pcs" onclick="this.parentElement.querySelectorAll('.unit-opt').forEach(el=>el.classList.remove('active')); this.classList.add('active');" style="padding:2px 6px;">Pcs</span>
+                            <span class="unit-opt ${unit === 'lot' ? 'active' : ''}" data-unit="lot" onclick="this.parentElement.querySelectorAll('.unit-opt').forEach(el=>el.classList.remove('active')); this.classList.add('active');" style="padding:2px 6px;">Lot</span>
+                        </div>
+                        
+                        <span style="color:var(--text-muted);">•</span>
                         <input class="edit-input edit-price" type="number" value="${item.price}" style="flex:1;" data-idx="${idx}">
                     </div>
                     <div>
@@ -797,7 +949,7 @@ export function initHistoryMode() {
                     const formats = appState.state.settings.fileNameFormat || { invoice: 'Invoice-{judul}', suratJalan: 'Surat Jalan-{judul}' };
                     const template = type === 'surat' ? formats.suratJalan : formats.invoice;
                     const now = new Date();
-                    const filename = template.replace(/\{judul\}/gi, title).replace(/%YYYY/g, String(now.getFullYear())).replace(/%MM/g, String(now.getMonth()+1).padStart(2,'0')).replace(/%DD/g, String(now.getDate()).padStart(2,'0')).replace(/%HH/g, String(now.getHours()).padStart(2,'0')).replace(/%mm/g, String(now.getMinutes()).padStart(2,'0')).replace(/%ss/g, String(now.getSeconds()).padStart(2,'0'));
+                    const filename = template.replace(/\{judul\}/gi, title).replace(/%YYYY/g, String(now.getFullYear())).replace(/%MM/g, String(now.getMonth() + 1).padStart(2, '0')).replace(/%DD/g, String(now.getDate()).padStart(2, '0')).replace(/%HH/g, String(now.getHours()).padStart(2, '0')).replace(/%mm/g, String(now.getMinutes()).padStart(2, '0')).replace(/%ss/g, String(now.getSeconds()).padStart(2, '0'));
                     if (defaultMethod === 'pdf') { printInvoicePDF(items, title); }
                     else {
                         const alertEl = document.getElementById('custom-alert');
@@ -828,7 +980,7 @@ export function initHistoryMode() {
                 const formats = appState.state.settings.fileNameFormat || { invoice: 'Invoice-{judul}', suratJalan: 'Surat Jalan-{judul}' };
                 const template = type === 'surat' ? formats.suratJalan : formats.invoice;
                 const now = new Date();
-                const filename = template.replace(/\{judul\}/gi, title).replace(/%YYYY/g, String(now.getFullYear())).replace(/%MM/g, String(now.getMonth()+1).padStart(2,'0')).replace(/%DD/g, String(now.getDate()).padStart(2,'0')).replace(/%HH/g, String(now.getHours()).padStart(2,'0')).replace(/%mm/g, String(now.getMinutes()).padStart(2,'0')).replace(/%ss/g, String(now.getSeconds()).padStart(2,'0'));
+                const filename = template.replace(/\{judul\}/gi, title).replace(/%YYYY/g, String(now.getFullYear())).replace(/%MM/g, String(now.getMonth() + 1).padStart(2, '0')).replace(/%DD/g, String(now.getDate()).padStart(2, '0')).replace(/%HH/g, String(now.getHours()).padStart(2, '0')).replace(/%mm/g, String(now.getMinutes()).padStart(2, '0')).replace(/%ss/g, String(now.getSeconds()).padStart(2, '0'));
                 if (defaultMethod === 'pdf') {
                     const w = window.open('', '_blank');
                     if (!w) return;
@@ -860,11 +1012,16 @@ export function initHistoryMode() {
         const qtys = detailContent.querySelectorAll('.edit-qty');
         const prices = detailContent.querySelectorAll('.edit-price');
         const notes = detailContent.querySelectorAll('.edit-note');
+        const unitSwitches = detailContent.querySelectorAll('.edit-unit-switch');
         names.forEach((el, i) => {
             currentDetailItem.items[i].name = el.value;
             currentDetailItem.items[i].qty = parseInt(qtys[i].value) || 1;
             currentDetailItem.items[i].price = parseFloat(prices[i].value) || 0;
             currentDetailItem.items[i].note = notes[i].value;
+            const activeUnitEl = unitSwitches[i].querySelector('.unit-opt.active');
+            if (activeUnitEl) {
+                currentDetailItem.items[i].qtyUnit = activeUnitEl.dataset.unit;
+            }
         });
         // Also update title
         currentDetailItem.title = detailTitle.textContent;

@@ -135,12 +135,12 @@ export function initManualMode() {
                             <button class="input-icon-btn template-picker-btn" data-index="${index}"><i class="fa-solid fa-list-ul"></i></button>
                         </div>
                     </div>
-                    <div style="width: 100px;">
-                        <div class="unit-switch" data-index="${index}">
+                    <div style="width: 100px; display: flex; flex-direction: column;">
+                        <div class="unit-switch" data-index="${index}" style="margin: 0 0 6px auto;">
                             <span class="unit-opt ${(item.qtyUnit || 'pcs') === 'pcs' ? 'active' : ''}" data-unit="pcs">Pcs</span>
                             <span class="unit-opt ${item.qtyUnit === 'lot' ? 'active' : ''}" data-unit="lot">Lot</span>
                         </div>
-                        <div class="qty-control">
+                        <div class="qty-control" style="margin-left: auto;">
                             <button class="qty-btn minus" data-index="${index}">-</button>
                             <input type="number" class="qty-input item-qty" value="${item.qty}" data-index="${index}" min="1">
                             <button class="qty-btn plus" data-index="${index}">+</button>
@@ -187,7 +187,7 @@ export function initManualMode() {
             div.innerHTML = `
                 <button class="remove-item-btn" data-index="${index}"><i class="fa-solid fa-trash"></i></button>
                     
-                    <div class="input-group" style="margin-bottom: 6px;">
+                    <div class="input-group" style="margin-bottom: 4px;">
                         <label class="field-label">Barang</label>
                         <div class="input-with-icon">
                             <textarea class="form-input item-name ${!item.name ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Nama Barang" rows="1" style="resize:none; overflow:hidden; padding-right:30px; font-family:inherit; white-space:pre-wrap;">${item.name || ''}</textarea>
@@ -196,11 +196,11 @@ export function initManualMode() {
                     </div>
                     
                     <div class="item-row">
-                        <div style="flex: 2.7;">
+                        <div style="flex: 2.2; padding-top: 4px;">
                             <label class="field-label">Harga</label>
                             <input type="text" class="form-input item-price-format ${!item.price || item.price <= 0 ? 'required-empty-orange' : ''}" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="0" inputmode="numeric">
                         </div>
-                        <div style="flex: 2.2;">
+                        <div style="flex: 2; padding-top: 4px;">
                             <label class="field-label">Tipe</label>
                             <select class="form-input item-tipe ${!item.tipe ? 'required-empty-orange' : ''}" data-index="${index}">
                                 <option value="" ${!item.tipe ? 'selected' : ''}></option>
@@ -210,12 +210,12 @@ export function initManualMode() {
                                 <option value="APC" ${item.tipe === 'APC' ? 'selected' : ''}>APC</option>
                             </select>
                         </div>
-                        <div style="flex: 0.7;">
-                            <div class="unit-switch" data-index="${index}">
+                        <div style="flex: 1.5; min-width: 90px; display: flex; flex-direction: column;">
+                            <div class="unit-switch" data-index="${index}" style="margin: 0 0 6px auto;">
                                 <span class="unit-opt ${(item.qtyUnit || 'pcs') === 'pcs' ? 'active' : ''}" data-unit="pcs">Pcs</span>
                                 <span class="unit-opt ${item.qtyUnit === 'lot' ? 'active' : ''}" data-unit="lot">Lot</span>
                             </div>
-                            <div class="qty-control">
+                            <div class="qty-control" style="margin-left: auto;">
                                 <button class="qty-btn minus" data-index="${index}">-</button>
                                 <input type="number" class="qty-input item-qty" value="${item.qty}" data-index="${index}" min="1">
                                 <button class="qty-btn plus" data-index="${index}">+</button>
@@ -349,15 +349,15 @@ export function initManualMode() {
 
     // Add Item
     const addItem = () => {
-        items.push({ 
-            name: '', 
-            price: 0, 
-            qty: 1, 
-            note: '', 
+        items.push({
+            name: '',
+            price: 0,
+            qty: 1,
+            note: '',
             tipe: '',
             qtyUnit: 'pcs',
             invKeterangan: '',
-            sjKeterangan: '' 
+            sjKeterangan: ''
         });
         render();
     };
@@ -419,14 +419,7 @@ export function initManualMode() {
             return;
         }
 
-        // Qty Buttons
-        if (target.classList.contains('qty-btn')) {
-            const index = parseInt(target.dataset.index);
-            if (target.classList.contains('plus')) items[index].qty++;
-            else if (items[index].qty > 1) items[index].qty--;
-            render();
-        }
-
+        // Qty Buttons (Logic moved to dedicated mousedown/touchstart handlers below)
         // Unit Switch (Pcs / Lot)
         const unitOpt = target.closest('.unit-opt');
         if (unitOpt) {
@@ -437,6 +430,67 @@ export function initManualMode() {
             render();
         }
     });
+
+    // --- Fast Qty Increment Logic ---
+    let qtyInterval = null;
+    let qtyTimeout = null;
+    let isQtyUpdating = false;
+
+    const startQtyChange = (btn, isPlus) => {
+        if (isQtyUpdating) return;
+        isQtyUpdating = true;
+        const index = parseInt(btn.dataset.index);
+
+        const change = () => {
+            if (isPlus) items[index].qty++;
+            else if (items[index].qty > 1) items[index].qty--;
+
+            // Only update DOM locally to prevent destroying elements while user is holding
+            const qs = document.querySelector(`.qty-input[data-index="${index}"]`);
+            if (qs) qs.value = items[index].qty;
+
+            // Update Grand Total
+            const total = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            document.getElementById('grand-total').textContent = formatCurrency(total);
+        };
+
+        change(); // initial tap
+
+        qtyTimeout = setTimeout(() => {
+            qtyInterval = setInterval(change, 80);
+        }, 400);
+    };
+
+    const stopQtyChange = () => {
+        if (qtyTimeout) clearTimeout(qtyTimeout);
+        if (qtyInterval) clearInterval(qtyInterval);
+        qtyTimeout = null;
+        qtyInterval = null;
+        if (isQtyUpdating) {
+            isQtyUpdating = false;
+            render(); // sync all subtotal arrays
+        }
+    };
+
+    ['mousedown', 'touchstart'].forEach(evt => {
+        container.addEventListener(evt, (e) => {
+            const btn = e.target.closest('.qty-btn');
+            if (btn) {
+                // Ignore right clicks
+                if (evt === 'mousedown' && e.button !== 0) return;
+                e.preventDefault();
+                const isPlus = btn.classList.contains('plus');
+                startQtyChange(btn, isPlus);
+            }
+        }, { passive: false });
+    });
+
+    ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach(evt => {
+        document.body.addEventListener(evt, () => {
+            if (isQtyUpdating) stopQtyChange();
+        });
+    });
+    // --------------------------------
 
     // Input Handling
     container.addEventListener('input', (e) => {
