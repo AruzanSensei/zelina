@@ -133,6 +133,15 @@ class StateManager {
         }
     }
 
+    updateHistoryEntry(id, updates) {
+        const item = this.state.history.find(h => h.id === id);
+        if (item) {
+            Object.assign(item, updates);
+            this.save(STORAGE_KEYS.HISTORY, this.state.history);
+            this.notify('history', this.state.history);
+        }
+    }
+
     removeFromHistory(index) {
         this.state.history.splice(index, 1);
         this.save(STORAGE_KEYS.HISTORY, this.state.history);

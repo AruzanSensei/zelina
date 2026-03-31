@@ -160,7 +160,7 @@
         <!-- PREVIEW & DOWNLOAD BAR -->
         <!-- Visible in Manual and AI modes -->
         <section id="preview-section" class="preview-section">
-            <div class="preview-header">
+            <div class="preview-header" style="padding-bottom: 8px;">
                 <h3>Preview</h3>
             </div>
             <div class="preview-cards">
@@ -326,13 +326,13 @@
                             <div style="width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
                                 <div style="position: relative;">
                                     <small
-                                        style="position: absolute; right: 8px; top: -14px; color: var(--text-muted); font-size: 0.65rem; font-weight: 700; text-transform: uppercase;">Invoice</small>
+                                        style="position: absolute; right: 16px; top: 16px; color: var(--muted); font-size: 0.65rem; font-weight: 500; ">Invoice</small>
                                     <input type="text" id="format-invoice" class="form-input" value="Invoice-{judul}"
                                         placeholder="Invoice-{judul}" style="font-size: 0.85rem;">
                                 </div>
                                 <div style="position: relative;">
                                     <small
-                                        style="position: absolute; right: 8px; top: -14px; color: var(--text-muted); font-size: 0.65rem; font-weight: 700; text-transform: uppercase;">Surat
+                                        style="position: absolute; right: 16px; top: 16px; color: var(--muted); font-size: 0.65rem; font-weight: 500;">Surat
                                         Jalan</small>
                                     <input type="text" id="format-surat-jalan" class="form-input"
                                         value="Surat Jalan-{judul}" placeholder="Surat Jalan-{judul}"
@@ -438,18 +438,22 @@
     <div id="detail-sheet" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="detail-title">Detail Invoice</h2>
-                <div style="display:flex; gap:10px; margin-left:auto; margin-right:8px;">
-                    <button id="btn-detail-download-mode" class="btn btn-primary"
-                        style="padding:6px 12px; font-size:0.85rem;" title="Unduh">
+                <h2 id="detail-title" style="flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Detail Invoice</h2>
+                <div style="display:flex; gap:8px; margin-left:auto; margin-right:8px;">
+                    <button id="btn-detail-download" class="btn btn-action-green"
+                        style="padding:6px 10px; font-size:0.85rem; border-radius:8px;" title="Unduh">
                         <i class="fa-solid fa-download"></i>
+                    </button>
+                    <button id="btn-detail-edit-toggle" class="btn btn-action-orange"
+                        style="padding:6px 10px; font-size:0.85rem; border-radius:8px;" title="Edit">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                    <button id="btn-detail-delete" class="btn btn-action-red"
+                        style="padding:6px 10px; font-size:0.85rem; border-radius:8px;" title="Hapus">
+                        <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>
                 <button class="close-detail"><i class="fa-solid fa-times"></i></button>
-            </div>
-            <div class="toggle-group" style="margin-bottom:10px; width: fit-content;">
-                <button class="toggle-btn active" id="detail-form-view">Form</button>
-                <button class="toggle-btn" id="detail-table-view">Table</button>
             </div>
             <div id="detail-content" class="modal-body">
                 <!-- Content injected via JS -->

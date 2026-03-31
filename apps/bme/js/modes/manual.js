@@ -136,7 +136,10 @@ export function initManualMode() {
                         </div>
                     </div>
                     <div style="width: 100px;">
-                        <label class="field-label">Pcs</label>
+                        <div class="unit-switch" data-index="${index}">
+                            <span class="unit-opt ${(item.qtyUnit || 'pcs') === 'pcs' ? 'active' : ''}" data-unit="pcs">Pcs</span>
+                            <span class="unit-opt ${item.qtyUnit === 'lot' ? 'active' : ''}" data-unit="lot">Lot</span>
+                        </div>
                         <div class="qty-control">
                             <button class="qty-btn minus" data-index="${index}">-</button>
                             <input type="number" class="qty-input item-qty" value="${item.qty}" data-index="${index}" min="1">
@@ -208,7 +211,10 @@ export function initManualMode() {
                             </select>
                         </div>
                         <div style="flex: 0.7;">
-                            <label class="field-label">Pcs</label>
+                            <div class="unit-switch" data-index="${index}">
+                                <span class="unit-opt ${(item.qtyUnit || 'pcs') === 'pcs' ? 'active' : ''}" data-unit="pcs">Pcs</span>
+                                <span class="unit-opt ${item.qtyUnit === 'lot' ? 'active' : ''}" data-unit="lot">Lot</span>
+                            </div>
                             <div class="qty-control">
                                 <button class="qty-btn minus" data-index="${index}">-</button>
                                 <input type="number" class="qty-input item-qty" value="${item.qty}" data-index="${index}" min="1">
@@ -349,6 +355,7 @@ export function initManualMode() {
             qty: 1, 
             note: '', 
             tipe: '',
+            qtyUnit: 'pcs',
             invKeterangan: '',
             sjKeterangan: '' 
         });
@@ -417,6 +424,16 @@ export function initManualMode() {
             const index = parseInt(target.dataset.index);
             if (target.classList.contains('plus')) items[index].qty++;
             else if (items[index].qty > 1) items[index].qty--;
+            render();
+        }
+
+        // Unit Switch (Pcs / Lot)
+        const unitOpt = target.closest('.unit-opt');
+        if (unitOpt) {
+            const switchEl = unitOpt.closest('.unit-switch');
+            const index = parseInt(switchEl.dataset.index);
+            const unit = unitOpt.dataset.unit;
+            items[index].qtyUnit = unit;
             render();
         }
     });

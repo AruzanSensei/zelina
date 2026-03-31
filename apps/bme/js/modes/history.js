@@ -18,12 +18,14 @@ export function initHistoryMode() {
     const detailTitle = document.getElementById('detail-title');
     const btnCloseDetail = document.querySelector('.close-detail');
 
-    // View Toggles in Sheet
-    const btnFormView = document.getElementById('detail-form-view');
-    const btnTableView = document.getElementById('detail-table-view');
+    // Action buttons in detail view
+    const btnDetailDownload = document.getElementById('btn-detail-download');
+    const btnDetailEditToggle = document.getElementById('btn-detail-edit-toggle');
+    const btnDetailDelete = document.getElementById('btn-detail-delete');
 
     let currentDetailItem = null;
-    let detailViewMode = 'form';
+    let currentDetailIndex = null;
+    let isDetailEditMode = false;
 
     // Multi-select state
     let isMultiSelectMode = false;
@@ -172,6 +174,9 @@ export function initHistoryMode() {
     const showContextMenu = (x, y, entry, realIndex) => {
         // Build menu content
         contextMenu.innerHTML = `
+            <button class="ctx-item" data-action="duplicate">
+                <i class="fa-solid fa-copy"></i> Duplikat
+            </button>
             <button class="ctx-item" data-action="download">
                 <i class="fa-solid fa-download"></i> Unduh
             </button>
@@ -241,6 +246,16 @@ export function initHistoryMode() {
 
     const handleContextAction = (action, entry, index) => {
         switch (action) {
+            case 'duplicate': {
+                const now = new Date();
+                const cloned = JSON.parse(JSON.stringify(entry));
+                cloned.id = Date.now();
+                cloned.timestamp = Date.now();
+                cloned.date = `${now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' })} | ${now.getHours()}.${String(now.getMinutes()).padStart(2, '0')}`;
+                appState.addToHistory(cloned);
+                break;
+            }
+
             case 'preview':
                 openDetail(index);
                 break;
@@ -596,122 +611,121 @@ export function initHistoryMode() {
     // ===================================
     // DETAIL VIEW LOGIC
     // ===================================
+    const formatNum = (n) => new Intl.NumberFormat('id-ID').format(n);
+
+    const parseDateString = (dateStr) => {
+        // Parses "DD/MM/YYYY | HH.MM" into { datePart, timePart }
+        if (!dateStr) return { datePart: '', timePart: '' };
+        const parts = dateStr.split('|').map(s => s.trim());
+        return { datePart: parts[0] || '', timePart: parts[1] || '' };
+    };
+
     const renderDetailContent = () => {
         if (!currentDetailItem) return;
         const items = currentDetailItem.items;
         const title = currentDetailItem.title;
+        const { datePart, timePart } = parseDateString(currentDetailItem.date);
 
         detailContent.innerHTML = '';
 
-        // Inject "Edit Back in Manual" Button into Header
-        let btnEdit = document.getElementById('btn-detail-edit');
-        if (btnEdit) {
-            btnEdit.remove();
-        }
+        // === INFO BAR (Date + Time + Total) ===
+        const total = items.reduce((s, i) => s + (i.price * i.qty), 0);
+        const totalHTML = `<sup style="font-size:0.6em; font-weight:500; vertical-align:super; opacity:0.75;">Rp</sup>${formatNum(total)}`;
 
-        btnEdit = document.createElement('button');
-        btnEdit.id = 'btn-detail-edit';
-        btnEdit.className = 'icon-btn';
-        btnEdit.innerHTML = '<i class="fa-solid fa-arrow-left"></i>';
-        btnEdit.style.marginRight = '10px';
-        btnEdit.style.color = '#F5A623';
-        btnEdit.title = "Buka di Mode Manual";
+        const infoBar = document.createElement('div');
+        infoBar.className = 'detail-info-bar';
+        infoBar.innerHTML = `
+            <div class="detail-date-time">
+                <span class="date-chip" id="detail-date-chip">${datePart}</span>
+                <span class="time-chip" id="detail-time-chip">${timePart}</span>
+            </div>
+            <div class="detail-total">${totalHTML}</div>
+        `;
+        detailContent.appendChild(infoBar);
 
-        btnCloseDetail.parentNode.insertBefore(btnEdit, btnCloseDetail);
-
-        btnEdit.addEventListener('click', () => {
-            if (!currentDetailItem) return;
-
-            const confirmModal = document.getElementById('history-to-manual-confirm');
-            if (!confirmModal) return;
-
-            confirmModal.classList.remove('hidden');
-            confirmModal.classList.add('active');
-
-            const btnCancel = document.getElementById('btn-history-confirm-cancel');
-            const btnProceed = document.getElementById('btn-history-confirm-proceed');
-
-            const cleanup = () => {
-                confirmModal.classList.add('hidden');
-                confirmModal.classList.remove('active');
-            };
-
-            const onCancel = () => { cleanup(); };
-            const onProceed = () => {
-                cleanup();
-
-                const clonedItems = JSON.parse(JSON.stringify(currentDetailItem.items));
-                const historyTitle = currentDetailItem.title;
-
-                // Dispatch template-selected so manual.js re-renders items
-                document.dispatchEvent(new CustomEvent('template-selected', {
-                    detail: { items: clonedItems }
-                }));
-
-                // Update title
-                const manualTitle = document.getElementById('manual-title');
-                if (manualTitle) {
-                    manualTitle.value = historyTitle;
-                    manualTitle.dispatchEvent(new Event('input'));
+        // Date chip click → native date picker
+        const dateChip = infoBar.querySelector('#detail-date-chip');
+        dateChip.addEventListener('click', () => {
+            const inp = document.createElement('input');
+            inp.type = 'date';
+            inp.style.cssText = 'position:absolute; opacity:0; width:0; height:0;';
+            // Try to parse existing DD/MM/YYYY to YYYY-MM-DD
+            const dParts = datePart.split('/');
+            if (dParts.length === 3) inp.value = `${dParts[2]}-${dParts[1]}-${dParts[0]}`;
+            document.body.appendChild(inp);
+            inp.addEventListener('change', () => {
+                if (inp.value) {
+                    const [y, m, d] = inp.value.split('-');
+                    const newDatePart = `${d}/${m}/${y}`;
+                    const newDateStr = `${newDatePart} | ${timePart}`;
+                    currentDetailItem.date = newDateStr;
+                    appState.updateHistoryEntry(currentDetailItem.id, { date: newDateStr });
+                    dateChip.textContent = newDatePart;
                 }
-
-                // Switch tab to Manual Mode
-                const tabManual = document.querySelector('[data-tab="manual"]');
-                if (tabManual) tabManual.click();
-
-                closeDetail();
-            };
-
-            btnCancel.addEventListener('click', onCancel, { once: true });
-            btnProceed.addEventListener('click', onProceed, { once: true });
+                inp.remove();
+            });
+            inp.showPicker();
         });
 
-        // Render data content (form or table)
-        if (detailViewMode === 'table') {
-            const table = document.createElement('table');
-            table.className = 'item-table';
-            table.innerHTML = `
-                <thead>
-                    <tr><th>Barang</th><th>Harga</th><th>Pcs</th><th>Note</th></tr>
-                </thead>
-                <tbody>
-                    ${items.map(item => `
-                    <tr>
-                        <td>${item.name}</td>
-                        <td>${new Intl.NumberFormat('id-ID').format(item.price)}</td>
-                        <td>${item.qty}</td>
-                        <td>${item.note || '-'}</td>
-                    </tr>
-                    `).join('')}
-                </tbody>
-            `;
-            const div = document.createElement('div');
-            div.className = 'table-view-container';
-            div.appendChild(table);
-            detailContent.appendChild(div);
-        } else {
-            items.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'item-card';
-                div.style.padding = '10px';
-                div.style.marginBottom = '10px';
-                div.style.borderTop = '1px solid var(--border-color)';
-                div.innerHTML = `
-                    <div style="font-weight:600; margin-bottom:4px;">${item.name}</div>
-                    <div style="display:flex; gap:10px; font-size:0.9rem; color:var(--text-muted);">
-                        <span>${item.qty} pcs</span>
-                        <span>x</span>
-                        <span>${new Intl.NumberFormat('id-ID').format(item.price)}</span>
-                    </div>
-                    ${item.note ? `<div style="font-size:0.85rem; margin-top:4px; font-style:italic;">"${item.note}"</div>` : ''}
-                `;
-                detailContent.appendChild(div);
+        // Time chip click → native time picker
+        const timeChip = infoBar.querySelector('#detail-time-chip');
+        timeChip.addEventListener('click', () => {
+            const inp = document.createElement('input');
+            inp.type = 'time';
+            inp.style.cssText = 'position:absolute; opacity:0; width:0; height:0;';
+            // Parse HH.MM to HH:MM
+            const tParts = timePart.split('.');
+            if (tParts.length === 2) inp.value = `${tParts[0].padStart(2,'0')}:${tParts[1].padStart(2,'0')}`;
+            document.body.appendChild(inp);
+            inp.addEventListener('change', () => {
+                if (inp.value) {
+                    const newTimePart = inp.value.replace(':', '.');
+                    const newDateStr = `${datePart} | ${newTimePart}`;
+                    currentDetailItem.date = newDateStr;
+                    appState.updateHistoryEntry(currentDetailItem.id, { date: newDateStr });
+                    timeChip.textContent = newTimePart;
+                }
+                inp.remove();
             });
-        }
+            inp.showPicker();
+        });
 
-        // ===================================
-        // PREVIEW RENDERING (Invoice + Surat Jalan) — compact preview-cards style
-        // ===================================
+        // === ITEM CARDS ===
+        items.forEach((item, idx) => {
+            const unit = item.qtyUnit || 'pcs';
+            const priceFormatted = formatNum(item.price);
+
+            const card = document.createElement('div');
+            card.className = 'detail-item-card';
+            if (isDetailEditMode) card.classList.add('editing');
+
+            if (isDetailEditMode) {
+                card.innerHTML = `
+                    <div style="margin-bottom:6px;">
+                        <input class="edit-input edit-name" value="${item.name || ''}" placeholder="Nama Barang" data-idx="${idx}">
+                    </div>
+                    <div style="display:flex; gap:8px; margin-bottom:6px;">
+                        <input class="edit-input edit-qty" type="number" value="${item.qty}" min="1" style="width:60px;" data-idx="${idx}">
+                        <span style="align-self:center; font-size:0.82rem; color:var(--text-muted);">${unit} •</span>
+                        <input class="edit-input edit-price" type="number" value="${item.price}" style="flex:1;" data-idx="${idx}">
+                    </div>
+                    <div>
+                        <input class="edit-input edit-note" value="${item.note || ''}" placeholder="Note (opsional)" data-idx="${idx}">
+                    </div>
+                `;
+            } else {
+                card.innerHTML = `
+                    <div class="item-name-row">
+                        <span class="d-item-name">${item.name || 'Tanpa Nama'}</span>
+                        <span class="item-meta">${item.qty} ${unit} • <span class="item-price-tag"><sup style="font-size:0.6em;opacity:0.7;">Rp</sup>${priceFormatted}</span></span>
+                    </div>
+                    ${item.note ? `<div class="item-note"><strong>Note:</strong> ${item.note}</div>` : ''}
+                `;
+            }
+            detailContent.appendChild(card);
+        });
+
+        // === PREVIEW RENDERING ===
         let invoiceHTML = '';
         let suratJalanHTML = '';
         try {
@@ -732,46 +746,30 @@ export function initHistoryMode() {
         const cardsRow = document.createElement('div');
         cardsRow.style.cssText = 'display:flex; gap:12px; margin-bottom:12px;';
         previewSection.appendChild(cardsRow);
-
         detailContent.appendChild(previewSection);
 
-        // Build a self-contained preview card with explicit inline sizing
         const buildPreviewCard = (htmlStr, bgColor) => {
-            // Outer card — aspect-ratio A4, clips overflow
             const card = document.createElement('div');
-            card.style.cssText = `
-                flex:1; position:relative; border-radius:var(--radius-sm);
-                border:1px solid var(--border-color); overflow:hidden;
-                background:${bgColor}; aspect-ratio:1/1.414;
-            `;
-
+            card.style.cssText = `flex:1; position:relative; border-radius:var(--radius-sm); border:1px solid var(--border-color); overflow:hidden; background:${bgColor}; aspect-ratio:1/1.414;`;
             if (htmlStr) {
-                // Inner frame-wrap: will be sized explicitly once we know the card width
                 const frameWrap = document.createElement('div');
                 frameWrap.style.cssText = 'position:absolute; top:0; left:0; width:100%; overflow:hidden;';
                 card.appendChild(frameWrap);
-
                 const iframe = document.createElement('iframe');
                 iframe.style.cssText = 'border:0; pointer-events:none; display:block; width:794px; height:1123px; transform-origin:top left;';
                 iframe.srcdoc = htmlStr;
                 frameWrap.appendChild(iframe);
-
-                // After modal finishes its 300ms open animation, measure and scale
-                // Pass cardsRow reference so we have a fallback width source
                 setTimeout(() => {
                     const availW = card.offsetWidth || cardsRow.offsetWidth / 2 || 150;
-                    const scale = availW / 794;
-                    iframe.style.transform = `scale(${scale})`;
+                    iframe.style.transform = `scale(${availW / 794})`;
                 }, 400);
             }
-
             return card;
         };
 
         const invoiceCard = buildPreviewCard(invoiceHTML, 'var(--invoice-bg, #f0f4ff)');
         const suratCard = buildPreviewCard(suratJalanHTML, 'var(--letter-bg, #f0fff4)');
 
-        // Add Preview buttons
         const makePreviewBtn = (type) => {
             const btn = document.createElement('button');
             btn.className = 'btn btn-outline';
@@ -781,59 +779,32 @@ export function initHistoryMode() {
                 e.stopPropagation();
                 const html = type === 'invoice' ? invoiceHTML : suratJalanHTML;
                 const label = type === 'invoice' ? 'Preview Invoice' : 'Preview Surat Jalan';
-
                 const editAction = () => {
                     if (confirm('Buka riwayat ini di Mode Manual untuk diedit?')) {
-                        // Populate state
                         appState.state.invoiceItems = JSON.parse(JSON.stringify(items));
                         const manualTitle = document.getElementById('manual-title');
                         if (manualTitle) manualTitle.value = title;
                         appState.save('bme_invoice_items', appState.state.invoiceItems);
-
-                        // Close preview modal
                         const previewModal = document.getElementById('preview-modal');
-                        if (previewModal) {
-                            previewModal.classList.add('hidden');
-                            previewModal.classList.remove('active');
-                        }
-                        closeDetail(); // Close detail sheet
-
-                        // Switch tab to Manual Mode
+                        if (previewModal) { previewModal.classList.add('hidden'); previewModal.classList.remove('active'); }
+                        closeDetail();
                         const tabManual = document.querySelector('[data-tab="manual"]');
                         if (tabManual) tabManual.click();
                     }
                 };
-
                 openPreviewModal(html, label, type, async () => {
                     const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
                     const formats = appState.state.settings.fileNameFormat || { invoice: 'Invoice-{judul}', suratJalan: 'Surat Jalan-{judul}' };
                     const template = type === 'surat' ? formats.suratJalan : formats.invoice;
-
                     const now = new Date();
-                    const filename = template
-                        .replace(/\{judul\}/gi, title)
-                        .replace(/%YYYY/g, String(now.getFullYear()))
-                        .replace(/%MM/g, String(now.getMonth() + 1).padStart(2, '0'))
-                        .replace(/%DD/g, String(now.getDate()).padStart(2, '0'))
-                        .replace(/%HH/g, String(now.getHours()).padStart(2, '0'))
-                        .replace(/%mm/g, String(now.getMinutes()).padStart(2, '0'))
-                        .replace(/%ss/g, String(now.getSeconds()).padStart(2, '0'));
-
-                    if (defaultMethod === 'pdf') {
-                        printInvoicePDF(items, title);
-                    } else {
+                    const filename = template.replace(/\{judul\}/gi, title).replace(/%YYYY/g, String(now.getFullYear())).replace(/%MM/g, String(now.getMonth()+1).padStart(2,'0')).replace(/%DD/g, String(now.getDate()).padStart(2,'0')).replace(/%HH/g, String(now.getHours()).padStart(2,'0')).replace(/%mm/g, String(now.getMinutes()).padStart(2,'0')).replace(/%ss/g, String(now.getSeconds()).padStart(2,'0'));
+                    if (defaultMethod === 'pdf') { printInvoicePDF(items, title); }
+                    else {
                         const alertEl = document.getElementById('custom-alert');
                         const messageEl = document.getElementById('alert-message');
-                        if (alertEl && messageEl) {
-                            messageEl.innerHTML = 'Mengekspor... <i class="fa-solid fa-spinner fa-spin"></i>';
-                            alertEl.classList.remove('hidden');
-                            alertEl.style.animation = 'alert-in 0.3s ease-out forwards';
-                        }
-                        if (defaultMethod === 'jpeg') {
-                            await exportToJPEG(html, filename);
-                        } else {
-                            await exportToPNG(html, filename);
-                        }
+                        if (alertEl && messageEl) { messageEl.innerHTML = 'Mengekspor... <i class="fa-solid fa-spinner fa-spin"></i>'; alertEl.classList.remove('hidden'); alertEl.style.animation = 'alert-in 0.3s ease-out forwards'; }
+                        if (defaultMethod === 'jpeg') await exportToJPEG(html, filename);
+                        else await exportToPNG(html, filename);
                         if (alertEl) alertEl.classList.add('hidden');
                     }
                 }, editAction, true);
@@ -844,7 +815,6 @@ export function initHistoryMode() {
         invoiceCard.appendChild(makePreviewBtn('invoice'));
         suratCard.appendChild(makePreviewBtn('surat'));
 
-        // Per-card download buttons (orange, left of Preview)
         const makeDownloadBtn = (type) => {
             const btn = document.createElement('button');
             btn.className = 'btn';
@@ -858,70 +828,79 @@ export function initHistoryMode() {
                 const formats = appState.state.settings.fileNameFormat || { invoice: 'Invoice-{judul}', suratJalan: 'Surat Jalan-{judul}' };
                 const template = type === 'surat' ? formats.suratJalan : formats.invoice;
                 const now = new Date();
-                const filename = template
-                    .replace(/\{judul\}/gi, title)
-                    .replace(/%YYYY/g, String(now.getFullYear()))
-                    .replace(/%MM/g, String(now.getMonth() + 1).padStart(2, '0'))
-                    .replace(/%DD/g, String(now.getDate()).padStart(2, '0'))
-                    .replace(/%HH/g, String(now.getHours()).padStart(2, '0'))
-                    .replace(/%mm/g, String(now.getMinutes()).padStart(2, '0'))
-                    .replace(/%ss/g, String(now.getSeconds()).padStart(2, '0'));
-
+                const filename = template.replace(/\{judul\}/gi, title).replace(/%YYYY/g, String(now.getFullYear())).replace(/%MM/g, String(now.getMonth()+1).padStart(2,'0')).replace(/%DD/g, String(now.getDate()).padStart(2,'0')).replace(/%HH/g, String(now.getHours()).padStart(2,'0')).replace(/%mm/g, String(now.getMinutes()).padStart(2,'0')).replace(/%ss/g, String(now.getSeconds()).padStart(2,'0'));
                 if (defaultMethod === 'pdf') {
                     const w = window.open('', '_blank');
                     if (!w) return;
-                    w.document.open();
-                    w.document.write(html);
-                    w.document.close();
-                    w.document.title = title;
+                    w.document.open(); w.document.write(html); w.document.close(); w.document.title = title;
                     setTimeout(() => { w.focus(); w.print(); }, 300);
                 } else {
                     const alertEl = document.getElementById('custom-alert');
                     const messageEl = document.getElementById('alert-message');
-                    if (alertEl && messageEl) {
-                        messageEl.innerHTML = 'Mengekspor... <i class="fa-solid fa-spinner fa-spin"></i>';
-                        alertEl.classList.remove('hidden');
-                        alertEl.style.animation = 'alert-in 0.3s ease-out forwards';
-                    }
-                    if (defaultMethod === 'jpeg') {
-                        await exportToJPEG(html, filename);
-                    } else {
-                        await exportToPNG(html, filename);
-                    }
+                    if (alertEl && messageEl) { messageEl.innerHTML = 'Mengekspor... <i class="fa-solid fa-spinner fa-spin"></i>'; alertEl.classList.remove('hidden'); alertEl.style.animation = 'alert-in 0.3s ease-out forwards'; }
+                    if (defaultMethod === 'jpeg') await exportToJPEG(html, filename);
+                    else await exportToPNG(html, filename);
                     if (alertEl) alertEl.classList.add('hidden');
                 }
             });
             return btn;
         };
 
-        // Adjust Preview button to not overlap with download button
         invoiceCard.querySelectorAll('.btn.btn-outline').forEach(b => { b.style.right = '52px'; });
         suratCard.querySelectorAll('.btn.btn-outline').forEach(b => { b.style.right = '52px'; });
-
         invoiceCard.appendChild(makeDownloadBtn('invoice'));
         suratCard.appendChild(makeDownloadBtn('surat'));
         cardsRow.appendChild(invoiceCard);
         cardsRow.appendChild(suratCard);
     };
 
+    const collectEditedData = () => {
+        if (!currentDetailItem || !isDetailEditMode) return;
+        const names = detailContent.querySelectorAll('.edit-name');
+        const qtys = detailContent.querySelectorAll('.edit-qty');
+        const prices = detailContent.querySelectorAll('.edit-price');
+        const notes = detailContent.querySelectorAll('.edit-note');
+        names.forEach((el, i) => {
+            currentDetailItem.items[i].name = el.value;
+            currentDetailItem.items[i].qty = parseInt(qtys[i].value) || 1;
+            currentDetailItem.items[i].price = parseFloat(prices[i].value) || 0;
+            currentDetailItem.items[i].note = notes[i].value;
+        });
+        // Also update title
+        currentDetailItem.title = detailTitle.textContent;
+        appState.updateHistoryEntry(currentDetailItem.id, {
+            title: currentDetailItem.title,
+            items: JSON.parse(JSON.stringify(currentDetailItem.items))
+        });
+    };
+
     const openDetail = (index) => {
+        currentDetailIndex = index;
         currentDetailItem = appState.state.history[index];
-        detailTitle.textContent = currentDetailItem.title || "Detail Invoice";
+        isDetailEditMode = false;
+        detailTitle.textContent = currentDetailItem.title || 'Detail Invoice';
+        detailTitle.contentEditable = 'false';
+        if (btnDetailDownload) btnDetailDownload.classList.remove('btn-action-faded');
+        if (btnDetailDelete) btnDetailDelete.classList.remove('btn-action-faded');
         detailSheet.classList.add('active');
         renderDetailContent();
     };
 
     const closeDetail = () => {
+        if (isDetailEditMode) {
+            collectEditedData();
+            isDetailEditMode = false;
+        }
         detailSheet.classList.remove('active');
         currentDetailItem = null;
+        currentDetailIndex = null;
     };
 
-    // Header buttons in Detail Sheet
-    const btnDetailDownloadMode = document.getElementById('btn-detail-download-mode');
-    if (btnDetailDownloadMode) {
-        btnDetailDownloadMode.addEventListener('click', () => {
+    // === DETAIL ACTION BUTTONS ===
+    if (btnDetailDownload) {
+        btnDetailDownload.addEventListener('click', () => {
             if (!currentDetailItem) return;
-            const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
+            const defaultMethod = appState.state.settings.defaultDownloadMethod || 'pdf';
             if (defaultMethod === 'pdf') {
                 printInvoicePDF(currentDetailItem.items, currentDetailItem.title);
             } else {
@@ -930,20 +909,41 @@ export function initHistoryMode() {
         });
     }
 
-    // Toggle Handlers
-    btnFormView.addEventListener('click', () => {
-        detailViewMode = 'form';
-        btnFormView.classList.add('active');
-        btnTableView.classList.remove('active');
-        renderDetailContent();
-    });
+    if (btnDetailEditToggle) {
+        btnDetailEditToggle.addEventListener('click', () => {
+            if (!currentDetailItem) return;
+            if (isDetailEditMode) {
+                // Exiting edit mode — save
+                collectEditedData();
+                isDetailEditMode = false;
+                detailTitle.contentEditable = 'false';
+                detailTitle.style.outline = '';
+                if (btnDetailDownload) btnDetailDownload.classList.remove('btn-action-faded');
+                if (btnDetailDelete) btnDetailDelete.classList.remove('btn-action-faded');
+                renderDetailContent();
+            } else {
+                // Entering edit mode
+                isDetailEditMode = true;
+                detailTitle.contentEditable = 'true';
+                detailTitle.style.outline = '1px dashed var(--primary)';
+                detailTitle.style.borderRadius = '4px';
+                detailTitle.style.padding = '2px 6px';
+                if (btnDetailDownload) btnDetailDownload.classList.add('btn-action-faded');
+                if (btnDetailDelete) btnDetailDelete.classList.add('btn-action-faded');
+                renderDetailContent();
+            }
+        });
+    }
 
-    btnTableView.addEventListener('click', () => {
-        detailViewMode = 'table';
-        btnTableView.classList.add('active');
-        btnFormView.classList.remove('active');
-        renderDetailContent();
-    });
+    if (btnDetailDelete) {
+        btnDetailDelete.addEventListener('click', () => {
+            if (!currentDetailItem || currentDetailIndex === null) return;
+            if (confirm('Hapus riwayat ini?')) {
+                appState.removeFromHistory(currentDetailIndex);
+                closeDetail();
+            }
+        });
+    }
 
     btnCloseDetail.addEventListener('click', closeDetail);
 

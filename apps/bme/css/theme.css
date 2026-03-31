@@ -177,3 +177,164 @@ input:checked+.ios-slider:before {
     color: var(--text-main);
     font-size: 0.9rem;
 }
+
+/* =========================================
+   Unit Switch (Pcs / Lot) — compact toggle
+   ========================================= */
+.unit-switch {
+    display: inline-flex;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    font-size: 0.65rem;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    line-height: 1;
+}
+
+.unit-switch .unit-opt {
+    padding: 2px 6px;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+}
+
+.unit-switch .unit-opt.active {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* =========================================
+   Detail View — redesigned
+   ========================================= */
+.detail-info-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 0;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.detail-info-bar .detail-date-time {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+}
+
+.detail-info-bar .detail-date-time .date-chip,
+.detail-info-bar .detail-date-time .time-chip {
+    background: var(--bg-body);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.detail-info-bar .detail-date-time .date-chip:hover,
+.detail-info-bar .detail-date-time .time-chip:hover {
+    border-color: var(--primary);
+}
+
+.detail-info-bar .detail-total {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1rem;
+    white-space: nowrap;
+}
+
+.detail-item-card {
+    background: var(--bg-body);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    border: 1px solid var(--border-color);
+    transition: border-color 0.2s ease;
+}
+
+.detail-item-card .item-name-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.detail-item-card .item-name-row .d-item-name {
+    font-weight: 600;
+    font-size: 0.92rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.detail-item-card .item-meta {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.detail-item-card .item-meta .item-price-tag {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.detail-item-card .item-note {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+/* Edit mode inline input */
+.detail-item-card.editing {
+    border-color: var(--primary);
+}
+
+.detail-item-card .edit-input {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: inherit;
+    font-family: inherit;
+    color: var(--text-main);
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.detail-item-card .edit-input:focus {
+    border-color: var(--primary);
+}
+
+/* Action button colors */
+.btn-action-green {
+    background: #27ae60 !important;
+    border-color: #219a52 !important;
+    color: #fff !important;
+}
+
+.btn-action-orange {
+    background: #F5A623 !important;
+    border-color: #d4891a !important;
+    color: #fff !important;
+}
+
+.btn-action-red {
+    background: #ff4d4f !important;
+    border-color: #d9363e !important;
+    color: #fff !important;
+}
+
+.btn-action-faded {
+    opacity: 0.35 !important;
+    pointer-events: none !important;
+}

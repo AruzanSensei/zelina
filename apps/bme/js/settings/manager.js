@@ -347,7 +347,7 @@ export function initSettings() {
 
     const handleSyncAction = async (action) => {
         const d = new Date();
-        const dateStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
         if (action === 'import-json') {
             const input = document.createElement('input');
@@ -388,17 +388,17 @@ export function initSettings() {
                 reader.readAsText(file);
             };
             input.click();
-        } 
+        }
         else if (action === 'export-json') {
             const hist = appState.state.history || [];
-            if(hist.length === 0) return alert('History kosong!');
+            if (hist.length === 0) return alert('History kosong!');
             const jsonStr = JSON.stringify(hist, null, 2);
-            downloadBlob(new Blob([jsonStr], {type: 'application/json'}), `BME-Backup-${dateStr}.json`);
+            downloadBlob(new Blob([jsonStr], { type: 'application/json' }), `BME-Backup-${dateStr}.json`);
         }
         else if (action === 'export-csv') {
             const hist = appState.state.history || [];
-            if(hist.length === 0) return alert('History kosong!');
-            
+            if (hist.length === 0) return alert('History kosong!');
+
             let csvContent = "Judul,Tanggal,Barang,Harga,Qty,Total\n";
             hist.forEach(h => {
                 const title = `"${(h.title || 'Untitled').replace(/"/g, '""')}"`;
@@ -407,12 +407,12 @@ export function initSettings() {
                     csvContent += `${title},${h.date},${name},${item.price},${item.qty},${item.price * item.qty}\n`;
                 });
             });
-            downloadBlob(new Blob([csvContent], {type: 'text/csv;charset=utf-8;'}), `BME-Data-${dateStr}.csv`);
+            downloadBlob(new Blob([csvContent], { type: 'text/csv;charset=utf-8;' }), `BME-Data-${dateStr}.csv`);
         }
         else if (action === 'export-pdf') {
             const hist = appState.state.history || [];
-            if(hist.length === 0) return alert('History kosong!');
-            
+            if (hist.length === 0) return alert('History kosong!');
+
             let combinedHtml = `
             <!DOCTYPE html>
             <html>
@@ -434,7 +434,7 @@ export function initSettings() {
             hist.forEach(h => {
                 combinedHtml += `<div class="invoice-chunk">${buildInvoiceHTML(h.items, h.title)}</div>`;
             });
-            
+
             combinedHtml += `</body></html>`;
 
             const blob = new Blob([combinedHtml], { type: 'text/html' });
@@ -449,10 +449,10 @@ export function initSettings() {
         else if (action === 'export-zip') {
             if (typeof JSZip === 'undefined') return alert('Library JSZip belum dimuat. Mohon cek koneksi internet!');
             const hist = appState.state.history || [];
-            if(hist.length === 0) return alert('History kosong!');
+            if (hist.length === 0) return alert('History kosong!');
 
             const zip = new JSZip();
-            
+
             // Backup JSON
             zip.file("backup.json", JSON.stringify(hist, null, 2));
 
@@ -482,9 +482,9 @@ export function initSettings() {
                 btnAlert.style.animation = 'alert-in 0.3s ease-out forwards';
             }
 
-            zip.generateAsync({type:"blob"}).then(function(content) {
+            zip.generateAsync({ type: "blob" }).then(function (content) {
                 downloadBlob(content, `BME-Archive-${dateStr}.zip`);
-                if(btnAlert) btnAlert.classList.add('hidden');
+                if (btnAlert) btnAlert.classList.add('hidden');
             });
         }
     };
@@ -532,12 +532,12 @@ export function initSettings() {
             div.style.userSelect = 'none';
 
             div.innerHTML = `
-            < div style = "pointer-events:none;" >
+            <div style="pointer-events:none;">
                     <div style="font-weight:600; font-size:0.95rem;">${t.name}</div>
                     <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
                         ${t.items.length} Barang &bull; ${formatCurrency(t.items.reduce((s, x) => s + (x.price * x.qty), 0))}
                     </div>
-                </div >
+                </div>
         <div class="template-actions">
             <button class="btn btn-sm btn-outline use-template" data-index="${i}" title="Pakai">
                 <i class="fa-solid fa-check"></i>
@@ -587,7 +587,7 @@ export function initSettings() {
         overlay.className = 'modal active';
         overlay.style.zIndex = '300';
         overlay.innerHTML = `
-        < div class="modal-content" style = "max-width:300px;" >
+        <div class="modal-content">
                 <h3>Nama Template</h3>
                 <input type="text" id="new-template-name" class="form-input" placeholder="Misal: Paket Rumah Tipe 36" style="margin:15px 0;" autofocus>
                 <div style="display:flex; gap:10px;">
@@ -660,7 +660,7 @@ export function initSettings() {
                     clone.style.opacity = '0.9';
                     clone.style.boxShadow = '0 10px 20px rgba(0,0,0,0.2)';
                     clone.style.background = 'var(--bg-card)';
-                    clone.style.transform = `translateY(${ e.touches[0].clientY - 30 }px)`; // Offset slightly
+                    clone.style.transform = `translateY(${e.touches[0].clientY - 30}px)`; // Offset slightly
                     clone.style.left = card.getBoundingClientRect().left + 'px';
                     clone.style.pointerEvents = 'none'; // Pass through to underlying elements
                     document.body.appendChild(clone);
@@ -785,7 +785,7 @@ export function initSettings() {
                 // Edit Mode
                 const item = itemTemplates[editItem];
                 return `
-        < div class="modal-content" >
+        <div class="modal-content">
                         <div class="modal-header">
                             <h2>Edit Item</h2>
                             <button class="close-picker"><i class="fa-solid fa-times"></i></button>
@@ -820,7 +820,7 @@ export function initSettings() {
         `;
             } else if (isAdding) {
                 return `
-        < div class="modal-content" >
+        <div class="modal-content">
                         <div class="modal-header">
                             <h2>Tambah Item Baru</h2>
                             <button class="close-picker"><i class="fa-solid fa-times"></i></button>
@@ -855,7 +855,7 @@ export function initSettings() {
         `;
             } else {
                 return `
-        < div class="modal-content" >
+        <div class="modal-content">
                         <div class="modal-header">
                             <h2>Pilih Barang</h2>
                             <button class="close-picker"><i class="fa-solid fa-times"></i></button>
@@ -907,7 +907,7 @@ export function initSettings() {
                 const touchCurrentX = e.touches[0].clientX;
                 const diff = touchCurrentX - touchStartX;
                 if (diff < 0 && diff > -150) {
-                    activePickerCard.style.transform = `translateX(${ diff }px)`;
+                    activePickerCard.style.transform = `translateX(${diff}px)`;
                 }
             }, { passive: true });
 
