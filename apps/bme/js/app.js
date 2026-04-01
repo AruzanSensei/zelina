@@ -90,20 +90,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Header Logic
     if (header) {
-        window.addEventListener('scroll', () => {
-            if (appState && appState.state && appState.state.currentMode === 'history') {
+        const applyHeaderMode = (mode) => {
+            if (mode === 'history') {
+                // In history mode: non-sticky, can be scrolled past
+                header.style.position = 'relative';
+                header.style.top = '';
                 header.classList.remove('hide');
+            } else {
+                // In other modes: sticky with smart hide/show
+                header.style.position = '';
+                header.style.top = '';
+            }
+        };
+
+        // Apply initial mode
+        applyHeaderMode(appState.state.currentMode);
+
+        // Reapply on tab switch
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                applyHeaderMode(tab.dataset.tab);
                 lastScrollY = window.scrollY;
+                header.classList.remove('hide');
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const currentScrollY = window.scrollY;
+
+            if (appState.state.currentMode === 'history') {
+                // In history mode: reveal if within 200px from top
+                if (currentScrollY <= 100) {
+                    header.style.position = 'sticky';
+                    header.style.top = '0';
+                    header.classList.remove('hide');
+                } else {
+                    header.style.position = 'relative';
+                    header.style.top = '';
+                    header.classList.remove('hide');
+                }
+                lastScrollY = currentScrollY;
                 return;
             }
 
-            const currentScrollY = window.scrollY;
-
+            // Normal smart hide/show for other modes
             if (currentScrollY > lastScrollY && currentScrollY > 50) {
-                // Scroll Down
                 header.classList.add('hide');
             } else {
-                // Scroll Up
                 header.classList.remove('hide');
             }
             lastScrollY = currentScrollY;
@@ -145,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         let selectedMethod = 'pdf'; // Default
-        
+
         if (selector) {
             selector.querySelectorAll('.segmented-btn').forEach(btn => {
                 btn.addEventListener('click', () => {

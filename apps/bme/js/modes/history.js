@@ -56,6 +56,100 @@ export function initHistoryMode() {
     // FILTER MENU DOM SETUP
     // ===================================
     const btnHistoryFilter = document.getElementById('btn-history-filter');
+
+    // --- Filter Chips Bar ---
+    const historyView = document.getElementById('history-view');
+    let chipsBar = document.getElementById('history-filter-chips');
+    if (!chipsBar) {
+        chipsBar = document.createElement('div');
+        chipsBar.id = 'history-filter-chips';
+        // Insert inside the sticky wrapper so it sticks with the toolbar
+        const stickyWrapper = document.getElementById('history-sticky-wrapper');
+        stickyWrapper.appendChild(chipsBar);
+    }
+
+    const updateFilterIconColor = () => {
+        if (!btnHistoryFilter) return;
+        const isActive = filterSortDate !== 'terbaru' || filterSortPrice !== 'none' || filterMinPrice !== '' || filterMaxPrice !== '';
+        btnHistoryFilter.style.color = isActive ? 'var(--tertiary)' : '';
+    };
+
+    const renderFilterChips = () => {
+        chipsBar.innerHTML = '';
+        const chips = [];
+
+        // Sort Date chip (skip default)
+        if (filterSortDate !== 'terbaru') {
+            chips.push({
+                label: filterSortDate === 'terlama' ? 'Terlama' : filterSortDate,
+                onClear: () => {
+                    filterSortDate = 'terbaru';
+                    syncFilterMenu();
+                    render(appState.state.history);
+                }
+            });
+        }
+
+        // Sort Price chip (skip default)
+        if (filterSortPrice !== 'none') {
+            const priceLabels = { asc: 'Termurah', desc: 'Termahal' };
+            chips.push({
+                label: priceLabels[filterSortPrice],
+                onClear: () => {
+                    filterSortPrice = 'none';
+                    syncFilterMenu();
+                    render(appState.state.history);
+                }
+            });
+        }
+
+        // Price range chip
+        if (filterMinPrice !== '' || filterMaxPrice !== '') {
+            const fmt = (v) => v !== '' ? new Intl.NumberFormat('id-ID').format(v) : '...';
+            chips.push({
+                label: `${fmt(filterMinPrice)} – ${fmt(filterMaxPrice)}`,
+                onClear: () => {
+                    filterMinPrice = '';
+                    filterMaxPrice = '';
+                    syncFilterMenu();
+                    render(appState.state.history);
+                }
+            });
+        }
+
+        if (chips.length === 0) {
+            chipsBar.style.display = 'none';
+        } else {
+            chipsBar.style.display = 'flex';
+            chips.forEach(chip => {
+                const el = document.createElement('button');
+                el.className = 'filter-chip';
+                el.innerHTML = `<span class="chip-label">${chip.label}</span><i class="fa-solid fa-xmark chip-x"></i>`;
+                // X icon clears the filter
+                el.querySelector('.chip-x').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    chip.onClear();
+                });
+                chipsBar.appendChild(el);
+            });
+        }
+
+        updateFilterIconColor();
+    };
+
+    const syncFilterMenu = () => {
+        const fsd = document.getElementById('filter-sort-date');
+        const fsp = document.getElementById('filter-sort-price');
+        const fmin = document.getElementById('filter-min-price');
+        const fmax = document.getElementById('filter-max-price');
+        if (fsd) fsd.value = filterSortDate;
+        if (fsp) fsp.value = filterSortPrice;
+        if (fmin) fmin.value = filterMinPrice;
+        if (fmax) fmax.value = filterMaxPrice;
+        renderFilterChips();
+    };
+
+    // --- Filter Modal Menu ---
     let filterMenu = document.getElementById('history-filter-menu');
     if (!filterMenu) {
         filterMenu = document.createElement('div');
@@ -73,15 +167,15 @@ export function initHistoryMode() {
                 <label class="filter-label">Urutan Harga</label>
                 <select id="filter-sort-price">
                     <option value="none">- Bawaan -</option>
-                    <option value="asc">Terendah ke Tertinggi</option>
-                    <option value="desc">Tertinggi ke Terendah</option>
+                    <option value="asc">Termurah ke Termahal</option>
+                    <option value="desc">Termahal ke Termurah</option>
                 </select>
             </div>
             <div class="filter-section">
                 <label class="filter-label">Rentang Harga</label>
                 <div style="display:flex; gap:8px;">
-                    <input type="number" id="filter-min-price" placeholder="Min" style="width:100%; padding:6px; border:1px solid var(--border-color); border-radius:4px; font-size:0.85rem;">
-                    <input type="number" id="filter-max-price" placeholder="Max" style="width:100%; padding:6px; border:1px solid var(--border-color); border-radius:4px; font-size:0.85rem;">
+                    <input type="number" id="filter-min-price" placeholder="Min" style="width:100%; padding:6px; border:1px solid var(--border-color); border-radius:4px; font-size:0.85rem; background:var(--bg-input); color:var(--text-main);">
+                    <input type="number" id="filter-max-price" placeholder="Max" style="width:100%; padding:6px; border:1px solid var(--border-color); border-radius:4px; font-size:0.85rem; background:var(--bg-input); color:var(--text-main);">
                 </div>
             </div>
         `;
@@ -93,6 +187,7 @@ export function initHistoryMode() {
             filterSortPrice = document.getElementById('filter-sort-price').value;
             filterMinPrice = document.getElementById('filter-min-price').value;
             filterMaxPrice = document.getElementById('filter-max-price').value;
+            renderFilterChips();
             render(appState.state.history);
         };
 
@@ -502,6 +597,8 @@ export function initHistoryMode() {
             selectedIndices.clear();
             isMultiSelectMode = false;
             btnMultiSelect.style.color = '';
+            updateBatchBar();
+            // Note: appState.removeMultipleFromHistory triggers subscribe → re-render automatically
         });
     }
 

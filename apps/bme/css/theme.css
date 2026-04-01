@@ -193,6 +193,7 @@ input:checked+.ios-slider:before {
     cursor: pointer;
     user-select: none;
     line-height: 1;
+    align-items: center;
 }
 
 .unit-switch .unit-opt {
@@ -409,7 +410,8 @@ input:checked+.ios-slider:before {
     gap: 2px;
 }
 
-.date-chip:hover, .time-chip:hover {
+.date-chip:hover,
+.time-chip:hover {
     background: var(--border-color) !important;
     opacity: 0.9;
 }

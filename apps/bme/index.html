@@ -136,17 +136,20 @@
 
         <!-- MODE 3: HISTORY -->
         <section id="history-view" class="view hidden">
-            <div class="history-toolbar">
-                <div class="history-search-wrapper">
-                    <i class="fa-solid fa-search"
-                        style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:0.85rem;"></i>
-                    <input type="text" id="history-search" class="form-input search-history"
-                        placeholder="Cari riwayat..." style="padding-left:36px; font-size:0.9rem;">
+            <div id="history-sticky-wrapper">
+                <div class="history-toolbar">
+                    <div class="history-search-wrapper">
+                        <i class="fa-solid fa-search"
+                            style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:0.85rem;"></i>
+                        <input type="text" id="history-search" class="form-input search-history"
+                            placeholder="Cari riwayat..." style="padding-left:36px; font-size:0.9rem;">
+                    </div>
+                    <button id="btn-multi-select" class="icon-btn" title="Pilih Semua / Beberapa"><i
+                            class="fa-solid fa-check-double"></i></button>
+                    <button id="btn-history-filter" class="icon-btn" title="Filter Riwayat"><i
+                            class="fa-solid fa-filter"></i></button>
                 </div>
-                <button id="btn-multi-select" class="icon-btn" title="Pilih Semua / Beberapa"><i
-                        class="fa-solid fa-check-double"></i></button>
-                <button id="btn-history-filter" class="icon-btn" title="Filter Riwayat"><i
-                        class="fa-solid fa-filter"></i></button>
+                <!-- Filter chips injected here by JS -->
             </div>
             <div id="history-list" class="history-list">
                 <!-- History items will be injected here -->

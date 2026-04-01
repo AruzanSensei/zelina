@@ -456,10 +456,62 @@ small {
     margin-right: calc(-1 * var(--spacing-md));
 }
 
+/* Sticky wrapper: holds toolbar + chips bar together */
+#history-sticky-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--bg-body);
+    border-bottom: 1px solid var(--border-color);
+}
+
 #history-view .history-toolbar {
-    padding: 14px 20px;
-    /* margin-left: var(--spacing-md);
-    margin-right: var(--spacing-md); */
+    padding: 12px 20px 11px 20px;
+    border-bottom: none;
+}
+
+/* Filter chips bar */
+#history-filter-chips {
+    padding: 1px 20px 10px;
+    gap: 6px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+#history-filter-chips::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    background: rgba(245, 166, 35, 0.12);
+    border: 1px solid rgba(245, 166, 35, 0.5);
+    color: var(--tertiary);
+    transition: background 0.15s, border-color 0.15s;
+    outline: none;
+}
+
+.filter-chip:hover {
+    background: rgba(245, 166, 35, 0.22);
+    border-color: var(--tertiary);
+}
+
+.filter-chip .chip-x {
+    font-size: 0.68rem;
+    opacity: 0.7;
+    line-height: 1;
+    border-left: 1px solid rgba(245, 166, 35, 0.4);
+    padding-left: 5px;
+    margin-left: 1px;
 }
 
 /* History list: full-bleed, no outer padding */
@@ -616,10 +668,16 @@ small {
 
 .qty-btn {
     padding: 14px 12px;
-    background: #f0f0f0;
+    background: var(--bg-body);
     border: none;
     cursor: pointer;
     font-weight: bold;
+    color: var(--text-main);
+    transition: background 0.15s;
+}
+
+.qty-btn:hover {
+    background: var(--border-color);
 }
 
 .qty-input.item-qty {
@@ -630,6 +688,8 @@ small {
     width: 35px;
     text-align: center;
     border: none;
+    background: var(--bg-input);
+    color: var(--text-main);
     -moz-appearance: textfield;
     text-decoration: none;
     -moz-text-decoration-style: none;
