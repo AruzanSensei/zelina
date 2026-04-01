@@ -11,6 +11,7 @@ export function initHistoryMode() {
     const batchDeleteBar = document.getElementById('batch-delete-bar');
     const batchCount = document.getElementById('batch-count');
     const btnBatchDelete = document.getElementById('btn-batch-delete');
+    const btnBatchDownload = document.getElementById('btn-batch-download');
 
     // Bottom Sheet Elements
     const detailSheet = document.getElementById('detail-sheet');
@@ -511,8 +512,12 @@ export function initHistoryMode() {
             const topBorder = filteredIdx === 0 ? 'border-top: 1px solid var(--border-color);' : '';
             swipeContainer.style.cssText = `position:relative; overflow:hidden; margin-bottom:0; ${topBorder}`;
 
+            const isChecked = selectedIndices.has(realIndex);
             const checkboxHTML = isMultiSelectMode
-                ? `<input type="checkbox" class="history-checkbox" data-index="${realIndex}" ${selectedIndices.has(realIndex) ? 'checked' : ''} style="margin-right:10px; margin-top:2px; flex-shrink:0;">`
+                ? `<label class="history-checkbox-custom">
+                    <input type="checkbox" class="history-checkbox" data-index="${realIndex}" ${isChecked ? 'checked' : ''}>
+                    <span class="checkmark"></span>
+                   </label>`
                 : '';
 
             swipeContainer.innerHTML = `
@@ -589,6 +594,40 @@ export function initHistoryMode() {
         btnMultiSelect.addEventListener('click', toggleMultiSelect);
     }
 
+    if (btnBatchDownload) {
+        btnBatchDownload.addEventListener('click', async () => {
+            if (selectedIndices.size === 0) return;
+            const selectedEntries = [...selectedIndices].map(i => appState.state.history[i]).filter(Boolean);
+            const count = selectedEntries.length;
+
+            // First-time notification about multiple downloads
+            const NOTIF_KEY = 'bme_batch_dl_notified';
+            if (!localStorage.getItem(NOTIF_KEY)) {
+                const ok = confirm(
+                    `Akan mengunduh ${count} file invoice.\n\n` +
+                    `⚠️ Browser membatasi unduhan dari satu situs secara bersamaan.\n` +
+                    `Jika muncul perintah izin, pilih "Izinkan".\n\n` +
+                    `Lanjutkan?`
+                );
+                if (!ok) return;
+                localStorage.setItem(NOTIF_KEY, '1');
+            } else if (!confirm(`Unduh ${count} file invoice?`)) {
+                return;
+            }
+
+            const defaultMethod = appState.state.settings.defaultDownloadMethod || 'pdf';
+            for (const entry of selectedEntries) {
+                if (defaultMethod === 'pdf') {
+                    printInvoicePDF(entry.items, entry.title);
+                } else {
+                    exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML, entry.items, entry.title, defaultMethod);
+                }
+                // Small delay to avoid browser throttling
+                await new Promise(r => setTimeout(r, 400));
+            }
+        });
+    }
+
     if (btnBatchDelete) {
         btnBatchDelete.addEventListener('click', () => {
             if (selectedIndices.size === 0) return;
@@ -602,7 +641,27 @@ export function initHistoryMode() {
         });
     }
 
-    // Handle checkbox clicks via delegation
+    // Handle item click for multiselect toggle (whole row)
+    container.addEventListener('click', (e) => {
+        if (!isMultiSelectMode) return;
+        const item = e.target.closest('.history-item');
+        if (!item) return;
+        // Don't double-fire if clicking the checkbox label itself
+        if (e.target.closest('.history-checkbox-custom')) return;
+        const idx = parseInt(item.dataset.index);
+        if (selectedIndices.has(idx)) {
+            selectedIndices.delete(idx);
+        } else {
+            selectedIndices.add(idx);
+        }
+        // Update just the checkbox visually without full re-render
+        const cb = item.querySelector('.history-checkbox');
+        if (cb) cb.checked = selectedIndices.has(idx);
+        updateBatchBar();
+        updateFocusState();
+    });
+
+    // Handle native checkbox change (for accessibility)
     container.addEventListener('change', (e) => {
         if (e.target.classList.contains('history-checkbox')) {
             const idx = parseInt(e.target.dataset.index);

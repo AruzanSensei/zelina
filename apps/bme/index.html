@@ -154,12 +154,6 @@
             <div id="history-list" class="history-list">
                 <!-- History items will be injected here -->
             </div>
-            <div id="batch-delete-bar" class="batch-delete-bar hidden">
-                <span id="batch-count">0 dipilih</span>
-                <button id="btn-batch-delete" class="btn btn-sm"
-                    style="background:#ff4d4f; color:white; border:none;"><i class="fa-solid fa-trash"></i>
-                    Hapus</button>
-            </div>
         </section>
 
         <!-- PREVIEW & DOWNLOAD BAR -->
@@ -582,6 +576,19 @@
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script type="module" src="js/app.js?v=1.4"></script>
+    <!-- Batch Action Bar (fixed footer for multiselect) -->
+    <div id="batch-delete-bar" class="batch-delete-bar hidden">
+        <span id="batch-count">0 dipilih</span>
+        <div style="display:flex; gap:8px; align-items:center;">
+            <button id="btn-batch-download" class="btn btn-sm" style="background:#27ae60; color:white; border:none;" title="Unduh semua terpilih">
+                <i class="fa-solid fa-download"></i> Unduh
+            </button>
+            <button id="btn-batch-delete" class="btn btn-sm" style="background:#ff4d4f; color:white; border:none;">
+                <i class="fa-solid fa-trash"></i> Hapus
+            </button>
+        </div>
+    </div>
+
 </body>
 
 </html>
