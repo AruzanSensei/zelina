@@ -590,6 +590,14 @@ export function initHistoryMode() {
         }
     }
 
+    const exitMultiSelect = () => {
+        isMultiSelectMode = false;
+        selectedIndices.clear();
+        if (btnMultiSelect) btnMultiSelect.style.color = '';
+        updateBatchBar();
+        render(appState.state.history);
+    };
+
     if (btnMultiSelect) {
         btnMultiSelect.addEventListener('click', toggleMultiSelect);
     }
@@ -625,6 +633,9 @@ export function initHistoryMode() {
                 // Small delay to avoid browser throttling
                 await new Promise(r => setTimeout(r, 400));
             }
+
+            // Deactivate multiselect after all downloads are done
+            exitMultiSelect();
         });
     }
 
@@ -632,12 +643,9 @@ export function initHistoryMode() {
         btnBatchDelete.addEventListener('click', () => {
             if (selectedIndices.size === 0) return;
             if (!confirm(`Hapus ${selectedIndices.size} riwayat?`)) return;
-            appState.removeMultipleFromHistory([...selectedIndices]);
-            selectedIndices.clear();
-            isMultiSelectMode = false;
-            btnMultiSelect.style.color = '';
-            updateBatchBar();
-            // Note: appState.removeMultipleFromHistory triggers subscribe → re-render automatically
+            const toDelete = [...selectedIndices];
+            appState.removeMultipleFromHistory(toDelete);
+            exitMultiSelect();
         });
     }
 
