@@ -31,7 +31,7 @@ body {
 
 /* Typography */
 h1 {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
     font-weight: 700;
 }
 
@@ -112,11 +112,11 @@ small {
 /* Header Smart UI */
 .app-header {
     background-color: var(--bg-card);
-    padding: var(--spacing-md);
+    padding: 10px var(--spacing-md) 8px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid var(--border-color);
+    /* border-bottom: 1px solid var(--border-color); */
     position: sticky;
     top: 0;
     z-index: 100;
@@ -156,7 +156,7 @@ small {
 .tab-nav {
     display: flex;
     background-color: var(--bg-card);
-    padding: 0 var(--spacing-md) var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md) var(--spacing-sm);
     gap: var(--spacing-sm);
     border-bottom: 2px solid var(--border-color);
     /* Thicker base */
@@ -164,12 +164,12 @@ small {
 
 .tab-btn {
     flex: 1;
-    padding: 12px 10px;
+    padding: 10px 8px;
     background: var(--bg-body);
     border: 2px solid var(--border-color);
     /* Thicker stroke */
     border-radius: var(--radius-sm);
-    font-size: 0.95rem;
+    font-size: 0.8rem;
     color: var(--text-muted);
     cursor: pointer;
     transition: all 0.3s ease;
@@ -1426,6 +1426,10 @@ small {
     margin-bottom: var(--spacing-lg);
 }
 
+.modal-header-history {
+    margin-bottom: 12px;
+}
+
 /* Clean Close Icon */
 .close-modal,
 .close-detail,
@@ -2069,7 +2073,8 @@ input:checked+.ios-slider:before {
 /* Controls — single row: target + mode switcher */
 .finance-controls {
     display: flex;
-    align-items: flex-end; /* Align to bottom for label balance */
+    align-items: flex-end;
+    /* Align to bottom for label balance */
     justify-content: space-between;
     gap: 12px;
     margin-bottom: 16px;
@@ -2093,9 +2098,11 @@ input:checked+.ios-slider:before {
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
-    padding: 8px 12px; /* Standardize with other inputs slightly */
+    padding: 8px 12px;
+    /* Standardize with other inputs slightly */
     transition: all 0.2s;
-    width: fit-content; /* Ensure wrap is as narrow as content */
+    width: fit-content;
+    /* Ensure wrap is as narrow as content */
 }
 
 .finance-target-input-wrap:focus-within {
@@ -2117,8 +2124,10 @@ input:checked+.ios-slider:before {
     color: var(--text-main);
     font-size: 0.9rem;
     font-weight: 700;
-    width: auto; /* Allow sizing by JS */
-    min-width: 60px; /* Minimum reasonable width */
+    width: auto;
+    /* Allow sizing by JS */
+    min-width: 60px;
+    /* Minimum reasonable width */
 }
 
 /* Segmented group (reuse pattern) */
@@ -2351,4 +2360,3 @@ input:checked+.ios-slider:before {
     border-radius: 0;
     margin-bottom: 0;
 }
-

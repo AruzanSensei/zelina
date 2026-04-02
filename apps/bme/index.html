@@ -501,23 +501,22 @@
     <!-- Bottom Sheet for History Details -->
     <div id="detail-sheet" class="modal hidden">
         <div class="modal-content">
-            <div class="modal-header" style="align-items: flex-start;">
-                <h2 id="detail-title" style="flex:1; min-width:0; line-height:1.2; padding-top:4px;">Detail Invoice</h2>
-                <div style="display:flex; gap:8px; margin-left:auto; margin-right:8px; align-items: flex-start;">
+            <div class="modal-header modal-header-history" style="align-items: flex-start; flex-wrap: wrap; gap: 8px;">
+                <h2 id="detail-title" style="flex:1 1 auto; line-height:1.2; padding-top:4px; word-break: break-word; min-width: 60%;">Detail Invoice</h2>
+                <div style="display:flex; gap:8px; margin-left:auto; align-items: flex-start;">
                     <button id="btn-detail-download" class="btn btn-action-green"
-                        style="padding:6px 10px; font-size:0.85rem; border-radius:8px;" title="Unduh">
+                        style="padding:10px 10px; font-size:0.85rem; border-radius:10px;" title="Unduh">
                         <i class="fa-solid fa-download"></i>
                     </button>
                     <button id="btn-detail-edit-toggle" class="btn btn-action-orange"
-                        style="padding:6px 10px; font-size:0.85rem; border-radius:8px;" title="Edit">
+                        style="padding:10px 10px; font-size:0.85rem; border-radius:10px;" title="Edit">
                         <i class="fa-solid fa-pen-to-square"></i>
                     </button>
                     <button id="btn-detail-delete" class="btn btn-action-red"
-                        style="padding:6px 10px; font-size:0.85rem; border-radius:8px;" title="Hapus">
+                        style="padding:10px 10px; font-size:0.85rem; border-radius:10px;" title="Hapus">
                         <i class="fa-solid fa-trash"></i>
                     </button>
                 </div>
-                <button class="close-detail"><i class="fa-solid fa-times"></i></button>
             </div>
             <div id="detail-content" class="modal-body">
                 <!-- Content injected via JS -->

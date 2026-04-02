@@ -263,7 +263,7 @@ input:checked+.ios-slider:before {
 .detail-item-card {
     background: var(--bg-transparent);
     border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-xs);
     padding: 12px 14px;
     margin-bottom: 8px;
     border: 1px solid var(--border-color);

@@ -17,7 +17,6 @@ export function initHistoryMode() {
     const detailSheet = document.getElementById('detail-sheet');
     const detailContent = document.getElementById('detail-content');
     const detailTitle = document.getElementById('detail-title');
-    const btnCloseDetail = document.querySelector('.close-detail');
 
     // Action buttons in detail view
     const btnDetailDownload = document.getElementById('btn-detail-download');
@@ -777,7 +776,7 @@ export function initHistoryMode() {
     // ===================================
     const dpModal = document.getElementById('custom-date-picker');
     const tpModal = document.getElementById('custom-time-picker');
-    
+
     let dpCallback = null, tpCallback = null;
     let dpCurrentViewDate = new Date();
     let dpSelectedDate = new Date();
@@ -786,34 +785,34 @@ export function initHistoryMode() {
         const dpInput = document.getElementById('dp-input');
         const dpMonthYear = document.getElementById('dp-month-year');
         const dpDays = document.getElementById('dp-days');
-        
+
         const m = dpCurrentViewDate.getMonth();
         const y = dpCurrentViewDate.getFullYear();
-        
+
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Ags", "Sep", "Okt", "Nov", "Des"];
         dpMonthYear.textContent = `${monthNames[m]} ${y}`;
-        
+
         const firstDay = new Date(y, m, 1).getDay();
         const daysInMonth = new Date(y, m + 1, 0).getDate();
         const daysInPrevMonth = new Date(y, m, 0).getDate();
-        
+
         dpDays.innerHTML = '';
-        
+
         // Prev month faded
-        for(let i = firstDay - 1; i >= 0; i--) {
+        for (let i = firstDay - 1; i >= 0; i--) {
             const d = document.createElement('div');
             d.className = 'dp-day faded';
             d.textContent = daysInPrevMonth - i;
             dpDays.appendChild(d);
         }
-        
+
         // Current month
         const today = new Date();
-        for(let i = 1; i <= daysInMonth; i++) {
+        for (let i = 1; i <= daysInMonth; i++) {
             const d = document.createElement('div');
             d.className = 'dp-day';
             d.textContent = i;
-            
+
             // Highlight today
             if (today.getDate() === i && today.getMonth() === m && today.getFullYear() === y) {
                 d.classList.add('today');
@@ -822,21 +821,21 @@ export function initHistoryMode() {
             if (dpSelectedDate && dpSelectedDate.getDate() === i && dpSelectedDate.getMonth() === m && dpSelectedDate.getFullYear() === y) {
                 d.classList.add('selected');
             }
-            
+
             d.addEventListener('click', () => {
                 dpSelectedDate = new Date(y, m, i);
-                const val = `${String(i).padStart(2,'0')}/${String(m+1).padStart(2,'0')}/${y}`;
+                const val = `${String(i).padStart(2, '0')}/${String(m + 1).padStart(2, '0')}/${y}`;
                 dpInput.value = val;
-                if(dpCallback) dpCallback(val);
+                if (dpCallback) dpCallback(val);
                 dpModal.classList.remove('active');
             });
             dpDays.appendChild(d);
         }
-        
+
         // Next month faded
         const totalCells = firstDay + daysInMonth;
         const remaining = (7 - (totalCells % 7)) % 7;
-        for(let i = 1; i <= remaining; i++) {
+        for (let i = 1; i <= remaining; i++) {
             const d = document.createElement('div');
             d.className = 'dp-day faded';
             d.textContent = i;
@@ -844,7 +843,7 @@ export function initHistoryMode() {
         }
     };
 
-    if(dpModal) {
+    if (dpModal) {
         document.getElementById('dp-btn-prev').addEventListener('click', () => {
             dpCurrentViewDate.setMonth(dpCurrentViewDate.getMonth() - 1);
             renderDP();
@@ -856,16 +855,16 @@ export function initHistoryMode() {
         document.getElementById('dp-btn-today').addEventListener('click', () => {
             const t = new Date();
             dpSelectedDate = new Date(t.getFullYear(), t.getMonth(), t.getDate());
-            const val = `${String(t.getDate()).padStart(2,'0')}/${String(t.getMonth()+1).padStart(2,'0')}/${t.getFullYear()}`;
+            const val = `${String(t.getDate()).padStart(2, '0')}/${String(t.getMonth() + 1).padStart(2, '0')}/${t.getFullYear()}`;
             document.getElementById('dp-input').value = val;
-            if(dpCallback) dpCallback(val);
+            if (dpCallback) dpCallback(val);
             dpModal.classList.remove('active');
         });
         document.getElementById('dp-input').addEventListener('input', (e) => {
             const parts = e.target.value.split('/');
-            if(parts.length === 3 && parts[2].length === 4) {
-                const d = parseInt(parts[0]), m = parseInt(parts[1])-1, y = parseInt(parts[2]);
-                if(!isNaN(d) && !isNaN(m) && !isNaN(y) && d>0 && m>=0 && m<12 && d<=31) {
+            if (parts.length === 3 && parts[2].length === 4) {
+                const d = parseInt(parts[0]), m = parseInt(parts[1]) - 1, y = parseInt(parts[2]);
+                if (!isNaN(d) && !isNaN(m) && !isNaN(y) && d > 0 && m >= 0 && m < 12 && d <= 31) {
                     dpSelectedDate = new Date(y, m, d);
                     dpCurrentViewDate = new Date(y, m, 1);
                     renderDP();
@@ -874,34 +873,34 @@ export function initHistoryMode() {
         });
         document.getElementById('dp-input').addEventListener('blur', (e) => {
             const parts = e.target.value.split('/');
-            if(parts.length === 3 && parts[2].length === 4 && dpCallback) {
+            if (parts.length === 3 && parts[2].length === 4 && dpCallback) {
                 dpCallback(e.target.value);
             }
         });
-        dpModal.addEventListener('click', (e) => { if(e.target === dpModal) dpModal.classList.remove('active'); });
+        dpModal.addEventListener('click', (e) => { if (e.target === dpModal) dpModal.classList.remove('active'); });
     }
 
-    if(tpModal) {
+    if (tpModal) {
         document.querySelector('.close-timepicker').addEventListener('click', () => {
             tpModal.classList.remove('active');
         });
         document.getElementById('tp-btn-save').addEventListener('click', () => {
             let h = document.getElementById('tp-hour').value;
             let m = document.getElementById('tp-minute').value;
-            if(!h) h = '00'; if(!m) m = '00';
-            const val = `${h.padStart(2,'0')}.${m.padStart(2,'0')}`;
-            if(tpCallback) tpCallback(val);
+            if (!h) h = '00'; if (!m) m = '00';
+            const val = `${h.padStart(2, '0')}.${m.padStart(2, '0')}`;
+            if (tpCallback) tpCallback(val);
             tpModal.classList.remove('active');
         });
-        tpModal.addEventListener('click', (e) => { if(e.target === tpModal) tpModal.classList.remove('active'); });
+        tpModal.addEventListener('click', (e) => { if (e.target === tpModal) tpModal.classList.remove('active'); });
     }
 
     const openDatePicker = (currentStr, callback) => {
         dpCallback = callback;
-        if(currentStr) {
+        if (currentStr) {
             const parts = currentStr.split('/');
-            if(parts.length === 3) {
-                const d = parseInt(parts[0]), m = parseInt(parts[1])-1, y = parseInt(parts[2]);
+            if (parts.length === 3) {
+                const d = parseInt(parts[0]), m = parseInt(parts[1]) - 1, y = parseInt(parts[2]);
                 dpSelectedDate = new Date(y, m, d);
                 dpCurrentViewDate = new Date(y, m, 1);
                 document.getElementById('dp-input').value = currentStr;
@@ -917,9 +916,9 @@ export function initHistoryMode() {
 
     const openTimePicker = (currentStr, callback) => {
         tpCallback = callback;
-        if(currentStr) {
+        if (currentStr) {
             const parts = currentStr.split('.');
-            if(parts.length === 2) {
+            if (parts.length === 2) {
                 document.getElementById('tp-hour').value = parts[0];
                 document.getElementById('tp-minute').value = parts[1];
             }
@@ -963,8 +962,8 @@ export function initHistoryMode() {
         infoBar.className = 'detail-info-bar';
         infoBar.innerHTML = `
             <div class="detail-date-time">
-                <span class="date-chip" id="detail-date-chip" style="cursor:pointer; display:inline-flex; align-items:center; padding:4px 10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:12px; font-weight:600; font-size:0.85rem; transition: background 0.2s;">${datePart}</span>
-                <span class="time-chip" id="detail-time-chip" style="cursor:pointer; display:inline-flex; align-items:center; padding:4px 10px; background:var(--bg-card); border:1px solid var(--border-color); border-radius:12px; font-weight:600; font-size:0.85rem; transition: background 0.2s;">${timePart}</span>
+                <span class="date-chip" id="detail-date-chip">${datePart}</span>
+                <span class="time-chip" id="detail-time-chip">${timePart}</span>
             </div>
             <div class="detail-total">${totalHTML}</div>
         `;
@@ -1035,7 +1034,7 @@ export function initHistoryMode() {
                         <span class="d-item-name">${item.name || 'Tanpa Nama'}</span>
                         <span class="item-meta">${item.qty} ${unit} • <span class="item-price-tag"><sup style="font-size:0.6em;opacity:0.7;">Rp</sup>${priceFormatted}</span></span>
                     </div>
-                    ${item.note ? `<div class="item-note"><strong>Note:</strong> ${item.note}</div>` : ''}
+                    ${item.note ? `<div class="item-note">${item.note}</div>` : ''}
                 `;
             }
             detailContent.appendChild(card);
@@ -1266,7 +1265,12 @@ export function initHistoryMode() {
         });
     }
 
-    btnCloseDetail.addEventListener('click', closeDetail);
+    // Close modal when clicking outside
+    detailSheet.addEventListener('click', (e) => {
+        if (e.target === detailSheet) {
+            closeDetail();
+        }
+    });
 
     // ===================================
     // EVENTS
