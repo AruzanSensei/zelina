@@ -55,9 +55,24 @@ export function initFinanceMode() {
         targetInput.type = 'text';
         targetInput.inputMode = 'numeric';
 
+        const resizeInput = () => {
+            // Measure content width using a temporary span
+            const span = document.createElement('span');
+            span.style.visibility = 'hidden';
+            span.style.position = 'absolute';
+            span.style.whiteSpace = 'pre';
+            span.style.font = window.getComputedStyle(targetInput).font;
+            span.textContent = targetInput.value || targetInput.placeholder;
+            document.body.appendChild(span);
+            // Add a little extra padding for the cursor and better look
+            targetInput.style.width = (span.offsetWidth + 8) + 'px';
+            document.body.removeChild(span);
+        };
+
         targetInput.addEventListener('input', () => {
             const raw = targetInput.value.replace(/\D/g, '');
             targetInput.value = formatNumberStr(raw);
+            resizeInput();
         });
 
         targetInput.addEventListener('change', () => {
@@ -65,6 +80,9 @@ export function initFinanceMode() {
             appState.updateSettings({ monthlyTarget: raw });
             render(appState.state.history);
         });
+
+        // Initialize size
+        resizeInput();
     };
 
     // Group history by year & month
