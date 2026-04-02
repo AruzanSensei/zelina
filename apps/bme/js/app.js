@@ -5,6 +5,7 @@ import { appState } from './state.js';
 import { initManualMode } from './modes/manual.js';
 import { initAIMode } from './modes/ai.js';
 import { initHistoryMode } from './modes/history.js';
+import { initFinanceMode } from './modes/finance.js';
 import { initSettings } from './settings/manager.js';
 import { initPDFGenerator } from './pdf/generator.js';
 
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSafely('ManualMode', initManualMode);
     initSafely('AIMode', initAIMode);
     initSafely('HistoryMode', initHistoryMode);
+    initSafely('FinanceMode', initFinanceMode);
     initSafely('Settings', initSettings);
     initSafely('PDFGenerator', initPDFGenerator);
 
@@ -50,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             appState.state.currentMode = target; // Simplified, not persisting mode for now
 
             // Preview Section Visibility
-            if (target === 'history') {
+            if (target === 'history' || target === 'finance') {
                 previewSection.style.display = 'none';
             } else {
                 previewSection.style.display = 'block';
@@ -91,8 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Header Logic
     if (header) {
         const applyHeaderMode = (mode) => {
-            if (mode === 'history') {
-                // In history mode: non-sticky, can be scrolled past
+            if (mode === 'history' || mode === 'finance') {
+                // In history/finance mode: non-sticky, can be scrolled past
                 header.style.position = 'relative';
                 header.style.top = '';
                 header.classList.remove('hide');
@@ -118,8 +120,9 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('scroll', () => {
             const currentScrollY = window.scrollY;
 
-            if (appState.state.currentMode === 'history') {
-                // In history mode: reveal if within 200px from top
+            const curMode = appState.state.currentMode;
+            if (curMode === 'history' || curMode === 'finance') {
+                // In history/finance mode: reveal if within 100px from top
                 if (currentScrollY <= 100) {
                     header.style.position = 'sticky';
                     header.style.top = '0';

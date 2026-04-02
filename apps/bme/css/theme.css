@@ -30,6 +30,10 @@
     --spacing-sm: 8px;
     --spacing-md: 16px;
     --spacing-lg: 24px;
+
+    /* Finance Mode */
+    --finance-green: #27ae60;
+    --finance-yellow: #f39c12;
 }
 
 [data-theme="dark"] {
@@ -47,6 +51,9 @@
 
     --invoice-bg: #1A237E;
     --letter-bg: #4A148C;
+
+    --finance-green: #2ecc71;
+    --finance-yellow: #f1c40f;
 }
 
 /* Toggle Group Enhancements */

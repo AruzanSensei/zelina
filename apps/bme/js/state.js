@@ -25,6 +25,7 @@ const DEFAULTS = {
         defaultDownloadMethod: 'pdf',
         downloadAndSave: false,
         titleRequired: true,
+        monthlyTarget: 3800000,
         fileNameFormat: {
             invoice: 'Invoice-{judul}',
             suratJalan: 'Surat Jalan-{judul}'

@@ -439,6 +439,13 @@ small {
     font-weight: 600;
 }
 
+.tab-btn[data-tab="finance"].active {
+    background: var(--bg-card);
+    border-color: var(--finance-green);
+    color: var(--finance-green);
+    font-weight: 600;
+}
+
 /* Layout */
 #app-content {
     flex: 1;
@@ -915,7 +922,7 @@ small {
     opacity: 0.35;
 }
 
-.history-checkbox-custom input:checked + .checkmark {
+.history-checkbox-custom input:checked+.checkmark {
     background: var(--tertiary);
     border-color: var(--tertiary);
     opacity: 1;
@@ -934,7 +941,7 @@ small {
     margin-top: -2px;
 }
 
-.history-checkbox-custom input:checked + .checkmark::after {
+.history-checkbox-custom input:checked+.checkmark::after {
     transform: rotate(45deg) scale(1);
 }
 
@@ -2052,3 +2059,298 @@ input:checked+.ios-slider {
 input:checked+.ios-slider:before {
     transform: translateX(20px);
 }
+
+/* =========================================
+   FINANCE MODE — Keuangan
+   ========================================= */
+
+/* Controls — single row: target + mode switcher */
+.finance-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Fallback for small screens */
+}
+
+.finance-target-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1; /* Allow to grow */
+    min-width: 300px; /* As requested */
+    max-width: 100%;
+}
+
+.finance-target-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.finance-target-input-wrap {
+    display: flex;
+    align-items: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 6px 12px;
+    flex: 1;
+    min-width: 0;
+    transition: border-color 0.2s;
+}
+
+.finance-target-input-wrap:focus-within {
+    border-color: var(--primary);
+}
+
+.finance-target-prefix {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-right: 6px;
+}
+
+.finance-target-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text-main);
+    font-size: 0.9rem;
+    font-weight: 600;
+    width: 100%;
+}
+
+/* Segmented group (reuse pattern) */
+.segmented-group {
+    display: inline-flex;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.segmented-btn {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.segmented-btn.active {
+    background: var(--finance-green);
+    color: white;
+    border-radius: var(--radius-sm);
+}
+
+/* Summary card */
+.finance-summary-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 20px 16px;
+    text-align: center;
+    margin-bottom: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+}
+
+.finance-summary-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--finance-green), var(--finance-yellow));
+}
+
+.finance-summary-label {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin: 0 0 6px;
+    font-weight: 500;
+}
+
+.finance-summary-amount {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px;
+}
+
+.finance-rp {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--finance-green);
+    opacity: 0.7;
+}
+
+#finance-amount-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--finance-green);
+    letter-spacing: -0.02em;
+}
+
+.finance-summary-sub {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin: 6px 0 0;
+}
+
+/* Chart card */
+.finance-chart-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.finance-chart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.finance-chart-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.finance-nav-btn {
+    border: none;
+    background: var(--bg-input);
+    color: var(--text-muted);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: background 0.15s;
+}
+
+.finance-nav-btn:hover {
+    background: var(--border-color);
+}
+
+/* Bar chart — CSS custom properties for layout math */
+.finance-chart {
+    --bar-label-w: 32px;
+    --bar-gap: 8px;
+    --bar-value-w: 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+}
+
+.finance-bar-row {
+    display: flex;
+    align-items: center;
+    gap: var(--bar-gap);
+}
+
+.finance-bar-row--active .finance-bar-label {
+    color: var(--text-main);
+    font-weight: 700;
+}
+
+.finance-bar-label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    width: var(--bar-label-w);
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.finance-bar-track {
+    flex: 1;
+    height: 20px;
+    background: var(--bg-input);
+    border-radius: 4px;
+    position: relative;
+    overflow: visible;
+}
+
+.finance-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    min-width: 0;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.finance-bar-value {
+    font-size: 0.72rem;
+    font-weight: 700;
+    width: var(--bar-value-w);
+    text-align: right;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+/* Single vertical target line spanning the entire chart */
+.finance-chart-target-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--text-main);
+    opacity: 0.25;
+    border-radius: 1px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* Finance mini history — reuses .history-item from main history */
+.finance-history-section {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 0;
+    margin-bottom: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.finance-history-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.finance-sort-select {
+    border: 1px solid var(--border-color);
+    background: var(--bg-input);
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    outline: none;
+}
+
+#finance-history-list .history-item {
+    border-radius: 0;
+    margin-bottom: 0;
+}
+

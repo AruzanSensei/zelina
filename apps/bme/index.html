@@ -55,6 +55,7 @@
         <button class="tab-btn" data-tab="ai">AI <i class="fa-solid fa-lock"
                 style="font-size: 0.7em; opacity: 0.5;"></i></button>
         <button class="tab-btn" data-tab="history">History</button>
+        <button class="tab-btn" data-tab="finance">Finance</button>
     </nav>
 
     <!-- Main Content Area -->
@@ -153,6 +154,70 @@
             </div>
             <div id="history-list" class="history-list">
                 <!-- History items will be injected here -->
+            </div>
+        </section>
+
+        <!-- MODE 4: KEUANGAN -->
+        <section id="finance-view" class="view hidden">
+            <!-- Target & Mode Controls — single row -->
+            <div class="finance-controls">
+                <div class="finance-target-row">
+                    <label class="finance-target-label">Target Bulanan</label>
+                    <div class="finance-target-input-wrap">
+                        <span class="finance-target-prefix">Rp</span>
+                        <input type="text" id="finance-target-input" class="finance-target-input"
+                            placeholder="3.800.000" inputmode="numeric">
+                    </div>
+                </div>
+                <div class="segmented-group" id="finance-mode-switcher">
+                    <button class="segmented-btn active" data-mode="bulan">Bulan</button>
+                    <button class="segmented-btn" data-mode="tahun">Tahun</button>
+                    <button class="segmented-btn" data-mode="semua">Semua</button>
+                </div>
+            </div>
+
+            <!-- Pemasukan Summary Card -->
+            <div class="finance-summary-card">
+                <p class="finance-summary-label" id="finance-summary-label">Pemasukan bulan ini</p>
+                <div class="finance-summary-amount">
+                    <span class="finance-rp">Rp.</span>
+                    <span id="finance-amount-value">0</span>
+                </div>
+                <p class="finance-summary-sub" id="finance-summary-sub"></p>
+            </div>
+
+            <!-- Bar Chart: Bulanan -->
+            <div class="finance-chart-card" id="finance-monthly-card">
+                <div class="finance-chart-header">
+                    <span class="finance-chart-title" id="finance-chart-year">2026</span>
+                    <div style="display:flex; gap:4px;">
+                        <button class="finance-nav-btn" id="finance-year-prev"><i
+                                class="fa-solid fa-chevron-left"></i></button>
+                        <button class="finance-nav-btn" id="finance-year-next"><i
+                                class="fa-solid fa-chevron-right"></i></button>
+                    </div>
+                </div>
+                <div class="finance-chart" id="finance-monthly-chart"></div>
+            </div>
+
+            <!-- Bar Chart: Tahunan -->
+            <div class="finance-chart-card" id="finance-yearly-card">
+                <div class="finance-chart-header">
+                    <span class="finance-chart-title">Tahunan</span>
+                </div>
+                <div class="finance-chart" id="finance-yearly-chart"></div>
+            </div>
+
+            <!-- Mini History -->
+            <div class="finance-history-section">
+                <div class="finance-history-header">
+                    <span class="finance-chart-title">History</span>
+                    <select id="finance-history-sort" class="finance-sort-select">
+                        <option value="terbaru">Terbaru</option>
+                        <option value="terlama">Terlama</option>
+                    </select>
+                </div>
+                <div id="finance-history-list"></div>
             </div>
         </section>
 
@@ -580,7 +645,8 @@
     <div id="batch-delete-bar" class="batch-delete-bar hidden">
         <span id="batch-count">0 dipilih</span>
         <div style="display:flex; gap:8px; align-items:center;">
-            <button id="btn-batch-download" class="btn btn-sm" style="background:#27ae60; color:white; border:none;" title="Unduh semua terpilih">
+            <button id="btn-batch-download" class="btn btn-sm" style="background:#27ae60; color:white; border:none;"
+                title="Unduh semua terpilih">
                 <i class="fa-solid fa-download"></i> Unduh
             </button>
             <button id="btn-batch-delete" class="btn btn-sm" style="background:#ff4d4f; color:white; border:none;">
