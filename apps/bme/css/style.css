@@ -1611,7 +1611,7 @@ details[open]>summary.setting-item::after {
     position: relative;
     overflow: hidden;
     /* Hide actions until swiped */
-    border-radius: var(--radius-sm);
+    /* border-radius: var(--radius-sm); */
     margin-bottom: var(--spacing-sm);
 }
 

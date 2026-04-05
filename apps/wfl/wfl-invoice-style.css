@@ -1,0 +1,391 @@
+:root {
+    --font-family: "Montserrat", sans-serif;
+
+    --black: 900;
+    --extrabold: 800;
+    --bold: 700;
+    --semibold: 600;
+    --medium: 500;
+    --regular: 400;
+    --light: 300;
+    --extralight: 200;
+    --thin: 100;
+
+    --text-color: #1D1D1D;
+}
+
+* {
+    font-family: var(--font-family);
+    font-weight: var(--font-regular);
+
+    position: absolute;
+}
+
+
+.main-title {
+    font-size: 5em;
+    font-weight: var(--black);
+    left: 50%;
+    top: 160%;
+}
+
+
+.date-label {
+    font-size: 1.083533em;
+    font-family: "Montserrat", sans-serif;
+
+    font-weight: 800;
+}
+
+.category-label {
+    font-size: 1.083533em;
+    font-weight: var(--extrabold);
+    left: 20%;
+    top: 242%;
+}
+
+
+
+.penanggung-jawab {
+    font-size: 1.083533em;
+    font-weight: var(--extrabold);
+    left: 70%;
+    top: 78%;
+}
+
+
+
+.instagram-label {
+    font-size: 1.083533em;
+    font-weight: var(--extrabold);
+    left: 8%;
+    top: 959%;
+}
+
+.whatsapp-label {
+    font-size: 1.083533em;
+    font-weight: var(--extrabold);
+    left: 80%;
+    top: 959%;
+}
+
+.email-label {}
+
+.location-label {
+    font-size: 1.083533em;
+    font-weight: var(--extrabold);
+    left: 20%;
+    top: 242%;
+}
+
+
+
+.pdf24_ sup {
+    vertical-align: baseline;
+    position: relative;
+    top: -0.4em;
+}
+
+.pdf24_ sub {
+    vertical-align: baseline;
+    position: relative;
+    top: 0.4em;
+}
+
+.pdf24_ a:link {
+    text-decoration: none;
+}
+
+.pdf24_ a:visited {
+    text-decoration: none;
+}
+
+@media screen and (min-device-pixel-ratio:0),
+(-webkit-min-device-pixel-ratio:0),
+(min--moz-device-pixel-ratio: 0) {
+    .pdf24_view {
+        font-size: 10em;
+        transform: scale(0.1);
+        -moz-transform: scale(0.1);
+        -webkit-transform: scale(0.1);
+        -moz-transform-origin: top left;
+        -webkit-transform-origin: top left;
+    }
+}
+
+
+.pdf24_ie {
+    font-size: 1pt;
+}
+
+.pdf24_ie body {
+    font-size: 12em;
+}
+
+@media print {
+    .pdf24_view {
+        font-size: 1em;
+        transform: scale(1);
+    }
+}
+
+.pdf24_grlink {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1000000;
+}
+
+.el-abs {
+    position: absolute;
+    white-space: nowrap;
+    font-family: var(--font-family);
+}
+
+.page-frame {
+    font-size: 1em;
+    line-height: 0.0em;
+    width: 49.58333em;
+    height: 70.16666em;
+    border-style: none;
+    display: block;
+    margin: 0em;
+}
+
+@supports(-ms-ime-align:auto) {
+    .page-frame {
+        overflow: hidden;
+    }
+}
+
+.page-relative {
+    position: relative;
+}
+
+.page-bg-img {
+    position: absolute;
+    pointer-events: none;
+    clip: rect(-0.0625em, 49.66667em, 70.20834em, -0.041667em);
+    width: 100%;
+}
+
+.page-content {
+    position: relative;
+    width: 49.58333em;
+}
+
+.page-height {
+    height: 7.016666em;
+}
+
+.pdf24_ie .page-height {
+    height: 70.16666em;
+}
+
+@font-face {
+    font-family: "Montserrat", sans-serif;
+    src: url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap");
+    font-weight: 800;
+}
+
+.text-invoice-title {
+    font-size: 5.089418em;
+    font-family: "Montserrat", sans-serif;
+
+    font-weight: 800;
+}
+
+.line-height-md {
+    line-height: 1.379em;
+}
+
+.ls-tight {
+    letter-spacing: -0.0251em;
+}
+
+.pdf24_ie .ls-tight {
+    letter-spacing: -2.0418px;
+}
+
+.text-date-label {
+    font-size: 1.000377em;
+    font-family: "Montserrat", sans-serif;
+
+    font-weight: 800;
+}
+
+.ls-wide {
+    letter-spacing: 0.025em;
+}
+
+.pdf24_ie .ls-wide {
+    letter-spacing: 0.4002px;
+}
+
+.text-date-value {
+    font-size: 0.999752em;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
+}
+
+.ls-light {
+    letter-spacing: 0.0248em;
+}
+
+.pdf24_ie .ls-light {
+    letter-spacing: 0.3968px;
+}
+
+.text-section-title {
+    font-size: 1.250471em;
+    font-family: "Montserrat", sans-serif;
+
+    font-weight: 800;
+}
+
+.text-field-label {
+    font-size: 1.083533em;
+    font-family: "Montserrat", sans-serif;
+
+    font-weight: 800;
+}
+
+.ls-normal {
+    letter-spacing: 0.0249em;
+}
+
+.pdf24_ie .ls-normal {
+    letter-spacing: 0.432px;
+}
+
+.ls-none {
+    letter-spacing: 0em;
+}
+
+.pdf24_ie .ls-none {
+    letter-spacing: 0px;
+}
+
+
+.text-field-value {
+    font-size: 1.000377em;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
+
+}
+
+.line-height-sm {
+    line-height: 1.117188em;
+}
+
+
+.text-table-header {
+    font-size: 1.083533em;
+    font-family: "PGOLJB+Aileron Bold";
+
+}
+
+.line-height-xs {
+    line-height: 1.2em;
+}
+
+.text-table-cell {
+    font-size: 0.833439em;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
+}
+
+.text-summary-label {
+    font-size: 0.999752em;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 800;
+
+}
+
+.text-summary-value {
+    font-size: 0.999752em;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 800;
+
+}
+
+.ls-wider {
+    letter-spacing: 0.0247em;
+}
+
+.pdf24_ie .ls-wider {
+    letter-spacing: 0.3958px;
+}
+
+.text-note {
+    font-size: 0.833439em;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 800;
+    color: #000000;
+}
+
+.ls-neg-tiny {
+    letter-spacing: -0.0029em;
+}
+
+.pdf24_ie .ls-neg-tiny {
+    letter-spacing: -0.0385px;
+}
+
+.ls-neg-small {
+    letter-spacing: -0.009em;
+}
+
+.pdf24_ie .ls-neg-small {
+    letter-spacing: -0.1199px;
+}
+
+.ls-neg-micro {
+    letter-spacing: -0.0039em;
+}
+
+.pdf24_ie .ls-neg-micro {
+    letter-spacing: -0.0516px;
+}
+
+.text-payment-label {
+    font-size: 1.000377em;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 800;
+
+}
+
+.text-bank-info {
+    font-size: 1.000377em;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 800;
+    color: #000000;
+}
+
+.text-footer {
+    font-size: 0.916595em;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 400;
+    color: #FFFFFF;
+}
+
+.ls-near-zero {
+    letter-spacing: -0.0001em;
+}
+
+.pdf24_ie .ls-near-zero {
+    letter-spacing: -0.0019px;
+}
+
+.ls-micro-neg {
+    letter-spacing: -0.0002em;
+}
+
+.pdf24_ie .ls-micro-neg {
+    letter-spacing: -0.0023px;
+}
+
+body>div {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) !important;
+    margin: 20px auto !important;
+}
