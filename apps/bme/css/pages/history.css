@@ -1,0 +1,609 @@
+/**
+ * pages/history.css — History Mode
+ * List, swipe actions, multiselect checkbox, age badges,
+ * context menu, filter menu, batch action bar, detail bottom sheet.
+ */
+
+/* ============================================
+   STICKY HEADER WRAPPER
+   ============================================ */
+#history-sticky-wrapper {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--bg-body);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* ============================================
+   HISTORY TOOLBAR
+   Merged from style.css + former theme.css
+   ============================================ */
+.history-toolbar {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: -16px;
+}
+
+#history-view .history-toolbar {
+    padding: 12px 20px 11px 20px;
+    border-bottom: none;
+}
+
+.history-search-wrapper {
+    flex: 1;
+    position: relative;
+}
+
+/* ============================================
+   FILTER CHIPS BAR
+   ============================================ */
+#history-filter-chips {
+    padding: 1px 20px 10px;
+    gap: 6px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+#history-filter-chips::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    background: rgba(245, 166, 35, 0.12);
+    border: 1px solid rgba(245, 166, 35, 0.5);
+    color: var(--tertiary);
+    transition: background 0.15s, border-color 0.15s;
+    outline: none;
+}
+
+.filter-chip:hover {
+    background: rgba(245, 166, 35, 0.22);
+    border-color: var(--tertiary);
+}
+
+.filter-chip .chip-x {
+    font-size: 0.68rem;
+    opacity: 0.7;
+    line-height: 1;
+    border-left: 1px solid rgba(245, 166, 35, 0.4);
+    padding-left: 5px;
+    margin-left: 1px;
+}
+
+/* ============================================
+   FILTER MENU (Notion-like dropdown)
+   ============================================ */
+#history-filter-menu {
+    position: fixed;
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    z-index: 200;
+    min-width: 220px;
+}
+
+#history-filter-menu .filter-section {
+    margin-bottom: 15px;
+}
+
+#history-filter-menu .filter-section:last-child {
+    margin-bottom: 0;
+}
+
+#history-filter-menu .filter-label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+#history-filter-menu select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: var(--bg-input);
+    color: var(--text-main);
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   HISTORY LIST
+   ============================================ */
+.history-list {
+    overflow: hidden;
+}
+
+/* Focus dimming for context menu and multiselect */
+.history-list.is-focused .item-swipe-container,
+.history-list:hover .item-swipe-container {
+    transition: opacity 0.2s ease;
+}
+
+.history-list.is-focused .item-swipe-container:not(.focused):not(:hover),
+.history-list:hover .item-swipe-container:not(:hover) {
+    opacity: 0.7;
+}
+
+/* ============================================
+   HISTORY ITEM
+   ============================================ */
+.history-item {
+    background: var(--bg-card);
+    padding: 11px 20px;
+    border-radius: 0;
+    margin-bottom: 0;
+    display: block;
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    transition: background 0.15s ease;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.history-item.context-active {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="dark"] .history-item.context-active {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.history-info h4 {
+    margin-bottom: 4px;
+    font-size: 0.95rem;
+}
+
+/* ============================================
+   SWIPE ACTIONS
+   ============================================ */
+.item-swipe-container {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: var(--spacing-sm);
+}
+
+.swipe-actions {
+    position: absolute;
+    top: 1px !important;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    justify-content: flex-end;
+    height: 100%;
+    z-index: 1;
+    padding-right: 1px;
+}
+
+.swipe-edit-history {
+    height: 100% !important;
+}
+
+.swipe-btn {
+    height: 100%;
+    border: none;
+    color: white;
+    font-weight: 600;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: width 0.2s;
+}
+
+.swipe-edit {
+    background-color: #F5A623;
+}
+
+.swipe-delete {
+    background-color: #ff4d4f;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+.history-item.swiped-left {
+    transform: translateX(-120px);
+}
+
+/* Picker item swipe (template picker) */
+.picker-item.swiped-left {
+    transform: translateX(-120px);
+}
+
+/* ============================================
+   BATCH ACTION BAR (fixed footer)
+   ============================================ */
+.batch-delete-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.12);
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 300;
+    transform: translateY(0);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+}
+
+.batch-delete-bar.hidden {
+    transform: translateY(110%);
+    pointer-events: none;
+    opacity: 0;
+}
+
+#batch-count {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   MULTISELECT CUSTOM CIRCULAR CHECKBOX
+   ============================================ */
+.history-checkbox-custom {
+    position: relative;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    margin-right: 10px;
+    margin-top: 1px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+}
+
+.history-checkbox-custom input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.history-checkbox-custom .checkmark {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    margin: 0;
+    cursor: pointer;
+    background-color: var(--bg-card);
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.history-checkbox-custom input:checked + .checkmark {
+    background: var(--tertiary);
+    border-color: var(--tertiary);
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.history-checkbox-custom .checkmark::after {
+    content: '';
+    position: absolute;
+    width: 5px;
+    height: 10px;
+    border: 2.5px solid white;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg) scale(0);
+    transition: transform 0.15s ease 0.05s;
+    margin-top: -2px;
+    /* Slight offset for better visual alignment of the hook */
+}
+
+.history-checkbox-custom input:checked + .checkmark::after {
+    transform: rotate(45deg) scale(1);
+}
+
+/* Native checkbox fallback */
+.history-checkbox {
+    width: 20px;
+    height: 20px;
+    accent-color: #F5A623;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* ============================================
+   AGE BADGES
+   ============================================ */
+.age-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 9px;
+    border-radius: 6px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+    flex-shrink: 0;
+}
+
+/* Empty badge — collapses to dot placeholder */
+.age-badge:empty {
+    padding: 0;
+    width: 15px;
+    height: 15px;
+    border-radius: 3px;
+    align-self: center;
+}
+
+/* Light mode */
+.age-today      { background: #ecfdf5; border-color: #22c55e; color: #166534; }
+.age-yesterday  { background: #f0fdf4; border-color: #72e99d; color: #37a561; }
+.age-week       { background: #fefce8; border-color: #facc15; color: #854d0e; }
+.age-last-week  { background: #fff7ed; border-color: #fb923c; color: #9a3412; }
+.age-month      { background: #fef2f2; border-color: #f87171; color: #7f1d1d; }
+.age-year       { background: #f9fafb; border-color: #d1d5db; color: #6b7280; }
+
+/* Dark mode overrides */
+[data-theme="dark"] .age-today {
+    background: rgba(34, 197, 94, 0.15);
+    border-color: rgba(34, 197, 94, 0.5);
+    color: #86efac;
+}
+
+[data-theme="dark"] .age-yesterday {
+    background: rgba(74, 222, 128, 0.12);
+    border-color: rgba(74, 222, 128, 0.4);
+    color: #86efac;
+}
+
+[data-theme="dark"] .age-week {
+    background: rgba(250, 204, 21, 0.12);
+    border-color: rgba(250, 204, 21, 0.4);
+    color: #fde047;
+}
+
+[data-theme="dark"] .age-last-week {
+    background: rgba(251, 146, 60, 0.12);
+    border-color: rgba(251, 146, 60, 0.4);
+    color: #fdba74;
+}
+
+[data-theme="dark"] .age-month {
+    background: rgba(248, 113, 113, 0.12);
+    border-color: rgba(248, 113, 113, 0.4);
+    color: #fca5a5;
+}
+
+[data-theme="dark"] .age-year {
+    background: rgba(209, 213, 219, 0.08);
+    border-color: rgba(209, 213, 219, 0.3);
+    color: #9ca3af;
+}
+
+/* ============================================
+   iOS CONTEXT MENU
+   ============================================ */
+#bme-context-menu {
+    position: fixed;
+    z-index: 9999;
+    min-width: 210px;
+    background: rgba(242, 242, 247, 0.50);
+    backdrop-filter: blur(10px) saturate(200%) brightness(1.05);
+    -webkit-backdrop-filter: blur(40px) saturate(200%) brightness(1.05);
+    border-radius: 14px;
+    border: 0.5px solid rgba(0, 0, 0, 0.12);
+    box-shadow:
+        0 0 0 0.5px rgba(0, 0, 0, 0.05),
+        0 8px 32px rgba(0, 0, 0, 0.14),
+        0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 6px;
+    opacity: 0;
+    transform: scale(0.88) translateY(-6px);
+    transform-origin: top left;
+    transition: opacity 0.15s ease, transform 0.18s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    pointer-events: none;
+    font-size: 0.9rem;
+}
+
+#bme-context-menu.visible {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: all;
+}
+
+[data-theme="dark"] #bme-context-menu {
+    background: rgba(44, 44, 46, 0.85);
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow:
+        0 0 0 0.5px rgba(255, 255, 255, 0.06),
+        0 8px 32px rgba(0, 0, 0, 0.45),
+        0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.ctx-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 14px;
+    border-radius: 9px;
+    cursor: pointer;
+    color: var(--text-main);
+    transition: background 0.08s ease;
+    border: none;
+    width: 100%;
+    background: transparent;
+    text-align: left;
+    font-family: inherit;
+    font-weight: 500;
+    font-size: 0.9rem;
+    letter-spacing: -0.01em;
+}
+
+.ctx-item:active {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .ctx-item:active {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.ctx-item i {
+    width: 18px;
+    text-align: center;
+    font-size: 0.85rem;
+    opacity: 0.3;
+    flex-shrink: 0;
+}
+
+.ctx-item.danger       { color: #ef4444; }
+.ctx-item.danger i     { opacity: 0.5; color: #ef4444; }
+.ctx-item.orange       { color: #F5A623; }
+.ctx-item.orange i     { opacity: 0.5; color: #F5A623; }
+
+.ctx-separator {
+    height: 0.5px;
+    background: rgba(60, 60, 67, 0.20);
+    margin: 6px 0;
+    width: 90%;
+    margin-left: 5%;
+}
+
+[data-theme="dark"] .ctx-separator {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* ============================================
+   DETAIL VIEW — History bottom sheet content
+   ============================================ */
+.detail-info-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 0;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.detail-info-bar .detail-date-time {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+}
+
+.detail-info-bar .detail-date-time .date-chip,
+.detail-info-bar .detail-date-time .time-chip {
+    background: var(--bg-transparent);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-xs);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.detail-info-bar .detail-date-time .date-chip:hover,
+.detail-info-bar .detail-date-time .time-chip:hover {
+    border-color: var(--primary);
+}
+
+.detail-info-bar .detail-total {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 1rem;
+    white-space: nowrap;
+}
+
+/* Detail item cards */
+.detail-item-card {
+    background: var(--bg-transparent);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-xs);
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    border: 1px solid var(--border-color);
+    transition: border-color 0.2s ease;
+}
+
+.detail-item-card .item-name-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.detail-item-card .item-name-row .d-item-name {
+    font-weight: 600;
+    font-size: 0.92rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.detail-item-card .item-meta {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.detail-item-card .item-meta .item-price-tag {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.detail-item-card .item-note {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+/* Edit mode inline inputs in detail view */
+.detail-item-card.editing {
+    border-color: var(--primary);
+}
+
+.detail-item-card .edit-input {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: inherit;
+    font-family: inherit;
+    color: var(--text-main);
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.detail-item-card .edit-input:focus {
+    border-color: var(--primary);
+}

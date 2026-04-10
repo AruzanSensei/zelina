@@ -1,0 +1,176 @@
+/**
+ * layout.css — App Shell & Navigation Structure
+ * Header, tab-nav, main content area, footer, sticky wrappers.
+ */
+
+/* ============================================
+   APP HEADER
+   ============================================ */
+.app-header {
+    background-color: var(--bg-card);
+    padding: 10px var(--spacing-md) 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: transform 0.3s ease;
+}
+
+.app-header.hide {
+    transform: translateY(-100%);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-container {
+    width: 40px;
+    height: 40px;
+    background: transparent !important;
+    border-radius: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.app-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    background-color: transparent !important;
+}
+
+/* ============================================
+   TAB NAVIGATION
+   ============================================ */
+.tab-nav {
+    display: flex;
+    background-color: var(--bg-card);
+    padding: var(--spacing-sm) var(--spacing-md) var(--spacing-sm);
+    gap: var(--spacing-sm);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 10px 8px;
+    background: var(--bg-body);
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    font-weight: 500;
+}
+
+/* Generic active state */
+.tab-btn.active {
+    background: var(--bg-card);
+    border-color: var(--primary);
+    color: var(--primary);
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(74, 144, 226, 0.1);
+}
+
+/* Manual tab */
+.tab-btn[data-tab="manual"].active {
+    background: var(--bg-card);
+    border-color: var(--primary);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* AI tab — animated gradient border */
+.tab-btn[data-tab="ai"] {
+    border-radius: var(--radius-sm) !important;
+}
+
+.tab-btn[data-tab="ai"].active {
+    position: relative;
+    background: var(--bg-card);
+    background-clip: padding-box;
+    border: 3px solid;
+    border-radius: var(--radius-sm);
+    color: var(--secondary);
+    font-weight: 700;
+    animation: glow-pulse 3s infinite;
+    box-shadow: 0 0 10px rgba(155, 81, 224, 0.3);
+    overflow: hidden;
+}
+
+.tab-btn[data-tab="ai"].active::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    bottom: -50%;
+    left: -50%;
+    right: -50%;
+    background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 90deg,
+        #9B51E0 100deg,
+        #4A90E2 180deg,
+        #5DD5D5 240deg,
+        #9B51E0 300deg,
+        transparent 340deg,
+        transparent 360deg
+    );
+    z-index: -1;
+    animation: rotate-border 3s linear infinite;
+}
+
+/* History tab */
+.tab-btn[data-tab="history"].active {
+    background: var(--bg-card);
+    border-color: var(--tertiary);
+    color: var(--tertiary);
+    font-weight: 600;
+}
+
+/* Finance tab */
+.tab-btn[data-tab="finance"].active {
+    background: var(--bg-card);
+    border-color: var(--finance-green);
+    color: var(--finance-green);
+    font-weight: 600;
+}
+
+/* ============================================
+   MAIN CONTENT AREA
+   ============================================ */
+#app-content {
+    flex: 1;
+    padding: var(--spacing-md);
+    padding-bottom: 80px;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* History view breaks out full-bleed */
+#history-view {
+    margin-left: calc(-1 * var(--spacing-md));
+    margin-right: calc(-1 * var(--spacing-md));
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.app-footer {
+    text-align: center;
+    padding: var(--spacing-lg);
+    background: #333;
+    color: #fff;
+    margin-top: auto;
+    font-size: 0.8rem;
+}

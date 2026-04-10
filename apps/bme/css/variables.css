@@ -1,0 +1,51 @@
+/**
+ * variables.css — CSS Custom Properties
+ * Token system: colors, spacing, shadows, radius.
+ * For dark mode overrides, see theme.css.
+ * For SaaS client theming: override this file per-tenant.
+ */
+
+:root {
+    /* Brand Colors */
+    --primary: #4A90E2;
+    --primary-dark: #357ABD;
+    --secondary: #9B51E0;
+    --tertiary: #F5A623;
+    --muted: #bebebe;
+
+    /* Backgrounds */
+    --bg-body: #F4F7F6;
+    --bg-transparent: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --bg-input: #FFFFFF;
+
+    /* Text */
+    --text-main: #2C3E50;
+    --text-muted: #7F8C8D;
+
+    /* Borders */
+    --border-color: #E0E4E8;
+
+    /* Feature-specific backgrounds */
+    --invoice-bg: #E3F2FD;
+    --letter-bg: #F3E5F5;
+
+    /* Shadows */
+    --shadow-xs: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-sm: 0 3px 8px rgba(0, 0, 0, 0.12);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+
+    /* Spacing Scale */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+
+    /* Finance Module */
+    --finance-green: #27ae60;
+    --finance-yellow: #f39c12;
+}

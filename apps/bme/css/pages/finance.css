@@ -1,0 +1,309 @@
+/**
+ * pages/finance.css — Finance / Keuangan Mode
+ * Controls, summary card, bar chart, history mini-list.
+ * NOTE: .segmented-group/.segmented-btn here are finance-specific
+ * (green active state). Settings uses its own segmented-control variant.
+ */
+
+/* ============================================
+   FINANCE CONTROLS ROW
+   ============================================ */
+.finance-controls {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.finance-target-unit {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.finance-target-unit .field-label {
+    margin-bottom: 2px;
+}
+
+.finance-target-input-wrap {
+    display: flex;
+    align-items: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    transition: all 0.2s;
+    width: fit-content;
+}
+
+.finance-target-input-wrap:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.finance-target-prefix {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-right: 4px;
+}
+
+.finance-target-input {
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text-main);
+    font-size: 0.9rem;
+    font-weight: 700;
+    width: auto;
+    min-width: 60px;
+}
+
+/* ============================================
+   SEGMENTED GROUP (Finance mode switcher)
+   Different from settings .segmented-control —
+   uses green active state instead of white.
+   ============================================ */
+.segmented-group {
+    display: inline-flex;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.segmented-group .segmented-btn {
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 5px 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.segmented-group .segmented-btn.active {
+    background: var(--finance-green);
+    color: white;
+    border-radius: var(--radius-sm);
+}
+
+/* ============================================
+   SUMMARY CARD
+   ============================================ */
+.finance-summary-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 20px 16px;
+    text-align: center;
+    margin-bottom: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Color accent bar at top */
+.finance-summary-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--finance-green), var(--finance-yellow));
+}
+
+.finance-summary-label {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin: 0 0 6px;
+    font-weight: 500;
+}
+
+.finance-summary-amount {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 4px;
+}
+
+.finance-rp {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--finance-green);
+    opacity: 0.7;
+}
+
+#finance-amount-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--finance-green);
+    letter-spacing: -0.02em;
+}
+
+.finance-summary-sub {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin: 6px 0 0;
+}
+
+/* ============================================
+   BAR CHART CARD
+   ============================================ */
+.finance-chart-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.finance-chart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.finance-chart-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.finance-nav-btn {
+    border: none;
+    background: var(--bg-input);
+    color: var(--text-muted);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.75rem;
+    transition: background 0.15s;
+}
+
+.finance-nav-btn:hover {
+    background: var(--border-color);
+}
+
+/* ============================================
+   BAR CHART ROWS
+   Uses CSS custom properties for layout math.
+   ============================================ */
+.finance-chart {
+    --bar-label-w: 32px;
+    --bar-gap: 8px;
+    --bar-value-w: 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+}
+
+.finance-bar-row {
+    display: flex;
+    align-items: center;
+    gap: var(--bar-gap);
+}
+
+.finance-bar-row--active .finance-bar-label {
+    color: var(--text-main);
+    font-weight: 700;
+}
+
+.finance-bar-label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    width: var(--bar-label-w);
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.finance-bar-track {
+    flex: 1;
+    height: 20px;
+    background: var(--bg-input);
+    border-radius: 4px;
+    position: relative;
+    overflow: visible;
+}
+
+.finance-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    min-width: 0;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.finance-bar-value {
+    font-size: 0.72rem;
+    font-weight: 700;
+    width: var(--bar-value-w);
+    text-align: right;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+/* Vertical target line spanning the chart */
+.finance-chart-target-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--text-main);
+    opacity: 0.25;
+    border-radius: 1px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* ============================================
+   MINI HISTORY SECTION
+   Reuses .history-item from history.css
+   ============================================ */
+.finance-history-section {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 0;
+    margin-bottom: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.finance-history-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.finance-sort-select {
+    border: 1px solid var(--border-color);
+    background: var(--bg-input);
+    color: var(--text-main);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    outline: none;
+}
+
+#finance-history-list .history-item {
+    border-radius: 0;
+    margin-bottom: 0;
+}

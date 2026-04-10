@@ -1,0 +1,495 @@
+/**
+ * pages/manual.css — Manual Invoice Mode
+ * Item cards, quantity controls, preview section, table view,
+ * sticky action bar, required-fields indicator, unit toggle.
+ */
+
+/* ============================================
+   MANUAL VIEW SPECIFIC OVERRIDES
+   ============================================ */
+#manual-view .input-group {
+    margin-bottom: 4px;
+}
+
+#manual-view .view-toggle-container {
+    margin-bottom: 4px;
+}
+
+/* ============================================
+   ITEM CARDS CONTAINER
+   ============================================ */
+#manual-items-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 12px;
+}
+
+/* ============================================
+   ITEM CARD
+   ============================================ */
+.item-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-md);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    transition: transform 0.2s ease-out;
+    background: var(--bg-card);
+    z-index: 2;
+    margin-bottom: 0;
+}
+
+.item-card.swiped-left {
+    transform: translateX(-120px);
+}
+
+.item-row {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-xs);
+}
+
+.item-row.full {
+    flex-direction: column;
+}
+
+.remove-item-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    color: #ff4d4f;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   QUANTITY CONTROL
+   ============================================ */
+.qty-control {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background: var(--bg-input);
+    overflow: hidden;
+}
+
+.qty-btn {
+    padding: 14px 12px;
+    background: var(--bg-body);
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    color: var(--text-main);
+    transition: background 0.15s;
+}
+
+.qty-btn:hover {
+    background: var(--border-color);
+}
+
+.qty-input.item-qty {
+    font-weight: 500;
+}
+
+.qty-input {
+    width: 35px;
+    text-align: center;
+    border: none;
+    background: var(--bg-input);
+    color: var(--text-main);
+    -moz-appearance: textfield;
+    text-decoration: none;
+    -moz-text-decoration-style: none;
+    box-decoration-break: none;
+}
+
+/* ============================================
+   UNIT SWITCH (Pcs / Lot compact toggle)
+   ============================================ */
+.unit-switch {
+    display: inline-flex;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    font-size: 0.65rem;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    line-height: 1;
+    align-items: center;
+}
+
+.unit-switch .unit-opt {
+    padding: 2px 6px;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+}
+
+.unit-switch .unit-opt.active {
+    background: var(--primary);
+    color: #fff;
+}
+
+/* ============================================
+   PREVIEW SECTION
+   ============================================ */
+.preview-section {
+    margin-top: var(--spacing-lg);
+    border-top: 2px dashed var(--border-color);
+    padding-top: var(--spacing-md);
+}
+
+.preview-cards {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+}
+
+.preview-card {
+    flex: 1;
+    aspect-ratio: 1/1.414;
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+.invoice-preview {
+    background-color: var(--invoice-bg);
+}
+
+.letter-preview {
+    background-color: var(--letter-bg);
+}
+
+.preview-content {
+    background: white;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    position: relative;
+    touch-action: none;
+    -webkit-overflow-scrolling: auto;
+}
+
+/* A4 preview wrapper & iframe */
+.a4-preview-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.a4-preview-frame {
+    width: 794px;
+    height: 1123px;
+    transform-origin: top center;
+    border: 0;
+    display: block;
+    flex: 0 0 auto;
+}
+
+/* HTML render container (A4 at 96dpi) */
+.html-preview-container {
+    width: 794px;
+    height: 1123px;
+    transform-origin: top left;
+    background: white;
+    padding: 40px;
+    font-family: 'Helvetica', sans-serif;
+    color: #000;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.html-preview-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.html-preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 12px;
+}
+
+.html-preview-table th {
+    background: #4A90E2;
+    color: white;
+    padding: 5px;
+    text-align: left;
+}
+
+.html-preview-table td {
+    border-bottom: 1px solid #eee;
+    padding: 5px;
+}
+
+.html-preview-total {
+    margin-top: 20px;
+    text-align: right;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* ============================================
+   STICKY ACTION BAR
+   ============================================ */
+.action-bar-sticky {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    padding: var(--spacing-md);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 90;
+    transition: transform 0.3s ease;
+}
+
+.action-bar-sticky.hide {
+    transform: translateY(110%);
+}
+
+.total-display {
+    display: flex;
+    flex-direction: column;
+}
+
+.total-display span {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+/* ============================================
+   FLOATING REQUIRED FIELDS INDICATOR
+   ============================================ */
+.floating-indicator {
+    position: absolute;
+    right: 20px;
+    bottom: calc(100% + 15px);
+    background: #ff4d4f;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(255, 77, 79, 0.4);
+    z-index: 85;
+    cursor: default;
+    font-weight: 400;
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    animation: bounce-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+    white-space: nowrap;
+}
+
+.floating-indicator.hidden {
+    display: none;
+    transform: translateY(20px);
+    opacity: 0;
+}
+
+.indicator-badge {
+    background: white;
+    color: #ff4d4f;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    font-weight: 800;
+}
+
+/* ============================================
+   TABLE VIEW
+   ============================================ */
+.table-view-container {
+    overflow-x: auto;
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+    margin-bottom: 20px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.table-view-container::-webkit-scrollbar {
+    display: none;
+}
+
+.item-table {
+    width: max-content;
+    min-width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+}
+
+.item-table th,
+.item-table td {
+    white-space: nowrap;
+    padding: 10px;
+    text-align: left;
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.item-table th:last-child,
+.item-table td:last-child {
+    border-right: none;
+}
+
+.item-table thead {
+    background: var(--bg-body);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.item-table th {
+    background: var(--bg-body);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.item-table tbody tr {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.item-table tbody tr:hover {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.item-table td input,
+.item-table td textarea,
+.item-table td select {
+    width: auto;
+    border: none;
+    background: transparent;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    padding: 4px;
+}
+
+.item-table td input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.item-table td input:focus {
+    outline: none;
+    background: rgba(74, 144, 226, 0.05);
+    border-radius: 3px;
+    border-bottom: 1px solid var(--primary);
+}
+
+/* Fix icon overlapping in Barang cell */
+.item-table td .input-with-icon input {
+    padding-right: 28px;
+}
+
+.item-table td .input-with-icon {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.item-table td .item-name {
+    width: 100%;
+    min-width: 80px;
+}
+
+.item-table td .item-price-format {
+    width: 100%;
+    min-width: 60px;
+}
+
+/* Column width constraints */
+.item-table th:nth-child(2),
+.item-table td:nth-child(2) {
+    white-space: nowrap;
+    min-width: 30px;
+    max-width: 120px;
+}
+
+.item-table th:nth-child(3),
+.item-table td:nth-child(3) {
+    white-space: nowrap;
+}
+
+.item-table th:nth-child(4),
+.item-table td:nth-child(4) {
+    text-align: center;
+    white-space: nowrap;
+}
+
+.item-table th:nth-child(5),
+.item-table td:nth-child(5) {
+    width: 180px;
+    max-width: 200px;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.item-table th:nth-child(6),
+.item-table td:nth-child(6) {
+    width: 32px;
+    text-align: center;
+}
+
+/* Quantity in table view */
+.item-table td .item-qty,
+.item-table td .table-qty-input {
+    width: 36px;
+    text-align: center;
+}
+
+.item-table td .item-note {
+    width: 100%;
+}
+
+/* Hide spinners on table qty input */
+.table-qty-input::-webkit-outer-spin-button,
+.table-qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.table-qty-input[type="text"] {
+    -moz-appearance: textfield;
+    text-align: center;
+    font-weight: 600;
+}

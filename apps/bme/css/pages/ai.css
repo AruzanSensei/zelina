@@ -1,0 +1,41 @@
+/**
+ * pages/ai.css — AI Mode
+ * Locked overlay for the AI invoice generation feature.
+ */
+
+/* ============================================
+   AI LOCKED STATE OVERLAY
+   ============================================ */
+.ai-locked-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: var(--radius-sm);
+    backdrop-filter: blur(2px);
+}
+
+.ai-locked-overlay i {
+    font-size: 2.5rem;
+    color: #9B51E0;
+    margin-bottom: 12px;
+    opacity: 0.7;
+}
+
+.ai-locked-overlay p {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+}
+
+.ai-locked-overlay small {
+    color: var(--text-muted);
+    margin-top: 4px;
+}

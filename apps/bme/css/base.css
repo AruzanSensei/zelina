@@ -1,0 +1,145 @@
+/**
+ * base.css — Global Reset, Typography, & Keyframe Animations
+ * No component-specific styles here. Pure foundational rules.
+ */
+
+/* ============================================
+   GLOBAL RESET
+   ============================================ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Hide number input spinners — Chrome, Edge, Safari */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Hide number input spinners — Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* ============================================
+   BASE BODY
+   ============================================ */
+body {
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+h1 {
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+h3 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+}
+
+small {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+/* ============================================
+   VIEW STATE UTILITY
+   ============================================ */
+.view.hidden {
+    display: none;
+}
+
+/* ============================================
+   GLOBAL KEYFRAME ANIMATIONS
+   ============================================ */
+
+/* Form validation border pulse */
+@keyframes border-blink {
+    0%, 100% { border-color: #ff4d4f; }
+    50%       { border-color: transparent; }
+}
+
+/* Alert slide-in / slide-out */
+@keyframes alert-in {
+    from { opacity: 0; transform: translate(-50%, -40%); }
+    to   { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+@keyframes alert-out {
+    from { opacity: 1; transform: translate(-50%, -50%); }
+    to   { opacity: 0; transform: translate(-50%, -60%); }
+}
+
+/* Confirm dialog pop */
+@keyframes confirm-pop {
+    from { opacity: 0; transform: scale(0.9); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+/* Shared slide-up from bottom (used in converter popup) */
+@keyframes slideUp {
+    from { opacity: 0; transform: translate(-50%, 20px); }
+    to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* Converter popup slide-up + scale */
+@keyframes slideUpScale {
+    from { opacity: 0; transform: translateY(20px) scale(0.8); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* AI tab glowing gradient border rotation */
+@keyframes rotate-border {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* AI tab glow pulse */
+@keyframes glow-pulse {
+    0%   { box-shadow: 0 0 5px rgba(155, 81, 224, 0.2); }
+    50%  { box-shadow: 0 0 15px rgba(155, 81, 224, 0.5); }
+    100% { box-shadow: 0 0 5px rgba(155, 81, 224, 0.2); }
+}
+
+/* Required fields indicator bounce */
+@keyframes bounce-in {
+    0%   { transform: scale(0.5) translateY(20px); opacity: 0; }
+    70%  { transform: scale(1.1); }
+    100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Onboarding wave animation */
+@keyframes wave {
+    0%   { transform: rotate(0deg); }
+    10%  { transform: rotate(14deg); }
+    20%  { transform: rotate(-8deg); }
+    30%  { transform: rotate(14deg); }
+    40%  { transform: rotate(-4deg); }
+    50%  { transform: rotate(10deg); }
+    60%  { transform: rotate(0deg); }
+    100% { transform: rotate(0deg); }
+}
