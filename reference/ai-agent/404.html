@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+  
+<!-- Mirrored from ai-agent.preview.uideck.com/404 by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 21 Apr 2026 05:04:50 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="assets/images/favicon.png" />
+    <link href="assets/css/glightbox.css" rel="stylesheet" />
+    <link href="assets/css/output.css" rel="stylesheet" />
+  </head>
+  <body
+    x-data="{      
+       mobileMenuOpen: false,
+      activeDropdown: null,
+      darkMode: localStorage.getItem('darkMode') === 'true',
+       init() {
+          // Apply dark mode on page load if saved in localStorage
+          const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+          
+          if (savedDarkMode) {
+            this.darkMode = true;
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+          } else {
+            this.darkMode = false;
+            document.documentElement.classList.add('light');
+            document.documentElement.classList.remove('dark');
+          }
+          
+          // Close dropdowns when clicking outside
+          document.addEventListener('click', (e) => {
+            if (!e.target.closest('.nav-item') && !e.target.closest('.dropdown-menu') && !e.target.closest('.mobile-dropdown-toggle')) {
+              this.closeDropdowns();
+            }
+          });
+          
+          // Reset activeDropdown when resizing to desktop
+          window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+              this.activeDropdown = null;
+              this.mobileMenuOpen = false;
+            }
+          });
+        }
+    }"
+  >
+    <!-- Main Start -->
+    <div class="dark:bg-dark-primary">
+      <!-- Contact Start -->
+      <section class="min-h-screen flex justify-center items-center relative">
+        <span class="absolute top-0">
+          <svg
+            width="1222"
+            height="283"
+            viewBox="0 0 1222 283"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g opacity="0.7" filter="url(#filter0_f_9289_13491)">
+              <circle cx="772" cy="-167.171" r="250" fill="#4E6EFF" />
+            </g>
+            <g opacity="0.3" filter="url(#filter1_f_9289_13491)">
+              <circle cx="450" cy="-167.171" r="250" fill="#FF58D5" />
+            </g>
+            <defs>
+              <filter
+                id="filter0_f_9289_13491"
+                x="322"
+                y="-617.171"
+                width="900"
+                height="900"
+                filterUnits="userSpaceOnUse"
+                color-interpolation-filters="sRGB"
+              >
+                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                <feBlend
+                  mode="normal"
+                  in="SourceGraphic"
+                  in2="BackgroundImageFix"
+                  result="shape"
+                />
+                <feGaussianBlur
+                  stdDeviation="100"
+                  result="effect1_foregroundBlur_9289_13491"
+                />
+              </filter>
+              <filter
+                id="filter1_f_9289_13491"
+                x="0"
+                y="-617.171"
+                width="900"
+                height="900"
+                filterUnits="userSpaceOnUse"
+                color-interpolation-filters="sRGB"
+              >
+                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                <feBlend
+                  mode="normal"
+                  in="SourceGraphic"
+                  in2="BackgroundImageFix"
+                  result="shape"
+                />
+                <feGaussianBlur
+                  stdDeviation="100"
+                  result="effect1_foregroundBlur_9289_13491"
+                />
+              </filter>
+            </defs>
+          </svg>
+        </span>
+        <div class="max-w-[451px] mx-auto text-center">
+          <img
+            src="assets/images/404.svg"
+            class="mb-10 block dark:hidden"
+            alt=""
+          />
+          <img
+            src="assets/images/404-white.svg"
+            class="mb-10 hidden dark:block"
+            alt=""
+          />
+          <h1 class="text-4xl font-black text-gray-800 mb-2 dark:text-white/90">
+            OPPS! Page Not Found
+          </h1>
+          <p class="text-gray-500 text-base dark:text-gray-400">
+            We are sorry, But the page you requested was not found
+          </p>
+          <a
+            href="index.html"
+            class="inline-flex mt-8 text-white text-sm gap-2 items-center bg-primary-500 rounded-full py-3 px-5 transition hover:bg-primary-600"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="21"
+              height="21"
+              viewBox="0 0 21 21"
+              fill="none"
+            >
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M3.08301 10.7424C3.08272 10.9347 3.15588 11.127 3.30249 11.2737L8.29915 16.2739C8.59194 16.5669 9.06682 16.5671 9.35981 16.2743C9.65281 15.9815 9.65297 15.5066 9.36018 15.2136L5.64009 11.4909L17.1675 11.4909C17.5817 11.4909 17.9175 11.1551 17.9175 10.7409C17.9175 10.3267 17.5817 9.9909 17.1675 9.9909L5.64554 9.9909L9.36017 6.27391C9.65297 5.98092 9.65282 5.50605 9.35983 5.21325C9.06684 4.92045 8.59197 4.9206 8.29917 5.21358L3.34167 10.1742C3.18321 10.3117 3.08301 10.5146 3.08301 10.7409C3.08301 10.7414 3.08301 10.7419 3.08301 10.7424Z"
+                fill="white"
+              />
+            </svg>
+            Back To Home</a
+          >
+        </div>
+      </section>
+      <!-- Contact End -->
+    </div>
+
+    <!-- Main End -->
+    <script defer src="assets/js/alpine.min.js"></script>
+    <script defer src="assets/js/glightbox.min.js"></script>
+    <script defer src="assets/js/app.js"></script>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"9a6015d415bb4773a0bff22543062d3b","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ef9d8c3fbf8819e',t:'MTc3Njc0Nzg1Mw=='};var a=document.createElement('script');a.src='cdn-cgi/challenge-platform/h/b/scripts/jsd/0b8fb825cb67/maind41d.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+
+<!-- Mirrored from ai-agent.preview.uideck.com/404 by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 21 Apr 2026 05:04:50 GMT -->
+</html>
