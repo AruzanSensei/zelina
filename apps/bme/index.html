@@ -791,11 +791,28 @@
 </script>
 
 <style>
+    /* Base transition — harus di sini agar animasi bekerja dua arah (fade in & out) */
+    #manual-view .field-label,
+    #manual-view .remove-item-btn,
+    #manual-view .view-toggle-container,
+    #manual-view .input-icon-btn,
+    #manual-view .copy-icon-btn {
+        transition: opacity 400ms ease;
+    }
+
     /* Label visibility toggle ─ label tetap occupy space, hanya tak terlihat */
     #manual-view.labels-hidden .field-label {
         opacity: 0;
         pointer-events: none;
         user-select: none;
+    }
+
+    /* Sembunyikan tombol hapus item dan kontrol tampilan/mode saat eye-closed */
+    #manual-view.labels-hidden .remove-item-btn,
+    #manual-view.labels-hidden .view-toggle-container,
+    #manual-view.labels-hidden .input-icon-btn,
+    #manual-view.labels-hidden .copy-icon-btn {
+        opacity: 0;
     }
 </style>
 
