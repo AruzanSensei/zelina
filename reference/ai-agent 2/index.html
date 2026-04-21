@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="assets/images/favicon.png" />
+
+  <!-- Vendor -->
+  <link href="assets/css/glightbox.css" rel="stylesheet" />
+  <link href="assets/css/output.css" rel="stylesheet" />
+
+  <!-- Project -->
+  <link href="assets/css/layout.css" rel="stylesheet" />
+  <link href="assets/css/components.css" rel="stylesheet" />
+  <link href="assets/css/animations.css" rel="stylesheet" />
+  <link href="assets/css/custom.css" rel="stylesheet" />
+
+  <title>AI Agent Demo: AI UI Kit for Tailwind CSS &amp; Figma</title>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body x-data="aiApp">
+  <div class="page-root">
+
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+       HEADER
+       ══════════════════════════════════════════════════════════════════════ -->
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="header-row">
+
+          <!-- Logo -->
+          <a href="index.html" class="logo-link">
+            <img src="assets/images/logo-black.svg" class="logo-light" alt="AI Agent" />
+            <img src="assets/images/logo-white.svg" class="logo-dark" alt="AI Agent" />
+          </a>
+
+          <!-- Desktop navigation -->
+          <nav class="desktop-nav">
+            <a href="index.html" class="nav-link">Home</a>
+
+            <!-- Products dropdown -->
+            <div class="nav-dropdown" @mouseenter="activeDropdown = 'products'" @mouseleave="activeDropdown = null">
+              <button class="nav-dropdown-trigger">
+                Products
+                <i data-lucide="chevron-down" class="chevron" :class="{ 'is-open': activeDropdown === 'products' }"></i>
+              </button>
+              <div class="nav-dropdown-panel" x-show="activeDropdown === 'products'" x-cloak>
+                <template x-for="product in products" :key="product.name">
+                  <a :href="product.href" class="nav-dropdown-item">
+                    <div class="nav-dropdown-icon">
+                      <i :data-lucide="product.icon"></i>
+                    </div>
+                    <span x-text="product.name"></span>
+                  </a>
+                </template>
+              </div>
+            </div>
+
+            <!-- Pages dropdown -->
+            <div class="nav-dropdown" @mouseenter="activeDropdown = 'pages'" @mouseleave="activeDropdown = null">
+              <button class="nav-dropdown-trigger">
+                Pages
+                <i data-lucide="chevron-down" class="chevron" :class="{ 'is-open': activeDropdown === 'pages' }"></i>
+              </button>
+              <div class="nav-dropdown-panel" x-show="activeDropdown === 'pages'" x-cloak>
+                <template x-for="page in pages" :key="page.name">
+                  <a :href="page.href" class="nav-dropdown-item-plain" x-text="page.name"></a>
+                </template>
+              </div>
+            </div>
+
+            <a href="contact.html" class="nav-link">Contact</a>
+          </nav>
+
+          <!-- Header actions -->
+          <div class="header-actions">
+            <!-- Dark mode toggle -->
+            <button class="btn-theme-toggle" @click="toggleDarkMode()" aria-label="Toggle dark mode">
+              <svg x-show="!darkMode" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
+                fill="none">
+                <path
+                  d="M6.24683 7.08492C6.24683 10.7677 9.23232 13.7532 12.9151 13.7532C14.6687 13.7532 16.2641 13.0764 17.4545 11.9697C16.584 15.2727 13.5765 17.7083 10.0001 17.7083C5.74289 17.7083 2.29175 14.2572 2.29175 9.99996C2.29175 6.42356 4.72736 3.41602 8.03036 2.54558C6.92367 3.73594 6.24683 5.33139 6.24683 7.08492Z"
+                  stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <svg x-show="darkMode" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </button>
+
+            <!-- Mobile menu toggle -->
+            <button class="btn-menu-mobile" @click.stop="mobileMenuOpen = !mobileMenuOpen" type="button"
+              aria-label="Open main menu">
+              <span class="sr-only">Open main menu</span>
+              <svg x-show="!mobileMenuOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              <svg x-show="mobileMenuOpen" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+            <a href="signin.html" class="btn-signin-desktop">Sign In</a>
+            <a href="signup.html" class="btn btn--gradient">Get Started Free</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile menu -->
+      <div class="mobile-menu" x-show="mobileMenuOpen" x-cloak>
+        <div class="mobile-menu-inner">
+          <a href="index.html" class="mobile-nav-link">Home</a>
+
+          <!-- Products (mobile) -->
+          <div>
+            <button class="mobile-dropdown-toggle" @click.stop="toggleDropdown('products')">
+              <span>Products</span>
+              <i data-lucide="chevron-down" class="chevron" :class="{ 'is-open': activeDropdown === 'products' }"></i>
+            </button>
+            <div class="mobile-dropdown-panel" x-show="activeDropdown === 'products'" x-cloak>
+              <a href="text-generator.html" class="mobile-dropdown-item">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g filter="url(#fi1)">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M0.737805 18.3018L0.738973 18.3004L0.74798 18.2896C0.756498 18.2794 0.76992 18.2632 0.787638 18.2413C0.823096 18.1974 0.875621 18.1311 0.94036 18.0452C1.07012 17.8731 1.24739 17.6245 1.43411 17.3229C1.76981 16.7807 2.11411 16.1021 2.2869 15.4087C1.20858 13.876 0.575195 12.0067 0.575195 9.99116C0.575195 4.78588 4.79491 0.566162 10.0002 0.566162C15.2055 0.566162 19.4252 4.78588 19.4252 9.99116C19.4252 15.1964 15.2055 19.4162 10.0002 19.4162C8.82101 19.4162 7.69102 19.1993 6.64895 18.8028C5.59279 19.1989 4.28065 19.3471 3.25194 19.4026C2.68125 19.4334 2.17458 19.4366 1.81031 19.4322C1.62792 19.43 1.48055 19.4258 1.37793 19.4222C1.32661 19.4203 1.28643 19.4186 1.2586 19.4174L1.22626 19.4158L1.21731 19.4154L1.21385 19.4152L1.2502 18.7412C1.21332 19.4152 1.21385 19.4152 1.21385 19.4152C0.957258 19.4012 0.73037 19.2426 0.629439 19.0063C0.528598 18.7702 0.570892 18.4968 0.737805 18.3018ZM5.62511 8.86633C5.00379 8.86633 4.50011 9.37001 4.50011 9.99133C4.50011 10.6127 5.00379 11.1163 5.62511 11.1163H5.63511C6.25643 11.1163 6.76011 10.6127 6.76011 9.99133C6.76011 9.37001 6.25643 8.86633 5.63511 8.86633H5.62511ZM10.0001 8.86633C9.37879 8.86633 8.87511 9.37001 8.87511 9.99133C8.87511 10.6127 9.37879 11.1163 10.0001 11.1163H10.0101C10.6314 11.1163 11.1351 10.6127 11.1351 9.99133C11.1351 9.37001 10.6314 8.86633 10.0101 8.86633H10.0001ZM14.3751 8.86633C13.7538 8.86633 13.2501 9.37001 13.2501 9.99133C13.2501 10.6127 13.7538 11.1163 14.3751 11.1163H14.3851C15.0064 11.1163 15.5101 10.6127 15.5101 9.99133C15.5101 9.37001 15.0064 8.86633 14.3851 8.86633H14.3751Z"
+                      fill="url(#fp1)" />
+                  </g>
+                  <defs>
+                    <filter id="fi1" x="0.575195" y="0.566162" width="20.3734" height="20.3915"
+                      filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                        result="hardAlpha" />
+                      <feOffset dx="1.52381" dy="1.52381" />
+                      <feGaussianBlur stdDeviation="1.14286" />
+                      <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
+                      <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0" />
+                      <feBlend mode="normal" in2="shape" result="effect1_innerShadow_9289_13241" />
+                    </filter>
+                    <radialGradient id="fp1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+                      gradientTransform="translate(10.8131 16.0965) rotate(-60.1772) scale(18.6241 18.6153)">
+                      <stop stop-color="#7F68FF" />
+                      <stop offset="1" stop-color="#BEB2FF" />
+                    </radialGradient>
+                  </defs>
+                </svg>
+                <span>Text Generator</span>
+              </a>
+              <a href="image-generator.html" class="mobile-dropdown-item">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g filter="url(#fi2)">
+                    <path
+                      d="M5.65219 4.12402C4.85936 4.12402 4.21665 4.76674 4.21665 5.55957C4.21665 6.3524 4.85936 6.99512 5.65219 6.99512C6.44502 6.99512 7.08774 6.3524 7.08774 5.55957C7.08774 4.76674 6.44502 4.12402 5.65219 4.12402Z"
+                      fill="url(#fp2a)" />
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M4 0.4375C2.03249 0.4375 0.4375 2.03249 0.4375 4V14C0.4375 15.9675 2.03249 17.5625 4 17.5625H14C15.9675 17.5625 17.5625 15.9675 17.5625 14V4C17.5625 2.03249 15.9675 0.4375 14 0.4375H4ZM1.5625 4C1.5625 2.65381 2.65381 1.5625 4 1.5625H14C15.3462 1.5625 16.4375 2.65381 16.4375 4V6.5688C15.8719 6.43748 15.2829 6.36814 14.6783 6.36814C11.4925 6.36814 8.75679 8.28996 7.5652 11.0367C6.62902 10.121 5.3471 9.55564 3.93303 9.55564C3.07946 9.55564 2.27335 9.76185 1.5625 10.127V4Z"
+                      fill="url(#fp2b)" />
+                  </g>
+                  <defs>
+                    <filter id="fi2" x="0.4375" y="0.4375" width="18.6488" height="18.6488" filterUnits="userSpaceOnUse"
+                      color-interpolation-filters="sRGB">
+                      <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                        result="hardAlpha" />
+                      <feOffset dx="1.52381" dy="1.52381" />
+                      <feGaussianBlur stdDeviation="1.14286" />
+                      <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
+                      <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0" />
+                      <feBlend mode="normal" in2="shape" result="eff" />
+                    </filter>
+                    <radialGradient id="fp2a" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+                      gradientTransform="translate(5.94542 16.1904) rotate(-58.7716) scale(25.6788)">
+                      <stop stop-color="#FF6F58" />
+                      <stop offset="1" stop-color="#FFA293" />
+                    </radialGradient>
+                    <radialGradient id="fp2b" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+                      gradientTransform="translate(5.94542 16.1904) rotate(-58.7716) scale(25.6788)">
+                      <stop stop-color="#FF6F58" />
+                      <stop offset="1" stop-color="#FFA293" />
+                    </radialGradient>
+                  </defs>
+                </svg>
+                <span>Image Generator</span>
+              </a>
+              <a href="code-generator.html" class="mobile-dropdown-item">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g filter="url(#fi3)">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M0.4375 4C0.4375 2.03249 2.03249 0.4375 4 0.4375H14C15.9675 0.4375 17.5625 2.03249 17.5625 4V14C17.5625 15.9675 15.9675 17.5625 14 17.5625H4C2.03249 17.5625 0.4375 15.9675 0.4375 14V4ZM10.4373 5.123C10.5047 4.81974 10.3134 4.51926 10.0102 4.45187C9.70692 4.38448 9.40645 4.57569 9.33906 4.87895L7.56181 12.8766C7.49442 13.1798 7.68563 13.4803 7.98889 13.5477C8.29215 13.6151 8.59263 13.4239 8.66002 13.1206L10.4373 5.123ZM12.2665 6.84713C12.0469 6.62745 11.6907 6.62744 11.471 6.8471C11.2513 7.06676 11.2513 7.42291 11.471 7.64259L12.8282 8.99989L11.471 10.357C11.2513 10.5767 11.2513 10.9329 11.471 11.1525C11.6907 11.3722 12.0468 11.3722 12.2665 11.1525L14.0214 9.39765C14.241 9.17799 14.241 8.82185 14.0214 8.60218L12.2665 6.84713ZM6.52237 7.64943C6.74203 7.42975 6.74201 7.07359 6.52233 6.85393C6.30265 6.63427 5.9465 6.63429 5.72684 6.85397L3.97879 8.60218C3.75914 8.82185 3.75915 9.17799 3.97881 9.39765L5.72686 11.1457C5.94653 11.3654 6.30268 11.3654 6.52235 11.1457C6.74202 10.926 6.74202 10.5699 6.52235 10.3502L5.17203 8.99989L6.52237 7.64943Z"
+                      fill="url(#fp3)" />
+                  </g>
+                  <defs>
+                    <filter id="fi3" x="0.4375" y="0.4375" width="18.125" height="18.125" filterUnits="userSpaceOnUse"
+                      color-interpolation-filters="sRGB">
+                      <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                        result="hardAlpha" />
+                      <feOffset dx="1" dy="1" />
+                      <feGaussianBlur stdDeviation="1" />
+                      <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
+                      <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0" />
+                      <feBlend mode="normal" in2="shape" result="eff" />
+                    </filter>
+                    <radialGradient id="fp3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+                      gradientTransform="translate(9.73852 14.5335) rotate(-60.1541) scale(16.9079)">
+                      <stop stop-color="#17A7FF" />
+                      <stop offset="1" stop-color="#84D0FF" />
+                    </radialGradient>
+                  </defs>
+                </svg>
+                <span>Code Generator</span>
+              </a>
+              <a href="video-generator.html" class="mobile-dropdown-item">
+                <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g filter="url(#fi4)">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M0.875 4.13058C0.875 2.1004 2.52078 0.45462 4.55096 0.45462H17.449C19.4792 0.45462 21.125 2.1004 21.125 4.13058V11.8694C21.125 13.8996 19.4792 15.5454 17.449 15.5454H4.55095C2.52078 15.5454 0.875 13.8996 0.875 11.8694V4.13058ZM13.8102 7.42904C14.227 7.69552 14.227 8.30432 13.8102 8.5708L10.0934 10.9471C9.64243 11.2355 9.05086 10.9116 9.05086 10.3763V5.62358C9.05086 5.08826 9.64243 4.76434 10.0934 5.05271L13.8102 7.42904Z"
+                      fill="url(#fp4)" />
+                  </g>
+                  <defs>
+                    <filter id="fi4" x="0.875" y="0.45462" width="21.7738" height="16.6146" filterUnits="userSpaceOnUse"
+                      color-interpolation-filters="sRGB">
+                      <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                        result="hardAlpha" />
+                      <feOffset dx="1.52381" dy="1.52381" />
+                      <feGaussianBlur stdDeviation="1.14286" />
+                      <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
+                      <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0" />
+                      <feBlend mode="normal" in2="shape" result="eff" />
+                    </filter>
+                    <radialGradient id="fp4" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+                      gradientTransform="translate(11.8733 12.8762) rotate(-52.4062) scale(16.3099 18.2642)">
+                      <stop stop-color="#FFAC19" />
+                      <stop offset="1" stop-color="#FFCE78" />
+                    </radialGradient>
+                  </defs>
+                </svg>
+                <span>Video Generator</span>
+              </a>
+              <a href="email-generator.html" class="mobile-dropdown-item">
+                <svg width="22" height="16" viewBox="0 0 22 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g filter="url(#fi5)">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M0.875 4.13057C0.875 2.1004 2.52078 0.45462 4.55096 0.45462H17.449C19.4792 0.45462 21.125 2.1004 21.125 4.13057V11.8694C21.125 13.8996 19.4792 15.5454 17.449 15.5454H4.55095C2.52078 15.5454 0.875 13.8996 0.875 11.8694V4.13057ZM5.30721 4.56105C5.04427 4.3777 4.68248 4.44222 4.49913 4.70515C4.31577 4.96809 4.38029 5.32988 4.64322 5.51323L9.78305 9.09739C10.5145 9.60742 11.4863 9.60742 12.2177 9.09739L17.3575 5.51323C17.6204 5.32988 17.6849 4.96809 17.5016 4.70515C17.3182 4.44222 16.9564 4.3777 16.6935 4.56105L11.5537 8.14521C11.2212 8.37704 10.7795 8.37704 10.447 8.14521L5.30721 4.56105Z"
+                      fill="url(#fp5)" />
+                  </g>
+                  <defs>
+                    <filter id="fi5" x="0.875" y="0.45462" width="21.7738" height="16.6146" filterUnits="userSpaceOnUse"
+                      color-interpolation-filters="sRGB">
+                      <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                        result="hardAlpha" />
+                      <feOffset dx="1.52381" dy="1.52381" />
+                      <feGaussianBlur stdDeviation="1.14286" />
+                      <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
+                      <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0" />
+                      <feBlend mode="normal" in2="shape" result="eff" />
+                    </filter>
+                    <radialGradient id="fp5" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse"
+                      gradientTransform="translate(11.8733 12.8762) rotate(-52.4062) scale(16.3099 18.2642)">
+                      <stop stop-color="#2BCFFF" />
+                      <stop offset="1" stop-color="#8EE5FF" />
+                    </radialGradient>
+                  </defs>
+                </svg>
+                <span>Email Generator</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Pages (mobile) -->
+          <div>
+            <button class="mobile-dropdown-toggle" @click.stop="toggleDropdown('pages')">
+              <span>Pages</span>
+              <i data-lucide="chevron-down" class="chevron" :class="{ 'is-open': activeDropdown === 'pages' }"></i>
+            </button>
+            <div class="mobile-dropdown-panel" x-show="activeDropdown === 'pages'" x-cloak>
+              <a href="dashboard.html" class="mobile-nav-link mobile-nav-link--muted">Dashboard</a>
+              <a href="pricing.html" class="mobile-nav-link mobile-nav-link--muted">Pricing</a>
+              <a href="blog-grid.html" class="mobile-nav-link mobile-nav-link--muted">Blog Grids</a>
+              <a href="blog-details.html" class="mobile-nav-link mobile-nav-link--muted">Blog Details</a>
+              <a href="signin.html" class="mobile-nav-link mobile-nav-link--muted">Sign In</a>
+              <a href="signup.html" class="mobile-nav-link mobile-nav-link--muted">Sign Up</a>
+              <a href="forgot-password.html" class="mobile-nav-link mobile-nav-link--muted">Reset Password</a>
+              <a href="privacy.html" class="mobile-nav-link mobile-nav-link--muted">Privacy Policy</a>
+              <a href="404.html" class="mobile-nav-link mobile-nav-link--muted">404 Error</a>
+            </div>
+          </div>
+
+          <a href="contact.html" class="mobile-nav-link mobile-nav-link--muted">Contact</a>
+
+          <div class="mobile-actions">
+            <a href="signin.html" class="mobile-nav-link mobile-nav-link--muted">Sign In</a>
+            <a href="contact.html" class="btn btn--gradient">Get Started Free</a>
+          </div>
+        </div>
+      </div>
+    </header>
+    <!-- /HEADER -->
+
+
+    <main>
+
+      <!-- ════════════════════════════════════════════════════════════════════
+         HERO
+         ════════════════════════════════════════════════════════════════════ -->
+      <section class="hero-section">
+        <div class="wrapper">
+          <div class="hero-content-wrap">
+            <div class="hero-text-block">
+
+              <!-- Badge -->
+              <div class="hero-badge-wrapper">
+                <div class="hero-badge-inner">
+                  <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M15.1699 0.58575C14.9429 -0.19525 13.7499 -0.19525 13.5229 0.58575L13.2029 1.69275C12.5109 4.07875 11.5669 5.94175 8.99994 6.58375L7.80794 6.88175C7.63097 6.91697 7.47168 7.01246 7.35721 7.15195C7.24274 7.29144 7.18018 7.4663 7.18018 7.64675C7.18018 7.8272 7.24274 8.00206 7.35721 8.14155C7.47168 8.28104 7.63097 8.37653 7.80794 8.41175L8.99994 8.70975C11.5669 9.35275 12.5109 11.2157 13.2029 13.6007L13.5229 14.7078C13.7499 15.4897 14.9429 15.4897 15.1699 14.7078L15.4899 13.6007C16.1819 11.2157 17.1269 9.35275 19.6939 8.71075L20.8839 8.41175C21.0609 8.37653 21.2202 8.28104 21.3347 8.14155C21.4491 8.00206 21.5117 7.8272 21.5117 7.64675C21.5117 7.4663 21.4491 7.29144 21.3347 7.15195C21.2202 7.01246 21.0609 6.91697 20.8839 6.88175L19.6939 6.58375C17.1269 5.94175 16.1819 4.07875 15.4899 1.69375L15.1699 0.58575Z"
+                      fill="url(#sh_paint0)" />
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M5.28304 11.8368C5.14704 11.3488 4.43104 11.3488 4.29604 11.8368L4.10304 12.5288C3.68805 14.0188 3.12205 15.1838 1.58104 15.5858L0.867045 15.7718C0.759268 15.7971 0.663206 15.8581 0.594451 15.9448C0.525695 16.0316 0.488281 16.1391 0.488281 16.2498C0.488281 16.3605 0.525695 16.4679 0.594451 16.5547C0.663206 16.6415 0.759268 16.7025 0.867045 16.7278L1.58104 16.9148C3.12104 17.3158 3.68805 18.4808 4.10304 19.9708L4.29604 20.6628C4.43104 21.1518 5.14704 21.1518 5.28304 20.6628L5.47605 19.9708C5.89005 18.4808 6.45805 17.3158 7.99804 16.9148L8.71204 16.7278C8.81982 16.7025 8.91588 16.6415 8.98464 16.5547C9.05339 16.4679 9.09081 16.3605 9.09081 16.2498C9.09081 16.1391 9.05339 16.0316 8.98464 15.9448C8.91588 15.8581 8.81982 15.7971 8.71204 15.7718L7.99804 15.5858C6.45805 15.1848 5.89005 14.0198 5.47605 12.5288L5.28304 11.8368Z"
+                      fill="url(#sh_paint1)" />
+                    <defs>
+                      <linearGradient id="sh_paint0" x1="7.18018" y1="0" x2="21.5117" y2="15.2943"
+                        gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#FF58D5" />
+                        <stop offset="1" stop-color="#FFA0E7" />
+                      </linearGradient>
+                      <linearGradient id="sh_paint1" x1="9.09081" y1="11.4708" x2="0.488281" y2="21.0295"
+                        gradientUnits="userSpaceOnUse">
+                        <stop stop-color="#7A5AF8" />
+                        <stop offset="1" stop-color="#B5A2FF" />
+                      </linearGradient>
+                    </defs>
+                  </svg>
+                  <p>Powerful AI Kit for AI Products, Tools and Startups</p>
+                </div>
+              </div>
+
+              <h1 class="hero-title">
+                Zanxa Studio, bantu kamu mengekspolorrefsafbs sdksa
+              </h1>
+
+              <p class="hero-desc">
+                Transform Your Vision into Reality: Unleash Your Creativity and Build Cutting-Edge AI Startups, Tools,
+                and Products with Our Powerful AI Agent UI Kit, Designed to Streamline Development and AI Innovation.
+              </p>
+
+              <div class="hero-cta-group">
+                <a href="text-generator.html" class="btn btn--primary">View Tools</a>
+                <a href="https://www.youtube.com/watch?v=_iHmNaQBtKk" class="btn btn--outline video-popup">
+                  <span class="btn-play-circle">
+                    <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path
+                        d="M3.5 3.71077L3.5 12.3482C3.5 13.5211 4.78545 14.2402 5.78489 13.6265L12.8183 9.30776C13.7717 8.7223 13.7717 7.33672 12.8183 6.75125L5.7849 2.43251C4.78545 1.81882 3.5 2.53795 3.5 3.71077Z"
+                        fill="white" />
+                    </svg>
+                  </span>
+                  Watch Intro
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero image -->
+          <div class="hero-img-wrap">
+            <div class="hero-img-frame">
+              <img src="assets/images/hero/hero-img.jpg" class="hero-img-light" alt="AI Agent dashboard preview" />
+              <img src="assets/images/hero/hero-img-dark.png" class="hero-img-dark" alt="AI Agent dashboard preview" />
+            </div>
+            <div class="hero-glow-blob" aria-hidden="true">
+              <svg width="1300" height="1001" viewBox="0 0 1300 1001" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g opacity="0.7" filter="url(#hgf0)">
+                  <circle cx="800" cy="500.03" r="300" fill="#4E6EFF" />
+                </g>
+                <g opacity="0.3" filter="url(#hgf1)">
+                  <circle cx="500" cy="500.03" r="300" fill="#FF58D5" />
+                </g>
+                <defs>
+                  <filter id="hgf0" x="300" y="0.029541" width="1000" height="1000" filterUnits="userSpaceOnUse"
+                    color-interpolation-filters="sRGB">
+                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                    <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                    <feGaussianBlur stdDeviation="100" result="effect1_foregroundBlur" />
+                  </filter>
+                  <filter id="hgf1" x="0" y="0.029541" width="1000" height="1000" filterUnits="userSpaceOnUse"
+                    color-interpolation-filters="sRGB">
+                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                    <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                    <feGaussianBlur stdDeviation="100" result="effect1_foregroundBlur" />
+                  </filter>
+                </defs>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-glow-bg" aria-hidden="true"></div>
+
+        <!-- Trusted logos -->
+        <div class="wrapper">
+          <div class="trusted-strip">
+            <p class="trusted-label">Trusted by worlds largest companies including...</p>
+            <div class="trusted-logos">
+              <img src="assets/images/brands/br-1.svg" class="trusted-logo" alt="Brand 1" />
+              <img src="assets/images/brands/br-2.svg" class="trusted-logo" alt="Brand 2" />
+              <img src="assets/images/brands/br-3.svg" class="trusted-logo" alt="Brand 3" />
+              <img src="assets/images/brands/br-4.svg" class="trusted-logo" alt="Brand 4" />
+              <img src="assets/images/brands/br-5.svg" class="trusted-logo" alt="Brand 5" />
+              <img src="assets/images/brands/br-6.svg" class="trusted-logo" alt="Brand 6" />
+              <img src="assets/images/brands/br-7.svg" class="trusted-logo" alt="Brand 7" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating decorative shapes -->
+        <div class="hero-shapes" aria-hidden="true">
+          <img src="assets/images/hero/shape-left-1.svg" class="hero-shape hero-shape--tl floating-1" alt="" />
+          <img src="assets/images/hero/shape-left-2.svg" class="hero-shape hero-shape--ml floating-2" alt="" />
+          <img src="assets/images/hero/shape-right-1.svg" class="hero-shape hero-shape--tr floating-3" alt="" />
+          <img src="assets/images/hero/shape-right-2.svg" class="hero-shape hero-shape--mr floating-4" alt="" />
+        </div>
+      </section>
+      <!-- /HERO -->
+
+
+      <!-- ════════════════════════════════════════════════════════════════════
+         CORE FEATURES
+         ════════════════════════════════════════════════════════════════════ -->
+      <section class="features-section">
+        <div class="wrapper">
+          <div class="section-header">
+            <h2 class="section-title">Core Features</h2>
+            <p class="section-desc">
+              Unlock the Potential of Innovation. Discover the Advanced AI Tools Transforming Your Ideas
+              into Reality with Unmatched Precision and Intelligence.
+            </p>
+          </div>
+          <div class="features-grid">
+            <template x-for="feature in features" :key="feature.title">
+              <div class="feature-card">
+                <div class="feature-icon-wrap">
+                  <i :data-lucide="feature.icon"></i>
+                </div>
+                <h3 class="feature-title" x-text="feature.title"></h3>
+                <p class="feature-desc" x-text="feature.desc"></p>
+              </div>
+            </template>
+          </div>
+        </div>
+      </section>
+      <!-- /CORE FEATURES -->
+
+
+      <!-- ════════════════════════════════════════════════════════════════════
+         AI TOOLS TABS
+         ════════════════════════════════════════════════════════════════════ -->
+      <section class="tabs-section">
+        <div class="wrapper">
+          <div class="section-header">
+            <h2 class="section-title">All the AI tools you need, at your Fingertips.</h2>
+            <p class="section-desc">
+              Unlock the Potential of Innovation, Discover the Advanced AI Tools Transforming Your Ideas
+              into Reality with Unmatched Precision and Intelligence.
+            </p>
+          </div>
+
+          <div class="tabs-inner" x-data="{ activeTab: 'text' }">
+            <!-- Tab nav -->
+            <div class="tab-nav">
+              <template x-for="product in products" :key="product.id">
+                <button class="tab-btn" :class="{ 'is-active': activeTab === product.id }"
+                  @click="activeTab = product.id">
+                  <i :data-lucide="product.icon"></i>
+                  <span x-text="product.name"></span>
+                </button>
+              </template>
+            </div>
+
+            <!-- Tab images -->
+            <div class="tab-img-container">
+              <template x-for="product in products" :key="product.id">
+                <div class="tab-panel" x-show="activeTab === product.id" x-cloak>
+                  <div class="tab-img-frame">
+                    <img :src="product.img + '.jpg'" class="tab-img-light"
+                      alt="assets/images/tab-image/tab-image-1.jpg" />
+                    <img :src="product.img + '-dark.jpg'" class="tab-img-dark"
+                      alt="assets/images/tab-image/tab-image-1-dark.jpg" />
+                  </div>
+                </div>
+              </template>
+            </div>
+
+            <!-- Tab description -->
+            <div class="tab-description">
+              <template x-for="product in products" :key="product.id">
+                <div x-show="activeTab === product.id" x-cloak>
+                  <h2 class="tab-product-title" x-text="product.title"></h2>
+                </div>
+              </template>
+              <p class="tab-desc-text">
+                Unlock the Potential of Innovation. Discover the Advanced AI Tools Transforming Your Ideas
+                into Reality with Unmatched Precision and Intelligence.
+              </p>
+              <button class="btn btn--primary">Try it now for free</button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /AI TOOLS TABS -->
+
+
+      <!-- ════════════════════════════════════════════════════════════════════
+         BENEFITS
+         ════════════════════════════════════════════════════════════════════ -->
+      <section class="benefits-section">
+        <div class="wrapper">
+          <div class="section-header">
+            <h2 class="section-title section-title--white">The key benefits of using our tools.</h2>
+            <p class="section-desc section-desc--white">
+              Unlock the Potential of Innovation. Discover the Advanced AI Tools Transforming Your Ideas
+              into Reality with Unmatched Precision and Intelligence.
+            </p>
+          </div>
+
+          <div class="benefits-inner">
+            <div class="benefits-grid">
+
+              <!-- Card 1 -->
+              <div class="benefits-col-half">
+                <div class="benefit-card--primary">
+                  <div class="benefit-card-text">
+                    <h3 class="benefit-card-title">Craft Professional-Grade Content with AI</h3>
+                    <p class="benefit-card-desc">Transform your ideas into groundbreaking realities with advanced AI
+                      tools.</p>
+                  </div>
+                  <div>
+                    <img src="assets/images/benefits/ind-1.svg" class="benefit-floating-1 floating-1" alt="" />
+                    <img src="assets/images/benefits/ind-2.svg" class="benefit-floating-2 floating-2" alt="" />
+                    <img src="assets/images/benefits/ind-3.svg" class="benefit-floating-3 floating-3" alt="" />
+                    <img src="assets/images/benefits/bn-1.svg" class="benefit-main-img" alt="" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 2 -->
+              <div class="benefits-col-half">
+                <div class="benefit-card--dark">
+                  <img src="assets/images/benefits/bn-2.svg" alt="" />
+                  <div>
+                    <h3 class="benefit-card-title">Boost your Productivity 10X with our AI agent tools.</h3>
+                    <p class="benefit-card-desc">Unlock the Potential of Innovation, Discover the Advanced AI Tools
+                      Intelligence.</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card 3 (full width) -->
+              <div class="benefits-col-full">
+                <div class="benefit-card--purple">
+                  <div class="benefit-purple-content">
+                    <h3 class="benefit-card-title">Overcome Writer's Block Today</h3>
+                    <p class="benefit-card-desc benefit-card-desc--mb">
+                      Discover the cutting-edge AI tools that bring your ideas to life with exceptional accuracy.
+                    </p>
+                    <a href="contact.html" class="btn btn--primary">Try it now for Free</a>
+                  </div>
+                  <div class="benefit-purple-img">
+                    <img src="assets/images/benefits/bn-3.svg" alt="" />
+                  </div>
+                  <img src="assets/images/benefits/blur-shape.png" class="benefit-blur-bg" alt="" />
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /BENEFITS -->
+
+
+      <!-- ════════════════════════════════════════════════════════════════════
+         TESTIMONIALS
+         ════════════════════════════════════════════════════════════════════ -->
+      <section class="testimonials-section" x-data="{ showAll: false }">
+        <div class="wrapper">
+          <div class="section-header">
+            <h2 class="section-title">What our users say</h2>
+            <p class="section-desc">
+              Unlock the Potential of Innovation. Discover the Advanced AI Tools Transforming Your Ideas
+              into Reality with Unmatched Precision and Intelligence.
+            </p>
+          </div>
+
+          <div class="testimonials-grid">
+            <template x-for="(testimonial, index) in testimonials" :key="index">
+              <div class="testimonial-card" x-show="showAll || index < 3" x-collapse>
+                <div class="testimonial-header">
+                  <img :src="testimonial.img" :alt="testimonial.name" class="testimonial-avatar" />
+                  <div>
+                    <p class="testimonial-name" x-text="testimonial.name"></p>
+                    <p class="testimonial-role" x-text="testimonial.role"></p>
+                  </div>
+                </div>
+                <div class="testimonial-body">
+                  <p class="testimonial-quote" x-text="testimonial.quote"></p>
+                </div>
+              </div>
+            </template>
+          </div>
+
+          <div class="testimonials-show-more">
+            <button class="btn btn--ghost" @click="showAll = !showAll">
+              <span x-text="showAll ? 'Show less...' : 'Show more...'"></span>
+            </button>
+          </div>
+        </div>
+
+        <template x-if="!showAll">
+          <div class="testimonials-fade" aria-hidden="true"></div>
+        </template>
+      </section>
+      <!-- /TESTIMONIALS -->
+
+
+      <!-- ════════════════════════════════════════════════════════════════════
+         PRICING
+         ════════════════════════════════════════════════════════════════════ -->
+      <section class="pricing-section">
+        <div class="wrapper">
+          <div class="section-header">
+            <h2 class="section-title">Start Your Content Creation Journey with AI</h2>
+            <p class="section-desc">
+              Collaborate with AI to generate content that resonates with your audience,
+              drives and delivers meaningful results across all platforms.
+            </p>
+          </div>
+
+          <div x-data="{ annual: false }">
+            <div class="billing-toggle-wrap">
+              <div class="billing-toggle">
+                <button class="billing-btn" :class="{ 'is-active': !annual }" @click="annual = false">Monthly</button>
+                <button class="billing-btn" :class="{ 'is-active': annual }" @click="annual = true">
+                  Annually
+                  <span class="save-badge">Save 20%</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="pricing-grid-wrap">
+              <!-- Background glow -->
+              <div class="pricing-glow" aria-hidden="true">
+                <svg width="1099" height="960" viewBox="0 0 1099 960" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g opacity="0.2" filter="url(#pgf0)">
+                    <circle cx="479.835" cy="480.254" r="179.665" fill="#FF58D5" />
+                  </g>
+                  <g opacity="0.1" filter="url(#pgf1)">
+                    <circle cx="619.165" cy="480.254" r="179.665" fill="#4E6EFF" />
+                  </g>
+                  <defs>
+                    <filter id="pgf0" x="0.169678" y="0.589355" width="959.33" height="959.33"
+                      filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                      <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                      <feGaussianBlur stdDeviation="150" result="effect1_foregroundBlur" />
+                    </filter>
+                    <filter id="pgf1" x="139.5" y="0.589355" width="959.33" height="959.33" filterUnits="userSpaceOnUse"
+                      color-interpolation-filters="sRGB">
+                      <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+                      <feGaussianBlur stdDeviation="150" result="effect1_foregroundBlur" />
+                    </filter>
+                  </defs>
+                </svg>
+              </div>
+
+              <div class="pricing-grid">
+                <template x-for="plan in pricing" :key="plan.name">
+                  <div class="pricing-card" :class="{ 'pricing-card--popular': plan.popular }">
+                    <div class="pricing-card-header">
+                      <div class="pricing-card-title-row">
+                        <h2 class="pricing-card-name" x-text="plan.name"></h2>
+                        <template x-if="plan.popular">
+                          <span class="popular-badge">Popular</span>
+                        </template>
+                      </div>
+                      <p class="pricing-card-price-row">
+                        <span class="pricing-card-price"
+                          x-text="annual && plan.annualPrice ? plan.annualPrice : plan.price"></span>
+                        <span class="pricing-card-period" x-text="annual ? 'Per year' : 'Per month'"></span>
+                      </p>
+                      <p class="pricing-card-desc" x-text="plan.desc"></p>
+                      <button class="pricing-card-cta"
+                        :class="plan.price === '$0' ? 'pricing-card-cta--free' : 'pricing-card-cta--paid'"
+                        x-text="plan.btn"></button>
+                    </div>
+                    <div class="pricing-card-features">
+                      <ul class="pricing-feature-list">
+                        <template x-for="feature in plan.features" :key="feature">
+                          <li class="pricing-feature-item">
+                            <i data-lucide="check" class="pricing-feature-icon"></i>
+                            <p class="pricing-feature-text" x-text="feature"></p>
+                          </li>
+                        </template>
+                      </ul>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /PRICING -->
+
+
+      <!-- ════════════════════════════════════════════════════════════════════
+         FAQ
+         ════════════════════════════════════════════════════════════════════ -->
+      <section class="faq-section">
+        <div class="wrapper">
+          <div class="section-header">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <p class="section-desc">
+              Answered all frequently asked questions. Still confused? Feel free to contact us.
+            </p>
+          </div>
+
+          <div class="faq-list-wrap" x-data="{ activeItem: 0 }">
+            <div class="faq-list">
+              <template x-for="(faq, index) in faqs" :key="index">
+                <div class="faq-item">
+                  <button class="faq-question-btn" type="button"
+                    @click="activeItem = activeItem === index ? null : index">
+                    <span class="faq-question-text" x-text="faq.q"></span>
+                    <i :data-lucide="activeItem === index ? 'minus' : 'plus'" class="faq-icon"></i>
+                  </button>
+                  <div class="faq-answer" x-show="activeItem === index" x-cloak x-collapse>
+                    <p class="faq-answer-text" x-text="faq.a"></p>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- /FAQ -->
+
+    </main>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+       FOOTER
+       ══════════════════════════════════════════════════════════════════════ -->
+    <footer class="site-footer">
+      <span class="footer-glow" aria-hidden="true">
+        <svg width="1260" height="457" viewBox="0 0 1260 457" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g filter="url(#fgf0)">
+            <circle cx="630" cy="-173.299" r="230" fill="#3B2EFF" />
+          </g>
+          <defs>
+            <filter id="fgf0" x="0" y="-803.299" width="1260" height="1260" filterUnits="userSpaceOnUse"
+              color-interpolation-filters="sRGB">
+              <feFlood flood-opacity="0" result="BackgroundImageFix" />
+              <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+              <feGaussianBlur stdDeviation="200" result="effect1_foregroundBlur" />
+            </filter>
+          </defs>
+        </svg>
+      </span>
+
+      <div class="footer-body">
+        <div class="footer-container">
+          <div class="footer-grid">
+
+            <!-- Brand -->
+            <div class="footer-brand">
+              <a href="index.html" class="footer-logo">
+                <img src="assets/images/logo-white.svg" alt="AI Agent" />
+              </a>
+              <span class="footer-tagline">
+                Create Smarter, Faster, and Effortless<br />
+                AI Tools, Products and Startups with AI Agent - AI UI Kit.
+              </span>
+              <div class="footer-socials">
+                <a href="https://www.linkedin.com/company/pimjo/posts/?feedView=all" target="_blank"
+                  rel="noopener noreferrer" class="footer-social-link" aria-label="LinkedIn">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
+                    <g clip-path="url(#fsc0)">
+                      <path
+                        d="M13.5447 3.68965C12.5249 3.22173 11.4313 2.87699 10.2879 2.67954C10.2671 2.67573 10.2463 2.68525 10.2356 2.7043C10.0949 2.95444 9.93915 3.28077 9.83006 3.53727C8.60027 3.35316 7.37679 3.35316 6.17221 3.53727C6.0631 3.27507 5.90166 2.95444 5.76038 2.7043C5.74966 2.68589 5.72886 2.67636 5.70803 2.67954C4.56527 2.87636 3.47171 3.2211 2.45129 3.68965C2.44246 3.69346 2.43488 3.69982 2.42986 3.70806C0.355594 6.80697 -0.212634 9.82971 0.0661201 12.815C0.0673814 12.8296 0.0755799 12.8435 0.086932 12.8524C1.45547 13.8574 2.78114 14.4676 4.08219 14.872C4.10301 14.8784 4.12507 14.8707 4.13832 14.8536C4.44608 14.4333 4.72043 13.9902 4.95565 13.5241C4.96953 13.4968 4.95628 13.4645 4.92791 13.4537C4.49275 13.2886 4.0784 13.0873 3.67982 12.8588C3.64829 12.8404 3.64577 12.7953 3.67477 12.7737C3.75865 12.7108 3.84255 12.6454 3.92264 12.5794C3.93713 12.5674 3.95732 12.5648 3.97435 12.5724C6.59286 13.7679 9.4277 13.7679 12.0153 12.5724C12.0323 12.5642 12.0525 12.5667 12.0677 12.5788C12.1478 12.6448 12.2316 12.7108 12.3161 12.7737C12.3451 12.7953 12.3433 12.8404 12.3117 12.8588C11.9131 13.0918 11.4988 13.2886 11.063 13.453C11.0346 13.4638 11.022 13.4968 11.0359 13.5241C11.2762 13.9895 11.5505 14.4327 11.8526 14.853C11.8652 14.8707 11.8879 14.8784 11.9087 14.872C13.2161 14.4676 14.5417 13.8574 15.9103 12.8524C15.9223 12.8435 15.9298 12.8302 15.9311 12.8156C16.2647 9.36431 15.3723 6.36636 13.5655 3.7087C13.5611 3.69982 13.5535 3.69346 13.5447 3.68965ZM5.34668 10.9973C4.55833 10.9973 3.90876 10.2735 3.90876 9.38464C3.90876 8.49578 4.54574 7.77202 5.34668 7.77202C6.15392 7.77202 6.79721 8.50214 6.78459 9.38464C6.78459 10.2735 6.14761 10.9973 5.34668 10.9973ZM10.6632 10.9973C9.87484 10.9973 9.22526 10.2735 9.22526 9.38464C9.22526 8.49578 9.86222 7.77202 10.6632 7.77202C11.4704 7.77202 12.1137 8.50214 12.1011 9.38464C12.1011 10.2735 11.4704 10.9973 10.6632 10.9973Z"
+                        fill="currentColor" fill-opacity="0.8" />
+                    </g>
+                    <defs>
+                      <clipPath id="fsc0">
+                        <rect width="16" height="16" fill="currentColor" transform="translate(0 0.919434)" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </a>
+                <a href="https://x.com/PimjoHQ" target="_blank" rel="noopener noreferrer" class="footer-social-link"
+                  aria-label="X (Twitter)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
+                    <path
+                      d="M12.2176 2.18848H14.4666L9.55323 7.80414L15.3334 15.4458H10.8076L7.26277 10.8112L3.20671 15.4458H0.956369L6.2117 9.43921L0.666748 2.18848H5.30749L8.51168 6.4247L12.2176 2.18848ZM11.4283 14.0997H12.6745L4.63034 3.4639H3.29306L11.4283 14.0997Z"
+                      fill="currentColor" />
+                  </svg>
+                </a>
+                <a href="https://github.com/PIMJO" target="_blank" rel="noopener noreferrer" class="footer-social-link"
+                  aria-label="GitHub">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="17" viewBox="0 0 16 17" fill="none">
+                    <g clip-path="url(#fsc2)">
+                      <path fill-rule="evenodd" clip-rule="evenodd"
+                        d="M8.00009 1.25293C6.10091 1.25392 4.264 1.92657 2.81783 3.15061C1.37166 4.37465 0.410521 6.07027 0.106282 7.93426C-0.197957 9.79825 0.174536 11.7091 1.15717 13.325C2.13979 14.941 3.66848 16.1568 5.46987 16.7549C5.86729 16.8287 6.01698 16.5824 6.01698 16.3729C6.01698 16.1635 6.00903 15.5563 6.00638 14.8924C3.78085 15.3732 3.31057 13.9533 3.31057 13.9533C2.9476 13.0312 2.42301 12.7889 2.42301 12.7889C1.69706 12.2962 2.47733 12.3054 2.47733 12.3054C3.28143 12.3621 3.70402 13.1261 3.70402 13.1261C4.41672 14.3418 5.57585 13.9901 6.03155 13.7847C6.10309 13.2696 6.31107 12.9193 6.54025 12.7204C4.76247 12.5202 2.89461 11.8378 2.89461 8.78988C2.88359 7.9994 3.1786 7.23496 3.71859 6.65472C3.63646 6.4545 3.36224 5.64575 3.79675 4.54722C3.79675 4.54722 4.46839 4.33383 5.99712 5.36256C7.30836 5.00601 8.69183 5.00601 10.0031 5.36256C11.5305 4.33383 12.2008 4.54722 12.2008 4.54722C12.6366 5.64312 12.3624 6.45187 12.2803 6.65472C12.822 7.23506 13.1176 8.00083 13.1056 8.79251C13.1056 11.8471 11.2337 12.5202 9.45331 12.7164C9.73945 12.964 9.99512 13.4475 9.99512 14.1903C9.99512 15.2546 9.98585 16.1108 9.98585 16.3729C9.98585 16.585 10.1302 16.8326 10.5356 16.7549C12.3372 16.1567 13.866 14.9407 14.8487 13.3245C15.8313 11.7082 16.2036 9.79713 15.899 7.93296C15.5944 6.0688 14.6328 4.37317 13.1861 3.14933C11.7395 1.9255 9.90215 1.25329 8.00274 1.25293H8.00009Z"
+                        fill="currentColor" />
+                    </g>
+                    <defs>
+                      <clipPath id="fsc2">
+                        <rect width="16" height="16" fill="currentColor" transform="translate(0 0.919434)" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </a>
+                <a href="https://www.facebook.com/PimjoHQ" target="_blank" rel="noopener noreferrer"
+                  class="footer-social-link" aria-label="Facebook">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
+                    <g clip-path="url(#fsc3)">
+                      <path
+                        d="M10.5 11.0444H12.375L13.125 8.04443H10.5V6.54443C10.5 5.7724 10.5 5.04443 12 5.04443H13.125V2.52451C12.8807 2.49207 11.9573 2.41943 10.9822 2.41943C8.9463 2.41943 7.5 3.66208 7.5 5.94422V8.04443H5.25V11.0444H7.5V17.4194H10.5V11.0444Z"
+                        fill="currentColor" />
+                    </g>
+                    <defs>
+                      <clipPath id="fsc3">
+                        <rect width="18" height="18" fill="currentColor" transform="translate(0 0.919434)" />
+                      </clipPath>
+                    </defs>
+                  </svg>
+                </a>
+              </div>
+            </div>
+
+            <!-- Nav links -->
+            <div class="footer-links">
+              <div class="footer-links-grid">
+                <template x-for="group in footerLinks" :key="group.title">
+                  <div>
+                    <span class="footer-link-group-title" x-text="group.title"></span>
+                    <nav class="footer-link-group-nav">
+                      <template x-for="link in group.links" :key="link.name">
+                        <a :href="link.href" class="footer-link" x-text="link.name"></a>
+                      </template>
+                    </nav>
+                  </div>
+                </template>
+              </div>
+            </div>
+
+            <!-- Newsletter -->
+            <div class="footer-newsletter">
+              <span class="footer-newsletter-title">Stay In Touch</span>
+              <span class="footer-newsletter-desc">Subscribe now for exclusive insights and offers!</span>
+              <div class="footer-newsletter-form">
+                <input type="email" placeholder="Enter your email" class="footer-email-input" />
+                <button class="btn--subscribe">Subscribe Now</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-bottom-inner">
+          <p class="footer-copyright">
+            &copy; <span x-text="currentYear"></span> AI Agent &mdash; All Rights Reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
+    <!-- /FOOTER -->
+
+
+  </div>
+
+  <script src="assets/js/app-data.js"></script>
+  <script defer src="assets/js/alpine.min.js"></script>
+  <script defer src="assets/js/glightbox.min.js"></script>
+  <script defer src="assets/js/app.js"></script>
+</body>
+
+</html>
