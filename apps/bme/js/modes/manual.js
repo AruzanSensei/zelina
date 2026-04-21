@@ -123,13 +123,13 @@ export function initManualMode() {
             div.innerHTML = `
                 <button class="remove-item-btn" data-index="${index}"><i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i></button>
                     
-                <div class="input-group" style="margin-bottom: 8px;">
+                <div class="input-group item-field-wrap" style="margin-bottom: 8px;">
                     <label class="field-label"><strong>Invoice</strong> - Keterangan</label>
                     <textarea class="form-input item-inv-keterangan ${!item.invKeterangan ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Keterangan untuk Invoice" rows="1" style="resize:none; overflow:hidden; font-family:inherit; white-space:pre-wrap;">${item.invKeterangan || ''}</textarea>
                 </div>
 
                 <div class="item-row">
-                    <div style="flex: 1;">
+                    <div class="item-field-wrap" style="flex: 1;">
                         <label class="field-label"><strong>SurJal</strong> - Nama Barang</label>
                         <div class="input-with-icon">
                             <textarea class="form-input item-name ${!item.name ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Nama Barang" rows="1" style="resize:none; overflow:hidden; padding-right:30px; font-family:inherit; white-space:pre-wrap;">${item.name || ''}</textarea>
@@ -149,7 +149,7 @@ export function initManualMode() {
                     </div>
                 </div>
 
-                <div class="input-group" style="margin-bottom: 8px;">
+                <div class="input-group item-field-wrap" style="margin-bottom: 8px;">
                     <label class="field-label"><strong>SurJal</strong> - Keterangan</label>
                     <textarea class="form-input item-sj-keterangan ${!item.sjKeterangan ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Keterangan untuk Surat Jalan" rows="1" style="resize:none; overflow:hidden; font-family:inherit; white-space:pre-wrap;">${item.sjKeterangan || ''}</textarea>
                 </div>
@@ -189,7 +189,7 @@ export function initManualMode() {
             div.innerHTML = `
                 <button class="remove-item-btn" data-index="${index}"><i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i></button>
                     
-                    <div class="input-group" style="margin-bottom: 4px;">
+                    <div class="input-group item-field-wrap" style="margin-bottom: 4px;">
                         <label class="field-label">Barang</label>
                         <div class="input-with-icon">
                             <textarea class="form-input item-name ${!item.name ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Nama Barang" rows="1" style="resize:none; overflow:hidden; padding-right:30px; font-family:inherit; white-space:pre-wrap;">${item.name || ''}</textarea>
@@ -198,11 +198,11 @@ export function initManualMode() {
                     </div>
                     
                     <div class="item-row">
-                        <div style="flex: 2.2; padding-top: 4px;">
+                        <div class="item-price-wrap" style="flex: 2.2; padding-top: 4px;">
                             <label class="field-label">Harga</label>
                             <input type="text" class="form-input item-price-format ${!item.price || item.price <= 0 ? 'required-empty-orange' : ''}" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="0" inputmode="numeric">
                         </div>
-                        <div style="flex: 2; padding-top: 4px;">
+                        <div class="item-tipe-wrap" style="flex: 2; padding-top: 4px;">
                             <label class="field-label">Tipe</label>
                             <select class="form-input item-tipe ${!item.tipe ? 'required-empty-orange' : ''}" data-index="${index}">
                                 <option value="" ${!item.tipe ? 'selected' : ''}></option>
@@ -212,7 +212,7 @@ export function initManualMode() {
                                 <option value="APC" ${item.tipe === 'APC' ? 'selected' : ''}>APC</option>
                             </select>
                         </div>
-                        <div style="flex: 1.5; min-width: 90px; display: flex; flex-direction: column;">
+                        <div class="item-qty-wrap" style="flex: 1.5; min-width: 90px; margin-top:17px; display: flex; flex-direction: column;">
                             <div class="unit-switch" data-index="${index}" style="margin: 0 0 6px auto;">
                                 <span class="unit-opt ${(item.qtyUnit || 'pcs') === 'pcs' ? 'active' : ''}" data-unit="pcs">Pcs</span>
                                 <span class="unit-opt ${item.qtyUnit === 'lot' ? 'active' : ''}" data-unit="lot">Lot</span>

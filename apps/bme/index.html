@@ -118,7 +118,7 @@
 
         <!-- MODE 1: MANUAL -->
         <section id="manual-view" class="view client-view active">
-            <div class="input-group">
+            <div class="input-group item-field-wrap">
                 <label class="field-label">Judul Invoice</label>
                 <input type="text" id="manual-title" class="form-input title" placeholder="Contoh: Invoice #001">
             </div>
@@ -791,28 +791,67 @@
 </script>
 
 <style>
-    /* Base transition — harus di sini agar animasi bekerja dua arah (fade in & out) */
+    /* Animasi collapse spacing pada field wraps saat label tersembunyi */
     #manual-view .field-label,
-    #manual-view .remove-item-btn,
-    #manual-view .view-toggle-container,
-    #manual-view .input-icon-btn,
-    #manual-view .copy-icon-btn {
+    #manual-view .item-field-wrap,
+    #manual-view .item-price-wrap,
+    #manual-view .item-tipe-wrap,
+    #manual-view .item-qty-wrap,
+    #manual-view .item-name,
+    #manual-view .item-note {
+        transition: opacity 400ms ease, max-height 400ms ease, margin 400ms ease, padding 400ms ease;
+    }
+
+    #manual-view.labels-hidden .view-toggle-container {
         transition: opacity 400ms ease;
     }
 
-    /* Label visibility toggle ─ label tetap occupy space, hanya tak terlihat */
+    /* Label visibility toggle ─ animasi collapse menggunakan max-height */
+    #manual-view .field-label {
+        max-height: 20px;
+        overflow: hidden;
+    }
+
     #manual-view.labels-hidden .field-label {
         opacity: 0;
+        max-height: 0;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
         pointer-events: none;
         user-select: none;
     }
 
-    /* Sembunyikan tombol hapus item dan kontrol tampilan/mode saat eye-closed */
+    /* Sembunyikan elemen UI lainnya saat eye-closed */
     #manual-view.labels-hidden .remove-item-btn,
     #manual-view.labels-hidden .view-toggle-container,
     #manual-view.labels-hidden .input-icon-btn,
     #manual-view.labels-hidden .copy-icon-btn {
         opacity: 0;
+        pointer-events: none;
+        user-select: none;
+    }
+
+    /* Collapse spacings */
+    #manual-view.labels-hidden .item-price-wrap,
+    #manual-view.labels-hidden .item-tipe-wrap {
+        padding-top: 0 !important;
+    }
+
+    #manual-view.labels-hidden .item-qty-wrap {
+        margin-top: 0 !important;
+    }
+
+    #manual-view.labels-hidden .item-field-wrap {
+        margin-bottom: 0 !important;
+    }
+
+    /* Penyesuaian margin input saat label hilang */
+    #manual-view.labels-hidden .item-name {
+        margin-bottom: 6px !important;
+    }
+
+    #manual-view.labels-hidden .item-note {
+        margin-top: 2px !important;
     }
 </style>
 

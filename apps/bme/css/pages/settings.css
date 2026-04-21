@@ -72,7 +72,7 @@ summary.setting-item::after {
     transition: transform 0.2s ease;
 }
 
-details[open] > summary.setting-item::after {
+details[open]>summary.setting-item::after {
     transform: translateY(-50%) rotate(180deg);
 }
 
@@ -123,6 +123,7 @@ details[open] > summary.setting-item::after {
     display: block;
     font-size: 0.85rem;
     color: var(--text-muted);
+    opacity: 0.5;
 }
 
 .setting-control {
@@ -218,14 +219,14 @@ details[open] > summary.setting-item::after {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-input:checked + .ios-slider {
+input:checked+.ios-slider {
     background-color: var(--primary);
 }
 
-input:focus + .ios-slider {
+input:focus+.ios-slider {
     box-shadow: 0 0 1px var(--primary);
 }
 
-input:checked + .ios-slider:before {
+input:checked+.ios-slider:before {
     transform: translateX(20px);
 }

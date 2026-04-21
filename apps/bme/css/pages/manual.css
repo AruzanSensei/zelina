@@ -71,9 +71,10 @@
    ============================================ */
 .qty-control {
     display: flex;
+    height: 27px;
     align-items: center;
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-sm);
+    border-radius: 8px;
     background: var(--bg-input);
     overflow: hidden;
 }
