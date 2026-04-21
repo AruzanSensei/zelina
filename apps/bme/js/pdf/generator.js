@@ -991,9 +991,10 @@ export function initPDFGenerator() {
                     const alertEl = document.getElementById('custom-alert');
                     const messageEl = document.getElementById('alert-message');
                     if (alertEl && messageEl) {
-                        messageEl.innerHTML = 'Mengekspor... <i class="fa-solid fa-spinner fa-spin"></i>';
+                        messageEl.innerHTML = 'Mengekspor... <i data-lucide="loader-2" class="spin-icon" style="width:14px;height:14px;stroke-width:1.5"></i>';
                         alertEl.classList.remove('hidden');
                         alertEl.style.animation = 'alert-in 0.3s ease-out forwards';
+                        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...messageEl.querySelectorAll('[data-lucide]')] });
                     }
 
                     if (defaultMethod === 'jpeg') {
@@ -1075,9 +1076,10 @@ export function initPDFGenerator() {
                 const alertEl = document.getElementById('custom-alert');
                 const messageEl = document.getElementById('alert-message');
                 if (alertEl && messageEl) {
-                    messageEl.innerHTML = 'Mengekspor... <i class="fa-solid fa-spinner fa-spin"></i>';
+                    messageEl.innerHTML = 'Mengekspor... <i data-lucide="loader-2" class="spin-icon" style="width:14px;height:14px;stroke-width:1.5"></i>';
                     alertEl.classList.remove('hidden');
                     alertEl.style.animation = 'alert-in 0.3s ease-out forwards';
+                    if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...messageEl.querySelectorAll('[data-lucide]')] });
                 }
 
                 if (defaultMethod === 'jpeg') {
@@ -1243,9 +1245,10 @@ export function initPDFGenerator() {
         const messageEl = document.getElementById('alert-message');
         if (!alertEl || !messageEl) return;
 
-        messageEl.innerHTML = isSuccess ? `${message} <i class="fa-solid fa-circle-check" style="color:#2ecc71;"></i>` : message;
+        messageEl.innerHTML = isSuccess ? `${message} <i data-lucide="check-circle-2" style="width:16px;height:16px;stroke-width:2;color:#2ecc71;"></i>` : message;
         alertEl.classList.remove('hidden');
         alertEl.style.animation = 'alert-in 0.3s ease-out forwards';
+        if (isSuccess && window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...messageEl.querySelectorAll('[data-lucide]')] });
 
         setTimeout(() => {
             alertEl.style.animation = 'alert-out 0.3s ease-in forwards';
@@ -1268,12 +1271,12 @@ export function initPDFGenerator() {
         popup.href = 'https://www.ilovepdf.com/id/jpg-ke-pdf/';
         popup.target = '_blank';
         popup.innerHTML = `
-            <i class="fa-solid fa-file-pdf"></i>
+            <i data-lucide="file-type-2" style="width:18px;height:18px;stroke-width:1.5"></i>
             <span>Jadikan PDF</span>
-            <i class="fa-solid fa-xmark close-popup" id="close-conv-popup"></i>
+            <i data-lucide="x" class="close-popup" id="close-conv-popup" style="width:14px;height:14px;stroke-width:2.5"></i>
         `;
-
         document.body.appendChild(popup);
+        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...popup.querySelectorAll('[data-lucide]')] });
 
         // Handle close button click
         const closeBtn = popup.querySelector('#close-conv-popup');

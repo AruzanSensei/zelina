@@ -179,7 +179,7 @@ export function initSettings() {
             tooltip.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                     <strong>Format Token</strong>
-                    <button id="close-format-help" style="background:none; border:none; cursor:pointer; font-size:1.2rem; color:var(--text-muted);"><i class="fa-solid fa-times"></i></button>
+                    <button id="close-format-help" style="background:none; border:none; cursor:pointer; color:var(--text-muted);"><i data-lucide="x" style="width:18px;height:18px;stroke-width:2.5"></i></button>
                 </div>
                 <table style="width:100%; font-size:0.85rem; border-collapse:collapse;">
                     <tr style="border-bottom:1px solid var(--border-color);"><td style="padding:6px 4px;"><code>{judul}</code></td><td>Judul invoice</td></tr>
@@ -195,6 +195,7 @@ export function initSettings() {
                 </div>
             `;
             document.body.appendChild(tooltip);
+            if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...tooltip.querySelectorAll('[data-lucide]')] });
 
             const backdrop = document.createElement('div');
             backdrop.id = 'format-help-backdrop';
@@ -272,25 +273,26 @@ export function initSettings() {
     const showSyncMenu = (x, y, isImport) => {
         syncContextMenu.innerHTML = isImport ? `
             <button class="ctx-item" data-action="import-json">
-                <i class="fa-solid fa-file-code"></i> Data JSON
+                <i data-lucide="file-code" style="width:14px;height:14px;stroke-width:1.5"></i> Data JSON
             </button>
         ` : `
             <button class="ctx-item" data-action="export-json">
-                <i class="fa-solid fa-file-code"></i> Data JSON
+                <i data-lucide="file-code" style="width:14px;height:14px;stroke-width:1.5"></i> Data JSON
             </button>
             <button class="ctx-item" data-action="export-csv">
-                <i class="fa-solid fa-file-csv"></i> Tabel CSV
+                <i data-lucide="table" style="width:14px;height:14px;stroke-width:2"></i> Tabel CSV
             </button>
             <button class="ctx-item" data-action="export-pdf">
-                <i class="fa-solid fa-file-pdf"></i> Dokumen PDF
+                <i data-lucide="file-type-2" style="width:14px;height:14px;stroke-width:1.5"></i> Dokumen PDF
             </button>
             <div class="ctx-separator"></div>
             <button class="ctx-item orange" data-action="export-zip">
-                <i class="fa-solid fa-file-zipper"></i> Semua (ZIP)
+                <i data-lucide="archive" style="width:14px;height:14px;stroke-width:2"></i> Semua (ZIP)
             </button>
         `;
 
-        syncContextMenu.id = 'bme-context-menu'; // Use existing css
+        syncContextMenu.id = 'bme-context-menu';
+        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...syncContextMenu.querySelectorAll('[data-lucide]')] });
 
         syncContextMenu.querySelectorAll('.ctx-item').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -477,9 +479,10 @@ export function initSettings() {
             const btnAlert = document.getElementById('custom-alert');
             const msgAlert = document.getElementById('alert-message');
             if (btnAlert && msgAlert) {
-                msgAlert.innerHTML = 'Memproses ZIP... <i class="fa-solid fa-spinner fa-spin"></i>';
+                msgAlert.innerHTML = 'Memproses ZIP... <i data-lucide="loader-2" class="spin-icon" style="width:14px;height:14px;stroke-width:1.5"></i>';
                 btnAlert.classList.remove('hidden');
                 btnAlert.style.animation = 'alert-in 0.3s ease-out forwards';
+                if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...msgAlert.querySelectorAll('[data-lucide]')] });
             }
 
             zip.generateAsync({ type: "blob" }).then(function (content) {
@@ -538,16 +541,17 @@ export function initSettings() {
                         ${t.items.length} Barang &bull; ${formatCurrency(t.items.reduce((s, x) => s + (x.price * x.qty), 0))}
                     </div>
                 </div>
-        <div class="template-actions">
+                	<div class="template-actions">
             <button class="btn btn-sm btn-outline use-template" data-index="${i}" title="Pakai">
-                <i class="fa-solid fa-check"></i>
+                <i data-lucide="check" style="width:14px;height:14px;stroke-width:2.5"></i>
             </button>
             <button class="btn btn-sm btn-outline delete-template" data-index="${i}" style="color:#ff4d4f; border-color:#ff4d4f; margin-left:4px;">
-                <i class="fa-solid fa-trash"></i>
+                <i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i>
             </button>
         </div>
     `;
             templateList.appendChild(div);
+            if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...div.querySelectorAll('[data-lucide]')] });
         });
 
         // Init Drag Logic after render
@@ -788,7 +792,7 @@ export function initSettings() {
         <div class="modal-content">
                         <div class="modal-header">
                             <h2>Edit Item</h2>
-                            <button class="close-picker"><i class="fa-solid fa-times"></i></button>
+                            <button class="close-picker"><i data-lucide="x" style="width:17px;height:17px;stroke-width:2.5"></i></button>
                         </div>
                         <div class="modal-body">
                             <div class="input-group">
@@ -823,7 +827,7 @@ export function initSettings() {
         <div class="modal-content">
                         <div class="modal-header">
                             <h2>Tambah Item Baru</h2>
-                            <button class="close-picker"><i class="fa-solid fa-times"></i></button>
+                            <button class="close-picker"><i data-lucide="x" style="width:17px;height:17px;stroke-width:2.5"></i></button>
                         </div>
                         <div class="modal-body">
                             <div class="input-group">
@@ -858,15 +862,15 @@ export function initSettings() {
         <div class="modal-content">
                         <div class="modal-header">
                             <h2>Pilih Barang</h2>
-                            <button class="close-picker"><i class="fa-solid fa-times"></i></button>
+                            <button class="close-picker"><i data-lucide="x" style="width:17px;height:17px;stroke-width:2.5"></i></button>
                         </div>
                         <div class="modal-body">
                             <div id="picker-list" style="max-height: 50vh; overflow-y: auto;">
                                 ${itemTemplates.map((t, idx) => `
                                     <div class="item-swipe-container" style="position:relative; overflow:hidden; border-radius:var(--radius-sm); margin-bottom:8px;">
                                         <div class="swipe-actions" style="position:absolute; top:0; bottom:0; right:0; display:flex; z-index:1;">
-                                            <button class="swipe-btn swipe-edit" data-index="${idx}" style="background-color:#F5A623; border:none; color:white; padding:0 20px; cursor:pointer;"><i class="fa-solid fa-pen-to-square"></i></button>
-                                            <button class="swipe-btn swipe-delete" data-index="${idx}" style="background-color:#ff4d4f; border:none; color:white; padding:0 20px; cursor:pointer; border-radius:0 var(--radius-sm) var(--radius-sm) 0;"><i class="fa-solid fa-trash"></i></button>
+                                            <button class="swipe-btn swipe-edit" data-index="${idx}" style="background-color:#F5A623; border:none; color:white; padding:0 20px; cursor:pointer;"><i data-lucide="pencil" style="width:15px;height:15px;stroke-width:2"></i></button>
+                                            <button class="swipe-btn swipe-delete" data-index="${idx}" style="background-color:#ff4d4f; border:none; color:white; padding:0 20px; cursor:pointer; border-radius:0 var(--radius-sm) var(--radius-sm) 0;"><i data-lucide="trash-2" style="width:15px;height:15px;stroke-width:2.5"></i></button>
                                         </div>
                                         <div class="item-card picker-item" data-index="${idx}" style="padding:12px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border:1px solid var(--border-color); box-shadow: var(--shadow-sm) !important; background:var(--bg-card); z-index:2; position:relative; transition:transform 0.2s;">
                                             <div style="font-weight:500; pointer-events:none;">${t.name}</div>
@@ -876,7 +880,7 @@ export function initSettings() {
                                 `).join('')}
                             </div>
                             <button id="btn-to-add-view" class="btn btn-outline btn-full" style="margin-top:10px;">
-                                <i class="fa-solid fa-plus"></i> Tambah Item Baru
+                                <i data-lucide="plus" style="width:14px;height:14px;stroke-width:2.5"></i> Tambah Item Baru
                             </button>
                         </div>
                     </div >

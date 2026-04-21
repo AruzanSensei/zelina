@@ -11,8 +11,47 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <style>
+        /* Lucide icon baseline */
+        [data-lucide] {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
+
+        [data-lucide] svg,
+        .lc svg {
+            display: block;
+            fill: none;
+            stroke: currentColor;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Spinner animation for loader-2 (replaces fa-spin) */
+        @keyframes bme-spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spin-icon {
+            animation: bme-spin 0.8s linear infinite;
+            display: inline-flex;
+            vertical-align: middle;
+        }
+
+        .spin-icon svg {
+            fill: none;
+            stroke: currentColor;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+    </style>
 
     <!-- html-to-image Library -->
     <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
@@ -54,15 +93,15 @@
             </div>
         </div>
         <button id="btn-settings" class="icon-btn">
-            <i class="fa-solid fa-cog"></i>
+            <i data-lucide="settings" style="width:22px;height:22px;stroke-width:2.5"></i>
         </button>
     </header>
 
     <!-- Tab Navigation -->
     <nav class="tab-nav">
         <button class="tab-btn active" data-tab="manual">Manual</button>
-        <button class="tab-btn" data-tab="ai">AI <i class="fa-solid fa-lock"
-                style="font-size: 0.7em; opacity: 0.5;"></i></button>
+        <button class="tab-btn" data-tab="ai">AI <i data-lucide="lock"
+                style="width:11px;height:11px;stroke-width:2;opacity:0.5"></i></button>
         <button class="tab-btn" data-tab="finance">Finance</button>
         <button class="tab-btn" data-tab="history">History</button>
     </nav>
@@ -84,10 +123,12 @@
                     <div style="display:flex; align-items:center; gap:8px;">
                         <span class="view-label" style="margin:0;">Tampilan</span>
                         <div class="toggle-group orange-theme">
-                            <button class="toggle-btn active" id="view-card-btn" title="Card View"><i
-                                    class="fa-solid fa-list-ul"></i></button>
-                            <button class="toggle-btn" id="view-table-btn" title="Table View"><i
-                                    class="fa-solid fa-table-cells-large"></i></button>
+                            <button class="toggle-btn active" id="view-card-btn" title="Card View">
+                                <i data-lucide="list" style="width:15px;height:15px;stroke-width:2"></i>
+                            </button>
+                            <button class="toggle-btn" id="view-table-btn" title="Table View">
+                                <i data-lucide="layout-grid" style="width:15px;height:15px;stroke-width:2"></i>
+                            </button>
                         </div>
                     </div>
 
@@ -97,10 +138,12 @@
                     <div style="display:flex; align-items:center; gap:8px;">
                         <span class="view-label" style="margin:0;">Mode</span>
                         <div class="toggle-group orange-theme">
-                            <button class="toggle-btn active" id="mode-simple-btn" title="Simple Mode"><i
-                                    class="fa-solid fa-th-large"></i></button>
-                            <button class="toggle-btn" id="mode-advance-btn" title="Advance Mode"><i
-                                    class="fa-solid fa-th"></i></button>
+                            <button class="toggle-btn active" id="mode-simple-btn" title="Simple Mode">
+                                <i data-lucide="square" style="width:15px;height:15px;stroke-width:2"></i>
+                            </button>
+                            <button class="toggle-btn" id="mode-advance-btn" title="Advance Mode">
+                                <i data-lucide="grid-2x2" style="width:15px;height:15px;stroke-width:2"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -109,21 +152,23 @@
             <div id="manual-items-wrapper" style="position:relative;">
                 <div id="manual-edit-overlay" class="hidden"
                     style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:10; display:none; flex-direction:column; justify-content:center; align-items:center; border:2px dashed #f39c12; border-radius:8px;">
-                    <i class="fa-solid fa-triangle-exclamation"
-                        style="font-size:3rem; color:#f39c12; margin-bottom:15px;"></i>
+                    <i data-lucide="alert-triangle"
+                        style="width:48px;height:48px; color:#f39c12; margin-bottom:15px;stroke-width:2.75"></i>
                     <h3 style="color:#d35400;">Mode Edit Manual Aktif</h3>
                     <p style="text-align:center; padding:10px; font-weight:600; color:#333;">Input otomatis
                         dinonaktifkan<br>karena ada perubahan kustom.</p>
                     <button id="btn-reset-manual-edit" class="btn btn-primary"
-                        style="background:#e67e22; border-color:#d35400; margin-top:10px;"><i
-                            class="fa-solid fa-rotate-left"></i> Reset & Lanjutkan Otomatis</button>
+                        style="background:#e67e22; border-color:#d35400; margin-top:10px;">
+                        <i data-lucide="rotate-ccw" style="width:14px;height:14px;stroke-width:2.5"></i> Reset &amp;
+                        Lanjutkan Otomatis
+                    </button>
                 </div>
                 <div id="manual-items-container">
                     <!-- Items will be injected here -->
                 </div>
 
                 <button id="btn-add-item" class="btn btn-outline btn-full">
-                    <i class="fa-solid fa-plus"></i> Tambah Item
+                    <i data-lucide="plus" style="width:15px;height:15px;stroke-width:2.5"></i> Tambah Item
                 </button>
             </div>
         </section>
@@ -139,7 +184,7 @@
             </div>
             <div class="ai-actions">
                 <button id="btn-ai-generate" class="btn btn-primary btn-icon-right">
-                    Generate <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    Generate <i data-lucide="wand-2" style="width:15px;height:15px;stroke-width:2"></i>
                 </button>
             </div>
         </section>
@@ -149,15 +194,17 @@
             <div id="history-sticky-wrapper">
                 <div class="history-toolbar">
                     <div class="history-search-wrapper">
-                        <i class="fa-solid fa-search"
-                            style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:0.85rem;"></i>
+                        <i data-lucide="search"
+                            style="position:absolute; left:12px; top:50%; transform:translateY(-50%); width:14px;height:14px; stroke-width:2;"></i>
                         <input type="text" id="history-search" class="form-input search-history"
                             placeholder="Cari riwayat..." style="padding-left:36px; font-size:0.9rem;">
                     </div>
-                    <button id="btn-multi-select" class="icon-btn" title="Pilih Semua / Beberapa"><i
-                            class="fa-solid fa-check-double"></i></button>
-                    <button id="btn-history-filter" class="icon-btn" title="Filter Riwayat"><i
-                            class="fa-solid fa-filter"></i></button>
+                    <button id="btn-multi-select" class="icon-btn" title="Pilih Semua / Beberapa">
+                        <i data-lucide="check-check" style="width:17px;height:17px;stroke-width:2.5"></i>
+                    </button>
+                    <button id="btn-history-filter" class="icon-btn" title="Filter Riwayat">
+                        <i data-lucide="filter" style="width:16px;height:16px;stroke-width:2"></i>
+                    </button>
                 </div>
                 <!-- Filter chips injected here by JS -->
             </div>
@@ -200,10 +247,12 @@
                 <div class="finance-chart-header">
                     <span class="finance-chart-title" id="finance-chart-year">2026</span>
                     <div style="display:flex; gap:4px;">
-                        <button class="finance-nav-btn" id="finance-year-prev"><i
-                                class="fa-solid fa-chevron-left"></i></button>
-                        <button class="finance-nav-btn" id="finance-year-next"><i
-                                class="fa-solid fa-chevron-right"></i></button>
+                        <button class="finance-nav-btn" id="finance-year-prev">
+                            <i data-lucide="chevron-left" style="width:16px;height:16px;stroke-width:2"></i>
+                        </button>
+                        <button class="finance-nav-btn" id="finance-year-next">
+                            <i data-lucide="chevron-right" style="width:16px;height:16px;stroke-width:2"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="finance-chart" id="finance-monthly-chart"></div>
@@ -247,7 +296,7 @@
                     </button>
                     <button class="btn preview-card-download-btn" data-download-type="invoice"
                         style="position:absolute; right:10px; bottom:10px; padding:8px 10px; font-size:0.8rem; background:#e67e22; border-color:#d35400; color:white;">
-                        <i class="fa-solid fa-download"></i>
+                        <i data-lucide="download" style="width:15px;height:15px;stroke-width:2.5"></i>
                     </button>
                 </div>
                 <div class="preview-card letter-preview">
@@ -260,7 +309,7 @@
                     </button>
                     <button class="btn preview-card-download-btn" data-download-type="surat"
                         style="position:absolute; right:10px; bottom:10px; padding:8px 10px; font-size:0.8rem; background:#e67e22; border-color:#d35400; color:white;">
-                        <i class="fa-solid fa-download"></i>
+                        <i data-lucide="download" style="width:15px;height:15px;stroke-width:2.5"></i>
                     </button>
                 </div>
             </div>
@@ -301,10 +350,12 @@
                 <h2>Pengaturan</h2>
                 <div style="display:flex; gap:10px; margin-left:auto; margin-right:8px;">
                     <button id="btn-theme-toggle" class="icon-btn" title="Ganti Tema">
-                        <i class="fa-solid fa-moon"></i>
+                        <i data-lucide="moon" style="width:17px;height:17px;stroke-width:1.5"></i>
                     </button>
                 </div>
-                <button class="close-modal"><i class="fa-solid fa-times"></i></button>
+                <button class="close-modal">
+                    <i data-lucide="x" style="width:18px;height:18px;stroke-width:2.5"></i>
+                </button>
             </div>
             <div class="modal-body" style="padding: 0;">
                 <!-- Settings Tabs -->
@@ -418,11 +469,12 @@
                     <!-- Danger Zone -->
                     <button id="btn-reset-settings" class="btn btn-outline btn-full"
                         style="color:#f39c12; border-color:#f39c12; margin-top: 4px; margin-bottom: 8px;">
-                        <i class="fa-solid fa-rotate-left"></i> Reset Semua Pengaturan
+                        <i data-lucide="rotate-ccw" style="width:14px;height:14px;stroke-width:2.5"></i> Reset Semua
+                        Pengaturan
                     </button>
                     <button id="btn-delete-all-data" class="btn btn-outline btn-full"
                         style="color:#ff4d4f; border-color:#ff4d4f; margin-bottom: 8px;">
-                        <i class="fa-solid fa-trash-alt"></i> Hapus Semua Data
+                        <i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i> Hapus Semua Data
                     </button>
                 </div>
 
@@ -449,14 +501,16 @@
                 <div style="display:flex; gap:10px; margin-left:auto; margin-right:8px;">
                     <button id="btn-modal-edit" class="btn btn-outline-edit"
                         style="padding:6px 12px; font-size:0.85rem;" title="Edit Manual">
-                        <i class="fa-solid fa-pen-to-square"></i> Edit
+                        <i data-lucide="pencil" style="width:14px;height:14px;stroke-width:2"></i> Edit
                     </button>
                     <button id="preview-download-btn" class="btn btn-primary"
                         style="padding:6px 12px; font-size:0.85rem;" title="Unduh">
-                        <i class="fa-solid fa-download"></i> Unduh
+                        <i data-lucide="download" style="width:14px;height:14px;stroke-width:2.5"></i> Unduh
                     </button>
                 </div>
-                <button class="close-modal-preview"><i class="fa-solid fa-times"></i></button>
+                <button class="close-modal-preview">
+                    <i data-lucide="x" style="width:18px;height:18px;stroke-width:2.5"></i>
+                </button>
             </div>
             <div class="modal-body" style="height: calc(100% - 60px);">
                 <iframe id="pdf-preview-frame"
@@ -468,7 +522,8 @@
     <!-- Edit Confirm Modal -->
     <div id="edit-confirm-modal" class="modal hidden">
         <div class="modal-content" style="max-width: 400px; text-align: center; padding: 20px;">
-            <i class="fa-solid fa-triangle-exclamation" style="font-size:3rem; color:#f39c12; margin-bottom:15px;"></i>
+            <i data-lucide="alert-triangle"
+                style="width:48px;height:48px; color:#f39c12; margin-bottom:15px;stroke-width:2.75"></i>
             <h3 style="margin-bottom:10px;">Konfirmasi Edit Manual</h3>
             <p style="margin-bottom:15px; font-size: 0.95rem; color: var(--text-muted); line-height: 1.4;">
                 Mengubah dokumen secara manual akan <strong>menonaktifkan</strong> otomatisasi input data di halaman
@@ -494,7 +549,8 @@
         style="z-index: 500; display: flex; align-items: center; justify-content: center;">
         <div class="modal-content"
             style="width: calc(100% - 32px); max-width: 360px; text-align: center; padding: 24px; margin: auto; border-radius: var(--radius-md)">
-            <i class="fa-solid fa-rotate-left" style="font-size: 2.2rem; color: #F5A623; margin-bottom: 12px;"></i>
+            <i data-lucide="rotate-ccw"
+                style="width:35px;height:35px; color:#F5A623; margin-bottom:12px;stroke-width:2.5"></i>
             <h3 style="margin-bottom: 8px; font-size: 1.1rem;">Pindah ke Mode Manual?</h3>
             <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5;">
                 Data riwayat ini akan <strong>menggantikan</strong> data yang ada di Mode Manual saat ini.
@@ -514,18 +570,20 @@
                 <div style="display:flex; gap:8px; justify-content: flex-end; width: 100%; align-items: center;">
                     <button id="btn-detail-download" class="btn btn-action-green"
                         style="padding:10px 10px; font-size:0.85rem; border-radius:10px;" title="Unduh">
-                        <i class="fa-solid fa-download"></i>
+                        <i data-lucide="download" style="width:16px;height:16px;stroke-width:2.5"></i>
                     </button>
                     <button id="btn-detail-edit-toggle" class="btn btn-action-orange"
                         style="padding:10px 10px; font-size:0.85rem; border-radius:10px;" title="Edit">
-                        <i class="fa-solid fa-pen-to-square"></i>
+                        <i data-lucide="pencil" style="width:16px;height:16px;stroke-width:2"></i>
                     </button>
                     <button id="btn-detail-delete" class="btn btn-action-red"
                         style="padding:10px 10px; font-size:0.85rem; border-radius:10px;" title="Hapus">
-                        <i class="fa-solid fa-trash"></i>
+                        <i data-lucide="trash-2" style="width:16px;height:16px;stroke-width:2.5"></i>
                     </button>
                 </div>
-                <h2 id="detail-title" style="width: 100%; line-height:1.2; word-break: break-word; font-size: 1.15rem; margin-top: 4px;">Detail Invoice</h2>
+                <h2 id="detail-title"
+                    style="width: 100%; line-height:1.2; word-break: break-word; font-size: 1.15rem; margin-top: 4px;">
+                    Detail Invoice</h2>
             </div>
             <div id="detail-content" class="modal-body">
                 <!-- Content injected via JS -->
@@ -544,8 +602,12 @@
                 <span id="dp-month-year">May 2026</span>
                 <div class="dp-nav-controls">
                     <button id="dp-btn-today">Hari ini</button>
-                    <button id="dp-btn-prev"><i class="fa-solid fa-chevron-left"></i></button>
-                    <button id="dp-btn-next"><i class="fa-solid fa-chevron-right"></i></button>
+                    <button id="dp-btn-prev">
+                        <i data-lucide="chevron-left" style="width:15px;height:15px;stroke-width:2"></i>
+                    </button>
+                    <button id="dp-btn-next">
+                        <i data-lucide="chevron-right" style="width:15px;height:15px;stroke-width:2"></i>
+                    </button>
                 </div>
             </div>
             <div class="datepicker-grid">
@@ -564,7 +626,9 @@
         <div class="modal-content datepicker-content" style="max-width:auto;">
             <div class="modal-header" style="border-bottom:none; padding-bottom:5px;">
                 <h2 style="font-size:1.1rem;">Atur Waktu</h2>
-                <button class="close-timepicker"><i class="fa-solid fa-times"></i></button>
+                <button class="close-timepicker">
+                    <i data-lucide="x" style="width:18px;height:18px;stroke-width:2.5"></i>
+                </button>
             </div>
             <div class="timepicker-body"
                 style="display:flex; align-items:center; justify-content:center; gap:20px; padding:20px 0;">
@@ -606,7 +670,7 @@
     <div id="custom-confirm" class="custom-confirm-overlay hidden">
         <div class="custom-confirm-box">
             <div class="confirm-icon">
-                <i class="fa-solid fa-copy"></i>
+                <i data-lucide="copy" style="width:32px;height:32px;stroke-width:2"></i>
             </div>
             <h3 id="confirm-title">Judul Sudah Ada</h3>
             <p id="confirm-message">Data dengan judul ini sudah ada di riwayat. Tetap simpan?</p>
@@ -622,8 +686,8 @@
         style="z-index: 9999; display: flex; align-items: center; justify-content: center;">
         <div class="modal-content"
             style="max-width: 400px; text-align: center; padding: 30px; border-radius: var(--radius-md);">
-            <div class="onboarding-icon" style="font-size: 3.5rem; color: var(--primary); margin-bottom: 20px;">
-                <i class="fa-solid fa-face-smile-beam"></i>
+            <div class="onboarding-icon" style="color: var(--primary); margin-bottom: 20px;">
+                <i data-lucide="smile" style="width:56px;height:56px;stroke-width:1.5"></i>
             </div>
             <h2 style="margin-bottom: 15px;">Halo! Selamat Datang</h2>
             <p style="margin-bottom: 25px; color: var(--text-muted); line-height: 1.6;">
@@ -641,7 +705,7 @@
             </div>
 
             <button id="btn-onboarding-start" class="btn btn-primary btn-full" style="margin-top: 20px; padding: 14px;">
-                Mulai Sekarang <i class="fa-solid fa-arrow-right"></i>
+                Mulai Sekarang <i data-lucide="arrow-right" style="width:16px;height:16px;stroke-width:2.5"></i>
             </button>
         </div>
     </div>
@@ -655,14 +719,37 @@
         <div style="display:flex; gap:8px; align-items:center;">
             <button id="btn-batch-download" class="btn btn-sm" style="background:#27ae60; color:white; border:none;"
                 title="Unduh semua terpilih">
-                <i class="fa-solid fa-download"></i> Unduh
+                <i data-lucide="download" style="width:14px;height:14px;stroke-width:2.5"></i> Unduh
             </button>
             <button id="btn-batch-delete" class="btn btn-sm" style="background:#ff4d4f; color:white; border:none;">
-                <i class="fa-solid fa-trash"></i> Hapus
+                <i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i> Hapus
             </button>
         </div>
     </div>
 
 </body>
+<script>
+    // Init Lucide + stroke-width depth system
+    const BME_SW = {
+        'smile': 1.5, 'moon': 1.5, 'wand-2': 1.5, 'copy': 1.75,
+        'list': 2, 'layout-grid': 2, 'square': 2, 'grid-2x2': 2, 'filter': 2,
+        'chevron-left': 2, 'chevron-right': 2, 'pencil': 2, 'lock': 2, 'settings': 2,
+        'rotate-ccw': 2.5, 'plus': 2.5, 'check': 2.5, 'check-check': 2.5,
+        'x': 2.5, 'download': 2.5, 'trash-2': 2.5, 'arrow-right': 2.5,
+        'alert-triangle': 2.75,
+    };
+    document.addEventListener('DOMContentLoaded', () => {
+        if (!window.lucide) return;
+        lucide.createIcons();
+        document.querySelectorAll('[data-lucide]').forEach(el => {
+            const name = el.getAttribute('data-lucide');
+            const sw = el.style.strokeWidth || BME_SW[name] || 2;
+            if (el.tagName === 'svg') el.setAttribute('stroke-width', sw);
+            // If it was already replaced to svg by lucide
+            const svg = el.tagName === 'svg' ? el : el.querySelector('svg');
+            if (svg && !el.style.strokeWidth) svg.setAttribute('stroke-width', sw);
+        });
+    });
+</script>
 
 </html>

@@ -31,10 +31,11 @@ export function initAIMode() {
         const overlay = document.createElement('div');
         overlay.className = 'ai-locked-overlay';
         overlay.innerHTML = `
-            <i class="fa-solid fa-lock"></i>
+            <i data-lucide="lock" style="width:32px;height:32px;stroke-width:2;margin-bottom:8px;"></i>
             <p>Mode AI Terkunci</p>
             <small>Fitur ini belum tersedia</small>
         `;
         aiView.appendChild(overlay);
+        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...overlay.querySelectorAll('[data-lucide]')] });
     }
 }

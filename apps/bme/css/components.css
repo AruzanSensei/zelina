@@ -295,13 +295,13 @@
     position: absolute;
     top: 14px;
     right: 8px;
-    background: rgba(255, 255, 255, 0.8);
+    background: var(--bg-body);
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 4px;
     font-size: 0.8rem;
     cursor: pointer;
-    color: var(--text-muted);
+    color: var(--primary);
     transition: all 0.2s;
     opacity: 0.6;
 }
@@ -340,8 +340,13 @@
 }
 
 /* z-index stacking for layered overlays */
-#preview-modal      { z-index: 300; }
-#edit-confirm-modal { z-index: 400; }
+#preview-modal {
+    z-index: 300;
+}
+
+#edit-confirm-modal {
+    z-index: 400;
+}
 
 .modal-content {
     background: var(--bg-card);

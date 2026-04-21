@@ -208,10 +208,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================
     const themeToggleBtn = document.getElementById('btn-theme-toggle');
     const updateThemeIcon = (theme) => {
-        const icon = themeToggleBtn?.querySelector('i');
-        if (icon) {
-            icon.className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
-        }
+        if (!themeToggleBtn) return;
+        themeToggleBtn.innerHTML = theme === 'dark'
+            ? '<i data-lucide="sun"  style="width:17px;height:17px;stroke-width:1.5"></i>'
+            : '<i data-lucide="moon" style="width:17px;height:17px;stroke-width:1.5"></i>';
+        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...themeToggleBtn.querySelectorAll('[data-lucide]')] });
     };
 
     if (themeToggleBtn) {

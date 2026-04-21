@@ -124,7 +124,8 @@ export function initHistoryMode() {
             chips.forEach(chip => {
                 const el = document.createElement('button');
                 el.className = 'filter-chip';
-                el.innerHTML = `<span class="chip-label">${chip.label}</span><i class="fa-solid fa-xmark chip-x"></i>`;
+                el.innerHTML = `<span class="chip-label">${chip.label}</span><i data-lucide="x" class="chip-x" style="width:12px;height:12px;stroke-width:2.5"></i>`;
+                if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...el.querySelectorAll('[data-lucide]')] });
                 // X icon clears the filter
                 el.querySelector('.chip-x').addEventListener('click', (e) => {
                     e.stopPropagation();
@@ -270,34 +271,35 @@ export function initHistoryMode() {
         // Build menu content
         contextMenu.innerHTML = `
             <button class="ctx-item" data-action="download">
-            <i class="fa-solid fa-download"></i> Unduh
+            <i data-lucide="download" style="width:14px;height:14px;stroke-width:2.5"></i> Unduh
             </button>
             <button class="ctx-item" data-action="print">
-            <i class="fa-solid fa-print"></i> Print
+            <i data-lucide="printer" style="width:14px;height:14px;stroke-width:2"></i> Print
             </button>
             <button class="ctx-item" data-action="duplicate">
-                <i class="fa-solid fa-copy"></i> Duplikat
+                <i data-lucide="copy" style="width:14px;height:14px;stroke-width:2"></i> Duplikat
             </button>
             <div class="ctx-separator"></div>
             <button class="ctx-item" data-action="preview">
-                <i class="fa-solid fa-eye"></i> Pratinjau...
+                <i data-lucide="eye" style="width:14px;height:14px;stroke-width:2"></i> Pratinjau...
             </button>
             <button class="ctx-item orange" data-action="edit">
-                <i class="fa-solid fa-pen-to-square"></i> Edit...
+                <i data-lucide="pencil" style="width:14px;height:14px;stroke-width:2"></i> Edit...
             </button>
             <button class="ctx-item" data-action="multiselect">
-                <i class="fa-solid fa-check-double"></i> Pilih beberapa...
+                <i data-lucide="check-check" style="width:14px;height:14px;stroke-width:2.5"></i> Pilih beberapa...
             </button>
             <div class="ctx-separator"></div>
             <button class="ctx-item" data-action="rename">
-                <i class="fa-solid fa-i-cursor"></i> Ubah nama
+                <i data-lucide="type" style="width:14px;height:14px;stroke-width:2"></i> Ubah nama
             </button>
             <button class="ctx-item danger" data-action="delete">
-                <i class="fa-solid fa-trash"></i> Hapus
+                <i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i> Hapus
             </button>
         `;
 
         // Attach action handlers
+        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...contextMenu.querySelectorAll('[data-lucide]')] });
         contextMenu.querySelectorAll('.ctx-item').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -521,15 +523,15 @@ export function initHistoryMode() {
 
             swipeContainer.innerHTML = `
                 <div class="swipe-actions" style="position:absolute; top:0; bottom:0; right:0; display:flex; z-index:1;">
-                    <button class="swipe-btn swipe-edit-history" data-index="${realIndex}" style="background-color:#F5A623; border:none; color:white; padding:0 20px; cursor:pointer;"><i class="fa-solid fa-pen-to-square"></i></button>
-                    <button class="swipe-btn swipe-delete-history" data-index="${realIndex}" style="background-color:#ff4d4f; border:none; color:white; padding:0 20px; cursor:pointer;"><i class="fa-solid fa-trash"></i></button>
+                    <button class="swipe-btn swipe-edit-history" data-index="${realIndex}" style="background-color:#F5A623; border:none; color:white; padding:0 20px; cursor:pointer;"><i data-lucide="pencil" style="width:16px;height:16px;stroke-width:2"></i></button>
+                    <button class="swipe-btn swipe-delete-history" data-index="${realIndex}" style="background-color:#ff4d4f; border:none; color:white; padding:0 20px; cursor:pointer;"><i data-lucide="trash-2" style="width:16px;height:16px;stroke-width:2.5"></i></button>
                 </div>
                 <div class="history-item" data-index="${realIndex}" style="cursor:pointer; transition:transform 0.2s; position:relative; z-index:2; background:var(--bg-card);">
                     <div style="display:flex; align-items:flex-start; gap:8px;">
                         ${checkboxHTML}
                         <div style="flex:1; min-width:0;">
                             <!-- Row 1: Title + Badge -->
-                            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:3px;">
+                            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px;">
                                 <h4 class="history-title-text" data-id="${entry.id}" style="margin:0; font-size:0.95rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0;">${entry.title || 'Tanpa Judul'}</h4>
                                 <span class="age-badge ${age.cls}" style="flex-shrink:0;">${badgeLabel}</span>
                             </div>
@@ -543,6 +545,7 @@ export function initHistoryMode() {
                 </div>
             `;
             container.appendChild(swipeContainer);
+            if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...swipeContainer.querySelectorAll('[data-lucide]')] });
         });
 
         if (!isMultiSelectMode) {
@@ -1117,7 +1120,7 @@ export function initHistoryMode() {
                     else {
                         const alertEl = document.getElementById('custom-alert');
                         const messageEl = document.getElementById('alert-message');
-                        if (alertEl && messageEl) { messageEl.innerHTML = 'Mengekspor... <i class="fa-solid fa-spinner fa-spin"></i>'; alertEl.classList.remove('hidden'); alertEl.style.animation = 'alert-in 0.3s ease-out forwards'; }
+                        if (alertEl && messageEl) { messageEl.innerHTML = 'Mengekspor... <i data-lucide="loader-2" class="spin-icon" style="width:14px;height:14px;stroke-width:1.5"></i>'; alertEl.classList.remove('hidden'); alertEl.style.animation = 'alert-in 0.3s ease-out forwards'; if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...messageEl.querySelectorAll('[data-lucide]')] }); }
                         if (defaultMethod === 'jpeg') await exportToJPEG(html, filename);
                         else await exportToPNG(html, filename);
                         if (alertEl) alertEl.classList.add('hidden');
@@ -1133,8 +1136,9 @@ export function initHistoryMode() {
         const makeDownloadBtn = (type) => {
             const btn = document.createElement('button');
             btn.className = 'btn';
-            btn.innerHTML = '<i class="fa-solid fa-download"></i>';
+            btn.innerHTML = '<i data-lucide="download" style="width:15px;height:15px;stroke-width:2.5"></i>';
             btn.style.cssText = 'position:absolute; right:10px; bottom:8px; padding:7px 11px; font-size:0.78rem; z-index:2; background:#e67e22; border-color:#d35400; color:white;';
+            if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...btn.querySelectorAll('[data-lucide]')] });
             btn.title = type === 'invoice' ? 'Unduh Invoice' : 'Unduh Surat Jalan';
             btn.addEventListener('click', async (e) => {
                 e.stopPropagation();
@@ -1152,7 +1156,7 @@ export function initHistoryMode() {
                 } else {
                     const alertEl = document.getElementById('custom-alert');
                     const messageEl = document.getElementById('alert-message');
-                    if (alertEl && messageEl) { messageEl.innerHTML = 'Mengekspor... <i class="fa-solid fa-spinner fa-spin"></i>'; alertEl.classList.remove('hidden'); alertEl.style.animation = 'alert-in 0.3s ease-out forwards'; }
+                    if (alertEl && messageEl) { messageEl.innerHTML = 'Mengekspor... <i data-lucide="loader-2" class="spin-icon" style="width:14px;height:14px;stroke-width:1.5"></i>'; alertEl.classList.remove('hidden'); alertEl.style.animation = 'alert-in 0.3s ease-out forwards'; if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...messageEl.querySelectorAll('[data-lucide]')] }); }
                     if (defaultMethod === 'jpeg') await exportToJPEG(html, filename);
                     else await exportToPNG(html, filename);
                     if (alertEl) alertEl.classList.add('hidden');
