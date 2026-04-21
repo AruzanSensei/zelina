@@ -92,16 +92,23 @@
                 <p>Invoice & Surat Jalan</p>
             </div>
         </div>
-        <button id="btn-settings" class="icon-btn">
-            <i data-lucide="settings" style="width:22px;height:22px;stroke-width:2.5"></i>
-        </button>
+        <div style="display:flex;align-items:center;gap:4px;">
+            <button id="btn-label-toggle" class="icon-btn" title="Sembunyikan / Tampilkan Label">
+                <span id="wrap-icon-eye"><i data-lucide="eye" style="width:20px;height:20px;stroke-width:2"></i></span>
+                <span id="wrap-icon-eye-closed" style="display:none"><i data-lucide="eye-closed"
+                        style="width:20px;height:20px;stroke-width:2"></i></span>
+            </button>
+            <button id="btn-settings" class="icon-btn">
+                <i data-lucide="settings" style="width:22px;height:22px;stroke-width:2.5"></i>
+            </button>
+        </div>
     </header>
 
     <!-- Tab Navigation -->
     <nav class="tab-nav">
         <button class="tab-btn active" data-tab="manual">Manual</button>
         <button class="tab-btn" data-tab="ai">AI <i data-lucide="lock"
-                style="width:11px;height:11px;stroke-width:2;opacity:0.5"></i></button>
+                style="width:11px;height:11px;stroke-width:4;opacity:0.5"></i></button>
         <button class="tab-btn" data-tab="finance">Finance</button>
         <button class="tab-btn" data-tab="history">History</button>
     </nav>
@@ -124,10 +131,10 @@
                         <span class="view-label" style="margin:0;">Tampilan</span>
                         <div class="toggle-group orange-theme">
                             <button class="toggle-btn active" id="view-card-btn" title="Card View">
-                                <i data-lucide="list" style="width:15px;height:15px;stroke-width:2"></i>
+                                <i data-lucide="list" style="width:15px;height:15px;stroke-width:3"></i>
                             </button>
                             <button class="toggle-btn" id="view-table-btn" title="Table View">
-                                <i data-lucide="layout-grid" style="width:15px;height:15px;stroke-width:2"></i>
+                                <i data-lucide="layout-grid" style="width:15px;height:15px;stroke-width:3"></i>
                             </button>
                         </div>
                     </div>
@@ -139,10 +146,10 @@
                         <span class="view-label" style="margin:0;">Mode</span>
                         <div class="toggle-group orange-theme">
                             <button class="toggle-btn active" id="mode-simple-btn" title="Simple Mode">
-                                <i data-lucide="square" style="width:15px;height:15px;stroke-width:2"></i>
+                                <i data-lucide="square" style="width:15px;height:15px;stroke-width:3"></i>
                             </button>
                             <button class="toggle-btn" id="mode-advance-btn" title="Advance Mode">
-                                <i data-lucide="grid-2x2" style="width:15px;height:15px;stroke-width:2"></i>
+                                <i data-lucide="grid-2x2" style="width:15px;height:15px;stroke-width:3"></i>
                             </button>
                         </div>
                     </div>
@@ -734,6 +741,7 @@
         'smile': 1.5, 'moon': 1.5, 'wand-2': 1.5, 'copy': 1.75,
         'list': 2, 'layout-grid': 2, 'square': 2, 'grid-2x2': 2, 'filter': 2,
         'chevron-left': 2, 'chevron-right': 2, 'pencil': 2, 'lock': 2, 'settings': 2,
+        'eye': 2, 'eye-off': 2,
         'rotate-ccw': 2.5, 'plus': 2.5, 'check': 2.5, 'check-check': 2.5,
         'x': 2.5, 'download': 2.5, 'trash-2': 2.5, 'arrow-right': 2.5,
         'alert-triangle': 2.75,
@@ -749,7 +757,46 @@
             const svg = el.tagName === 'svg' ? el : el.querySelector('svg');
             if (svg && !el.style.strokeWidth) svg.setAttribute('stroke-width', sw);
         });
+
+        // ── Label Visibility Toggle ──────────────────────────────────────
+        const toggleBtn = document.getElementById('btn-label-toggle');
+        // Toggle the <span> wrappers — Lucide replaces <i>→<svg> but never touches <span>
+        const wrapEye = document.getElementById('wrap-icon-eye');
+        const wrapEyeOff = document.getElementById('wrap-icon-eye-closed');
+        const manualView = document.getElementById('manual-view');
+
+        // Restore saved state
+        let labelsHidden = localStorage.getItem('bme_labels_hidden') === 'true';
+
+        const applyLabelState = () => {
+            if (labelsHidden) {
+                manualView.classList.add('labels-hidden');
+                wrapEye.style.display = 'none';
+                wrapEyeOff.style.display = '';
+            } else {
+                manualView.classList.remove('labels-hidden');
+                wrapEye.style.display = '';
+                wrapEyeOff.style.display = 'none';
+            }
+        };
+
+        applyLabelState();
+
+        toggleBtn?.addEventListener('click', () => {
+            labelsHidden = !labelsHidden;
+            localStorage.setItem('bme_labels_hidden', labelsHidden);
+            applyLabelState();
+        });
     });
 </script>
+
+<style>
+    /* Label visibility toggle ─ label tetap occupy space, hanya tak terlihat */
+    #manual-view.labels-hidden .field-label {
+        opacity: 0;
+        pointer-events: none;
+        user-select: none;
+    }
+</style>
 
 </html>

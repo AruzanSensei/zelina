@@ -133,7 +133,7 @@ export function initManualMode() {
                         <label class="field-label"><strong>SurJal</strong> - Nama Barang</label>
                         <div class="input-with-icon">
                             <textarea class="form-input item-name ${!item.name ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Nama Barang" rows="1" style="resize:none; overflow:hidden; padding-right:30px; font-family:inherit; white-space:pre-wrap;">${item.name || ''}</textarea>
-                            <button class="input-icon-btn template-picker-btn" data-index="${index}"><i data-lucide="list" style="width:13px;height:13px;stroke-width:2"></i></button>
+                            <button class="input-icon-btn template-picker-btn" data-index="${index}"><i data-lucide="list" style="width:18px;height:18px;stroke-width:3.5"></i></button>
                         </div>
                     </div>
                     <div style="width: 100px; display: flex; flex-direction: column;">
@@ -193,7 +193,7 @@ export function initManualMode() {
                         <label class="field-label">Barang</label>
                         <div class="input-with-icon">
                             <textarea class="form-input item-name ${!item.name ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Nama Barang" rows="1" style="resize:none; overflow:hidden; padding-right:30px; font-family:inherit; white-space:pre-wrap;">${item.name || ''}</textarea>
-                            <button class="input-icon-btn template-picker-btn" data-index="${index}"><i data-lucide="list" style="width:13px;height:13px;stroke-width:2"></i></button>
+                            <button class="input-icon-btn template-picker-btn" data-index="${index}"><i data-lucide="list" style="width:18px;height:18px;stroke-width:3.5"></i></button>
                         </div>
                     </div>
                     
