@@ -316,12 +316,15 @@
     right: 0;
     background: var(--bg-card);
     padding: var(--spacing-md);
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow:
+        0 -1px 3px color-mix(in srgb, var(--active-tab-glow) 6%, transparent),
+        0 -6px 16px color-mix(in srgb, var(--active-tab-glow) 10%, transparent);
     display: flex;
     align-items: center;
     justify-content: space-between;
     z-index: 90;
     transition: transform 0.3s ease;
+    border-top: 1px solid var(--border-color);
 }
 
 .action-bar-sticky.hide {
@@ -336,7 +339,23 @@
 .total-display span {
     font-size: 1.2rem;
     font-weight: 700;
-    color: var(--primary);
+    color: var(--active-tab-glow);
+}
+
+.batch-delete-btn {
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow:
+        0 1px 3px rgba(255, 77, 79, 0.1),
+        0 4px 15px rgba(255, 77, 79, 0.3);
 }
 
 /* ============================================
@@ -411,6 +430,7 @@
 }
 
 .item-table {
+    width: max-content;
     min-width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
@@ -578,11 +598,8 @@
 .item-table th:nth-child(6),
 .item-table td:nth-child(6) {
     /* Actions */
-    width: 30px;
-    min-width: 30px;
-    max-width: 30px;
+    width: 40px;
     text-align: center;
-    padding: 0;
 }
 
 /* Quantity in table view */
@@ -621,8 +638,8 @@
 
 .template-picker-btn {
     position: absolute;
-    right: 0;
-    top: 50%;
+    right: 10px;
+    top: 48%;
     transform: translateY(-50%);
     background: none;
     border: none;

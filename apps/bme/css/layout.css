@@ -54,7 +54,27 @@
     background-color: var(--bg-card);
     padding: var(--spacing-sm) var(--spacing-md) var(--spacing-sm);
     gap: var(--spacing-sm);
-    border-bottom: 2px solid var(--border-color);
+    border-bottom: 2px solid var(--active-tab-glow);
+    background-image: linear-gradient(to bottom, transparent 0%,
+            color-mix(in srgb, var(--active-tab-glow) 6%, transparent) 30%,
+            color-mix(in srgb, var(--active-tab-glow) 30%, transparent) 100%);
+}
+
+/* Global active tab state — propagates to all shadows */
+:root:has(.tab-btn[data-tab="manual"].active) {
+    --active-tab-glow: var(--primary);
+}
+
+:root:has(.tab-btn[data-tab="ai"].active) {
+    --active-tab-glow: var(--secondary);
+}
+
+:root:has(.tab-btn[data-tab="history"].active) {
+    --active-tab-glow: var(--tertiary);
+}
+
+:root:has(.tab-btn[data-tab="finance"].active) {
+    --active-tab-glow: var(--finance-green);
 }
 
 .tab-btn {
@@ -78,7 +98,10 @@
     border-color: var(--primary);
     color: var(--primary);
     font-weight: 600;
-    box-shadow: 0 2px 4px rgba(74, 144, 226, 0.1);
+    box-shadow:
+        0 1px 2px color-mix(in srgb, var(--active-tab-glow) 6%, transparent),
+        0 6px 16px color-mix(in srgb, var(--active-tab-glow) 10%, transparent);
+    border-bottom-width: 4px;
 }
 
 /* Manual tab */
@@ -114,17 +137,15 @@
     bottom: -50%;
     left: -50%;
     right: -50%;
-    background: conic-gradient(
-        from 0deg,
-        transparent 0deg,
-        transparent 90deg,
-        #9B51E0 100deg,
-        #4A90E2 180deg,
-        #5DD5D5 240deg,
-        #9B51E0 300deg,
-        transparent 340deg,
-        transparent 360deg
-    );
+    background: conic-gradient(from 0deg,
+            transparent 0deg,
+            transparent 90deg,
+            #9B51E0 100deg,
+            #4A90E2 180deg,
+            #5DD5D5 240deg,
+            #9B51E0 300deg,
+            transparent 340deg,
+            transparent 360deg);
     z-index: -1;
     animation: rotate-border 3s linear infinite;
 }

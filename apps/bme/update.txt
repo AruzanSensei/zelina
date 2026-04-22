@@ -12,3 +12,7 @@ Update Log:
 9.  Refactoring layout Riwayat: Mengubah sistem Grid menjadi Flexbox 2-kolom (Grup Kiri & Grup Kanan) untuk transisi mode compact yang lebih mulus dan perataan harga yang lebih konsisten.
 10. UI/UX: Membedakan warna indikator unit 'Lot' (warna tersier/orange) dan 'Pcs' (warna primer/biru) saat aktif untuk identifikasi unit yang lebih cepat.
 11. Tabel Mode Manual: Implementasi logika 'Excel Auto-Width' (width: 1% & nowrap) dan penonaktifkan fitur wrap pada kolom Barang agar teks selalu dalam satu baris.
+12. Tabel Mode Manual: Revolusi sistem 'Self-Sizing' menggunakan teknik CSS Grid + Hidden Span. Input (Barang, Harga, Pcs) kini melebar secara akurat mengikuti teks tanpa risiko terpotong (clipping).
+13. Tabel Mode Manual: Kolom Note kini fleksibel dengan batas maksimal 300px dan fitur pembungkusan teks (wrap) otomatis.
+14. Estetika Visual: Implementasi sistem 'Dynamic 2-Layer SaaS Shadow'. Bayangan di seluruh aplikasi kini lebih halus dan natural.
+15. Context-Aware UI: Menggunakan selector :root:has() untuk sinkronisasi warna bayangan dan gradasi navigasi secara otomatis mengikuti tab yang aktif (Manual, AI, History, Finance).

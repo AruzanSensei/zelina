@@ -113,7 +113,9 @@
     background: white;
     padding: 15px 30px;
     border-radius: var(--radius-sm);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 
+        0 4px 6px color-mix(in srgb, var(--active-tab-glow) 6%, transparent),
+        0 12px 24px color-mix(in srgb, var(--active-tab-glow) 15%, transparent);
     border: 1px solid var(--border-color);
     display: flex;
     align-items: center;
@@ -157,10 +159,12 @@
     padding: 24px;
     border-radius: var(--radius-md);
     text-align: center;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    box-shadow: 
+        0 10px 25px color-mix(in srgb, var(--active-tab-glow) 10%, transparent),
+        0 20px 40px rgba(0, 0, 0, 0.1);
     animation: confirm-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    border: 1px solid var(--border-color);
 }
-
 .confirm-icon {
     width: 50px;
     height: 50px;
@@ -456,7 +460,6 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    background: var(--bg-body);
     padding: 4px 8px;
     border-radius: var(--radius-sm);
 }
