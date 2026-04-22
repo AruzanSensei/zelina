@@ -391,6 +391,8 @@
     background: var(--bg-card);
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-color);
+}
+
 .table-view-container {
     overflow-x: auto;
     width: 100%;
@@ -409,7 +411,6 @@
 }
 
 .item-table {
-    width: max-content;
     min-width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
@@ -495,7 +496,8 @@
 }
 
 .input-sizer::after {
-    content: attr(data-value) "  "; /* extra space for comfort */
+    content: attr(data-value) "  ";
+    /* extra space for comfort */
     visibility: hidden;
     white-space: pre;
     grid-area: 1 / 1;
@@ -525,7 +527,7 @@
 }
 
 .item-table td .item-price-format {
-    width: 100%;
+    width: 90%;
     min-width: 60px;
 }
 
@@ -560,7 +562,6 @@
 .item-table td:nth-child(4) {
     /* Qty */
     text-align: center;
-    width: auto;
 }
 
 .item-table th:nth-child(5),
@@ -570,14 +571,18 @@
     width: auto;
     /* Take remaining space if any */
     min-width: 140px;
+    max-width: 300px;
     white-space: normal;
 }
 
 .item-table th:nth-child(6),
 .item-table td:nth-child(6) {
     /* Actions */
-    width: 40px;
+    width: 30px;
+    min-width: 30px;
+    max-width: 30px;
     text-align: center;
+    padding: 0;
 }
 
 /* Quantity in table view */
