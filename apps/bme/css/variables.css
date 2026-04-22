@@ -34,9 +34,9 @@
     --active-tab-glow: var(--primary);
 
     /* Shadows (SaaS-style 2-layer shadows with dynamic glow) */
-    --shadow-xs: 0 1px 2px color-mix(in srgb, var(--active-tab-glow) 10%, transparent), 0 1px 4px color-mix(in srgb, var(--active-tab-glow) 20%, transparent);
-    --shadow-sm: 0 1px 2px color-mix(in srgb, var(--active-tab-glow) 8%, transparent), 0 6px 16px color-mix(in srgb, var(--active-tab-glow) 16%, transparent);
-    --shadow-md: 0 4px 6px color-mix(in srgb, var(--active-tab-glow) 4%, transparent), 0 12px 24px color-mix(in srgb, var(--active-tab-glow) 12%, transparent);
+    --shadow-xs: 0 1px 2px color-mix(in srgb, var(--active-tab-glow) 9%, transparent), 0 1px 4px color-mix(in srgb, var(--active-tab-glow) 15%, transparent);
+    --shadow-sm: 0 1px 2px color-mix(in srgb, var(--active-tab-glow) 6%, transparent), 0 6px 16px color-mix(in srgb, var(--active-tab-glow) 12%, transparent);
+    --shadow-md: 0 4px 6px color-mix(in srgb, var(--active-tab-glow) 3%, transparent), 0 12px 24px color-mix(in srgb, var(--active-tab-glow) 9%, transparent);
 
     /* Border Radius */
     --radius-sm: 8px;
