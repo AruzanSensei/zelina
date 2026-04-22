@@ -391,20 +391,34 @@
     background: var(--bg-card);
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-color);
+.table-view-container {
+    overflow-x: auto;
+    width: 100%;
     margin-bottom: 20px;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-sm);
 }
 
 .table-view-container::-webkit-scrollbar {
-    display: none;
+    height: 6px;
+}
+
+.table-view-container::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 10px;
 }
 
 .item-table {
     width: max-content;
     min-width: 100%;
     border-collapse: collapse;
+    border-spacing: 0;
     table-layout: auto;
+    border: 1px solid var(--border-color);
+}
+
+.item-table tr:nth-child(even) {
+    background-color: rgba(0, 0, 0, 0.02);
 }
 
 .item-table th,
@@ -470,19 +484,44 @@
 }
 
 /* Fix icon overlapping in Barang cell */
-.item-table td .input-with-icon input {
-    padding-right: 8px;
+/* Core fix: Hidden Span via CSS Grid for self-sizing inputs */
+.input-sizer {
+    display: inline-grid;
+    vertical-align: middle;
+    align-items: center;
+    position: relative;
+    min-width: 1ch;
+    width: auto;
+}
+
+.input-sizer::after {
+    content: attr(data-value) "  "; /* extra space for comfort */
+    visibility: hidden;
+    white-space: pre;
+    grid-area: 1 / 1;
+    font: inherit;
+    padding: 4px;
+    border: none;
+}
+
+.input-sizer input,
+.input-sizer select {
+    grid-area: 1 / 1;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    border: none;
+    background: transparent;
+    font: inherit;
+    padding: 4px;
+    margin: 0;
+    outline: none;
 }
 
 .item-table td .input-with-icon {
     display: flex;
     align-items: center;
-    position: relative;
-}
-
-.item-table td .item-name {
-    width: auto;
-    min-width: 70px;
+    gap: 4px;
 }
 
 .item-table td .item-price-format {
@@ -509,7 +548,6 @@
     /* Harga */
     text-align: right;
     width: auto;
-    min-width: 80px;
 }
 
 .item-table th:nth-child(3),
@@ -522,7 +560,7 @@
 .item-table td:nth-child(4) {
     /* Qty */
     text-align: center;
-    min-width: 55px;
+    width: auto;
 }
 
 .item-table th:nth-child(5),
@@ -545,12 +583,11 @@
 /* Quantity in table view */
 .item-table td .item-qty,
 .item-table td .table-qty-input {
-    width: 100%;
+    width: auto;
     text-align: center;
 }
 
 .remove-item-btn {
-    position: static !important;
     color: #ff4d4f;
     background: none;
     border: none;
@@ -558,9 +595,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto;
     opacity: 0.7;
     transition: opacity 0.2s;
+}
+
+.item-card .remove-item-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.item-table .remove-item-btn {
+    position: static;
+    margin: 0 auto;
 }
 
 .remove-item-btn:hover {

@@ -281,11 +281,17 @@ export function initManualMode() {
                 <tr>
                     <td>
                         <div class="input-with-icon">
-                            <input type="text" class="item-name ${!item.name ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Nama Barang" value="${item.name || ''}" size="${Math.max(10, (item.name || '').length)}">
+                            <span class="input-sizer" data-value="${item.name || 'Nama Barang'}">
+                                <input type="text" class="item-name ${!item.name ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Nama Barang" value="${item.name || ''}" oninput="this.parentNode.dataset.value = this.value || 'Nama Barang'">
+                            </span>
                             <button class="input-icon-btn template-picker-btn" data-index="${index}"><i data-lucide="list" style="width:12px;height:12px;stroke-width:2"></i></button>
                         </div>
                     </td>
-                    <td><input type="text" class="item-price-format ${!item.price || item.price <= 0 ? 'required-empty-orange' : ''}" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="0" inputmode="numeric"></td>
+                    <td>
+                        <span class="input-sizer" data-value="${formatNumberStr(String(item.price)) || '0'}">
+                            <input type="text" class="item-price-format ${!item.price || item.price <= 0 ? 'required-empty-orange' : ''}" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="0" inputmode="numeric" oninput="this.parentNode.dataset.value = this.value || '0'">
+                        </span>
+                    </td>
                     <td>
                         <select class="item-tipe ${!item.tipe ? 'required-empty-orange' : ''}" data-index="${index}">
                             <option value="" ${!item.tipe ? 'selected' : ''}></option>
@@ -295,7 +301,11 @@ export function initManualMode() {
                             <option value="APC" ${item.tipe === 'APC' ? 'selected' : ''}>APC</option>
                         </select>
                     </td>
-                    <td><input type="text" class="item-qty table-qty-input" value="${item.qty}" data-index="${index}" inputmode="numeric"></td>
+                    <td>
+                        <span class="input-sizer" data-value="${item.qty || '1'}">
+                            <input type="text" class="item-qty table-qty-input" value="${item.qty}" data-index="${index}" inputmode="numeric" oninput="this.parentNode.dataset.value = this.value || '1'">
+                        </span>
+                    </td>
                     <td><textarea class="item-note ${!item.note ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Deskripsi (wajib)" rows="2">${item.note || ''}</textarea></td>
                     <td>
                         <button class="remove-item-btn" data-index="${index}"><i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i></button>
@@ -693,9 +703,6 @@ export function initManualMode() {
             if (target.classList.contains('item-name')) {
                 items[index].name = val;
                 if (target.tagName.toLowerCase() === 'textarea') autoResize(target);
-                if (target.tagName.toLowerCase() === 'input' && target.closest('.item-table')) {
-                    target.size = Math.max(10, val.length);
-                }
             }
 
             if (target.classList.contains('item-tipe')) items[index].tipe = val;
@@ -710,9 +717,22 @@ export function initManualMode() {
                 // Only format if not empty to allow deleting everything
                 if (raw === '') target.value = '';
                 else target.value = formatNumberStr(raw);
+                
+                // Sync with sizer
+                if (target.parentNode.classList.contains('input-sizer')) {
+                    target.parentNode.dataset.value = target.value || '0';
+                }
             }
 
-            if (target.classList.contains('item-qty')) items[index].qty = parseInt(val) || 1;
+            if (target.classList.contains('item-qty')) {
+                const num = parseInt(val) || 1;
+                items[index].qty = num;
+                
+                // Sync with sizer
+                if (target.parentNode.classList.contains('input-sizer')) {
+                    target.parentNode.dataset.value = target.value || '1';
+                }
+            }
 
             if (target.classList.contains('item-note')) {
                 items[index].note = val;
