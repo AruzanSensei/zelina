@@ -529,11 +529,15 @@ export function initHistoryMode() {
                 <div class="history-item" data-index="${realIndex}" style="cursor:pointer; transition:transform 0.2s; position:relative; z-index:2; background:var(--bg-card);">
                     <div style="display:flex; align-items:center; gap:8px; width:100%;">
                         ${checkboxHTML}
-                        <div class="history-content-wrapper" style="flex:1; min-width:0; display:grid;">
-                            <h4 class="history-title-text" data-id="${entry.id}" style="margin:0; font-size:0.95rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${entry.title || 'Tanpa Judul'}</h4>
-                            <span class="age-badge ${age.cls}">${badgeLabel}</span>
-                            <span class="history-info-text" style="font-size:0.78rem; color:var(--muted);">${entry.date} | ${entry.items.length} Item</span>
-                            <span class="history-price-text" style="font-weight:700; color:var(--primary); font-size:0.92rem; white-space:nowrap; line-height:1;">${totalHTML}</span>
+                        <div class="history-content-wrapper" style="flex:1; min-width:0; display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                            <div class="history-left-group" style="display:flex; flex-direction:column; min-width:0; flex:1;">
+                                <h4 class="history-title-text" data-id="${entry.id}" style="margin:0; font-size:0.95rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${entry.title || 'Tanpa Judul'}</h4>
+                                <span class="history-info-text" style="font-size:0.78rem; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${entry.date} | ${entry.items.length} Item</span>
+                            </div>
+                            <div class="history-right-group" style="display:flex; flex-direction:column; align-items:flex-end; flex-shrink:0;">
+                                <span class="age-badge ${age.cls}">${badgeLabel}</span>
+                                <span class="history-price-text" style="font-weight:700; color:var(--primary); font-size:0.92rem; white-space:nowrap; line-height:1;">${totalHTML}</span>
+                            </div>
                         </div>
                     </div>
                 </div>

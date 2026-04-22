@@ -281,13 +281,13 @@ export function initManualMode() {
                 <tr>
                     <td>
                         <div class="input-with-icon">
-                            <textarea class="item-name ${!item.name ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Nama Barang" rows="1" style="width:100%; border:none; background:transparent; font-size:0.9rem; resize:none; overflow:hidden; font-family:inherit; padding:4px; padding-right:24px; word-break:break-word; white-space:pre-wrap;">${item.name || ''}</textarea>
-                            <button class="input-icon-btn template-picker-btn" data-index="${index}" style="right:0; padding:2px;"><i data-lucide="list" style="width:12px;height:12px;stroke-width:2"></i></button>
+                            <input type="text" class="item-name ${!item.name ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Nama Barang" value="${item.name || ''}" size="${Math.max(10, (item.name || '').length)}">
+                            <button class="input-icon-btn template-picker-btn" data-index="${index}"><i data-lucide="list" style="width:12px;height:12px;stroke-width:2"></i></button>
                         </div>
                     </td>
                     <td><input type="text" class="item-price-format ${!item.price || item.price <= 0 ? 'required-empty-orange' : ''}" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="0" inputmode="numeric"></td>
                     <td>
-                        <select class="item-tipe ${!item.tipe ? 'required-empty-orange' : ''}" data-index="${index}" style="width:100%; padding:4px; border:none; background:transparent;">
+                        <select class="item-tipe ${!item.tipe ? 'required-empty-orange' : ''}" data-index="${index}">
                             <option value="" ${!item.tipe ? 'selected' : ''}></option>
                             <option value="ICA" ${item.tipe === 'ICA' ? 'selected' : ''}>ICA</option>
                             <option value="Protecta" ${item.tipe === 'Protecta' ? 'selected' : ''}>Protecta</option>
@@ -296,9 +296,9 @@ export function initManualMode() {
                         </select>
                     </td>
                     <td><input type="text" class="item-qty table-qty-input" value="${item.qty}" data-index="${index}" inputmode="numeric"></td>
-                    <td><textarea class="item-note ${!item.note ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Deskripsi (wajib)" rows="2" style="width:100%; border:none; background:transparent; font-size:0.9rem; resize:none; overflow:hidden; font-family:inherit; padding:4px; word-break:break-word;">${item.note || ''}</textarea></td>
+                    <td><textarea class="item-note ${!item.note ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Deskripsi (wajib)" rows="2">${item.note || ''}</textarea></td>
                     <td>
-                        <button class="remove-item-btn" data-index="${index}" style="position:static; color:#ff4d4f; background:none; border:none; cursor:pointer;"><i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i></button>
+                        <button class="remove-item-btn" data-index="${index}"><i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i></button>
                     </td>
                 </tr>
                 `).join('')}
@@ -403,7 +403,7 @@ export function initManualMode() {
     const removeItemWithAnimation = (idx) => {
         const cards = container.querySelectorAll('.item-card');
         const card = Array.from(cards).find(c => parseInt(c.dataset.index) === idx);
-        
+
         if (card) {
             card.classList.add('removing');
             setTimeout(() => {
@@ -496,7 +496,7 @@ export function initManualMode() {
         // Global click to close menu or exit multi-select
         document.addEventListener('click', (e) => {
             if (!e.target.closest('#bme-context-menu')) closeContextMenu();
-            
+
             // Exit multi-select if clicking away from any card or inputs
             if (isMultiSelectMode && !e.target.closest('.item-card') && !e.target.closest('#bme-context-menu') && !e.target.closest('.sticky-action-bar')) {
                 isMultiSelectMode = false;
@@ -693,6 +693,9 @@ export function initManualMode() {
             if (target.classList.contains('item-name')) {
                 items[index].name = val;
                 if (target.tagName.toLowerCase() === 'textarea') autoResize(target);
+                if (target.tagName.toLowerCase() === 'input' && target.closest('.item-table')) {
+                    target.size = Math.max(10, val.length);
+                }
             }
 
             if (target.classList.contains('item-tipe')) items[index].tipe = val;

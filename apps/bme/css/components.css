@@ -434,7 +434,7 @@
     background: transparent;
     border-radius: calc(var(--radius-sm) - 2px);
     cursor: pointer;
-    color: var(--text-muted);
+    color: color-mix(in srgb, var(--text-main), transparent 70%);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -448,7 +448,7 @@
 /* Orange-accented toggle (Manual view/mode switcher) */
 .toggle-group.orange-theme .toggle-btn.active {
     background: var(--bg-card);
-    color: #F5A623;
+    color: color-mix(in srgb, var(--text-main), transparent 50%);
     box-shadow: var(--shadow-sm);
 }
 

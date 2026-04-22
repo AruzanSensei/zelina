@@ -873,61 +873,39 @@
 
     /* --- HISTORY MODE --- */
     .history-content-wrapper {
-        display: grid !important;
-        grid-template-areas:
-            "title badge"
-            "info price";
-        grid-template-columns: 1fr auto;
-        align-items: center;
-        gap: 4px 8px;
         width: 100%;
-    }
-
-    .history-title-text {
-        grid-area: title;
-        min-width: 0;
-    }
-
-    .age-badge {
-        grid-area: badge;
-        justify-self: end;
-    }
-
-    .history-info-text {
-        grid-area: info;
-        min-width: 0;
-    }
-
-    .history-price-text {
-        grid-area: price;
-        justify-self: end;
+        transition: all 400ms ease;
     }
 
     .age-badge,
     .history-info-text {
-        max-height: 40px;
+        max-height: 22px; 
+        opacity: 1;
         overflow: hidden;
-        transition: all 400ms ease;
+        transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .history-info-text {
+        margin-top: 2px;
+    }
+
+    .age-badge {
+        margin-bottom: 4px;
     }
 
     /* Eye Closed (Compact) */
-    .labels-hidden .history-content-wrapper {
-        grid-template-areas: "title price" !important;
-        grid-template-columns: 1fr auto !important;
-        grid-template-rows: auto !important;
-        gap: 0 0 !important;
-    }
-
     .labels-hidden .age-badge,
     .labels-hidden .history-info-text {
         opacity: 0;
         max-height: 0;
-        max-width: 0;
-        /* Tambahkan ini agar kolom menciut */
-        margin: 0 !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
         padding: 0 !important;
-        overflow: hidden;
         pointer-events: none;
+    }
+
+    .labels-hidden .history-content-wrapper {
+        align-items: center !important;
     }
 </style>
 
