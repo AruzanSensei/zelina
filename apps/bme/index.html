@@ -770,11 +770,11 @@
 
         const applyLabelState = () => {
             if (labelsHidden) {
-                manualView.classList.add('labels-hidden');
+                document.body.classList.add('labels-hidden');
                 wrapEye.style.display = 'none';
                 wrapEyeOff.style.display = '';
             } else {
-                manualView.classList.remove('labels-hidden');
+                document.body.classList.remove('labels-hidden');
                 wrapEye.style.display = '';
                 wrapEyeOff.style.display = 'none';
             }
@@ -791,67 +791,143 @@
 </script>
 
 <style>
-    /* Animasi collapse spacing pada field wraps saat label tersembunyi */
-    #manual-view .field-label,
-    #manual-view .item-field-wrap,
-    #manual-view .item-price-wrap,
-    #manual-view .item-tipe-wrap,
-    #manual-view .item-qty-wrap,
-    #manual-view .item-name,
-    #manual-view .item-note {
-        transition: opacity 400ms ease, max-height 400ms ease, margin 400ms ease, padding 400ms ease;
+    /* ============================================
+       GLOBAL LABEL VISIBILITY (EYE TOGGLE)
+       ============================================ */
+
+    /* Transition dasar untuk animasi smooth */
+    .field-label,
+    .view-toggle-container,
+    .item-field-wrap,
+    .item-price-wrap,
+    .item-tipe-wrap,
+    .item-qty-wrap,
+    .item-name,
+    .item-note,
+    .qty-control,
+    .remove-item-btn,
+    .template-picker-btn,
+    .age-badge,
+    .history-info-text,
+    .history-content-wrapper,
+    .history-row-1,
+    .history-row-2 {
+        transition: all 400ms ease;
     }
 
-    #manual-view.labels-hidden .view-toggle-container {
-        transition: opacity 400ms ease;
+    /* --- MANUAL MODE --- */
+    /* Eye Open (Normal) */
+    .qty-control {
+        height: 45px;
     }
 
-    /* Label visibility toggle ─ animasi collapse menggunakan max-height */
-    #manual-view .field-label {
+    .item-qty-wrap {
+        margin-top: 0 !important;
+    }
+
+    /* Eye Closed (Compact) */
+    .labels-hidden .qty-control {
+        height: 24px;
+    }
+
+    /* Label & Field collapse */
+    .field-label {
         max-height: 20px;
         overflow: hidden;
     }
 
-    #manual-view.labels-hidden .field-label {
+    .labels-hidden .field-label {
         opacity: 0;
         max-height: 0;
         margin-top: 0 !important;
         margin-bottom: 0 !important;
         pointer-events: none;
-        user-select: none;
     }
 
-    /* Sembunyikan elemen UI lainnya saat eye-closed */
-    #manual-view.labels-hidden .remove-item-btn,
-    #manual-view.labels-hidden .view-toggle-container,
-    #manual-view.labels-hidden .input-icon-btn,
-    #manual-view.labels-hidden .copy-icon-btn {
+    /* UI Auxiliaries */
+    .labels-hidden .remove-item-btn,
+    .labels-hidden .view-toggle-container,
+    .labels-hidden .input-icon-btn,
+    .labels-hidden .copy-icon-btn,
+    .labels-hidden .template-picker-btn {
         opacity: 0;
         pointer-events: none;
-        user-select: none;
     }
 
-    /* Collapse spacings */
-    #manual-view.labels-hidden .item-price-wrap,
-    #manual-view.labels-hidden .item-tipe-wrap {
+    .labels-hidden .item-price-wrap,
+    .labels-hidden .item-tipe-wrap {
         padding-top: 0 !important;
     }
 
-    #manual-view.labels-hidden .item-qty-wrap {
-        margin-top: 0 !important;
-    }
-
-    #manual-view.labels-hidden .item-field-wrap {
+    .labels-hidden .item-field-wrap {
         margin-bottom: 0 !important;
     }
 
-    /* Penyesuaian margin input saat label hilang */
-    #manual-view.labels-hidden .item-name {
+    .labels-hidden .item-name {
         margin-bottom: 6px !important;
     }
 
-    #manual-view.labels-hidden .item-note {
+    .labels-hidden .item-note {
         margin-top: 2px !important;
+    }
+
+    /* --- HISTORY MODE --- */
+    .history-content-wrapper {
+        display: grid !important;
+        grid-template-areas:
+            "title badge"
+            "info price";
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 4px 8px;
+        width: 100%;
+    }
+
+    .history-title-text {
+        grid-area: title;
+        min-width: 0;
+    }
+
+    .age-badge {
+        grid-area: badge;
+        justify-self: end;
+    }
+
+    .history-info-text {
+        grid-area: info;
+        min-width: 0;
+    }
+
+    .history-price-text {
+        grid-area: price;
+        justify-self: end;
+    }
+
+    .age-badge,
+    .history-info-text {
+        max-height: 40px;
+        overflow: hidden;
+        transition: all 400ms ease;
+    }
+
+    /* Eye Closed (Compact) */
+    .labels-hidden .history-content-wrapper {
+        grid-template-areas: "title price" !important;
+        grid-template-columns: 1fr auto !important;
+        grid-template-rows: auto !important;
+        gap: 0 0 !important;
+    }
+
+    .labels-hidden .age-badge,
+    .labels-hidden .history-info-text {
+        opacity: 0;
+        max-height: 0;
+        max-width: 0;
+        /* Tambahkan ini agar kolom menciut */
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden;
+        pointer-events: none;
     }
 </style>
 

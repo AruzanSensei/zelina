@@ -39,6 +39,36 @@
     background: var(--bg-card);
     z-index: 2;
     margin-bottom: 0;
+    outline: 2px solid transparent;
+}
+
+.item-card.is-selected {
+    outline: 2px solid var(--primary) !important;
+    box-shadow: var(--shadow-md);
+}
+
+#manual-items-container.is-multi-select .item-card:not(.is-selected) {
+    opacity: 0.6;
+}
+
+/* Animations */
+@keyframes card-in {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes card-out {
+    from { opacity: 1; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.95); }
+}
+
+.item-card.new-item {
+    animation: card-in 400ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.item-card.removing {
+    animation: card-out 400ms cubic-bezier(0.5, 0, 0.7, 0.4) forwards;
+    pointer-events: none;
 }
 
 .item-card.swiped-left {

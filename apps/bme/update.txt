@@ -1,0 +1,10 @@
+22 April 2026
+
+Update Log:
+1.  Penyempurnaan "Compact Mode" (Toggle Visibilitas) pada Mode Riwayat dengan transisi CSS 400ms.
+2.  Perbaikan layout Riwayat menggunakan CSS Grid (Title, Badge, Info, Price) untuk transisi yang lebih mulus.
+3.  Perbaikan alignment Harga pada Mode Riwayat agar tetap berada di pojok kanan saat mode compact aktif.
+4.  Implementasi Context Menu (tekan lama di mobile & klik kanan di desktop) pada kartu item di Mode Manual.
+5.  Penambahan opsi menu: Duplikat, Pilih Beberapa, dan Hapus pada Mode Manual.
+6.  Implementasi indikator visual Multi-Select di Mode Manual: outline biru 2px untuk item terpilih dan opacity 0.6 untuk item yang tidak terpilih.
+7.  Penambahan animasi fade-in (masuk) dan fade-out (keluar) selama 400ms pada kartu item di Mode Manual untuk UX yang lebih halus.

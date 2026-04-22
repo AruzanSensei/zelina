@@ -1,0 +1,1 @@
+- menjadikan show menu di manual dan history menjadi 1

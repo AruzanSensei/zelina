@@ -30,6 +30,10 @@ export function initManualMode() {
     const btnModeAdvance = document.getElementById('mode-advance-btn');
 
     let items = appState.state.invoiceItems || [];
+    let isMultiSelectMode = false;
+    let selectedIndices = new Set();
+    let longPressTimer = null;
+    let contextActiveItem = null;
     if (titleInput) {
         titleInput.value = appState.state.manualTitle || '';
         // Show orange outline if empty on load
@@ -119,7 +123,9 @@ export function initManualMode() {
 
         items.forEach((item, index) => {
             const div = document.createElement('div');
-            div.className = 'item-card';
+            const isSelected = selectedIndices.has(index);
+            div.className = `item-card ${isSelected ? 'is-selected' : ''} ${item.isNew ? 'new-item' : ''}`;
+            div.dataset.index = index;
             div.innerHTML = `
                 <button class="remove-item-btn" data-index="${index}"><i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i></button>
                     
@@ -137,7 +143,7 @@ export function initManualMode() {
                         </div>
                     </div>
                     <div style="width: 100px; display: flex; flex-direction: column;">
-                        <div class="unit-switch" data-index="${index}" style="margin: 0 0 6px auto;">
+                        <div class="unit-switch" data-index="${index}" style="margin: 0 0 5px auto;">
                             <span class="unit-opt ${(item.qtyUnit || 'pcs') === 'pcs' ? 'active' : ''}" data-unit="pcs">Pcs</span>
                             <span class="unit-opt ${item.qtyUnit === 'lot' ? 'active' : ''}" data-unit="lot">Lot</span>
                         </div>
@@ -185,7 +191,9 @@ export function initManualMode() {
 
         items.forEach((item, index) => {
             const div = document.createElement('div');
-            div.className = 'item-card';
+            const isSelected = selectedIndices.has(index);
+            div.className = `item-card ${isSelected ? 'is-selected' : ''} ${item.isNew ? 'new-item' : ''}`;
+            div.dataset.index = index;
             div.innerHTML = `
                 <button class="remove-item-btn" data-index="${index}"><i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i></button>
                     
@@ -212,7 +220,7 @@ export function initManualMode() {
                                 <option value="APC" ${item.tipe === 'APC' ? 'selected' : ''}>APC</option>
                             </select>
                         </div>
-                        <div class="item-qty-wrap" style="flex: 1.5; min-width: 90px; margin-top:17px; display: flex; flex-direction: column;">
+                        <div class="item-qty-wrap" style="min-width: 90px; margin-top:17px; display: flex; flex-direction: column;">
                             <div class="unit-switch" data-index="${index}" style="margin: 0 0 6px auto;">
                                 <span class="unit-opt ${(item.qtyUnit || 'pcs') === 'pcs' ? 'active' : ''}" data-unit="pcs">Pcs</span>
                                 <span class="unit-opt ${item.qtyUnit === 'lot' ? 'active' : ''}" data-unit="lot">Lot</span>
@@ -328,8 +336,177 @@ export function initManualMode() {
         // Update State
         appState.updateItems(items);
         updateEmptyFieldsInfo();
-        // manualTitle is updated via its own listener
+
+        // Apply multi-select class to container
+        if (isMultiSelectMode) {
+            container.classList.add('is-multi-select');
+        } else {
+            container.classList.remove('is-multi-select');
+        }
+
+        // Clear isNew flags after first render
+        items.forEach(item => { if (item.isNew) delete item.isNew; });
     };
+
+    // ============================================
+    // CONTEXT MENU & MULTI-SELECT LOGIC
+    // ============================================
+
+    const showManualContextMenu = (x, y, index) => {
+        let menu = document.getElementById('bme-context-menu');
+        if (!menu) {
+            menu = document.createElement('div');
+            menu.id = 'bme-context-menu';
+            document.body.appendChild(menu);
+        }
+
+        menu.innerHTML = `
+            <button class="ctx-item" data-action="duplicate">
+                <i data-lucide="copy" style="width:14px;height:14px;stroke-width:2"></i> Duplikat
+            </button>
+            <button class="ctx-item" data-action="multiselect">
+                <i data-lucide="check-check" style="width:14px;height:14px;stroke-width:2.5"></i> Pilih beberapa...
+            </button>
+            <div class="ctx-separator"></div>
+            <button class="ctx-item danger" data-action="delete">
+                <i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i> Hapus
+            </button>
+        `;
+
+        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...menu.querySelectorAll('[data-lucide]')] });
+
+        menu.querySelectorAll('.ctx-item').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                handleManualContextAction(btn.dataset.action, index);
+                menu.classList.remove('visible');
+            });
+        });
+
+        // Position & Show
+        menu.classList.add('visible');
+        const mw = menu.offsetWidth || 210;
+        const mh = menu.offsetHeight || 160;
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        let left = x;
+        let top = y;
+        if (left + mw > vw) left = vw - mw - 10;
+        if (top + mh > vh) top = vh - mh - 10;
+
+        menu.style.left = `${left}px`;
+        menu.style.top = `${top}px`;
+        menu.style.transformOrigin = x > vw / 2 ? 'top right' : 'top left';
+    };
+
+    const removeItemWithAnimation = (idx) => {
+        const cards = container.querySelectorAll('.item-card');
+        const card = Array.from(cards).find(c => parseInt(c.dataset.index) === idx);
+        
+        if (card) {
+            card.classList.add('removing');
+            setTimeout(() => {
+                items.splice(idx, 1);
+                appState.updateItems(items);
+                render();
+            }, 400);
+        } else {
+            items.splice(idx, 1);
+            appState.updateItems(items);
+            render();
+        }
+    };
+
+    const handleManualContextAction = (action, index) => {
+        switch (action) {
+            case 'duplicate': {
+                const itemToClone = items[index];
+                const cloned = JSON.parse(JSON.stringify(itemToClone));
+                cloned.isNew = true;
+                items.splice(index + 1, 0, cloned);
+                appState.updateItems(items);
+                render();
+                break;
+            }
+            case 'multiselect':
+                isMultiSelectMode = true;
+                selectedIndices.add(index);
+                render();
+                break;
+            case 'delete':
+                if (confirm('Hapus item ini?')) {
+                    removeItemWithAnimation(index);
+                }
+                break;
+        }
+    };
+
+    const closeContextMenu = () => {
+        const menu = document.getElementById('bme-context-menu');
+        if (menu) menu.classList.remove('visible');
+    };
+
+    const setupContextMenuListeners = () => {
+        // Desktop Context Menu
+        container.addEventListener('contextmenu', (e) => {
+            const card = e.target.closest('.item-card');
+            if (card && !isMultiSelectMode) {
+                e.preventDefault();
+                const index = parseInt(card.dataset.index);
+                showManualContextMenu(e.pageX, e.pageY, index);
+            }
+        });
+
+        // Mobile Long Press
+        container.addEventListener('touchstart', (e) => {
+            const card = e.target.closest('.item-card');
+            if (card && !isMultiSelectMode) {
+                longPressTimer = setTimeout(() => {
+                    const touch = e.touches[0];
+                    const index = parseInt(card.dataset.index);
+                    showManualContextMenu(touch.pageX, touch.pageY, index);
+                }, 600);
+            }
+        }, { passive: true });
+
+        container.addEventListener('touchend', () => clearTimeout(longPressTimer));
+        container.addEventListener('touchmove', () => clearTimeout(longPressTimer));
+
+        // Click to select in multi-select mode
+        container.addEventListener('click', (e) => {
+            if (!isMultiSelectMode) return;
+            // Prevent interference with inputs/buttons
+            if (e.target.closest('.form-input') || e.target.closest('button')) return;
+
+            const card = e.target.closest('.item-card');
+            if (card) {
+                const index = parseInt(card.dataset.index);
+                if (selectedIndices.has(index)) {
+                    selectedIndices.delete(index);
+                } else {
+                    selectedIndices.add(index);
+                }
+                // If nothing selected, exit multi-select mode
+                if (selectedIndices.size === 0) isMultiSelectMode = false;
+                render();
+            }
+        });
+
+        // Global click to close menu or exit multi-select
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#bme-context-menu')) closeContextMenu();
+            
+            // Exit multi-select if clicking away from any card or inputs
+            if (isMultiSelectMode && !e.target.closest('.item-card') && !e.target.closest('#bme-context-menu') && !e.target.closest('.sticky-action-bar')) {
+                isMultiSelectMode = false;
+                selectedIndices.clear();
+                render();
+            }
+        });
+    };
+
+    setupContextMenuListeners();
 
     // ============================================
     // EVENTS
@@ -361,7 +538,8 @@ export function initManualMode() {
             tipe: '',
             qtyUnit: 'pcs',
             invKeterangan: '',
-            sjKeterangan: ''
+            sjKeterangan: '',
+            isNew: true
         });
         render();
     };
@@ -375,8 +553,7 @@ export function initManualMode() {
         const removeBtn = target.closest('.remove-item-btn') || target.closest('.swipe-delete');
         if (removeBtn) {
             const idx = parseInt(removeBtn.dataset.index);
-            items.splice(idx, 1);
-            render();
+            removeItemWithAnimation(idx);
             return;
         }
 

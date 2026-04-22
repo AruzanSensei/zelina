@@ -527,19 +527,13 @@ export function initHistoryMode() {
                     <button class="swipe-btn swipe-delete-history" data-index="${realIndex}" style="background-color:#ff4d4f; border:none; color:white; padding:0 20px; cursor:pointer;"><i data-lucide="trash-2" style="width:16px;height:16px;stroke-width:2.5"></i></button>
                 </div>
                 <div class="history-item" data-index="${realIndex}" style="cursor:pointer; transition:transform 0.2s; position:relative; z-index:2; background:var(--bg-card);">
-                    <div style="display:flex; align-items:flex-start; gap:8px;">
+                    <div style="display:flex; align-items:center; gap:8px; width:100%;">
                         ${checkboxHTML}
-                        <div style="flex:1; min-width:0;">
-                            <!-- Row 1: Title + Badge -->
-                            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:4px;">
-                                <h4 class="history-title-text" data-id="${entry.id}" style="margin:0; font-size:0.95rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0;">${entry.title || 'Tanpa Judul'}</h4>
-                                <span class="age-badge ${age.cls}" style="flex-shrink:0;">${badgeLabel}</span>
-                            </div>
-                            <!-- Row 2: Date + Price -->
-                            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
-                                <span style="font-size:0.78rem; color:var(--muted);">${entry.date} | ${entry.items.length} Item</span>
-                                <span style="font-weight:700; color:var(--primary); font-size:0.92rem; white-space:nowrap; flex-shrink:0; line-height:1;">${totalHTML}</span>
-                            </div>
+                        <div class="history-content-wrapper" style="flex:1; min-width:0; display:grid;">
+                            <h4 class="history-title-text" data-id="${entry.id}" style="margin:0; font-size:0.95rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${entry.title || 'Tanpa Judul'}</h4>
+                            <span class="age-badge ${age.cls}">${badgeLabel}</span>
+                            <span class="history-info-text" style="font-size:0.78rem; color:var(--muted);">${entry.date} | ${entry.items.length} Item</span>
+                            <span class="history-price-text" style="font-weight:700; color:var(--primary); font-size:0.92rem; white-space:nowrap; line-height:1;">${totalHTML}</span>
                         </div>
                     </div>
                 </div>
