@@ -101,7 +101,7 @@ if (!id) {
   showNotFound();
 } else {
   document.title = `Produk ${id} — QR Zanxa`;
-  fetch('data/product.json')
+  fetch('product.json')
     .then(res => {
       if (!res.ok) throw new Error('fetch failed');
       return res.json();
