@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detail Produk — QR Zanxa</title>
+  <meta name="description" content="Detail informasi produk." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="logo">QR<span>.</span>Zanxa</a>
+      <span class="header-badge">Product Detail</span>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main id="main-content">
+    <!-- Loading State -->
+    <div class="loading-state" id="loading-state">
+      <div class="spinner"></div>
+      <span class="loading-text">Memuat data produk...</span>
+    </div>
+
+    <!-- Product Detail (hidden initially) -->
+    <div class="product-page" id="product-content" style="display:none;">
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb" id="breadcrumb">
+        <a href="index.html">Beranda</a>
+        <span class="breadcrumb-sep">›</span>
+        <span id="bc-name">—</span>
+      </nav>
+
+      <div class="product-layout">
+        <!-- Left: Images -->
+        <div class="product-images animate-in">
+          <div class="main-image-wrap">
+            <img class="main-image" id="main-img" src="" alt="" />
+          </div>
+          <div class="gallery-strip" id="gallery-strip"></div>
+        </div>
+
+        <!-- Right: Info -->
+        <div class="product-info animate-in delay-2">
+          <div class="product-info-card">
+            <div class="info-id" id="info-id"></div>
+            <h1 class="info-name" id="info-name"></h1>
+            <div class="info-status" id="info-status"></div>
+
+            <div class="info-divider"></div>
+
+            <div class="info-table">
+              <div class="info-row">
+                <div class="info-row-icon">🏭</div>
+                <div class="info-row-content">
+                  <div class="info-row-label">Tipe Mesin</div>
+                  <div class="info-row-value" id="info-tipe"></div>
+                </div>
+              </div>
+              <div class="info-row">
+                <div class="info-row-icon">📅</div>
+                <div class="info-row-content">
+                  <div class="info-row-label">Tahun Pembuatan</div>
+                  <div class="info-row-value" id="info-tahun"></div>
+                </div>
+              </div>
+              <div class="info-row">
+                <div class="info-row-icon">🔢</div>
+                <div class="info-row-content">
+                  <div class="info-row-label">Nomor Seri</div>
+                  <div class="info-row-value" id="info-seri" style="font-family:monospace;letter-spacing:0.05em;"></div>
+                </div>
+              </div>
+              <div class="info-row">
+                <div class="info-row-icon">📍</div>
+                <div class="info-row-content">
+                  <div class="info-row-label">Lokasi Produksi</div>
+                  <div class="info-row-value" id="info-lokasi"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="spec-box">
+              <div class="spec-box-label">Spesifikasi</div>
+              <div class="spec-box-text" id="info-spesifikasi"></div>
+            </div>
+
+            <!-- QR Code Section -->
+            <div class="qr-section">
+              <img class="qr-image" id="qr-img" src="" alt="QR Code Produk" />
+              <div class="qr-info">
+                <div class="qr-info-label">QR Code Produk</div>
+                <div class="qr-info-url" id="qr-url"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Not Found State (hidden initially) -->
+    <div class="state-page" id="not-found-state" style="display:none;">
+      <div class="state-card animate-in">
+        <span class="state-icon">🔍</span>
+        <h2 class="state-title">Produk Tidak Ditemukan</h2>
+        <p class="state-desc">
+          Produk dengan ID <strong id="nf-id"></strong> tidak ada dalam database kami. Pastikan ID yang Anda masukkan benar.
+        </p>
+        <a href="index.html" class="btn btn-primary">← Kembali ke Beranda</a>
+      </div>
+    </div>
+
+    <!-- Error State (hidden initially) -->
+    <div class="state-page" id="error-state" style="display:none;">
+      <div class="state-card animate-in">
+        <span class="state-icon">⚠️</span>
+        <h2 class="state-title">Gagal Memuat Data</h2>
+        <p class="state-desc">
+          Terjadi kesalahan saat mengambil data produk. Periksa koneksi internet Anda dan coba lagi.
+        </p>
+        <a href="index.html" class="btn btn-primary">← Kembali ke Beranda</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    &copy; 2024 <a href="https://zanxa.site">Zanxa</a> — Product Tracking System
+  </footer>
+
+  <script>
+    // ── Helpers ──────────────────────────────────────────────
+    function show(id) { document.getElementById(id).style.display = ''; }
+    function hide(id) { document.getElementById(id).style.display = 'none'; }
+
+    // ── Get ID from URL ───────────────────────────────────────
+    const params = new URLSearchParams(window.location.search);
+    const productId = (params.get('id') || '').toUpperCase();
+
+    // ── Gallery Logic ─────────────────────────────────────────
+    function setMainImage(src, alt) {
+      const img = document.getElementById('main-img');
+      img.style.opacity = '0';
+      setTimeout(() => {
+        img.src = src;
+        img.alt = alt;
+        img.style.opacity = '1';
+        img.style.transition = 'opacity 0.3s';
+      }, 150);
+    }
+
+    // ── Render Product ────────────────────────────────────────
+    function renderProduct(p) {
+      // Update page title
+      document.title = `${p.nama_produk} — QR Zanxa`;
+
+      // Breadcrumb
+      document.getElementById('bc-name').textContent = p.nama_produk;
+
+      // Header info
+      document.getElementById('info-id').textContent = p.id;
+      document.getElementById('info-name').textContent = p.nama_produk;
+      document.getElementById('info-tipe').textContent = p.tipe;
+      document.getElementById('info-tahun').textContent = p.tahun_pembuatan;
+      document.getElementById('info-seri').textContent = p.nomor_seri;
+      document.getElementById('info-lokasi').textContent = p.lokasi_produksi;
+      document.getElementById('info-spesifikasi').textContent = p.spesifikasi;
+
+      // Status badge
+      const isAktif = p.status === 'aktif';
+      document.getElementById('info-status').innerHTML = `
+        <span class="status-badge ${isAktif ? 'status-aktif' : 'status-nonaktif'}">
+          ${isAktif ? 'Aktif' : 'Tidak Aktif'}
+        </span>
+      `;
+
+      // Main image
+      const mainImg = document.getElementById('main-img');
+      mainImg.src = p.gambar;
+      mainImg.alt = p.nama_produk;
+
+      // Gallery
+      const allImages = [p.gambar, ...(p.galeri || [])];
+      const strip = document.getElementById('gallery-strip');
+      strip.innerHTML = allImages.map((src, i) => `
+        <div class="gallery-thumb ${i === 0 ? 'active' : ''}" data-src="${src}" onclick="selectThumb(this, '${src}', '${p.nama_produk}')">
+          <img src="${src}" alt="Gambar ${i + 1}" loading="lazy" />
+        </div>
+      `).join('');
+
+      // QR Code
+      const productUrl = `https://qr.zanxa.site/product/${p.id}`;
+      const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(productUrl)}&size=160x160&margin=8`;
+      document.getElementById('qr-img').src = qrSrc;
+      document.getElementById('qr-url').textContent = productUrl;
+
+      // Show content
+      hide('loading-state');
+      show('product-content');
+    }
+
+    function selectThumb(el, src, alt) {
+      // Update active state
+      document.querySelectorAll('.gallery-thumb').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      setMainImage(src, alt);
+    }
+
+    // ── Not Found ─────────────────────────────────────────────
+    function showNotFound() {
+      document.getElementById('nf-id').textContent = productId || '(kosong)';
+      hide('loading-state');
+      show('not-found-state');
+    }
+
+    // ── Error ─────────────────────────────────────────────────
+    function showError() {
+      hide('loading-state');
+      show('error-state');
+    }
+
+    // ── Fetch Data ────────────────────────────────────────────
+    if (!productId) {
+      showNotFound();
+    } else {
+      fetch('data/product.json')
+        .then(res => {
+          if (!res.ok) throw new Error('Network error');
+          return res.json();
+        })
+        .then(data => {
+          const product = data.find(item => item.id === productId);
+          if (product) {
+            renderProduct(product);
+          } else {
+            showNotFound();
+          }
+        })
+        .catch(() => {
+          showError();
+        });
+    }
+  </script>
+</body>
+</html>

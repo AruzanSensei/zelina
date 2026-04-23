@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Zanxa — Sistem Tracking Produk</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">QR<span>Zanxa</span></a>
+    <ul class="nav-links">
+      <li><a href="#produk">Produk</a></li>
+      <li><a href="#">Tentang</a></li>
+      <li><a href="#">Kontak</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-badge">Sistem Tracking Aktif</div>
+      <h1>Lacak Produk<br><em>Berbasis QR</em></h1>
+      <p>Scan barcode pada produk untuk mengakses informasi lengkap seketika — spesifikasi, lokasi, status, dan riwayat produksi.</p>
+
+      <div class="search-wrapper">
+        <div class="search-form">
+          <div class="search-input-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" class="search-input" id="productIdInput" placeholder="Masukkan ID produk (contoh: BRG001)" />
+          </div>
+          <button class="btn btn-primary" id="searchBtn">
+            Cari Produk
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </div>
+        <div class="search-hint">
+          Coba: 
+          <span onclick="goToProduct('BRG001')">BRG001</span> · 
+          <span onclick="goToProduct('BRG002')">BRG002</span> · 
+          <span onclick="goToProduct('BRG003')">BRG003</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS SECTION -->
+  <section class="section" id="produk">
+    <div class="section-header">
+      <div>
+        <div class="section-label">Inventaris</div>
+        <h2 class="section-title">Semua Produk</h2>
+      </div>
+      <div id="productCount" style="color: var(--gray); font-size: 0.875rem;"></div>
+    </div>
+    <div class="product-grid" id="productGrid">
+      <!-- Cards rendered by JS -->
+      <div class="loading-state" style="grid-column: 1/-1; min-height: 200px;">
+        <div class="loader"></div>
+        <div class="loading-text">Memuat data produk...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-copy">© 2024 Zanxa · Sistem Tracking Produk</div>
+    <div class="footer-logo">QRZanxa</div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Search handler
+    function goToProduct(id) {
+      window.location.href = `product.html?id=${id}`;
+    }
+
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      const id = document.getElementById('productIdInput').value.trim().toUpperCase();
+      if (id) goToProduct(id);
+    });
+
+    document.getElementById('productIdInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        const id = e.target.value.trim().toUpperCase();
+        if (id) goToProduct(id);
+      }
+    });
+
+    // Load product grid
+    fetch('data/product.json')
+      .then(res => res.json())
+      .then(products => {
+        const grid = document.getElementById('productGrid');
+        document.getElementById('productCount').textContent = `${products.length} produk tersedia`;
+
+        grid.innerHTML = products.map((p, i) => `
+          <a class="product-card" href="product.html?id=${p.id}" style="animation-delay: ${i * 0.1}s">
+            <img class="card-image" src="${p.gambar}" alt="${p.nama_produk}" loading="lazy" />
+            <div class="card-body">
+              <div class="card-type">${p.tipe}</div>
+              <div class="card-title">${p.nama_produk}</div>
+              <div class="card-meta">
+                <span class="meta-chip">📍 ${p.lokasi_produksi}</span>
+                <span class="meta-chip">📅 ${p.tahun_pembuatan}</span>
+                <span class="meta-chip"># ${p.id}</span>
+              </div>
+              <div class="card-footer">
+                <span class="status-badge ${p.status === 'aktif' ? 'status-aktif' : 'status-nonaktif'}">
+                  ${p.status === 'aktif' ? '● Aktif' : '○ Tidak Aktif'}
+                </span>
+                <div class="card-arrow">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </a>
+        `).join('');
+      })
+      .catch(() => {
+        document.getElementById('productGrid').innerHTML = `
+          <div style="grid-column:1/-1; text-align:center; padding: 60px; color: var(--gray);">
+            <div style="font-size: 2rem; margin-bottom: 12px;">⚠</div>
+            <div>Gagal memuat data produk</div>
+          </div>
+        `;
+      });
+  </script>
+</body>
+</html>

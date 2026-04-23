@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detail Produk — QR Zanxa</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">QR<span>Zanxa</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">← Kembali</a></li>
+      <li><a href="#">Tentang</a></li>
+    </ul>
+  </nav>
+
+  <!-- CONTENT -->
+  <main id="app" class="product-page">
+    <div class="loading-state">
+      <div class="loader"></div>
+      <div class="loading-text">Memuat informasi produk...</div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer" id="footer" style="display:none;">
+    <div class="footer-copy">© 2024 Zanxa · Sistem Tracking Produk</div>
+    <div class="footer-logo">QRZanxa</div>
+  </footer>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const app = document.getElementById('app');
+
+    function renderProduct(p) {
+      const statusClass = p.status === 'aktif' ? 'status-aktif' : 'status-nonaktif';
+      const statusText = p.status === 'aktif' ? '● Aktif' : '○ Tidak Aktif';
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=https://qr.zanxa.site/product/${p.id}`;
+      const productUrl = `https://qr.zanxa.site/product/${p.id}`;
+
+      const galleryHtml = p.galeri.map(src => `
+        <div class="gallery-item">
+          <img src="${src}" alt="Galeri ${p.nama_produk}" loading="lazy" />
+        </div>
+      `).join('');
+
+      app.innerHTML = `
+        <!-- Product Hero -->
+        <div class="product-hero">
+          <div class="product-image-panel animate-in">
+            <img class="product-main-image" src="${p.gambar}" alt="${p.nama_produk}" />
+            <div class="image-overlay"></div>
+          </div>
+
+          <div class="product-info-panel">
+            <div class="product-breadcrumb animate-in">
+              <a href="index.html">Beranda</a>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+              <a href="index.html">Produk</a>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+              <span>${p.id}</span>
+            </div>
+
+            <div class="product-type-tag animate-in">${p.tipe}</div>
+            <h1 class="product-name animate-in">${p.nama_produk}</h1>
+            <div class="product-serial animate-in">SN: ${p.nomor_seri} &nbsp;·&nbsp; ID: ${p.id}</div>
+
+            <p class="product-spec animate-in">${p.spesifikasi}</p>
+
+            <div class="product-meta-grid animate-in">
+              <div class="meta-item">
+                <div class="meta-label">Lokasi Produksi</div>
+                <div class="meta-value">📍 ${p.lokasi_produksi}</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">Tahun Pembuatan</div>
+                <div class="meta-value">📅 ${p.tahun_pembuatan}</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">Tipe Mesin</div>
+                <div class="meta-value">${p.tipe}</div>
+              </div>
+              <div class="meta-item">
+                <div class="meta-label">Status</div>
+                <div class="meta-value">
+                  <span class="status-badge ${statusClass}">${statusText}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="product-actions animate-in">
+              <button class="btn btn-primary" onclick="window.print()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                  <rect x="6" y="14" width="12" height="8"></rect>
+                </svg>
+                Print / Simpan PDF
+              </button>
+              <a href="index.html" class="btn btn-ghost">← Kembali</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gallery -->
+        <div class="gallery-section animate-in">
+          <div class="gallery-label">Galeri Produk</div>
+          <div class="gallery-grid">${galleryHtml}</div>
+        </div>
+
+        <!-- QR Code -->
+        <div class="qr-section animate-in">
+          <div class="qr-code-wrap">
+            <img src="${qrUrl}" alt="QR Code ${p.id}" />
+          </div>
+          <div class="qr-info">
+            <h3>QR Code Produk</h3>
+            <p>Scan QR code ini untuk mengakses halaman produk secara langsung. Cocok untuk ditempelkan pada unit mesin atau dokumen pengiriman.</p>
+            <div class="qr-url">${productUrl}</div>
+          </div>
+        </div>
+      `;
+
+      document.title = `${p.nama_produk} — QR Zanxa`;
+      document.getElementById('footer').style.display = 'flex';
+    }
+
+    function showNotFound() {
+      app.innerHTML = `
+        <div class="error-page">
+          <div class="error-code">404</div>
+          <h2 class="error-title">Produk Tidak Ditemukan</h2>
+          <p class="error-desc">
+            ID produk <strong style="color: var(--accent)">"${id || '—'}"</strong> tidak tersedia dalam sistem kami.
+            Pastikan barcode yang di-scan masih valid.
+          </p>
+          <a href="index.html" class="btn btn-primary">← Kembali ke Beranda</a>
+        </div>
+      `;
+      document.getElementById('footer').style.display = 'flex';
+    }
+
+    function showError() {
+      app.innerHTML = `
+        <div class="error-page">
+          <div class="error-code">500</div>
+          <h2 class="error-title">Gagal Mengambil Data</h2>
+          <p class="error-desc">Terjadi kesalahan saat memuat data produk. Coba refresh halaman atau periksa koneksi internet Anda.</p>
+          <a href="index.html" class="btn btn-primary">← Kembali ke Beranda</a>
+        </div>
+      `;
+      document.getElementById('footer').style.display = 'flex';
+    }
+
+    // Fetch and render
+    if (!id) {
+      showNotFound();
+    } else {
+      fetch('data/product.json')
+        .then(res => res.json())
+        .then(data => {
+          const product = data.find(item => item.id === id.toUpperCase());
+          if (product) {
+            renderProduct(product);
+          } else {
+            showNotFound();
+          }
+        })
+        .catch(() => {
+          showError();
+        });
+    }
+  </script>
+</body>
+</html>

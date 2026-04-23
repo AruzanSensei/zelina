@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Zanxa — Product Tracking System</title>
+  <meta name="description" content="Sistem pelacakan produk berbasis QR Code. Scan barcode untuk melihat detail produk secara instan." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="logo">QR<span>.</span>Zanxa</a>
+      <span class="header-badge">Product Tracking</span>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-content animate-in">
+      <span class="hero-eyebrow">Sistem Pelacakan Produk</span>
+      <h1 class="hero-title">Track Produk<br>via <em>QR Code</em></h1>
+      <p class="hero-subtitle">
+        Scan barcode atau masukkan ID produk untuk melihat informasi lengkap — spesifikasi, status, dan detail teknis secara instan.
+      </p>
+
+      <!-- Search Card -->
+      <div class="search-card animate-in delay-2">
+        <label class="search-label" for="product-id-input">Masukkan ID Produk</label>
+        <div class="search-row">
+          <input
+            type="text"
+            id="product-id-input"
+            class="search-input"
+            placeholder="Contoh: BRG001"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <button class="btn btn-primary" onclick="goToProduct()">
+            Cari
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+        <p class="search-hint">Coba: <code>BRG001</code> · <code>BRG002</code> · <code>BRG003</code></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Products Section -->
+  <section class="products-section">
+    <div class="section-header">
+      <h2 class="section-title">Semua Produk</h2>
+      <span class="section-sub" id="product-count">Memuat...</span>
+    </div>
+    <div class="products-grid" id="products-grid">
+      <!-- Skeleton loading -->
+      <div style="background:var(--card-bg);border:1px solid var(--gray-light);border-radius:12px;height:320px;animation:pulse 1.5s ease infinite;"></div>
+      <div style="background:var(--card-bg);border:1px solid var(--gray-light);border-radius:12px;height:320px;animation:pulse 1.5s ease infinite;animation-delay:0.2s;"></div>
+      <div style="background:var(--card-bg);border:1px solid var(--gray-light);border-radius:12px;height:320px;animation:pulse 1.5s ease infinite;animation-delay:0.4s;"></div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    &copy; 2024 <a href="https://zanxa.site">Zanxa</a> — Product Tracking System
+  </footer>
+
+  <style>
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+
+  <script>
+    // Navigate to product page
+    function goToProduct() {
+      const id = document.getElementById('product-id-input').value.trim().toUpperCase();
+      if (!id) {
+        document.getElementById('product-id-input').focus();
+        return;
+      }
+      window.location.href = `product.html?id=${id}`;
+    }
+
+    // Enter key support
+    document.getElementById('product-id-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') goToProduct();
+    });
+
+    // Load and render all products
+    fetch('data/product.json')
+      .then(res => res.json())
+      .then(products => {
+        const grid = document.getElementById('products-grid');
+        const count = document.getElementById('product-count');
+
+        count.textContent = `${products.length} produk terdaftar`;
+
+        grid.innerHTML = products.map((p, i) => {
+          const isAktif = p.status === 'aktif';
+          return `
+            <a href="product.html?id=${p.id}" class="product-card animate-in" style="animation-delay:${0.1 * i}s;">
+              <img class="card-image" src="${p.gambar}" alt="${p.nama_produk}" loading="lazy" />
+              <div class="card-body">
+                <div class="card-id">${p.id}</div>
+                <div class="card-name">${p.nama_produk}</div>
+                <div class="card-desc">${p.tipe} · ${p.tahun_pembuatan} · ${p.lokasi_produksi}</div>
+                <div class="card-footer">
+                  <span class="status-badge ${isAktif ? 'status-aktif' : 'status-nonaktif'}">
+                    ${isAktif ? 'Aktif' : 'Tidak Aktif'}
+                  </span>
+                  <div class="card-arrow">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </a>
+          `;
+        }).join('');
+      })
+      .catch(() => {
+        document.getElementById('products-grid').innerHTML =
+          '<p style="color:var(--red);grid-column:1/-1;padding:2rem;">Gagal memuat daftar produk.</p>';
+        document.getElementById('product-count').textContent = 'Gagal memuat';
+      });
+  </script>
+</body>
+</html>

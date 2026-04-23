@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Zanxa — Product Tracking</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="index-page">
+
+  <div class="noise"></div>
+
+  <header class="site-header">
+    <div class="logo">QR<span class="accent">.</span>ZANXA</div>
+    <div class="tagline">Industrial Asset Tracking</div>
+  </header>
+
+  <main class="landing-main">
+    <div class="hero">
+      <div class="hero-label">SISTEM PELACAKAN PRODUK</div>
+      <h1 class="hero-title">Scan.<br>Track.<br>Know.</h1>
+      <p class="hero-sub">Scan QR Code pada produk untuk melihat detail lengkap aset industri Anda.</p>
+    </div>
+
+    <div class="search-card">
+      <div class="search-label">ATAU MASUKKAN ID MANUAL</div>
+      <div class="search-row">
+        <input
+          type="text"
+          id="product-id-input"
+          placeholder="Contoh: BRG001"
+          class="id-input"
+          maxlength="10"
+        />
+        <button id="go-btn" class="go-btn" onclick="goToProduct()">
+          <span>CARI</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <div id="search-error" class="search-error hidden">Masukkan ID produk terlebih dahulu.</div>
+    </div>
+
+    <div class="demo-section">
+      <div class="demo-label">DEMO PRODUK</div>
+      <div class="demo-grid">
+        <a href="product.html?id=BRG001" class="demo-item">
+          <span class="demo-id">BRG001</span>
+          <span class="demo-name">Mesin X Turbo</span>
+          <span class="demo-type">Industrial</span>
+        </a>
+        <a href="product.html?id=BRG002" class="demo-item">
+          <span class="demo-id">BRG002</span>
+          <span class="demo-name">Mesin Y Pro</span>
+          <span class="demo-type">Manufacture</span>
+        </a>
+        <a href="product.html?id=BRG003" class="demo-item">
+          <span class="demo-id">BRG003</span>
+          <span class="demo-name">Mesin Z Lite</span>
+          <span class="demo-type">Portable</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="qr-section">
+      <div class="demo-label">CONTOH QR CODE</div>
+      <div class="qr-cards">
+        <div class="qr-card">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://qr.zanxa.site/product/BRG001&size=120x120&color=0a0a0a&bgcolor=f5f0e8" alt="QR BRG001" />
+          <span>BRG001</span>
+        </div>
+        <div class="qr-card">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://qr.zanxa.site/product/BRG002&size=120x120&color=0a0a0a&bgcolor=f5f0e8" alt="QR BRG002" />
+          <span>BRG002</span>
+        </div>
+        <div class="qr-card">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://qr.zanxa.site/product/BRG003&size=120x120&color=0a0a0a&bgcolor=f5f0e8" alt="QR BRG003" />
+          <span>BRG003</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <span>© 2024 Zanxa — MVP Demo</span>
+    <span class="footer-domain">qr.zanxa.site</span>
+  </footer>
+
+  <script>
+    document.getElementById('product-id-input').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') goToProduct();
+    });
+
+    function goToProduct() {
+      const val = document.getElementById('product-id-input').value.trim().toUpperCase();
+      const err = document.getElementById('search-error');
+      if (!val) {
+        err.classList.remove('hidden');
+        return;
+      }
+      err.classList.add('hidden');
+      window.location.href = 'product.html?id=' + val;
+    }
+  </script>
+</body>
+</html>
