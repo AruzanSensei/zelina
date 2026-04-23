@@ -4,22 +4,56 @@
 import { appState } from '../state.js';
 import { buildInvoiceHTML } from '../pdf/generator.js';
 
-/**
- * Custom alert to replace native window.alert().
- * Shows a styled, auto-dismissing notification in the center of the screen.
- */
-const showBMEAlert = (message, duration = 2500) => {
-    const alertEl = document.getElementById('custom-alert');
-    const msgEl = document.getElementById('alert-message');
-    if (alertEl && msgEl) {
-        msgEl.innerHTML = message;
-        alertEl.classList.remove('hidden');
-        alertEl.style.animation = 'alert-in 0.3s ease-out forwards';
-        clearTimeout(alertEl._hideTimer);
-        alertEl._hideTimer = setTimeout(() => {
-            alertEl.style.animation = 'alert-out 0.3s ease-in forwards';
-            setTimeout(() => alertEl.classList.add('hidden'), 300);
-        }, duration);
+// -------------------------------------------------------------------------
+// BME SaaS Custom Alert (Success, Warning, Error, Confirmation)
+// -------------------------------------------------------------------------
+window.showBMEAlert = (message, type = 'info', options = {}) => {
+    const { confirm = false, onConfirm = null, onCancel = null, confirmText = 'Ya', cancelText = 'Tidak' } = options;
+
+    // Remove existing
+    const old = document.querySelector('.custom-alert');
+    if (old) old.remove();
+
+    const alert = document.createElement('div');
+    alert.className = `custom-alert alert-${type} ${confirm ? 'alert-confirm' : ''}`;
+
+    let icon = 'info';
+    if (type === 'success') icon = 'check-circle';
+    if (type === 'warning') icon = 'alert-triangle';
+    if (type === 'error') icon = 'x-circle';
+
+    alert.innerHTML = `
+        <div class="alert-content">
+            <i data-lucide="${icon}" class="alert-icon"></i>
+            <span class="alert-message">${message}</span>
+        </div>
+        ${confirm ? `
+        <div class="alert-actions">
+            <button class="alert-btn btn-confirm">${confirmText}</button>
+            <button class="alert-btn btn-cancel">${cancelText}</button>
+        </div>
+        ` : ''}
+    `;
+
+    document.body.appendChild(alert);
+    if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [alert.querySelector('.alert-icon')] });
+
+    // Interaction
+    if (confirm) {
+        alert.querySelector('.btn-confirm').onclick = () => {
+            alert.classList.add('fade-out');
+            setTimeout(() => { alert.remove(); if (onConfirm) onConfirm(); }, 300);
+        };
+        alert.querySelector('.btn-cancel').onclick = () => {
+            alert.classList.add('fade-out');
+            setTimeout(() => { alert.remove(); if (onCancel) onCancel(); }, 300);
+        };
+    } else {
+        // Auto-dismiss for non-confirm alerts
+        setTimeout(() => {
+            alert.classList.add('fade-out');
+            setTimeout(() => alert.remove(), 300);
+        }, 3000);
     }
 };
 
@@ -233,40 +267,47 @@ export function initSettings() {
     const btnResetSettings = document.getElementById('btn-reset-settings');
     if (btnResetSettings) {
         btnResetSettings.addEventListener('click', () => {
-            if (!confirm('Reset semua pengaturan ke default?')) return;
-            appState.resetSettings();
+            window.showBMEAlert('Reset semua pengaturan ke default?', 'warning', {
+                confirm: true,
+                onConfirm: () => {
+                    appState.resetSettings();
 
-            // Re-render UI from the new reset state
-            const s = appState.state.settings;
+                    // Re-render UI from the new reset state
+                    const s = appState.state.settings;
 
-            // Sync Theme
-            if (themeToggle) themeToggle.checked = (s.theme === 'dark');
-            syncThemeUI(s.theme);
+                    // Sync Theme
+                    if (themeToggle) themeToggle.checked = (s.theme === 'dark');
+                    syncThemeUI(s.theme);
 
-            // Sync Download Format
-            if (formatSelector) {
-                formatSelector.querySelectorAll('.segmented-btn').forEach(btn => {
-                    btn.classList.toggle('active', btn.dataset.value === s.defaultDownloadMethod);
-                });
-            }
+                    // Sync Download Format
+                    if (formatSelector) {
+                        formatSelector.querySelectorAll('.segmented-btn').forEach(btn => {
+                            btn.classList.toggle('active', btn.dataset.value === s.defaultDownloadMethod);
+                        });
+                    }
 
-            // Sync Validation & File Naming
-            if (titleRequiredToggle) titleRequiredToggle.checked = s.titleRequired !== false;
-            if (downloadSaveToggle) downloadSaveToggle.checked = s.downloadAndSave === true;
-            if (formatInvoice) formatInvoice.value = (s.fileNameFormat || {}).invoice || 'Invoice-{judul}';
-            if (formatSuratJalan) formatSuratJalan.value = (s.fileNameFormat || {}).suratJalan || 'Surat Jalan-{judul}';
+                    // Sync Validation & File Naming
+                    if (titleRequiredToggle) titleRequiredToggle.checked = s.titleRequired !== false;
+                    if (downloadSaveToggle) downloadSaveToggle.checked = s.downloadAndSave === true;
+                    if (formatInvoice) formatInvoice.value = (s.fileNameFormat || {}).invoice || 'Invoice-{judul}';
+                    if (formatSuratJalan) formatSuratJalan.value = (s.fileNameFormat || {}).suratJalan || 'Surat Jalan-{judul}';
 
-            showBMEAlert('Pengaturan telah direset!');
+                    window.showBMEAlert('Pengaturan telah direset!', 'success');
+                }
+            });
         });
     }
 
     const btnDeleteAll = document.getElementById('btn-delete-all-data');
     if (btnDeleteAll) {
         btnDeleteAll.addEventListener('click', () => {
-            if (confirm('PERINGATAN! Semua riwayat dan pengaturan akan dihapus permanen. Lanjutkan?')) {
-                localStorage.clear();
-                window.location.reload();
-            }
+            window.showBMEAlert('PERINGATAN! Semua riwayat dan pengaturan akan dihapus permanen. Lanjutkan?', 'error', {
+                confirm: true,
+                onConfirm: () => {
+                    localStorage.clear();
+                    window.location.reload();
+                }
+            });
         });
     }
 
@@ -554,20 +595,23 @@ export function initSettings() {
             div.style.userSelect = 'none';
 
             div.innerHTML = `
-            <div style="pointer-events:none;">
-                    <div style="font-weight:600; font-size:0.95rem;">${t.name}</div>
+                <div style="flex:1; pointer-events:none; min-width:0;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                        <div style="font-weight:600; font-size:0.95rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1;">${t.name}</div>
+                        <div style="font-weight:700; color:var(--primary); margin-left:12px; font-size:0.95rem; flex-shrink:0;">${formatCurrency(t.items.reduce((s, x) => s + (x.price * x.qty), 0))}</div>
+                    </div>
                     <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
-                        ${t.items.length} Barang &bull; ${formatCurrency(t.items.reduce((s, x) => s + (x.price * x.qty), 0))}
+                        ${t.items.length} Barang Terdaftar
                     </div>
                 </div>
-                	<div class="template-actions">
-            <button class="btn btn-sm btn-outline use-template" data-index="${i}" title="Pakai">
-                <i data-lucide="check" style="width:14px;height:14px;stroke-width:2.5"></i>
-            </button>
-            <button class="btn btn-sm btn-outline delete-template" data-index="${i}" style="color:#ff4d4f; border-color:#ff4d4f; margin-left:4px;">
-                <i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i>
-            </button>
-        </div>
+                <div class="template-actions" style="margin-left:12px; display:flex; gap:6px;">
+                    <button class="btn btn-sm btn-outline use-template" data-index="${i}" title="Pakai" style="padding:6px; border-radius:8px;">
+                        <i data-lucide="check" style="width:14px;height:14px;stroke-width:2.5"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline delete-template" data-index="${i}" style="color:#ff4d4f; border-color:#ff4d4f; padding:6px; border-radius:8px;">
+                        <i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i>
+                    </button>
+                </div>
     `;
             templateList.appendChild(div);
             if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...div.querySelectorAll('[data-lucide]')] });
@@ -587,19 +631,28 @@ export function initSettings() {
             const template = appState.state.templates[idx];
 
             if (appState.state.invoiceItems.length > 0 && appState.state.invoiceItems[0].name) {
-                if (!confirm("Ganti data saat ini dengan template?")) return;
+                showBMEAlert("Ganti data saat ini dengan template?", "warning", {
+                    confirm: true,
+                    onConfirm: () => {
+                        document.dispatchEvent(new CustomEvent('template-selected', { detail: { items: template.items } }));
+                        toggleModal(false);
+                    }
+                });
+            } else {
+                document.dispatchEvent(new CustomEvent('template-selected', { detail: { items: template.items } }));
+                toggleModal(false);
             }
-
-            document.dispatchEvent(new CustomEvent('template-selected', { detail: { items: template.items } }));
-            toggleModal(false);
         }
 
         if (btnDel) {
-            if (confirm("Hapus template ini?")) {
-                appState.state.templates.splice(btnDel.dataset.index, 1);
-                appState.save('bme_templates', appState.state.templates);
-                renderTemplates();
-            }
+            showBMEAlert("Hapus template ini?", "error", {
+                confirm: true,
+                onConfirm: () => {
+                    appState.state.templates.splice(btnDel.dataset.index, 1);
+                    appState.save('bme_templates', appState.state.templates);
+                    renderTemplates();
+                }
+            });
         }
     });
 
@@ -851,7 +904,7 @@ export function initSettings() {
                             </div>
                             <div class="input-group">
                                 <label class="field-label">Note (Opsional)</label>
-                                <input type="text" id="edit-item-note" class="form-input" value="${item.note || ''}" placeholder="Deskripsi item">
+                                <textarea id="edit-item-note" class="form-input" rows="1" placeholder="Deskripsi item" style="resize:none; overflow:hidden; font-family:inherit; min-height:40px; padding:10px; white-space:pre-wrap; line-height:1.4;">${item.note || ''}</textarea>
                             </div>
                             <button id="btn-save-edit-item" data-index="${editItem}" class="btn btn-primary btn-full" style="margin-top:10px;">Simpan Perubahan</button>
                             <button id="btn-back-picker" class="btn btn-outline btn-full" style="margin-top:8px;">Batal</button>
@@ -899,7 +952,7 @@ export function initSettings() {
                             </div>
                             <div class="input-group">
                                 <label class="field-label">Note (Opsional)</label>
-                                <input type="text" id="new-item-note" class="form-input" placeholder="Deskripsi item">
+                                <textarea id="new-item-note" class="form-input" rows="1" placeholder="Deskripsi item" style="resize:none; overflow:hidden; font-family:inherit; min-height:40px; padding:10px; white-space:pre-wrap; line-height:1.4;"></textarea>
                             </div>
                             <button id="btn-save-new-item" class="btn btn-primary btn-full" style="margin-top:10px;">Simpan & Pilih</button>
                             <button id="btn-back-picker" class="btn btn-outline btn-full" style="margin-top:8px;">Kembali</button>
@@ -934,16 +987,29 @@ export function initSettings() {
                                             <button class="swipe-btn swipe-edit" data-index="${t.originalIndex}" style="background-color:#F5A623; border:none; color:white; padding:0 20px; cursor:pointer;"><i data-lucide="pencil" style="width:15px;height:15px;stroke-width:2"></i></button>
                                             <button class="swipe-btn swipe-delete" data-index="${t.originalIndex}" style="background-color:#ff4d4f; border:none; color:white; padding:0 20px; cursor:pointer; border-radius:0 var(--radius-sm) var(--radius-sm) 0;"><i data-lucide="trash-2" style="width:15px;height:15px;stroke-width:2.5"></i></button>
                                         </div>
-                                        <div class="item-card picker-item" data-index="${t.originalIndex}" style="padding:12px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border:1px solid var(--border-color); box-shadow: var(--app-shadow-sm) !important; background:var(--bg-card); z-index:2; position:relative; transition:transform 0.2s;">
-                                            <div style="pointer-events:none; flex:1; min-width:0;">
-                                                <div style="font-weight:600; font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${t.name}</div>
-                                                <div style="font-size:0.72rem; color:var(--text-muted); margin-top:3px; display:flex; gap:8px; flex-wrap:wrap;">
-                                                    <span>Tipe: <strong>${t.tipe || '-'}</strong></span>
-                                                    <span>Qty: <strong>${t.qty || '-'}</strong></span>
-                                                    <span style="flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Note: <strong>${t.note || '-'}</strong></span>
+                                        <div class="item-card picker-item" data-index="${t.originalIndex}" style="padding:12px; display:flex; flex-direction:column; gap:4px; cursor:pointer; border:1px solid var(--border-color); box-shadow: var(--app-shadow-sm) !important; background:var(--bg-card); z-index:2; position:relative; transition:transform 0.2s;">
+                                            <div style="display:flex; justify-content:space-between; align-items:center; width:100%; pointer-events:none;">
+                                                <div style="font-weight:600; font-size:0.92rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1;">${t.name}</div>
+                                                <div style="font-weight:700; color:var(--primary); margin-left:12px; font-size:0.92rem; flex-shrink:0;">${formatCurrency(t.price)}</div>
+                                            </div>
+                                            <div style="font-size:0.72rem; color:var(--text-muted); display:flex; gap:12px; pointer-events:none; align-items:center; flex-wrap:nowrap;">
+                                                <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
+                                                    <i data-lucide="tag" style="width:11px;height:11px;opacity:0.6;"></i>
+                                                    ${t.tipe || '-'}
+                                                </div>
+                                                <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
+                                                    <i data-lucide="hash" style="width:11px;height:11px;opacity:0.6;"></i>
+                                                    ${t.qty || '-'}
+                                                </div>
+                                                <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
+                                                    <i data-lucide="package" style="width:11px;height:11px;opacity:0.6;"></i>
+                                                    ${t.qtyUnit || 'pcs'}
+                                                </div>
+                                                <div style="display:flex; align-items:center; gap:4px; min-width:0; flex:1;">
+                                                    <i data-lucide="sticky-note" style="width:11px;height:11px;opacity:0.6; flex-shrink:0;"></i>
+                                                    <p style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:0.7rem">${t.note || '-'}</p>
                                                 </div>
                                             </div>
-                                            <div style="font-weight:700; color:var(--primary); pointer-events:none; flex-shrink:0; margin-left:12px; font-size:0.9rem;">${formatCurrency(t.price)}</div>
                                         </div>
                                     </div>
                                 `).join('') : '<p style="text-align:center; padding: 20px; color: var(--text-muted);">Barang tidak ditemukan.</p>'}
@@ -1004,6 +1070,7 @@ export function initSettings() {
         };
 
         initPickerSwipe();
+        initPickerTextarea();
 
         // Close with animation
         const closePicker = () => {
@@ -1056,20 +1123,24 @@ export function initSettings() {
                 const idx = parseInt(editBtn.dataset.index);
                 pickerOverlay.innerHTML = renderPickerContent(false, idx);
                 if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...pickerOverlay.querySelectorAll('[data-lucide]')] });
+                initPickerTextarea();
                 return;
             }
 
             // Swipe Delete Button
             const deleteBtn = target.closest('.swipe-delete');
             if (deleteBtn) {
-                if (confirm('Hapus item ini dari template?')) {
-                    const idx = parseInt(deleteBtn.dataset.index);
-                    itemTemplates.splice(idx, 1);
-                    saveItemTemplates();
-                    pickerOverlay.innerHTML = renderPickerContent(false);
-                    if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...pickerOverlay.querySelectorAll('[data-lucide]')] });
-                    initPickerSwipe();
-                }
+                showBMEAlert('Hapus item ini dari template?', 'error', {
+                    confirm: true,
+                    onConfirm: () => {
+                        const idx = parseInt(deleteBtn.dataset.index);
+                        itemTemplates.splice(idx, 1);
+                        saveItemTemplates();
+                        pickerOverlay.innerHTML = renderPickerContent(false);
+                        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...pickerOverlay.querySelectorAll('[data-lucide]')] });
+                        initPickerSwipe();
+                    }
+                });
                 return;
             }
 
@@ -1085,6 +1156,7 @@ export function initSettings() {
             if (target.closest('#btn-to-add-view')) {
                 pickerOverlay.innerHTML = renderPickerContent(true);
                 if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...pickerOverlay.querySelectorAll('[data-lucide]')] });
+                initPickerTextarea();
             }
 
             // Back to List
@@ -1146,6 +1218,17 @@ export function initSettings() {
                 pickerOverlay.innerHTML = renderPickerContent(false);
                 if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...pickerOverlay.querySelectorAll('[data-lucide]')] });
                 initPickerSwipe();
+
+                // Init auto-resize for textarea after render
+                pickerOverlay.querySelectorAll('textarea').forEach(ta => {
+                    ta.addEventListener('input', () => {
+                        ta.style.height = 'auto';
+                        ta.style.height = ta.scrollHeight + 'px';
+                    });
+                    // trigger initial
+                    ta.style.height = 'auto';
+                    ta.style.height = ta.scrollHeight + 'px';
+                });
             }
         });
 
@@ -1179,6 +1262,18 @@ export function initSettings() {
 
         // Final icon init for initial view
         if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...pickerOverlay.querySelectorAll('[data-lucide]')] });
+
+        function initPickerTextarea() {
+            pickerOverlay.querySelectorAll('textarea').forEach(ta => {
+                ta.addEventListener('input', () => {
+                    ta.style.height = 'auto';
+                    ta.style.height = ta.scrollHeight + 'px';
+                });
+                // trigger initial
+                ta.style.height = 'auto';
+                ta.style.height = ta.scrollHeight + 'px';
+            });
+        }
     });
 
 }

@@ -358,15 +358,19 @@ export function initHistoryMode() {
                 break;
 
             case 'edit': {
-                if (!confirm('Pindah ke Mode Manual untuk mengedit data ini?')) return;
-                document.dispatchEvent(new CustomEvent('template-selected', { detail: { items: JSON.parse(JSON.stringify(entry.items)) } }));
-                const manualTitleEl = document.getElementById('manual-title');
-                if (manualTitleEl) {
-                    manualTitleEl.value = entry.title || '';
-                    appState.updateManualTitle(entry.title || '');
-                    manualTitleEl.dispatchEvent(new Event('input'));
-                }
-                document.querySelector('[data-tab="manual"]')?.click();
+                window.showBMEAlert('Pindah ke Mode Manual untuk mengedit data ini?', 'warning', {
+                    confirm: true,
+                    onConfirm: () => {
+                        document.dispatchEvent(new CustomEvent('template-selected', { detail: { items: JSON.parse(JSON.stringify(entry.items)) } }));
+                        const manualTitleEl = document.getElementById('manual-title');
+                        if (manualTitleEl) {
+                            manualTitleEl.value = entry.title || '';
+                            appState.updateManualTitle(entry.title || '');
+                            manualTitleEl.dispatchEvent(new Event('input'));
+                        }
+                        document.querySelector('[data-tab="manual"]')?.click();
+                    }
+                });
                 break;
             }
 
@@ -399,9 +403,12 @@ export function initHistoryMode() {
                 break;
 
             case 'delete':
-                if (confirm('Hapus riwayat ini?')) {
-                    appState.removeFromHistory(index);
-                }
+                window.showBMEAlert('Hapus riwayat ini?', 'error', {
+                    confirm: true,
+                    onConfirm: () => {
+                        appState.removeFromHistory(index);
+                    }
+                });
                 break;
         }
     };
@@ -1260,10 +1267,13 @@ export function initHistoryMode() {
     if (btnDetailDelete) {
         btnDetailDelete.addEventListener('click', () => {
             if (!currentDetailItem || currentDetailIndex === null) return;
-            if (confirm('Hapus riwayat ini?')) {
-                appState.removeFromHistory(currentDetailIndex);
-                closeDetail();
-            }
+            window.showBMEAlert('Hapus riwayat ini?', 'error', {
+                confirm: true,
+                onConfirm: () => {
+                    appState.removeFromHistory(currentDetailIndex);
+                    closeDetail();
+                }
+            });
         });
     }
 
@@ -1306,9 +1316,12 @@ export function initHistoryMode() {
         if (deleteBtn) {
             e.stopPropagation();
             const idx = parseInt(deleteBtn.dataset.index);
-            if (confirm('Hapus riwayat ini?')) {
-                appState.removeFromHistory(idx);
-            }
+            window.showBMEAlert('Hapus riwayat ini?', 'error', {
+                confirm: true,
+                onConfirm: () => {
+                    appState.removeFromHistory(idx);
+                }
+            });
             return;
         }
 
@@ -1319,15 +1332,19 @@ export function initHistoryMode() {
             const idx = parseInt(editBtn.dataset.index);
             const entry = appState.state.history[idx];
             if (!entry) return;
-            if (!confirm("Pindah ke Mode Manual untuk mengedit?")) return;
 
-            document.dispatchEvent(new CustomEvent('template-selected', { detail: { items: entry.items } }));
-            const manualTitle = document.getElementById('manual-title');
-            if (manualTitle) {
-                manualTitle.value = entry.title || '';
-                appState.updateManualTitle(entry.title || '');
-            }
-            document.querySelector('[data-tab="manual"]').click();
+            window.showBMEAlert("Pindah ke Mode Manual untuk mengedit?", "warning", {
+                confirm: true,
+                onConfirm: () => {
+                    document.dispatchEvent(new CustomEvent('template-selected', { detail: { items: entry.items } }));
+                    const manualTitle = document.getElementById('manual-title');
+                    if (manualTitle) {
+                        manualTitle.value = entry.title || '';
+                        appState.updateManualTitle(entry.title || '');
+                    }
+                    document.querySelector('[data-tab="manual"]').click();
+                }
+            });
             return;
         }
 

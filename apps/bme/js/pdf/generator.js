@@ -1439,41 +1439,135 @@ export function initPDFGenerator() {
     const btnDownload = document.getElementById('btn-download');
     if (btnDownload) {
         let isDownloading = false;
+        let longPressTimer;
 
-        btnDownload.addEventListener('click', async (e) => {
-            if (isDownloading) return;
-
-            // Prevent ghost click
+        const showMenu = async (e) => {
             if (e && e.cancelable) e.preventDefault();
-
+            
             const title = validateSync();
             if (!title) return;
 
             const items = appState.state.invoiceItems;
             if (items.length === 0) return showAlert("Belum ada item!");
 
-            const shouldSave = appState.state.settings.downloadAndSave === true;
+            // Create download menu
+            const existingMenu = document.getElementById('bme-download-menu');
+            if (existingMenu) existingMenu.remove();
 
+            const menu = document.createElement('div');
+            menu.id = 'bme-download-menu';
+            menu.className = 'visible';
+            menu.style.position = 'fixed';
+            menu.style.bottom = '80px';
+            menu.style.left = '50%';
+            menu.style.transform = 'translateX(-50%)';
+            menu.style.width = '240px';
+            menu.style.background = 'var(--bg-card)';
+            menu.style.border = '1px solid var(--border-color)';
+            menu.style.borderRadius = 'var(--radius-md)';
+            menu.style.boxShadow = 'var(--app-shadow-lg)';
+            menu.style.zIndex = '1000';
+            menu.style.padding = '8px';
+            menu.style.animation = 'alert-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards';
+
+            const options = [
+                { id: 'pdf', label: 'Unduh PDF', icon: 'file-text', color: '#2ecc71' },
+                { id: 'jpg', label: 'Unduh JPG (Gambar)', icon: 'image', color: '#f39c12' },
+                { id: 'png', label: 'Unduh PNG (Gambar)', icon: 'file-image', color: '#3498db' }
+            ];
+
+            menu.innerHTML = `
+                <div style="font-size:0.75rem; color:var(--text-muted); padding:4px 10px; margin-bottom:4px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">Pilih Format</div>
+                ${options.map(opt => `
+                    <button class="ctx-item" data-format="${opt.id}" style="display:flex; align-items:center; gap:12px; width:100%; padding:10px; border:none; background:none; cursor:pointer; border-radius:var(--radius-sm); transition:background 0.2s;">
+                        <i data-lucide="${opt.icon}" style="width:18px;height:18px;stroke-width:2; color:${opt.color};"></i>
+                        <span style="font-weight:600; font-size:0.9rem; color:var(--text-main);">${opt.label}</span>
+                    </button>
+                `).join('')}
+            `;
+
+            document.body.appendChild(menu);
+            if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...menu.querySelectorAll('[data-lucide]')] });
+
+            const closeMenu = (e) => {
+                if (!menu.contains(e.target) && e.target !== btnDownload) {
+                    menu.style.animation = 'alert-out 0.3s ease-in forwards';
+                    setTimeout(() => menu.remove(), 300);
+                    document.removeEventListener('click', closeMenu);
+                }
+            };
+            setTimeout(() => document.addEventListener('click', closeMenu), 10);
+
+            menu.querySelectorAll('.ctx-item').forEach(btn => {
+                btn.onclick = async () => {
+                    const format = btn.dataset.format;
+                    menu.remove();
+                    await runDownload(format);
+                };
+            });
+        };
+
+        const runDownload = async (format) => {
+            if (isDownloading) return;
+            const title = validateSync();
+            if (!title) return;
+            const items = appState.state.invoiceItems;
+            if (items.length === 0) return showAlert("Belum ada item!");
+
+            const shouldSave = appState.state.settings.downloadAndSave === true;
             if (shouldSave) {
-                // Check for duplicate synchronously
                 const history = appState.state.history || [];
                 const isDuplicate = history.some(h => (h.title || 'Untitled').toLowerCase() === title.toLowerCase());
-
                 if (isDuplicate) {
                     const proceed = await showCustomConfirm(title);
                     if (!proceed) return;
                 }
+                saveToHistory(items, title);
             }
 
             isDownloading = true;
             try {
-                if (shouldSave) {
-                    saveToHistory(items, title);
-                }
-                const defaultMethod = appState.state.settings.defaultDownloadMethod || 'pdf';
-                await executeDownload(items, title, defaultMethod);
+                const methodToUse = format || appState.state.settings.defaultDownloadMethod || 'pdf';
+                await executeDownload(items, title, methodToUse);
             } finally {
                 isDownloading = false;
+            }
+        };
+
+        // Click: Default Download
+        btnDownload.addEventListener('click', (e) => {
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
+            runDownload();
+        });
+
+        // Context Menu: Show Options
+        btnDownload.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            showMenu(e);
+        });
+
+        // Long Press: Show Options
+        btnDownload.addEventListener('pointerdown', (e) => {
+            longPressTimer = setTimeout(() => {
+                showMenu(e);
+                longPressTimer = null;
+            }, 600);
+        });
+
+        btnDownload.addEventListener('pointerup', () => {
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
+            }
+        });
+
+        btnDownload.addEventListener('pointerleave', () => {
+            if (longPressTimer) {
+                clearTimeout(longPressTimer);
+                longPressTimer = null;
             }
         });
     }

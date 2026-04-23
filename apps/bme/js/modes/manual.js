@@ -207,11 +207,11 @@ export function initManualMode() {
                     
                     <div class="item-row">
                         <div class="item-price-wrap" style="flex: 2.2; padding-top: 4px;">
-                            <label class="field-label">Harga</label>
+                            <label class="field-label"><i data-lucide="banknote" style="width:12px;height:12px;vertical-align:middle;margin-top:-2px;"></i> Harga</label>
                             <input type="text" class="form-input item-price-format ${!item.price || item.price <= 0 ? 'required-empty-orange' : ''}" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="0" inputmode="numeric">
                         </div>
                         <div class="item-tipe-wrap" style="flex: 2; padding-top: 4px;">
-                            <label class="field-label">Tipe</label>
+                            <label class="field-label"><i data-lucide="tag" style="width:12px;height:12px;vertical-align:middle;margin-top:-2px;"></i> Tipe</label>
                             <select class="form-input item-tipe ${!item.tipe ? 'required-empty-orange' : ''}" data-index="${index}">
                                 <option value="" ${!item.tipe ? 'selected' : ''}></option>
                                 <option value="ICA" ${item.tipe === 'ICA' ? 'selected' : ''}>ICA</option>
@@ -235,7 +235,7 @@ export function initManualMode() {
 
                     <div class="input-group" style="margin-bottom: 0;">
                         <div class="input-wrapper">
-                            <textarea class="form-textarea item-note ${!item.note ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Deskripsi Item (wajib)" rows="1" style="padding-right: 30px; overflow:hidden;">${item.note || ''}</textarea>
+                            <textarea class="form-textarea item-note ${!item.note ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Deskripsi Item (wajib)" rows="1" style="padding-right: 30px; resize:none; overflow:hidden; min-height:36px; line-height:1.4;">${item.note || ''}</textarea>
                             <button class="copy-icon-btn" data-index="${index}" title="Copy Note"><i data-lucide="copy" style="width:13px;height:13px;stroke-width:2"></i></button>
                         </div>
                     </div>
@@ -445,9 +445,12 @@ export function initManualMode() {
                 render();
                 break;
             case 'delete':
-                if (confirm('Hapus item ini?')) {
-                    removeItemWithAnimation(index);
-                }
+                window.showBMEAlert('Hapus item ini?', 'error', {
+                    confirm: true,
+                    onConfirm: () => {
+                        removeItemWithAnimation(index);
+                    }
+                });
                 break;
         }
     };
@@ -796,23 +799,37 @@ export function initManualMode() {
 
     // External Event Listeners
     document.addEventListener('template-selected', (e) => {
+        const applyTemplate = () => {
+            items = JSON.parse(JSON.stringify(e.detail.items));
+            render();
+        };
+
         // Warning if data exists? "Peringatan Penggantian Data"
         if (items.length > 0 && (items[0].name !== '' || items.length > 1)) {
-            if (!confirm("Data saat ini akan digantikan. Lanjutkan?")) return;
+            window.showBMEAlert("Data saat ini akan digantikan. Lanjutkan?", "warning", {
+                confirm: true,
+                onConfirm: applyTemplate
+            });
+        } else {
+            applyTemplate();
         }
-
-        items = JSON.parse(JSON.stringify(e.detail.items));
-        render();
     });
 
     document.addEventListener('ai-generated', (e) => {
-        if (items.length > 0 && (items[0].name !== '' || items.length > 1)) {
-            if (!confirm("Data saat ini akan digantikan dengan hasil AI. Lanjutkan?")) return;
-        }
+        const applyAI = () => {
+            titleInput.value = e.detail.title;
+            items = JSON.parse(JSON.stringify(e.detail.items));
+            render();
+        };
 
-        titleInput.value = e.detail.title;
-        items = JSON.parse(JSON.stringify(e.detail.items));
-        render();
+        if (items.length > 0 && (items[0].name !== '' || items.length > 1)) {
+            window.showBMEAlert("Data saat ini akan digantikan dengan hasil AI. Lanjutkan?", "warning", {
+                confirm: true,
+                onConfirm: applyAI
+            });
+        } else {
+            applyAI();
+        }
     });
 
     // Initial
