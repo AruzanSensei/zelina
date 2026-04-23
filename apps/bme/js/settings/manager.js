@@ -1106,13 +1106,13 @@ export function initSettings() {
 
                 if (!name) return showBMEAlert('Nama harus diisi');
 
-                const newItem = { 
-                    name, 
-                    price: parseInt(price) || 0, 
-                    tipe, 
+                const newItem = {
+                    name,
+                    price: parseInt(price) || 0,
+                    tipe,
                     qty: parseInt(qty) || 1,
                     qtyUnit,
-                    note 
+                    note
                 };
                 itemTemplates.push(newItem);
                 saveItemTemplates();
@@ -1134,13 +1134,13 @@ export function initSettings() {
 
                 if (!name) return showBMEAlert('Nama harus diisi');
 
-                itemTemplates[idx] = { 
-                    name, 
-                    price: parseInt(price) || 0, 
-                    tipe, 
+                itemTemplates[idx] = {
+                    name,
+                    price: parseInt(price) || 0,
+                    tipe,
                     qty: parseInt(qty) || 1,
                     qtyUnit,
-                    note 
+                    note
                 };
                 saveItemTemplates();
                 pickerOverlay.innerHTML = renderPickerContent(false);
@@ -1157,11 +1157,11 @@ export function initSettings() {
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = renderPickerContent(false);
                 modalBody.innerHTML = tempDiv.querySelector('.modal-body').innerHTML;
-                
+
                 // Re-init icons and search bar state
                 if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...modalBody.querySelectorAll('[data-lucide]')] });
                 initPickerSwipe();
-                
+
                 // Keep focus and expanded state
                 const newSearchInput = pickerOverlay.querySelector('#picker-search-input');
                 newSearchInput.focus();

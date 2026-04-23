@@ -242,6 +242,11 @@
 .form-input.title {
     box-shadow: var(--app-shadow-sm);
     font-weight: 700;
+    border-left: 8px solid var(--primary) !important;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    border: none;
+    padding: 4px;
+    padding-left: 12px;
 }
 
 .form-input.item-name {
@@ -266,6 +271,11 @@
 
 .search-history {
     box-shadow: var(--app-shadow-sm);
+    border-left: 8px solid var(--tertiary) !important;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    border: none;
+    padding: 4px;
+    padding-left: 22px;
 }
 
 /* Input with inline icon button */
