@@ -555,6 +555,25 @@ export function initManualMode() {
     };
     addBtn.addEventListener('click', addItem);
 
+    // Global template picker (from orange button next to addBtn in HTML)
+    document.addEventListener('add-item-from-template', (e) => {
+        const t = e.detail.item;
+        items.push({
+            name: t.name || '',
+            price: t.price || 0,
+            qty: t.qty || 1,
+            note: t.note || '',
+            tipe: t.tipe || '',
+            qtyUnit: 'pcs',
+            invKeterangan: '',
+            sjKeterangan: '',
+            isNew: true
+        });
+        appState.updateItems(items);
+        render();
+        updateEmptyFieldsInfo();
+    });
+
     // Container Interactions
     container.addEventListener('click', (e) => {
         const target = e.target;

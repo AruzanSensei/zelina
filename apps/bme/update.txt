@@ -16,3 +16,16 @@ Update Log:
 13. Tabel Mode Manual: Kolom Note kini fleksibel dengan batas maksimal 300px dan fitur pembungkusan teks (wrap) otomatis.
 14. Estetika Visual: Implementasi sistem 'Dynamic 2-Layer SaaS Shadow'. Bayangan di seluruh aplikasi kini lebih halus dan natural.
 15. Context-Aware UI: Menggunakan selector :root:has() untuk sinkronisasi warna bayangan dan gradasi navigasi secara otomatis mengikuti tab yang aktif (Manual, AI, History, Finance).
+
+23 April 2026
+
+Update Log:
+1.  Modernisasi Navigasi Tema: Mengganti segmented control dengan tombol siklik tunggal (Light -> Dark -> System) dengan ikon yang berubah dinamis.
+2.  Implementasi Sistem Bayangan Adaptif: Menggunakan --glow (berwarna) pada mode gelap/malam dan --shadow (netral) pada mode terang untuk estetika SaaS yang premium.
+3.  Penyempurnaan Picker Template: Implementasi Search Bar minimalis yang melebar (expanding) saat diklik untuk pencarian barang yang lebih cepat.
+4.  Pembaruan Layout Form Picker: Menyesuaikan tata letak Harga, Tipe, Qty, dan Unit pada modal picker agar identik dengan layout "Mode Simpel" (eye-closed) pada kartu barang utama.
+5.  Interaktivitas Picker: Penambahan kontrol kuantitas (+/-) dan unit toggle (Pcs/Lot) yang interaktif di dalam modal edit/tambah template.
+6.  Standardisasi Notifikasi: Mengganti semua window.alert() dengan komponen showBMEAlert() kustom yang lebih modern dan selaras dengan desain aplikasi.
+7.  Global Template Picker: Penambahan tombol orange akses cepat untuk memilih barang template langsung di samping tombol "+ tambah item".
+8.  Ikon Performa: Perbaikan inisialisasi ikon Lucide pada elemen dinamis (modal/alert) untuk memastikan semua ikon tampil dengan benar tanpa lag.
+9.  Perbaikan UX: Animasi pop-up modal picker barang diperhalus menjadi 400ms dengan kurva cubic-bezier untuk kesan yang lebih 'snappy'.

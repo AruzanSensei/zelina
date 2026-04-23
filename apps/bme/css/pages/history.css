@@ -89,7 +89,7 @@
     position: fixed;
     background: var(--bg-card);
     border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--app-shadow-md);
     border: 1px solid var(--border-color);
     padding: 10px;
     z-index: 200;
@@ -128,7 +128,7 @@
    ============================================ */
 .history-list {
     overflow: hidden;
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--app-shadow-sm);
 }
 
 /* Focus dimming for context menu and multiselect */
@@ -561,7 +561,7 @@
 .detail-info-bar .detail-date-time .time-chip {
     background: var(--bg-transparent);
     border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-xs);
+    box-shadow: var(--app-shadow-xs);
     border-radius: 6px;
     padding: 4px 10px;
     font-size: 0.8rem;
@@ -587,7 +587,7 @@
 .detail-item-card {
     background: var(--bg-transparent);
     border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-xs);
+    box-shadow: var(--app-shadow-xs);
     padding: 12px 14px;
     margin-bottom: 8px;
     border: 1px solid var(--border-color);

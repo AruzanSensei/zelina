@@ -174,9 +174,15 @@
                     <!-- Items will be injected here -->
                 </div>
 
-                <button id="btn-add-item" class="btn btn-outline btn-full">
-                    <i data-lucide="plus" style="width:15px;height:15px;stroke-width:2.5"></i> Tambah Item
-                </button>
+                <div style="display: flex; gap: 8px; align-items: stretch;">
+                    <button id="btn-add-item" class="btn btn-outline" style="flex: 1;">
+                        <i data-lucide="plus" style="width:15px;height:15px;stroke-width:2.5"></i> Tambah Item
+                    </button>
+                    <button id="btn-global-template-picker" class="btn" title="Pilih dari Template Barang"
+                        style="background: var(--tertiary); color: white; border: none; aspect-ratio: 1; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); flex-shrink: 0; min-width: 44px;">
+                        <i data-lucide="align-justify" style="width:18px;height:18px;stroke-width:2.5"></i>
+                    </button>
+                </div>
             </div>
         </section>
 
@@ -356,9 +362,12 @@
             <div class="modal-header">
                 <h2>Pengaturan</h2>
                 <div style="display:flex; gap:10px; margin-left:auto; margin-right:8px;">
-                    <button id="btn-theme-toggle" class="icon-btn" title="Ganti Tema">
-                        <i data-lucide="moon" style="width:17px;height:17px;stroke-width:1.5"></i>
-                    </button>
+                    <div style="margin-left:auto; margin-right:8px;">
+                        <button id="btn-theme-cycle" class="icon-btn" title="Ganti Tema"
+                            style="background: transparent; border: 1px solid var(--border-color); border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-main); transition: all 0.2s;">
+                            <i data-lucide="monitor" style="width:16px;height:16px;stroke-width:2"></i>
+                        </button>
+                    </div>
                 </div>
                 <button class="close-modal">
                     <i data-lucide="x" style="width:18px;height:18px;stroke-width:2.5"></i>

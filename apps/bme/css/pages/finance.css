@@ -104,7 +104,7 @@
     text-align: center;
     margin-bottom: 16px;
     border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--app-shadow-sm);
     position: relative;
     overflow: hidden;
 }
@@ -163,7 +163,7 @@
     padding: 16px;
     margin-bottom: 16px;
     border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--app-shadow-sm);
 }
 
 .finance-chart-header {
@@ -280,7 +280,7 @@
     padding: 0;
     margin-bottom: 16px;
     border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--app-shadow-sm);
     overflow: hidden;
 }
 

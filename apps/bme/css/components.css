@@ -113,7 +113,7 @@
     background: white;
     padding: 15px 30px;
     border-radius: var(--radius-sm);
-    box-shadow: 
+    box-shadow:
         0 4px 6px color-mix(in srgb, var(--active-tab-glow) 6%, transparent),
         0 12px 24px color-mix(in srgb, var(--active-tab-glow) 15%, transparent);
     border: 1px solid var(--border-color);
@@ -159,12 +159,13 @@
     padding: 24px;
     border-radius: var(--radius-md);
     text-align: center;
-    box-shadow: 
+    box-shadow:
         0 10px 25px color-mix(in srgb, var(--active-tab-glow) 10%, transparent),
         0 20px 40px rgba(0, 0, 0, 0.1);
     animation: confirm-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     border: 1px solid var(--border-color);
 }
+
 .confirm-icon {
     width: 50px;
     height: 50px;
@@ -239,7 +240,7 @@
 }
 
 .form-input.title {
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--app-shadow-sm);
     font-weight: 700;
 }
 
@@ -264,7 +265,7 @@
 }
 
 .search-history {
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--app-shadow-sm);
 }
 
 /* Input with inline icon button */
@@ -336,12 +337,32 @@
     align-items: flex-end;
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
 .modal.active {
     opacity: 1;
     visibility: visible;
+    animation: modal-backdrop-in 0.4s ease forwards;
+}
+
+/* Picker modal — centers on screen with pop animation */
+.modal.picker-modal {
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.picker-modal .modal-content {
+    border-radius: var(--radius-md);
+    max-width: 480px;
+    transform: scale(0.92) translateY(8px);
+    transition: transform 0.4s cubic-bezier(0.34, 1.3, 0.64, 1), opacity 0.4s ease;
+    opacity: 0;
+}
+
+.modal.picker-modal.active .modal-content {
+    transform: scale(1) translateY(0);
+    opacity: 1;
 }
 
 /* z-index stacking for layered overlays */
@@ -361,6 +382,7 @@
     max-height: 90vh;
     overflow-y: auto;
     transform: translateY(100%);
+    box-shadow: var(--app-shadow-md);
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -413,6 +435,7 @@
         max-width: 500px;
         border-radius: var(--radius-md);
         transform: scale(0.9);
+        box-shadow: var(--app-shadow-lg);
     }
 
     .modal.active .modal-content {
@@ -453,7 +476,7 @@
 .toggle-group.orange-theme .toggle-btn.active {
     background: var(--bg-card);
     color: color-mix(in srgb, var(--text-main), transparent 50%);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--app-shadow-sm);
 }
 
 .view-toggle-container {

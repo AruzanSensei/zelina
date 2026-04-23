@@ -20,9 +20,8 @@
     --text-main: #E0E0E0;
     --text-muted: #A0A0A0;
 
-    /* Borders & Shadows */
+    /* Borders & Dividers */
     --border-color: #333333;
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
 
     /* Feature-specific backgrounds */
     --invoice-bg: #1A237E;

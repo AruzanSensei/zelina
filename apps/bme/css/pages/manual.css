@@ -33,18 +33,18 @@
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
     padding: var(--spacing-md);
-    box-shadow: var(--shadow-sm);
     position: relative;
     transition: transform 0.2s ease-out;
     background: var(--bg-card);
     z-index: 2;
     margin-bottom: 0;
     outline: 2px solid transparent;
+    box-shadow: var(--app-shadow-sm);
 }
 
 .item-card.is-selected {
     outline: 2px solid var(--primary) !important;
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--app-shadow-md);
 }
 
 #manual-items-container.is-multi-select .item-card:not(.is-selected) {
@@ -230,7 +230,7 @@
     align-items: flex-start;
     justify-content: center;
     padding: 0;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--app-shadow-sm);
     overflow: hidden;
     position: relative;
     touch-action: none;
@@ -417,7 +417,7 @@
     width: 100%;
     margin-bottom: 20px;
     border-radius: var(--radius-sm);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--app-shadow-sm);
 }
 
 .table-view-container::-webkit-scrollbar {

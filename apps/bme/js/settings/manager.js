@@ -4,6 +4,25 @@
 import { appState } from '../state.js';
 import { buildInvoiceHTML } from '../pdf/generator.js';
 
+/**
+ * Custom alert to replace native window.alert().
+ * Shows a styled, auto-dismissing notification in the center of the screen.
+ */
+const showBMEAlert = (message, duration = 2500) => {
+    const alertEl = document.getElementById('custom-alert');
+    const msgEl = document.getElementById('alert-message');
+    if (alertEl && msgEl) {
+        msgEl.innerHTML = message;
+        alertEl.classList.remove('hidden');
+        alertEl.style.animation = 'alert-in 0.3s ease-out forwards';
+        clearTimeout(alertEl._hideTimer);
+        alertEl._hideTimer = setTimeout(() => {
+            alertEl.style.animation = 'alert-out 0.3s ease-in forwards';
+            setTimeout(() => alertEl.classList.add('hidden'), 300);
+        }, duration);
+    }
+};
+
 export function initSettings() {
     // ===================================
     // DOM Elements
@@ -237,7 +256,7 @@ export function initSettings() {
             if (formatInvoice) formatInvoice.value = (s.fileNameFormat || {}).invoice || 'Invoice-{judul}';
             if (formatSuratJalan) formatSuratJalan.value = (s.fileNameFormat || {}).suratJalan || 'Surat Jalan-{judul}';
 
-            alert('Pengaturan telah direset!');
+            showBMEAlert('Pengaturan telah direset!');
         });
     }
 
@@ -379,12 +398,12 @@ export function initSettings() {
                             });
                             appState.save('bme_history', existing);
                             appState.notify('history', existing);
-                            alert(`Import berhasil: ${data.length} item diproses.`);
+                            showBMEAlert(`Import berhasil: ${data.length} item diproses.`);
                         } else {
-                            alert("Format JSON tidak valid!");
+                            showBMEAlert('Format JSON tidak valid!');
                         }
                     } catch (err) {
-                        alert("Gagal membaca file JSON.");
+                        showBMEAlert('Gagal membaca file JSON.');
                     }
                 };
                 reader.readAsText(file);
@@ -393,13 +412,13 @@ export function initSettings() {
         }
         else if (action === 'export-json') {
             const hist = appState.state.history || [];
-            if (hist.length === 0) return alert('History kosong!');
+            if (hist.length === 0) return showBMEAlert('History kosong!');
             const jsonStr = JSON.stringify(hist, null, 2);
             downloadBlob(new Blob([jsonStr], { type: 'application/json' }), `BME-Backup-${dateStr}.json`);
         }
         else if (action === 'export-csv') {
             const hist = appState.state.history || [];
-            if (hist.length === 0) return alert('History kosong!');
+            if (hist.length === 0) return showBMEAlert('History kosong!');
 
             let csvContent = "Judul,Tanggal,Barang,Harga,Qty,Total\n";
             hist.forEach(h => {
@@ -413,7 +432,7 @@ export function initSettings() {
         }
         else if (action === 'export-pdf') {
             const hist = appState.state.history || [];
-            if (hist.length === 0) return alert('History kosong!');
+            if (hist.length === 0) return showBMEAlert('History kosong!');
 
             let combinedHtml = `
             <!DOCTYPE html>
@@ -449,9 +468,9 @@ export function initSettings() {
             }
         }
         else if (action === 'export-zip') {
-            if (typeof JSZip === 'undefined') return alert('Library JSZip belum dimuat. Mohon cek koneksi internet!');
+            if (typeof JSZip === 'undefined') return showBMEAlert('Library JSZip belum dimuat. Mohon cek koneksi internet!');
             const hist = appState.state.history || [];
-            if (hist.length === 0) return alert('History kosong!');
+            if (hist.length === 0) return showBMEAlert('History kosong!');
 
             const zip = new JSZip();
 
@@ -613,7 +632,7 @@ export function initSettings() {
         overlay.querySelector('#btn-cancel-tpl').addEventListener('click', close);
         overlay.querySelector('#btn-save-tpl').addEventListener('click', () => {
             const name = input.value.trim();
-            if (!name) return alert("Nama wajib diisi!");
+            if (!name) return showBMEAlert('Nama wajib diisi!');
 
             const newTemplate = {
                 id: Date.now(),
@@ -780,10 +799,14 @@ export function initSettings() {
 
         // Dynamic Modal Creation
         const pickerOverlay = document.createElement('div');
-        pickerOverlay.className = 'modal active';
+        pickerOverlay.className = 'modal picker-modal';
         pickerOverlay.style.zIndex = '300';
+        // Delay adding 'active' so CSS transition plays
+        requestAnimationFrame(() => requestAnimationFrame(() => pickerOverlay.classList.add('active')));
 
         // Initial HTML
+        let searchQuery = '';
+
         const renderPickerContent = (isAdding = false, editItem = null) => {
             if (editItem !== null) {
                 // Edit Mode
@@ -799,19 +822,32 @@ export function initSettings() {
                                 <label class="field-label">Nama Barang</label>
                                 <input type="text" id="edit-item-name" class="form-input" value="${item.name || ''}">
                             </div>
-                            <div class="input-group">
-                                <label class="field-label">Harga (Rp)</label>
-                                <input type="number" id="edit-item-price" class="form-input" value="${item.price || ''}">
-                            </div>
-                            <div class="input-group">
-                                <label class="field-label">Tipe (Opsional)</label>
-                                <select id="edit-item-tipe" class="form-input">
-                                    <option value="" ${!item.tipe ? 'selected' : ''}>-</option>
-                                    <option value="ICA" ${item.tipe === 'ICA' ? 'selected' : ''}>ICA</option>
-                                    <option value="Protecta" ${item.tipe === 'Protecta' ? 'selected' : ''}>Protecta</option>
-                                    <option value="Prolink" ${item.tipe === 'Prolink' ? 'selected' : ''}>Prolink</option>
-                                    <option value="APC" ${item.tipe === 'APC' ? 'selected' : ''}>APC</option>
-                                </select>
+                            <div class="item-row">
+                                <div class="item-price-wrap" style="flex: 2.2; padding-top: 4px;">
+                                    <label class="field-label">Harga</label>
+                                    <input type="number" id="edit-item-price" class="form-input" value="${item.price || ''}" placeholder="0">
+                                </div>
+                                <div class="item-tipe-wrap" style="flex: 2; padding-top: 4px;">
+                                    <label class="field-label">Tipe</label>
+                                    <select id="edit-item-tipe" class="form-input">
+                                        <option value="" ${!item.tipe ? 'selected' : ''}></option>
+                                        <option value="ICA" ${item.tipe === 'ICA' ? 'selected' : ''}>ICA</option>
+                                        <option value="Protecta" ${item.tipe === 'Protecta' ? 'selected' : ''}>Protecta</option>
+                                        <option value="Prolink" ${item.tipe === 'Prolink' ? 'selected' : ''}>Prolink</option>
+                                        <option value="APC" ${item.tipe === 'APC' ? 'selected' : ''}>APC</option>
+                                    </select>
+                                </div>
+                                <div class="item-qty-wrap" style="min-width: 90px; margin-top:17px; display: flex; flex-direction: column;">
+                                    <div class="unit-switch picker-unit-switch" data-target="edit" style="margin: 0 0 6px auto;">
+                                        <span class="unit-opt ${item.qtyUnit !== 'lot' ? 'active' : ''}" data-unit="pcs">Pcs</span>
+                                        <span class="unit-opt ${item.qtyUnit === 'lot' ? 'active' : ''}" data-unit="lot">Lot</span>
+                                    </div>
+                                    <div class="qty-control" style="margin-left: auto;">
+                                        <button class="qty-btn picker-qty-btn minus" data-target="edit-item-qty">-</button>
+                                        <input type="number" id="edit-item-qty" class="qty-input item-qty" value="${item.qty || 1}" min="1">
+                                        <button class="qty-btn picker-qty-btn plus" data-target="edit-item-qty">+</button>
+                                    </div>
+                                </div>
                             </div>
                             <div class="input-group">
                                 <label class="field-label">Note (Opsional)</label>
@@ -834,19 +870,32 @@ export function initSettings() {
                                 <label class="field-label">Nama Barang</label>
                                 <input type="text" id="new-item-name" class="form-input" placeholder="Contoh: Kabel Audio">
                             </div>
-                            <div class="input-group">
-                                <label class="field-label">Harga (Rp)</label>
-                                <input type="number" id="new-item-price" class="form-input" placeholder="0">
-                            </div>
-                            <div class="input-group">
-                                <label class="field-label">Tipe (Opsional)</label>
-                                <select id="new-item-tipe" class="form-input">
-                                    <option value="" selected>-</option>
-                                    <option value="ICA">ICA</option>
-                                    <option value="Protecta">Protecta</option>
-                                    <option value="Prolink">Prolink</option>
-                                    <option value="APC">APC</option>
-                                </select>
+                            <div class="item-row">
+                                <div class="item-price-wrap" style="flex: 2.2; padding-top: 4px;">
+                                    <label class="field-label">Harga</label>
+                                    <input type="number" id="new-item-price" class="form-input" placeholder="0">
+                                </div>
+                                <div class="item-tipe-wrap" style="flex: 2; padding-top: 4px;">
+                                    <label class="field-label">Tipe</label>
+                                    <select id="new-item-tipe" class="form-input">
+                                        <option value="" selected></option>
+                                        <option value="ICA">ICA</option>
+                                        <option value="Protecta">Protecta</option>
+                                        <option value="Prolink">Prolink</option>
+                                        <option value="APC">APC</option>
+                                    </select>
+                                </div>
+                                <div class="item-qty-wrap" style="min-width: 90px; margin-top:17px; display: flex; flex-direction: column;">
+                                    <div class="unit-switch picker-unit-switch" data-target="new" style="margin: 0 0 6px auto;">
+                                        <span class="unit-opt active" data-unit="pcs">Pcs</span>
+                                        <span class="unit-opt" data-unit="lot">Lot</span>
+                                    </div>
+                                    <div class="qty-control" style="margin-left: auto;">
+                                        <button class="qty-btn picker-qty-btn minus" data-target="new-item-qty">-</button>
+                                        <input type="number" id="new-item-qty" class="qty-input item-qty" value="1" min="1">
+                                        <button class="qty-btn picker-qty-btn plus" data-target="new-item-qty">+</button>
+                                    </div>
+                                </div>
                             </div>
                             <div class="input-group">
                                 <label class="field-label">Note (Opsional)</label>
@@ -858,26 +907,46 @@ export function initSettings() {
                     </div >
         `;
             } else {
+                const filteredItems = itemTemplates.map((t, idx) => ({ ...t, originalIndex: idx }))
+                    .filter(t => t.name.toLowerCase().includes(searchQuery.toLowerCase()));
+
                 return `
         <div class="modal-content">
-                        <div class="modal-header">
-                            <h2>Pilih Barang</h2>
-                            <button class="close-picker"><i data-lucide="x" style="width:17px;height:17px;stroke-width:2.5"></i></button>
+                        <div class="modal-header" style="align-items: center; gap: 10px;">
+                            <h2 style="flex: 1; margin: 0; font-size: 1.1rem;">Pilih Barang</h2>
+                            
+                            <div class="picker-search-container" style="position: relative; display: flex; align-items: center;">
+                                <input type="text" id="picker-search-input" class="form-input" placeholder="Cari barang..." 
+                                    style="width: 32px; height: 32px; padding: 0; border-radius: 20px; transition: all 0.3s ease; border: 1px solid var(--border-color); background: rgba(0,0,0,0.05); cursor: pointer; padding-left: 32px; font-size: 0.85rem;"
+                                    value="${searchQuery}">
+                                <i data-lucide="search" class="search-icon" style="position: absolute; left: 8px; width: 14px; height: 14px; color: var(--text-muted); pointer-events: none;"></i>
+                            </div>
+
+                            <button class="close-picker" style="background: rgba(0, 0, 0, 0.05); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer;">
+                                <i data-lucide="x" style="width: 17px; height: 17px; stroke-width: 2.5;"></i>
+                            </button>
                         </div>
                         <div class="modal-body">
-                            <div id="picker-list" style="max-height: 50vh; overflow-y: auto;">
-                                ${itemTemplates.map((t, idx) => `
+                            <div id="picker-list" style="max-height: 50vh; overflow-y: auto; margin-top: 5px;">
+                                ${filteredItems.length > 0 ? filteredItems.map((t) => `
                                     <div class="item-swipe-container" style="position:relative; overflow:hidden; border-radius:var(--radius-sm); margin-bottom:8px;">
                                         <div class="swipe-actions" style="position:absolute; top:0; bottom:0; right:0; display:flex; z-index:1;">
-                                            <button class="swipe-btn swipe-edit" data-index="${idx}" style="background-color:#F5A623; border:none; color:white; padding:0 20px; cursor:pointer;"><i data-lucide="pencil" style="width:15px;height:15px;stroke-width:2"></i></button>
-                                            <button class="swipe-btn swipe-delete" data-index="${idx}" style="background-color:#ff4d4f; border:none; color:white; padding:0 20px; cursor:pointer; border-radius:0 var(--radius-sm) var(--radius-sm) 0;"><i data-lucide="trash-2" style="width:15px;height:15px;stroke-width:2.5"></i></button>
+                                            <button class="swipe-btn swipe-edit" data-index="${t.originalIndex}" style="background-color:#F5A623; border:none; color:white; padding:0 20px; cursor:pointer;"><i data-lucide="pencil" style="width:15px;height:15px;stroke-width:2"></i></button>
+                                            <button class="swipe-btn swipe-delete" data-index="${t.originalIndex}" style="background-color:#ff4d4f; border:none; color:white; padding:0 20px; cursor:pointer; border-radius:0 var(--radius-sm) var(--radius-sm) 0;"><i data-lucide="trash-2" style="width:15px;height:15px;stroke-width:2.5"></i></button>
                                         </div>
-                                        <div class="item-card picker-item" data-index="${idx}" style="padding:12px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border:1px solid var(--border-color); box-shadow: var(--shadow-sm) !important; background:var(--bg-card); z-index:2; position:relative; transition:transform 0.2s;">
-                                            <div style="font-weight:500; pointer-events:none;">${t.name}</div>
-                                            <div style="font-weight:600; color:var(--primary); pointer-events:none;">${formatCurrency(t.price)}</div>
+                                        <div class="item-card picker-item" data-index="${t.originalIndex}" style="padding:12px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; border:1px solid var(--border-color); box-shadow: var(--app-shadow-sm) !important; background:var(--bg-card); z-index:2; position:relative; transition:transform 0.2s;">
+                                            <div style="pointer-events:none; flex:1; min-width:0;">
+                                                <div style="font-weight:600; font-size:0.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${t.name}</div>
+                                                <div style="font-size:0.72rem; color:var(--text-muted); margin-top:3px; display:flex; gap:8px; flex-wrap:wrap;">
+                                                    <span>Tipe: <strong>${t.tipe || '-'}</strong></span>
+                                                    <span>Qty: <strong>${t.qty || '-'}</strong></span>
+                                                    <span style="flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Note: <strong>${t.note || '-'}</strong></span>
+                                                </div>
+                                            </div>
+                                            <div style="font-weight:700; color:var(--primary); pointer-events:none; flex-shrink:0; margin-left:12px; font-size:0.9rem;">${formatCurrency(t.price)}</div>
                                         </div>
                                     </div>
-                                `).join('')}
+                                `).join('') : '<p style="text-align:center; padding: 20px; color: var(--text-muted);">Barang tidak ditemukan.</p>'}
                             </div>
                             <button id="btn-to-add-view" class="btn btn-outline btn-full" style="margin-top:10px;">
                                 <i data-lucide="plus" style="width:14px;height:14px;stroke-width:2.5"></i> Tambah Item Baru
@@ -936,13 +1005,49 @@ export function initSettings() {
 
         initPickerSwipe();
 
+        // Close with animation
+        const closePicker = () => {
+            pickerOverlay.classList.remove('active');
+            setTimeout(() => pickerOverlay.remove(), 400);
+        };
+
         // Interaction Logic
         pickerOverlay.addEventListener('click', (evt) => {
             const target = evt.target;
 
             // Close
             if (target === pickerOverlay || target.closest('.close-picker')) {
-                pickerOverlay.remove();
+                closePicker();
+            }
+
+            // Unit Toggle in Picker
+            const unitOpt = target.closest('.unit-opt');
+            if (unitOpt && target.closest('.picker-unit-switch')) {
+                const parent = unitOpt.closest('.picker-unit-switch');
+                parent.querySelectorAll('.unit-opt').forEach(opt => opt.classList.remove('active'));
+                unitOpt.classList.add('active');
+            }
+
+            // Qty +/- in Picker
+            const qtyBtn = target.closest('.picker-qty-btn');
+            if (qtyBtn) {
+                const targetInputId = qtyBtn.dataset.target;
+                const input = document.getElementById(targetInputId);
+                if (input) {
+                    let val = parseInt(input.value) || 1;
+                    if (qtyBtn.classList.contains('plus')) {
+                        val++;
+                    } else if (qtyBtn.classList.contains('minus') && val > 1) {
+                        val--;
+                    }
+                    input.value = val;
+                }
+            }
+
+            // Expand search bar on click if it's collapsed
+            if (target.id === 'picker-search-input') {
+                target.style.width = '160px';
+                target.style.cursor = 'text';
             }
 
             // Swipe Edit Button
@@ -950,6 +1055,7 @@ export function initSettings() {
             if (editBtn) {
                 const idx = parseInt(editBtn.dataset.index);
                 pickerOverlay.innerHTML = renderPickerContent(false, idx);
+                if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...pickerOverlay.querySelectorAll('[data-lucide]')] });
                 return;
             }
 
@@ -961,6 +1067,7 @@ export function initSettings() {
                     itemTemplates.splice(idx, 1);
                     saveItemTemplates();
                     pickerOverlay.innerHTML = renderPickerContent(false);
+                    if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...pickerOverlay.querySelectorAll('[data-lucide]')] });
                     initPickerSwipe();
                 }
                 return;
@@ -971,17 +1078,19 @@ export function initSettings() {
             if (itemEl && !target.closest('.swipe-btn')) {
                 const idx = itemEl.dataset.index;
                 callback(itemTemplates[idx]);
-                pickerOverlay.remove();
+                closePicker();
             }
 
             // Switch to Add View
             if (target.closest('#btn-to-add-view')) {
                 pickerOverlay.innerHTML = renderPickerContent(true);
+                if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...pickerOverlay.querySelectorAll('[data-lucide]')] });
             }
 
             // Back to List
             if (target.id === 'btn-back-picker') {
                 pickerOverlay.innerHTML = renderPickerContent(false);
+                if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...pickerOverlay.querySelectorAll('[data-lucide]')] });
                 initPickerSwipe();
             }
 
@@ -990,16 +1099,26 @@ export function initSettings() {
                 const name = document.getElementById('new-item-name').value;
                 const price = document.getElementById('new-item-price').value;
                 const tipe = document.getElementById('new-item-tipe').value;
+                const qty = document.getElementById('new-item-qty').value;
+                const unitOpt = pickerOverlay.querySelector('.picker-unit-switch[data-target="new"] .unit-opt.active');
+                const qtyUnit = unitOpt ? unitOpt.dataset.unit : 'pcs';
                 const note = document.getElementById('new-item-note').value;
 
-                if (!name) return alert("Nama harus diisi");
+                if (!name) return showBMEAlert('Nama harus diisi');
 
-                const newItem = { name, price: parseInt(price) || 0, tipe, note };
+                const newItem = { 
+                    name, 
+                    price: parseInt(price) || 0, 
+                    tipe, 
+                    qty: parseInt(qty) || 1,
+                    qtyUnit,
+                    note 
+                };
                 itemTemplates.push(newItem);
                 saveItemTemplates();
 
                 callback(newItem);
-                pickerOverlay.remove();
+                closePicker();
             }
 
             // Save Edit Item
@@ -1008,16 +1127,58 @@ export function initSettings() {
                 const name = document.getElementById('edit-item-name').value;
                 const price = document.getElementById('edit-item-price').value;
                 const tipe = document.getElementById('edit-item-tipe').value;
+                const qty = document.getElementById('edit-item-qty').value;
+                const unitOpt = pickerOverlay.querySelector('.picker-unit-switch[data-target="edit"] .unit-opt.active');
+                const qtyUnit = unitOpt ? unitOpt.dataset.unit : 'pcs';
                 const note = document.getElementById('edit-item-note').value;
 
-                if (!name) return alert("Nama harus diisi");
+                if (!name) return showBMEAlert('Nama harus diisi');
 
-                itemTemplates[idx] = { name, price: parseInt(price) || 0, tipe, note };
+                itemTemplates[idx] = { 
+                    name, 
+                    price: parseInt(price) || 0, 
+                    tipe, 
+                    qty: parseInt(qty) || 1,
+                    qtyUnit,
+                    note 
+                };
                 saveItemTemplates();
                 pickerOverlay.innerHTML = renderPickerContent(false);
+                if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...pickerOverlay.querySelectorAll('[data-lucide]')] });
                 initPickerSwipe();
             }
         });
+
+        // Search Input Handlers
+        pickerOverlay.addEventListener('input', (e) => {
+            if (e.target.id === 'picker-search-input') {
+                searchQuery = e.target.value;
+                const modalBody = pickerOverlay.querySelector('.modal-body');
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = renderPickerContent(false);
+                modalBody.innerHTML = tempDiv.querySelector('.modal-body').innerHTML;
+                
+                // Re-init icons and search bar state
+                if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...modalBody.querySelectorAll('[data-lucide]')] });
+                initPickerSwipe();
+                
+                // Keep focus and expanded state
+                const newSearchInput = pickerOverlay.querySelector('#picker-search-input');
+                newSearchInput.focus();
+                newSearchInput.style.width = '160px';
+                newSearchInput.setSelectionRange(searchQuery.length, searchQuery.length);
+            }
+        });
+
+        pickerOverlay.addEventListener('focusout', (e) => {
+            if (e.target.id === 'picker-search-input' && !e.target.value) {
+                e.target.style.width = '32px';
+                e.target.style.cursor = 'pointer';
+            }
+        });
+
+        // Final icon init for initial view
+        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...pickerOverlay.querySelectorAll('[data-lucide]')] });
     });
 
 }

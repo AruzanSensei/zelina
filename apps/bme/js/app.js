@@ -71,10 +71,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================
     // INIT SETTINGS (Visuals)
     // ============================================
-    // Theme
-    const currentTheme = appState.state.settings.theme;
-    document.documentElement.setAttribute('data-theme', currentTheme);
-    document.querySelector(`[data-theme="${currentTheme}"]`).classList.add('active');
+    // Theme — support 'system' as default
+    const applyTheme = (theme) => {
+        let effectiveTheme = theme;
+        if (theme === 'system') {
+            effectiveTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', effectiveTheme);
+        // Sync segmented buttons
+        document.querySelectorAll('.theme-toggle-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.theme === theme);
+        });
+    };
+
+    const currentTheme = appState.state.settings.theme || 'system';
+    applyTheme(currentTheme);
+
+    // Listen for OS theme change when mode is 'system'
+    const systemMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    systemMediaQuery.addEventListener('change', () => {
+        if ((appState.state.settings.theme || 'system') === 'system') applyTheme('system');
+    });
 
     // ============================================
     // PWA Check
@@ -203,32 +220,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initSafely('Onboarding', initOnboarding);
 
-    // ============================================
-    // THEME TOGGLE LOGIC
-    // ============================================
-    const themeToggleBtn = document.getElementById('btn-theme-toggle');
+    // Theme cycle control (1 button: light -> dark -> system)
+    const themeCycleBtn = document.getElementById('btn-theme-cycle');
+    const themeSequence = ['light', 'dark', 'system'];
+    
     const updateThemeIcon = (theme) => {
-        if (!themeToggleBtn) return;
-        themeToggleBtn.innerHTML = theme === 'dark'
-            ? '<i data-lucide="sun"  style="width:17px;height:17px;stroke-width:1.5"></i>'
-            : '<i data-lucide="moon" style="width:17px;height:17px;stroke-width:1.5"></i>';
-        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...themeToggleBtn.querySelectorAll('[data-lucide]')] });
+        if (!themeCycleBtn) return;
+        const icons = {
+            'light': 'sun',
+            'dark': 'moon',
+            'system': 'monitor'
+        };
+        themeCycleBtn.innerHTML = `<i data-lucide="${icons[theme] || 'monitor'}" style="width:16px;height:16px;stroke-width:2"></i>`;
+        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [themeCycleBtn] });
     };
 
-    if (themeToggleBtn) {
-        themeToggleBtn.addEventListener('click', () => {
-            const newTheme = appState.state.settings.theme === 'light' ? 'dark' : 'light';
-            appState.updateSettings({ theme: newTheme });
+    if (themeCycleBtn) {
+        themeCycleBtn.addEventListener('click', () => {
+            const current = appState.state.settings.theme || 'system';
+            const nextIdx = (themeSequence.indexOf(current) + 1) % themeSequence.length;
+            const nextTheme = themeSequence[nextIdx];
+            
+            appState.updateSettings({ theme: nextTheme });
+            applyTheme(nextTheme);
+            updateThemeIcon(nextTheme);
         });
     }
 
-    // Subscribe to theme changes to update header icon
+    // Subscribe to theme changes from settings module
     appState.subscribe('settings', (settings) => {
-        if (settings.theme) updateThemeIcon(settings.theme);
+        if (settings.theme) {
+            applyTheme(settings.theme);
+            updateThemeIcon(settings.theme);
+        }
     });
 
-    // Initial icon state
-    updateThemeIcon(appState.state.settings.theme);
+    // Initial state
+    updateThemeIcon(appState.state.settings.theme || 'system');
+
+    // Global Template Picker button (orange button next to + Tambah Item)
+    const btnGlobalPicker = document.getElementById('btn-global-template-picker');
+    if (btnGlobalPicker) {
+        btnGlobalPicker.addEventListener('click', () => {
+            document.dispatchEvent(new CustomEvent('request-item-picker', {
+                detail: {
+                    callback: (selectedItem) => {
+                        // Add a new item using the selected template
+                        document.dispatchEvent(new CustomEvent('add-item-from-template', {
+                            detail: { item: selectedItem }
+                        }));
+                    }
+                }
+            }));
+        });
+        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...btnGlobalPicker.querySelectorAll('[data-lucide]')] });
+    }
 
     // Initial show
     showFooter();
