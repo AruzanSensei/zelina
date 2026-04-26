@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Migration Tool — QR Zanxa</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', monospace;
+      background: #0a0a0a;
+      color: #e8e0d0;
+      padding: 32px;
+      min-height: 100vh;
+    }
+    h1 { font-size: 1.4rem; margin-bottom: 8px; color: #f5f0e8; }
+    .sub { color: #888; font-size: 0.8rem; margin-bottom: 32px; }
+    .card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      max-width: 680px;
+    }
+    label { display: block; font-size: 0.75rem; color: #888; margin-bottom: 8px; letter-spacing: 0.08em; }
+    input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      background: #181818;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #e8e0d0;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    button {
+      margin-top: 16px;
+      padding: 12px 24px;
+      background: #c8ff00;
+      color: #0a0a0a;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    button:hover:not(:disabled) { opacity: 0.85; }
+    #log {
+      margin-top: 20px;
+      max-width: 680px;
+      max-height: 500px;
+      overflow-y: auto;
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 16px;
+      background: #0d0d0d;
+      font-size: 0.78rem;
+      line-height: 1.8;
+    }
+    .log-ok  { color: #6dff9c; }
+    .log-err { color: #ff6b6b; }
+    .log-inf { color: #888; }
+    .log-hd  { color: #c8ff00; font-weight: bold; margin-top: 8px; }
+    .progress {
+      height: 4px;
+      background: #222;
+      border-radius: 2px;
+      margin-top: 12px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: #c8ff00;
+      transition: width 0.3s;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📦 Migration Tool — QR Zanxa</h1>
+  <p class="sub">Upload data dari product.json ke Supabase Database &amp; Storage</p>
+
+  <div class="card">
+    <label>PILIH FILE product.json</label>
+    <input type="file" id="json-file" accept=".json" />
+    <div class="progress"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
+    <button id="btn-upload" onclick="startUpload()">MULAI UPLOAD</button>
+    <button id="btn-clear" onclick="document.getElementById('log').innerHTML=''" style="background:#333;color:#e8e0d0;margin-left:8px;">CLEAR LOG</button>
+  </div>
+
+  <div id="log"><span class="log-inf">Pilih file dan klik MULAI UPLOAD.</span></div>
+
+  <script>
+    // ── KONFIGURASI ───────────────────────────────────────────────
+    const SUPABASE_URL   = 'https://cxtmilenczpjetlnqiwo.supabase.co';
+    const SUPABASE_KEY   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4dG1pbGVuY3pwamV0bG5xaXdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMTEzMTUsImV4cCI6MjA5Mjc4NzMxNX0.OpTsBgQACFzE4ipIuOiTFaf-ldscH_hnTDQdY0U52AY';
+    const STORAGE_BUCKET = 'product-images';
+    // ─────────────────────────────────────────────────────────────
+
+    const IMAGE_KEYS = [
+      'gambar_cover', 'gambar_depan', 'gambar_samping_kanan',
+      'gambar_samping_kiri', 'gambar_belakang', 'gambar_dalam'
+    ];
+
+    const log  = document.getElementById('log');
+    const pbar = document.getElementById('progress-bar');
+
+    function addLog(msg, cls = 'log-inf') {
+      log.innerHTML += `<div class="${cls}">${msg}</div>`;
+      log.scrollTop = log.scrollHeight;
+    }
+
+    // Base64 data URL → Blob → upload ke Supabase Storage → public URL
+    async function uploadBase64(productId, key, dataUrl) {
+      const res     = await fetch(dataUrl);
+      const blob    = await res.blob();
+      const ext     = (blob.type.split('/')[1] || 'jpg').replace('jpeg','jpg');
+      const path    = `${productId}/${key}.${ext}`;
+
+      const uploadRes = await fetch(
+        `${SUPABASE_URL}/storage/v1/object/${STORAGE_BUCKET}/${path}`,
+        {
+          method:  'POST',
+          headers: {
+            'apikey':        SUPABASE_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_KEY,
+            'Content-Type':  blob.type || 'image/jpeg',
+            'x-upsert':      'true',
+          },
+          body: blob,
+        }
+      );
+
+      if (!uploadRes.ok) {
+        const err = await uploadRes.json().catch(() => ({}));
+        throw new Error(`Storage gagal (${key}): ${err.message || uploadRes.status}`);
+      }
+
+      return `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${path}`;
+    }
+
+    // Proses satu produk: konversi base64 → URL, lalu upsert ke DB
+    async function processProduct(product) {
+      const payload = { ...product };
+
+      for (const key of IMAGE_KEYS) {
+        const val = payload[key];
+        if (val && val.startsWith('data:')) {
+          addLog(`  ⬆ Upload gambar ${key}...`, 'log-inf');
+          payload[key] = await uploadBase64(product.id, key, val);
+          addLog(`  ✓ ${key} → Storage`, 'log-ok');
+        }
+        // URL biasa atau null → tetap
+      }
+
+      // Upsert ke tabel products
+      const dbRes = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
+        method:  'POST',
+        headers: {
+          'apikey':        SUPABASE_KEY,
+          'Authorization': 'Bearer ' + SUPABASE_KEY,
+          'Content-Type':  'application/json',
+          'Prefer':        'resolution=merge-duplicates,return=minimal',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!dbRes.ok) {
+        const err = await dbRes.json().catch(() => ({}));
+        throw new Error(`DB gagal: ${err.message || err.hint || dbRes.status}`);
+      }
+    }
+
+    async function startUpload() {
+      const fileInput = document.getElementById('json-file');
+      const btn       = document.getElementById('btn-upload');
+
+      if (!fileInput.files[0]) {
+        addLog('⚠ Pilih file JSON dulu!', 'log-err');
+        return;
+      }
+
+      btn.disabled = true;
+      log.innerHTML = '';
+      pbar.style.width = '0%';
+
+      let products;
+      try {
+        const text = await fileInput.files[0].text();
+        products   = JSON.parse(text);
+        if (!Array.isArray(products)) products = [products];
+        addLog(`📂 File dibaca: ${products.length} produk ditemukan.`, 'log-inf');
+      } catch(e) {
+        addLog('✕ Gagal parse JSON: ' + e.message, 'log-err');
+        btn.disabled = false;
+        return;
+      }
+
+      let ok = 0, fail = 0;
+
+      for (let i = 0; i < products.length; i++) {
+        const product = products[i];
+        addLog(`\n[${i + 1}/${products.length}] Memproses ${product.id}...`, 'log-hd');
+
+        try {
+          await processProduct(product);
+          ok++;
+          addLog(`✓ ${product.id} berhasil disimpan ke DB`, 'log-ok');
+        } catch(e) {
+          fail++;
+          addLog(`✕ ${product.id}: ${e.message}`, 'log-err');
+        }
+
+        pbar.style.width = ((i + 1) / products.length * 100).toFixed(0) + '%';
+      }
+
+      addLog('\n─────────────────────────────────────────', 'log-inf');
+      addLog(`SELESAI: ${ok} berhasil, ${fail} gagal dari ${products.length} produk.`,
+             fail === 0 ? 'log-ok' : 'log-err');
+      btn.disabled = false;
+    }
+  </script>
+</body>
+</html>
