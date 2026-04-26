@@ -359,8 +359,10 @@
       }));
 
       return Object.fromEntries(results);
+    }
+    // ─────────────────────────────────────────────────────────────
 
-      async function saveToSupabase() {
+    async function saveToSupabase() {
         const id = val('f-id').toUpperCase();
         if (!id || !val('f-nama') || !val('f-tipe') || !val('f-seri') || !val('f-tahun')) {
           showStatus('error', '&#x2715; <strong>Gagal:</strong> Lengkapi field wajib: ID, Nama, Tipe, No. Seri, Tahun.');
@@ -453,7 +455,6 @@
         });
         document.getElementById('save-status').style.display = 'none';
       }
-    }
   </script>
 </body>
 
