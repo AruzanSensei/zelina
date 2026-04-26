@@ -77,7 +77,7 @@
     const state = { demo: false, qr: false };
     let products = [];
 
-    fetch('data/product.json')
+    fetch('https://qr-worker.zanxa.site/products')
       .then(r => r.json())
       .then(data => {
         products = data;

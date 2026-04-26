@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tambah Produk — QR Zanxa</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
 </head>
+
 <body class="product-page">
 
   <div class="noise"></div>
@@ -15,7 +19,10 @@
   <header class="site-header">
     <a href="index.html" class="logo">QR<span class="accent">.</span>ZANXA</a>
     <a href="index.html" class="back-link">
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 4l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+        <path d="M13 8H3M7 4l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
       Kembali
     </a>
   </header>
@@ -81,7 +88,8 @@
         </div>
         <div class="form-group full">
           <label class="form-label" for="f-spesifikasi">TAMBAHAN / OPSIONAL</label>
-          <textarea class="form-textarea" id="f-spesifikasi" placeholder="Kapasitas, fitur tambahan, catatan, dll..."></textarea>
+          <textarea class="form-textarea" id="f-spesifikasi"
+            placeholder="Kapasitas, fitur tambahan, catatan, dll..."></textarea>
         </div>
       </div>
     </div>
@@ -92,8 +100,12 @@
       <div class="img-upload-slot cover-slot" id="slot-cover">
         <img class="img-slot-preview" id="prev-cover" alt="Cover" />
         <div class="img-slot-placeholder" id="ph-cover">
-          <svg class="img-slot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-          <span class="img-slot-lbl">COVER UTAMA<br/>Klik untuk upload</span>
+          <svg class="img-slot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <circle cx="8.5" cy="8.5" r="1.5" />
+            <path d="M21 15l-5-5L5 21" />
+          </svg>
+          <span class="img-slot-lbl">COVER UTAMA<br />Klik untuk upload</span>
         </div>
         <input class="img-slot-input" type="file" accept="image/*" onchange="handleImg(this,'cover')" />
       </div>
@@ -108,7 +120,11 @@
           <div class="img-upload-slot" id="slot-depan">
             <img class="img-slot-preview" id="prev-depan" alt="Depan" />
             <div class="img-slot-placeholder" id="ph-depan">
-              <svg class="img-slot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <svg class="img-slot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <path d="M21 15l-5-5L5 21" />
+              </svg>
               <span class="img-slot-lbl">DEPAN</span>
             </div>
             <input class="img-slot-input" type="file" accept="image/*" onchange="handleImg(this,'depan')" />
@@ -119,7 +135,11 @@
           <div class="img-upload-slot" id="slot-kanan">
             <img class="img-slot-preview" id="prev-kanan" alt="Samping Kanan" />
             <div class="img-slot-placeholder" id="ph-kanan">
-              <svg class="img-slot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <svg class="img-slot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <path d="M21 15l-5-5L5 21" />
+              </svg>
               <span class="img-slot-lbl">SAMPING KANAN</span>
             </div>
             <input class="img-slot-input" type="file" accept="image/*" onchange="handleImg(this,'kanan')" />
@@ -130,7 +150,11 @@
           <div class="img-upload-slot" id="slot-kiri">
             <img class="img-slot-preview" id="prev-kiri" alt="Samping Kiri" />
             <div class="img-slot-placeholder" id="ph-kiri">
-              <svg class="img-slot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <svg class="img-slot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <path d="M21 15l-5-5L5 21" />
+              </svg>
               <span class="img-slot-lbl">SAMPING KIRI</span>
             </div>
             <input class="img-slot-input" type="file" accept="image/*" onchange="handleImg(this,'kiri')" />
@@ -141,7 +165,11 @@
           <div class="img-upload-slot" id="slot-belakang">
             <img class="img-slot-preview" id="prev-belakang" alt="Belakang" />
             <div class="img-slot-placeholder" id="ph-belakang">
-              <svg class="img-slot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <svg class="img-slot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <path d="M21 15l-5-5L5 21" />
+              </svg>
               <span class="img-slot-lbl">BELAKANG</span>
             </div>
             <input class="img-slot-input" type="file" accept="image/*" onchange="handleImg(this,'belakang')" />
@@ -152,7 +180,11 @@
           <div class="img-upload-slot" id="slot-dalam">
             <img class="img-slot-preview" id="prev-dalam" alt="Dalam" />
             <div class="img-slot-placeholder" id="ph-dalam">
-              <svg class="img-slot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <svg class="img-slot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="3" width="18" height="18" rx="2" />
+                <circle cx="8.5" cy="8.5" r="1.5" />
+                <path d="M21 15l-5-5L5 21" />
+              </svg>
               <span class="img-slot-lbl">DALAM</span>
             </div>
             <input class="img-slot-input" type="file" accept="image/*" onchange="handleImg(this,'dalam')" />
@@ -163,15 +195,13 @@
 
     <!-- SUBMIT -->
     <div class="submit-row">
-      <button class="btn-submit" onclick="generateJSON()">GENERATE JSON ENTRY</button>
+      <button class="btn-submit" id="btn-save" onclick="saveToSupabase()">SIMPAN KE SUPABASE</button>
       <button class="btn-reset" onclick="resetForm()">RESET</button>
     </div>
 
-    <!-- OUTPUT -->
-    <div class="json-output-wrap" id="output-wrap">
-      <div class="json-output-label">SALIN & TAMBAHKAN KE data/product.json</div>
-      <pre class="json-output" id="json-out"></pre>
-      <button class="copy-btn" onclick="copyJSON()">SALIN JSON <span class="toast" id="toast">✓ Tersalin!</span></button>
+    <!-- STATUS FEEDBACK -->
+    <div id="save-status"
+      style="display:none;margin-top:20px;padding:16px 20px;border-radius:10px;font-family:var(--mono);font-size:0.8rem;letter-spacing:0.05em;line-height:1.6;">
     </div>
   </main>
 
@@ -181,18 +211,23 @@
   </footer>
 
   <script>
+    // ── KONFIGURASI SUPABASE ───────────────────────────────────────
+    // Ganti dengan nilai dari: Supabase Dashboard → Settings → API
+    const SUPABASE_URL = 'https://cxtmilenczpjetlnqiwo.supabase.co'; // ← GANTI
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4dG1pbGVuY3pwamV0bG5xaXdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMTEzMTUsImV4cCI6MjA5Mjc4NzMxNX0.OpTsBgQACFzE4ipIuOiTFaf-ldscH_hnTDQdY0U52AY';                            // ← GANTI (anon public key)
+    // ──────────────────────────────────────────────────────────────
+
     const images = {};
 
     function handleImg(input, key) {
       const file = input.files[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = function(e) {
+      reader.onload = function (e) {
         const dataUrl = e.target.result;
         images[key] = dataUrl;
-
         const prev = document.getElementById('prev-' + key);
-        const ph   = document.getElementById('ph-' + key);
+        const ph = document.getElementById('ph-' + key);
         prev.src = dataUrl;
         prev.classList.add('visible');
         ph.classList.add('hidden');
@@ -204,67 +239,101 @@
       return document.getElementById(id).value.trim();
     }
 
-    function generateJSON() {
+    function showStatus(type, message) {
+      const el = document.getElementById('save-status');
+      el.style.display = 'block';
+      const styles = {
+        loading: { bg: 'var(--bg2)', border: 'var(--border)', color: 'var(--ink2)' },
+        success: { bg: 'var(--green-bg)', border: 'var(--green)', color: 'var(--green)' },
+        error: { bg: 'var(--red-bg)', border: 'var(--accent)', color: 'var(--accent)' },
+      };
+      const s = styles[type];
+      el.style.background = s.bg;
+      el.style.border = `1px solid ${s.border}`;
+      el.style.color = s.color;
+      el.innerHTML = message;
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    async function saveToSupabase() {
       const id = val('f-id').toUpperCase();
       if (!id || !val('f-nama') || !val('f-tipe') || !val('f-seri') || !val('f-tahun')) {
-        alert('Lengkapi field wajib: ID, Nama, Tipe, No. Seri, Tahun');
+        showStatus('error', '✕ <strong>Gagal:</strong> Lengkapi field wajib: ID, Nama, Tipe, No. Seri, Tahun.');
+        return;
+      }
+      if (SUPABASE_URL.includes('XXXXXXXXXXXX') || SUPABASE_KEY === 'eyJ...') {
+        showStatus('error', '✕ <strong>Konfigurasi belum diisi!</strong> Set <code>SUPABASE_URL</code> dan <code>SUPABASE_KEY</code> di bagian atas script <code>create.html</code>.');
         return;
       }
 
-      const entry = {
+      const payload = {
         id,
         nama_produk: val('f-nama'),
         tipe: val('f-tipe'),
         tahun_pembuatan: parseInt(val('f-tahun')) || null,
         nomor_seri: val('f-seri'),
-        input: val('f-input') || undefined,
-        output: val('f-output') || undefined,
-        frekuensi: val('f-frekuensi') || undefined,
-        jumlah_socket: val('f-socket') ? parseInt(val('f-socket')) : undefined,
-        spesifikasi: val('f-spesifikasi') || undefined,
+        input: val('f-input') || null,
+        output: val('f-output') || null,
+        frekuensi: val('f-frekuensi') || null,
+        jumlah_socket: val('f-socket') ? parseInt(val('f-socket')) : null,
+        spesifikasi: val('f-spesifikasi') || null,
         status: document.getElementById('f-status').value,
-        gambar_cover: images['cover'] || undefined,
-        gambar_depan: images['depan'] || undefined,
-        gambar_samping_kanan: images['kanan'] || undefined,
-        gambar_samping_kiri: images['kiri'] || undefined,
-        gambar_belakang: images['belakang'] || undefined,
-        gambar_dalam: images['dalam'] || undefined,
+        gambar_cover: images['cover'] || null,
+        gambar_depan: images['depan'] || null,
+        gambar_samping_kanan: images['kanan'] || null,
+        gambar_samping_kiri: images['kiri'] || null,
+        gambar_belakang: images['belakang'] || null,
+        gambar_dalam: images['dalam'] || null,
       };
 
-      // Remove undefined keys
-      Object.keys(entry).forEach(k => entry[k] === undefined && delete entry[k]);
+      const btn = document.getElementById('btn-save');
+      btn.disabled = true;
+      btn.textContent = 'MENYIMPAN…';
+      showStatus('loading', `⏳ Menyimpan produk <strong>${id}</strong> ke Supabase…`);
 
-      const json = JSON.stringify(entry, null, 2);
-      document.getElementById('json-out').textContent = json;
-      document.getElementById('output-wrap').classList.add('visible');
-      document.getElementById('output-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
+          method: 'POST',
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': `Bearer ${SUPABASE_KEY}`,
+            'Content-Type': 'application/json',
+            'Prefer': 'resolution=merge-duplicates,return=representation'
+          },
+          body: JSON.stringify(payload)
+        });
 
-    function copyJSON() {
-      const text = document.getElementById('json-out').textContent;
-      navigator.clipboard.writeText(text).then(() => {
-        const t = document.getElementById('toast');
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 2000);
-      });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.message || err.hint || `HTTP ${res.status}`);
+        }
+
+        showStatus('success',
+          `✓ <strong>Berhasil!</strong> Produk <strong>${id}</strong> tersimpan di Supabase. &nbsp;
+           <a href="product.html?id=${id}" style="color:var(--green);text-decoration:underline">Lihat produk →</a>`
+        );
+      } catch (e) {
+        showStatus('error', `✕ <strong>Gagal:</strong> ${e.message || 'Terjadi kesalahan jaringan.'}`);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'SIMPAN KE SUPABASE';
+      }
     }
 
     function resetForm() {
-      ['f-id','f-nama','f-tipe','f-seri','f-tahun','f-input','f-output','f-frekuensi','f-socket','f-spesifikasi']
+      ['f-id', 'f-nama', 'f-tipe', 'f-seri', 'f-tahun', 'f-input', 'f-output', 'f-frekuensi', 'f-socket', 'f-spesifikasi']
         .forEach(id => document.getElementById(id).value = '');
       document.getElementById('f-status').value = 'aktif';
-
       Object.keys(images).forEach(k => delete images[k]);
-
-      ['cover','depan','kanan','kiri','belakang','dalam'].forEach(k => {
+      ['cover', 'depan', 'kanan', 'kiri', 'belakang', 'dalam'].forEach(k => {
         const prev = document.getElementById('prev-' + k);
-        const ph   = document.getElementById('ph-' + k);
+        const ph = document.getElementById('ph-' + k);
         if (prev) { prev.src = ''; prev.classList.remove('visible'); }
-        if (ph)   ph.classList.remove('hidden');
+        if (ph) ph.classList.remove('hidden');
       });
-
-      document.getElementById('output-wrap').classList.remove('visible');
+      document.getElementById('save-status').style.display = 'none';
     }
   </script>
 </body>
+
 </html>
