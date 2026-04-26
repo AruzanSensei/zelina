@@ -30,7 +30,7 @@
   <main class="create-main">
     <div class="hero-label">MANAJEMEN PRODUK</div>
     <h1 class="create-title">Tambah Produk Baru</h1>
-    <p class="create-sub">ISI SEMUA FIELD · GAMBAR DIKONVERSI KE BASE64 / URL</p>
+    <p class="create-sub">ISI SEMUA FIELD · GAMBAR DIUPLOAD KE SUPABASE STORAGE</p>
 
     <!-- IDENTITAS -->
     <div class="form-section">
@@ -212,27 +212,25 @@
 
   <script>
     // ── KONFIGURASI SUPABASE ───────────────────────────────────────
-    // Ganti dengan nilai dari: Supabase Dashboard → Settings → API
-    const SUPABASE_URL = 'https://cxtmilenczpjetlnqiwo.supabase.co'; // ← GANTI
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4dG1pbGVuY3pwamV0bG5xaXdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMTEzMTUsImV4cCI6MjA5Mjc4NzMxNX0.OpTsBgQACFzE4ipIuOiTFaf-ldscH_hnTDQdY0U52AY';                            // ← GANTI (anon public key)
+    const SUPABASE_URL   = 'https://cxtmilenczpjetlnqiwo.supabase.co';
+    const SUPABASE_KEY   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4dG1pbGVuY3pwamV0bG5xaXdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMTEzMTUsImV4cCI6MjA5Mjc4NzMxNX0.OpTsBgQACFzE4ipIuOiTFaf-ldscH_hnTDQdY0U52AY';
+    const STORAGE_BUCKET = 'product-images'; // Nama bucket di Supabase Storage
     // ──────────────────────────────────────────────────────────────
 
+    // images[key] = File object (bukan base64)
     const images = {};
 
     function handleImg(input, key) {
       const file = input.files[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const dataUrl = e.target.result;
-        images[key] = dataUrl;
-        const prev = document.getElementById('prev-' + key);
-        const ph = document.getElementById('ph-' + key);
-        prev.src = dataUrl;
-        prev.classList.add('visible');
-        ph.classList.add('hidden');
-      };
-      reader.readAsDataURL(file);
+      images[key] = file; // simpan File object untuk upload nanti
+
+      // Preview instan via object URL (jauh lebih cepat dari FileReader)
+      const prev = document.getElementById('prev-' + key);
+      const ph   = document.getElementById('ph-' + key);
+      prev.src = URL.createObjectURL(file);
+      prev.classList.add('visible');
+      ph.classList.add('hidden');
     }
 
     function val(id) {
@@ -243,93 +241,145 @@
       const el = document.getElementById('save-status');
       el.style.display = 'block';
       const styles = {
-        loading: { bg: 'var(--bg2)', border: 'var(--border)', color: 'var(--ink2)' },
-        success: { bg: 'var(--green-bg)', border: 'var(--green)', color: 'var(--green)' },
-        error: { bg: 'var(--red-bg)', border: 'var(--accent)', color: 'var(--accent)' },
+        loading: { bg: 'var(--bg2)',      border: 'var(--border)', color: 'var(--ink2)' },
+        success: { bg: 'var(--green-bg)', border: 'var(--green)',  color: 'var(--green)' },
+        error:   { bg: 'var(--red-bg)',   border: 'var(--accent)', color: 'var(--accent)' },
       };
       const s = styles[type];
       el.style.background = s.bg;
-      el.style.border = `1px solid ${s.border}`;
-      el.style.color = s.color;
-      el.innerHTML = message;
+      el.style.border     = '1px solid ' + s.border;
+      el.style.color      = s.color;
+      el.innerHTML        = message;
       el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
+
+    // ── Upload semua gambar ke Supabase Storage (paralel) ─────────
+    async function uploadImages(productId) {
+      const entries = Object.entries(images).filter(([, f]) => f instanceof File);
+      if (!entries.length) return {};
+
+      const results = await Promise.all(entries.map(async ([key, file]) => {
+        const ext  = (file.name.split('.').pop() || 'jpg').toLowerCase();
+        const path = productId + '/' + key + '.' + ext;
+
+        const res = await fetch(
+          SUPABASE_URL + '/storage/v1/object/' + STORAGE_BUCKET + '/' + path,
+          {
+            method:  'POST',
+            headers: {
+              'apikey':        SUPABASE_KEY,
+              'Authorization': 'Bearer ' + SUPABASE_KEY,
+              'Content-Type':  file.type || 'image/jpeg',
+              'x-upsert':      'true',
+            },
+            body: file,
+          }
+        );
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error('Upload "' + key + '" gagal: ' + (err.message || res.status));
+        }
+
+        const publicUrl =
+          SUPABASE_URL + '/storage/v1/object/public/' + STORAGE_BUCKET + '/' + path;
+        return [key, publicUrl];
+      }));
+
+      return Object.fromEntries(results);
+    }
+    // ─────────────────────────────────────────────────────────────
 
     async function saveToSupabase() {
       const id = val('f-id').toUpperCase();
       if (!id || !val('f-nama') || !val('f-tipe') || !val('f-seri') || !val('f-tahun')) {
-        showStatus('error', '✕ <strong>Gagal:</strong> Lengkapi field wajib: ID, Nama, Tipe, No. Seri, Tahun.');
+        showStatus('error', '&#x2715; <strong>Gagal:</strong> Lengkapi field wajib: ID, Nama, Tipe, No. Seri, Tahun.');
         return;
       }
-      if (SUPABASE_URL.includes('XXXXXXXXXXXX') || SUPABASE_KEY === 'eyJ...') {
-        showStatus('error', '✕ <strong>Konfigurasi belum diisi!</strong> Set <code>SUPABASE_URL</code> dan <code>SUPABASE_KEY</code> di bagian atas script <code>create.html</code>.');
-        return;
-      }
-
-      const payload = {
-        id,
-        nama_produk: val('f-nama'),
-        tipe: val('f-tipe'),
-        tahun_pembuatan: parseInt(val('f-tahun')) || null,
-        nomor_seri: val('f-seri'),
-        input: val('f-input') || null,
-        output: val('f-output') || null,
-        frekuensi: val('f-frekuensi') || null,
-        jumlah_socket: val('f-socket') ? parseInt(val('f-socket')) : null,
-        spesifikasi: val('f-spesifikasi') || null,
-        status: document.getElementById('f-status').value,
-        gambar_cover: images['cover'] || null,
-        gambar_depan: images['depan'] || null,
-        gambar_samping_kanan: images['kanan'] || null,
-        gambar_samping_kiri: images['kiri'] || null,
-        gambar_belakang: images['belakang'] || null,
-        gambar_dalam: images['dalam'] || null,
-      };
 
       const btn = document.getElementById('btn-save');
-      btn.disabled = true;
-      btn.textContent = 'MENYIMPAN…';
-      showStatus('loading', `⏳ Menyimpan produk <strong>${id}</strong> ke Supabase…`);
+      btn.disabled    = true;
+      btn.textContent = 'MENYIMPAN...';
 
       try {
-        const res = await fetch(`${SUPABASE_URL}/rest/v1/products`, {
-          method: 'POST',
+        // ── Langkah 1: Upload gambar ke Storage ─────────────────
+        const imgCount = Object.keys(images).length;
+        if (imgCount > 0) {
+          showStatus('loading',
+            '&#x23F3; Mengupload <strong>' + imgCount + ' gambar</strong> ke Storage...');
+        } else {
+          showStatus('loading', '&#x23F3; Menyimpan data produk <strong>' + id + '</strong>...');
+        }
+
+        const imageUrls = await uploadImages(id);
+
+        // ── Langkah 2: Simpan data ke database ──────────────────
+        if (imgCount > 0) {
+          showStatus('loading', '&#x23F3; Menyimpan data produk <strong>' + id + '</strong>...');
+        }
+
+        const payload = {
+          id,
+          nama_produk:          val('f-nama'),
+          tipe:                 val('f-tipe'),
+          tahun_pembuatan:      parseInt(val('f-tahun')) || null,
+          nomor_seri:           val('f-seri'),
+          input:                val('f-input')      || null,
+          output:               val('f-output')     || null,
+          frekuensi:            val('f-frekuensi')  || null,
+          jumlah_socket:        val('f-socket') ? parseInt(val('f-socket')) : null,
+          spesifikasi:          val('f-spesifikasi') || null,
+          status:               document.getElementById('f-status').value,
+          // URL dari Supabase Storage (bukan base64)
+          gambar_cover:         imageUrls['cover']    || null,
+          gambar_depan:         imageUrls['depan']    || null,
+          gambar_samping_kanan: imageUrls['kanan']    || null,
+          gambar_samping_kiri:  imageUrls['kiri']     || null,
+          gambar_belakang:      imageUrls['belakang'] || null,
+          gambar_dalam:         imageUrls['dalam']    || null,
+        };
+
+        const res = await fetch(SUPABASE_URL + '/rest/v1/products', {
+          method:  'POST',
           headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json',
-            'Prefer': 'resolution=merge-duplicates,return=representation'
+            'apikey':        SUPABASE_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_KEY,
+            'Content-Type':  'application/json',
+            'Prefer':        'resolution=merge-duplicates,return=representation'
           },
           body: JSON.stringify(payload)
         });
 
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
-          throw new Error(err.message || err.hint || `HTTP ${res.status}`);
+          throw new Error(err.message || err.hint || 'HTTP ' + res.status);
         }
 
+        const uploadedCount = Object.keys(imageUrls).length;
         showStatus('success',
-          `✓ <strong>Berhasil!</strong> Produk <strong>${id}</strong> tersimpan di Supabase. &nbsp;
-           <a href="product.html?id=${id}" style="color:var(--green);text-decoration:underline">Lihat produk →</a>`
+          '&#x2713; <strong>Berhasil!</strong> Produk <strong>' + id + '</strong> tersimpan.' +
+          (uploadedCount > 0 ? ' ' + uploadedCount + ' gambar di Storage.' : '') +
+          ' &nbsp;<a href="product.html?id=' + id + '" style="color:var(--green);text-decoration:underline">Lihat produk &#x2192;</a>'
         );
+
       } catch (e) {
-        showStatus('error', `✕ <strong>Gagal:</strong> ${e.message || 'Terjadi kesalahan jaringan.'}`);
+        showStatus('error', '&#x2715; <strong>Gagal:</strong> ' + (e.message || 'Terjadi kesalahan jaringan.'));
       } finally {
-        btn.disabled = false;
+        btn.disabled    = false;
         btn.textContent = 'SIMPAN KE SUPABASE';
       }
     }
 
     function resetForm() {
-      ['f-id', 'f-nama', 'f-tipe', 'f-seri', 'f-tahun', 'f-input', 'f-output', 'f-frekuensi', 'f-socket', 'f-spesifikasi']
+      ['f-id','f-nama','f-tipe','f-seri','f-tahun','f-input','f-output','f-frekuensi','f-socket','f-spesifikasi']
         .forEach(id => document.getElementById(id).value = '');
       document.getElementById('f-status').value = 'aktif';
       Object.keys(images).forEach(k => delete images[k]);
-      ['cover', 'depan', 'kanan', 'kiri', 'belakang', 'dalam'].forEach(k => {
+      ['cover','depan','kanan','kiri','belakang','dalam'].forEach(k => {
         const prev = document.getElementById('prev-' + k);
-        const ph = document.getElementById('ph-' + k);
+        const ph   = document.getElementById('ph-' + k);
         if (prev) { prev.src = ''; prev.classList.remove('visible'); }
-        if (ph) ph.classList.remove('hidden');
+        if (ph)   ph.classList.remove('hidden');
       });
       document.getElementById('save-status').style.display = 'none';
     }

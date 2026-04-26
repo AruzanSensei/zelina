@@ -79,20 +79,65 @@
     const state = { demo: false, qr: false };
     let products = [];
 
-    // Tampilkan skeleton dulu
-    showSkeletons();
+    // ── Cache config ──────────────────────────────────────────
+    const CACHE_KEY = 'qr_products_list';
+    const CACHE_TTL = 120 * 60 * 1000; // 20 menit
 
-    fetch(`${WORKER_URL}/products`)
-      .then(r => r.json())
-      .then(data => {
-        products = Array.isArray(data) ? data : [];
-        renderDemo();
-        renderQR();
-      })
-      .catch(() => {
-        document.getElementById('demo-grid').innerHTML = '<p style="color:var(--ink3);font-size:0.8rem">Gagal memuat data.</p>';
-        document.getElementById('qr-cards').innerHTML = '';
-      });
+    function tryLoadCache() {
+      try {
+        const raw = sessionStorage.getItem(CACHE_KEY);
+        const time = sessionStorage.getItem(CACHE_KEY + '_t');
+        if (raw && time && Date.now() - parseInt(time) < CACHE_TTL) {
+          return JSON.parse(raw);
+        }
+      } catch (e) { }
+      return null;
+    }
+
+    function saveCache(data) {
+      try {
+        sessionStorage.setItem(CACHE_KEY, JSON.stringify(data));
+        sessionStorage.setItem(CACHE_KEY + '_t', Date.now());
+      } catch (e) { }
+    }
+    // ─────────────────────────────────────────────────────────
+
+    const cached = tryLoadCache();
+    if (cached) {
+      // Render instan dari cache, lalu update background
+      products = cached;
+      renderDemo();
+      renderQR();
+      // Revalidate di background (silent)
+      fetch(`${WORKER_URL}/products?fields=id,nama_produk,tipe`)
+        .then(r => r.json())
+        .then(data => {
+          if (Array.isArray(data)) {
+            saveCache(data);
+            // Hanya re-render jika data berubah
+            if (JSON.stringify(data) !== JSON.stringify(products)) {
+              products = data;
+              renderDemo();
+              renderQR();
+            }
+          }
+        }).catch(() => { });
+    } else {
+      // Tidak ada cache: tampilkan skeleton, fetch, render
+      showSkeletons();
+      fetch(`${WORKER_URL}/products?fields=id,nama_produk,tipe`)
+        .then(r => r.json())
+        .then(data => {
+          products = Array.isArray(data) ? data : [];
+          saveCache(products);
+          renderDemo();
+          renderQR();
+        })
+        .catch(() => {
+          document.getElementById('demo-grid').innerHTML = '<p style="color:var(--ink3);font-size:0.8rem">Gagal memuat data.</p>';
+          document.getElementById('qr-cards').innerHTML = '';
+        });
+    }
 
     function showSkeletons() {
       const skItem = `<div class="demo-item" style="pointer-events:none">
@@ -133,6 +178,7 @@
       const btn = document.getElementById('qr-more');
       const list = state.qr ? products : products.slice(0, LIMIT);
 
+      // Render container HTML dulu (cepat)
       cards.innerHTML = list.map(p => `
         <div class="qr-card">
           <div id="qr-${p.id}"></div>
@@ -140,14 +186,23 @@
         </div>
       `).join('');
 
-      list.forEach(p => {
-        new QRCode(document.getElementById('qr-' + p.id), {
-          text: 'https://qr.zanxa.site/product.html?id=' + p.id,
-          width: 100, height: 100,
-          colorDark: '#0a0a0a',
-          colorLight: '#f5f0e8',
-        });
-      });
+      // Generate QR satu per satu via rAF agar tidak block UI
+      let i = 0;
+      function renderNext() {
+        if (i >= list.length) return;
+        const p = list[i++];
+        const el = document.getElementById('qr-' + p.id);
+        if (el) {
+          new QRCode(el, {
+            text: 'https://qr.zanxa.site/product.html?id=' + p.id,
+            width: 100, height: 100,
+            colorDark: '#0a0a0a',
+            colorLight: '#f5f0e8',
+          });
+        }
+        requestAnimationFrame(renderNext);
+      }
+      requestAnimationFrame(renderNext);
 
       if (products.length > LIMIT) {
         btn.classList.remove('hidden');
