@@ -305,9 +305,11 @@ if (!id) {
       if (!res.ok) throw new Error('fetch failed');
       return res.json();
     })
-    .then(data => {
+    .then(raw => {
       removeSkeleton();
-      const product = data[0];
+      // Handle both: plain array [] dan wrapped {success, data:[]}
+      const arr = Array.isArray(raw) ? raw : (raw?.data ?? []);
+      const product = arr[0];
       if (product) {
         renderProduct(product);
       } else {

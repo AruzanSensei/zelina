@@ -81,7 +81,7 @@
 
     // ── Cache config ──────────────────────────────────────────
     const CACHE_KEY = 'qr_products_list';
-    const CACHE_TTL = 120 * 60 * 1000; // 20 menit
+    const CACHE_TTL = 5 * 60 * 1000; // 5 menit
 
     function tryLoadCache() {
       try {
@@ -107,12 +107,14 @@
       products = cached;
       renderDemo();
       renderQR();
-      
+
       // Silent revalidate
       fetch(`${WORKER_URL}/products?fields=id,nama_produk,tipe`)
         .then(res => res.ok ? res.json() : Promise.reject())
-        .then(data => {
-          if (Array.isArray(data)) {
+        .then(raw => {
+          // Handle both: plain array [] dan wrapped {success, data:[]}
+          const data = Array.isArray(raw) ? raw : (raw?.data ?? []);
+          if (data.length > 0) {
             saveCache(data);
             if (JSON.stringify(data) !== JSON.stringify(products)) {
               products = data;
@@ -120,7 +122,7 @@
               renderQR();
             }
           }
-        }).catch(() => {});
+        }).catch(() => { });
     } else {
       showSkeletons();
       fetch(`${WORKER_URL}/products?fields=id,nama_produk,tipe`)
@@ -128,8 +130,9 @@
           if (!res.ok) throw new Error('Worker returned ' + res.status);
           return res.json();
         })
-        .then(data => {
-          products = Array.isArray(data) ? data : [];
+        .then(raw => {
+          // Handle both: plain array [] dan wrapped {success, data:[]}
+          products = Array.isArray(raw) ? raw : (raw?.data ?? []);
           saveCache(products);
           renderDemo();
           renderQR();
