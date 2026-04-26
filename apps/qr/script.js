@@ -1,4 +1,4 @@
-const WORKER_URL = 'https://qr-worker.zanxa.site';
+const WORKER_URL = 'https://qr-worker.zanxa-studio.workers.dev';
 
 const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
