@@ -104,37 +104,44 @@
 
     const cached = tryLoadCache();
     if (cached) {
-      // Render instan dari cache, lalu update background
       products = cached;
       renderDemo();
       renderQR();
-      // Revalidate di background (silent)
+      
+      // Silent revalidate
       fetch(`${WORKER_URL}/products?fields=id,nama_produk,tipe`)
-        .then(r => r.json())
+        .then(res => res.ok ? res.json() : Promise.reject())
         .then(data => {
           if (Array.isArray(data)) {
             saveCache(data);
-            // Hanya re-render jika data berubah
             if (JSON.stringify(data) !== JSON.stringify(products)) {
               products = data;
               renderDemo();
               renderQR();
             }
           }
-        }).catch(() => { });
+        }).catch(() => {});
     } else {
-      // Tidak ada cache: tampilkan skeleton, fetch, render
       showSkeletons();
       fetch(`${WORKER_URL}/products?fields=id,nama_produk,tipe`)
-        .then(r => r.json())
+        .then(res => {
+          if (!res.ok) throw new Error('Worker returned ' + res.status);
+          return res.json();
+        })
         .then(data => {
           products = Array.isArray(data) ? data : [];
           saveCache(products);
           renderDemo();
           renderQR();
         })
-        .catch(() => {
-          document.getElementById('demo-grid').innerHTML = '<p style="color:var(--ink3);font-size:0.8rem">Gagal memuat data.</p>';
+        .catch(err => {
+          console.error('Fetch error:', err);
+          document.getElementById('demo-grid').innerHTML = `
+            <div style="grid-column: 1/-1; padding: 20px; background: var(--red-bg); border: 1px solid var(--accent); border-radius: 8px; color: var(--accent); font-size: 0.8rem;">
+              <strong>Gagal Memuat Data:</strong> ${err.message}<br>
+              Pastikan Cloudflare Worker sudah di-deploy dan URL benar.
+            </div>
+          `;
           document.getElementById('qr-cards').innerHTML = '';
         });
     }
