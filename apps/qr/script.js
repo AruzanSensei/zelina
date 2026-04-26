@@ -1,5 +1,4 @@
-const SUPABASE_URL = 'https://cxtmilenczpjetlnqiwo.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4dG1pbGVuY3pwamV0bG5xaXdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMTEzMTUsImV4cCI6MjA5Mjc4NzMxNX0.OpTsBgQACFzE4ipIuOiTFaf-ldscH_hnTDQdY0U52AY';
+const WORKER_URL = 'https://qr-worker.zanxa.site';
 
 const params = new URLSearchParams(window.location.search);
 const id = params.get('id');
@@ -301,20 +300,14 @@ if (!id) {
   showNotFound();
 } else {
   document.title = `Produk ${id} — QR Zanxa`;
-  // Fetch langsung ke Supabase, filter by id (lebih efisien)
-  fetch(`${SUPABASE_URL}/rest/v1/products?id=eq.${encodeURIComponent(id.toUpperCase())}&select=*`, {
-    headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': `Bearer ${SUPABASE_KEY}`
-    }
-  })
+  fetch(`${WORKER_URL}/products?id=${encodeURIComponent(id.toUpperCase())}`)
     .then(res => {
       if (!res.ok) throw new Error('fetch failed');
       return res.json();
     })
     .then(data => {
       removeSkeleton();
-      const product = data[0]; // Supabase returns array, ambil item pertama
+      const product = data[0];
       if (product) {
         renderProduct(product);
       } else {

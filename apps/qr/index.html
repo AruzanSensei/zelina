@@ -73,25 +73,41 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    const SUPABASE_URL = 'https://cxtmilenczpjetlnqiwo.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4dG1pbGVuY3pwamV0bG5xaXdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMTEzMTUsImV4cCI6MjA5Mjc4NzMxNX0.OpTsBgQACFzE4ipIuOiTFaf-ldscH_hnTDQdY0U52AY';
+    const WORKER_URL = 'https://qr-worker.zanxa.site';
 
     const LIMIT = 3;
     const state = { demo: false, qr: false };
     let products = [];
 
-    fetch(`${SUPABASE_URL}/rest/v1/products?select=*&order=created_at.desc`, {
-      headers: {
-        'apikey': SUPABASE_KEY,
-        'Authorization': `Bearer ${SUPABASE_KEY}`
-      }
-    })
+    // Tampilkan skeleton dulu
+    showSkeletons();
+
+    fetch(`${WORKER_URL}/products`)
       .then(r => r.json())
       .then(data => {
-        products = data;
+        products = Array.isArray(data) ? data : [];
         renderDemo();
         renderQR();
+      })
+      .catch(() => {
+        document.getElementById('demo-grid').innerHTML = '<p style="color:var(--ink3);font-size:0.8rem">Gagal memuat data.</p>';
+        document.getElementById('qr-cards').innerHTML = '';
       });
+
+    function showSkeletons() {
+      const skItem = `<div class="demo-item" style="pointer-events:none">
+        <span class="demo-id" style="background:var(--border);color:transparent;border-radius:4px">LOADING</span>
+        <span class="demo-name" style="background:var(--border);color:transparent;border-radius:4px">Loading product name...</span>
+        <span class="demo-type" style="background:var(--border);color:transparent;border-radius:4px">Type</span>
+      </div>`;
+      document.getElementById('demo-grid').innerHTML = skItem.repeat(3);
+
+      const skCard = `<div class="qr-card" style="opacity:0.4">
+        <div style="width:100px;height:100px;background:var(--border);border-radius:4px"></div>
+        <span style="background:var(--border);color:transparent;border-radius:4px">LOADING</span>
+      </div>`;
+      document.getElementById('qr-cards').innerHTML = skCard.repeat(3);
+    }
 
     function renderDemo() {
       const grid = document.getElementById('demo-grid');
@@ -126,7 +142,7 @@
 
       list.forEach(p => {
         new QRCode(document.getElementById('qr-' + p.id), {
-          text: 'https://qr.zanxa.site/product/' + p.id,
+          text: 'https://qr.zanxa.site/product.html?id=' + p.id,
           width: 100, height: 100,
           colorDark: '#0a0a0a',
           colorLight: '#f5f0e8',
