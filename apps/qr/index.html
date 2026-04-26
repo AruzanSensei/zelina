@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>QR Zanxa — Product Tracking</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
 </head>
+
 <body class="index-page">
 
   <div class="noise"></div>
@@ -19,66 +23,46 @@
 
   <main class="landing-main">
     <div class="hero">
-      <div class="hero-label">SISTEM PELACAKAN PRODUK</div>
-      <h1 class="hero-title">Scan.<br>Track.<br>Know.</h1>
+      <!-- <div class="hero-label">SISTEM PELACAKAN PRODUK</div>
+      <h1 class="hero-title">Scan.<br>Track.<br>Know.</h1> -->
       <p class="hero-sub">Scan QR Code pada produk untuk melihat detail lengkap aset industri Anda.</p>
     </div>
 
     <div class="search-card">
       <div class="search-label">ATAU MASUKKAN ID MANUAL</div>
       <div class="search-row">
-        <input
-          type="text"
-          id="product-id-input"
-          placeholder="Contoh: BRG001"
-          class="id-input"
-          maxlength="10"
-        />
+        <input type="text" id="product-id-input" placeholder="Contoh: UPS001" class="id-input" maxlength="20" />
         <button id="go-btn" class="go-btn" onclick="goToProduct()">
           <span>CARI</span>
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
         </button>
       </div>
       <div id="search-error" class="search-error hidden">Masukkan ID produk terlebih dahulu.</div>
     </div>
 
+    <!-- DEMO PRODUK — rendered from JSON -->
     <div class="demo-section">
       <div class="demo-label">DEMO PRODUK</div>
-      <div class="demo-grid">
-        <a href="product.html?id=BRG001" class="demo-item">
-          <span class="demo-id">BRG001</span>
-          <span class="demo-name">Mesin X Turbo</span>
-          <span class="demo-type">Industrial</span>
-        </a>
-        <a href="product.html?id=BRG002" class="demo-item">
-          <span class="demo-id">BRG002</span>
-          <span class="demo-name">Mesin Y Pro</span>
-          <span class="demo-type">Manufacture</span>
-        </a>
-        <a href="product.html?id=BRG003" class="demo-item">
-          <span class="demo-id">BRG003</span>
-          <span class="demo-name">Mesin Z Lite</span>
-          <span class="demo-type">Portable</span>
-        </a>
-      </div>
+      <div class="demo-grid" id="demo-grid"></div>
+      <button class="see-more-btn hidden" id="demo-more" onclick="toggleMore('demo')">Lihat Lebih Banyak ↓</button>
     </div>
 
+    <!-- QR SECTION — rendered from JSON -->
     <div class="qr-section">
       <div class="demo-label">CONTOH QR CODE</div>
-      <div class="qr-cards">
-        <div class="qr-card">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://qr.zanxa.site/product/BRG001&size=120x120&color=0a0a0a&bgcolor=f5f0e8" alt="QR BRG001" />
-          <span>BRG001</span>
-        </div>
-        <div class="qr-card">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://qr.zanxa.site/product/BRG002&size=120x120&color=0a0a0a&bgcolor=f5f0e8" alt="QR BRG002" />
-          <span>BRG002</span>
-        </div>
-        <div class="qr-card">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?data=https://qr.zanxa.site/product/BRG003&size=120x120&color=0a0a0a&bgcolor=f5f0e8" alt="QR BRG003" />
-          <span>BRG003</span>
-        </div>
-      </div>
+      <div class="qr-cards" id="qr-cards"></div>
+      <button class="see-more-btn hidden" id="qr-more" onclick="toggleMore('qr')">Lihat Lebih Banyak ↓</button>
+    </div>
+
+    <!-- KELOLA -->
+    <div class="demo-section">
+      <div class="demo-label">KELOLA PRODUK</div>
+      <a href="create.html" class="go-btn" style="display:inline-flex;text-decoration:none;margin-top:4px;">
+        <span>+ TAMBAH PRODUK BARU</span>
+      </a>
     </div>
   </main>
 
@@ -87,21 +71,84 @@
     <span class="footer-domain">qr.zanxa.site</span>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    document.getElementById('product-id-input').addEventListener('keydown', function(e) {
+    const LIMIT = 3;
+    const state = { demo: false, qr: false };
+    let products = [];
+
+    fetch('data/product.json')
+      .then(r => r.json())
+      .then(data => {
+        products = data;
+        renderDemo();
+        renderQR();
+      });
+
+    function renderDemo() {
+      const grid = document.getElementById('demo-grid');
+      const btn = document.getElementById('demo-more');
+      const list = state.demo ? products : products.slice(0, LIMIT);
+
+      grid.innerHTML = list.map(p => `
+        <a href="product.html?id=${p.id}" class="demo-item">
+          <span class="demo-id">${p.id}</span>
+          <span class="demo-name">${p.nama_produk}</span>
+          <span class="demo-type">${p.tipe}</span>
+        </a>
+      `).join('');
+
+      if (products.length > LIMIT) {
+        btn.classList.remove('hidden');
+        btn.textContent = state.demo ? 'Tampilkan Lebih Sedikit ↑' : 'Lihat Lebih Banyak ↓';
+      }
+    }
+
+    function renderQR() {
+      const cards = document.getElementById('qr-cards');
+      const btn = document.getElementById('qr-more');
+      const list = state.qr ? products : products.slice(0, LIMIT);
+
+      cards.innerHTML = list.map(p => `
+        <div class="qr-card">
+          <div id="qr-${p.id}"></div>
+          <span>${p.id}</span>
+        </div>
+      `).join('');
+
+      list.forEach(p => {
+        new QRCode(document.getElementById('qr-' + p.id), {
+          text: 'https://qr.zanxa.site/product/' + p.id,
+          width: 100, height: 100,
+          colorDark: '#0a0a0a',
+          colorLight: '#f5f0e8',
+        });
+      });
+
+      if (products.length > LIMIT) {
+        btn.classList.remove('hidden');
+        btn.textContent = state.qr ? 'Tampilkan Lebih Sedikit ↑' : 'Lihat Lebih Banyak ↓';
+      }
+    }
+
+    function toggleMore(section) {
+      state[section] = !state[section];
+      if (section === 'demo') renderDemo();
+      else renderQR();
+    }
+
+    document.getElementById('product-id-input').addEventListener('keydown', function (e) {
       if (e.key === 'Enter') goToProduct();
     });
 
     function goToProduct() {
       const val = document.getElementById('product-id-input').value.trim().toUpperCase();
       const err = document.getElementById('search-error');
-      if (!val) {
-        err.classList.remove('hidden');
-        return;
-      }
+      if (!val) { err.classList.remove('hidden'); return; }
       err.classList.add('hidden');
       window.location.href = 'product.html?id=' + val;
     }
   </script>
 </body>
+
 </html>

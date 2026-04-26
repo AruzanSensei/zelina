@@ -1,13 +1,17 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Detail Produk — QR Zanxa</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
 </head>
+
 <body class="product-page">
 
   <div class="noise"></div>
@@ -15,10 +19,19 @@
   <header class="site-header">
     <a href="index.html" class="logo">QR<span class="accent">.</span>ZANXA</a>
     <a href="index.html" class="back-link">
-      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 4l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+        <path d="M13 8H3M7 4l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
       Kembali
     </a>
   </header>
+
+  <nav class="breadcrumb" id="breadcrumb">
+    <a href="index.html">Home</a>
+    <span class="bc-sep">›</span>
+    <span class="bc-current" id="bc-id">—</span>
+  </nav>
 
   <main id="app" class="product-main">
     <div class="skeleton-screen" id="skeleton">
@@ -34,6 +47,8 @@
     <span class="footer-domain">qr.zanxa.site</span>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="script.js"></script>
 </body>
+
 </html>

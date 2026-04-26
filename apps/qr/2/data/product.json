@@ -1,0 +1,50 @@
+[
+  {
+    "id": "BRG001",
+    "nama_produk": "Mesin X Turbo",
+    "tipe": "Industrial",
+    "tahun_pembuatan": 2023,
+    "nomor_seri": "SN-938472",
+    "lokasi_produksi": "Jakarta",
+    "spesifikasi": "Mesin kecepatan tinggi untuk produksi massal dengan output 5000 unit/jam. Dilengkapi sistem pendingin otomatis dan sensor tekanan real-time.",
+    "status": "aktif",
+    "gambar": "https://picsum.photos/seed/brg001/600/400",
+    "galeri": [
+      "https://picsum.photos/seed/brg001a/400/300",
+      "https://picsum.photos/seed/brg001b/400/300",
+      "https://picsum.photos/seed/brg001c/400/300"
+    ]
+  },
+  {
+    "id": "BRG002",
+    "nama_produk": "Mesin Y Pro",
+    "tipe": "Manufacture",
+    "tahun_pembuatan": 2022,
+    "nomor_seri": "SN-111222",
+    "lokasi_produksi": "Bandung",
+    "spesifikasi": "Mesin efisiensi tinggi dengan konsumsi daya rendah. Kapasitas produksi 3000 unit/jam dengan akurasi presisi ±0.01mm.",
+    "status": "aktif",
+    "gambar": "https://picsum.photos/seed/brg002/600/400",
+    "galeri": [
+      "https://picsum.photos/seed/brg002a/400/300",
+      "https://picsum.photos/seed/brg002b/400/300",
+      "https://picsum.photos/seed/brg002c/400/300"
+    ]
+  },
+  {
+    "id": "BRG003",
+    "nama_produk": "Mesin Z Lite",
+    "tipe": "Portable",
+    "tahun_pembuatan": 2021,
+    "nomor_seri": "SN-999888",
+    "lokasi_produksi": "Surabaya",
+    "spesifikasi": "Mesin ringan dan fleksibel dengan berat hanya 12kg. Ideal untuk produksi skala kecil dan prototipe.",
+    "status": "tidak aktif",
+    "gambar": "https://picsum.photos/seed/brg003/600/400",
+    "galeri": [
+      "https://picsum.photos/seed/brg003a/400/300",
+      "https://picsum.photos/seed/brg003b/400/300",
+      "https://picsum.photos/seed/brg003c/400/300"
+    ]
+  }
+]

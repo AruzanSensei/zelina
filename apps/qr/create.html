@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tambah Produk — QR Zanxa</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="product-page">
+
+  <div class="noise"></div>
+
+  <header class="site-header">
+    <a href="index.html" class="logo">QR<span class="accent">.</span>ZANXA</a>
+    <a href="index.html" class="back-link">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M13 8H3M7 4l-4 4 4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Kembali
+    </a>
+  </header>
+
+  <main class="create-main">
+    <div class="hero-label">MANAJEMEN PRODUK</div>
+    <h1 class="create-title">Tambah Produk Baru</h1>
+    <p class="create-sub">ISI SEMUA FIELD · GAMBAR DIKONVERSI KE BASE64 / URL</p>
+
+    <!-- IDENTITAS -->
+    <div class="form-section">
+      <div class="form-section-title">IDENTITAS PRODUK</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label" for="f-id">ID PRODUK *</label>
+          <input class="form-input" id="f-id" type="text" placeholder="UPS004" maxlength="20" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-nama">NAMA PRODUK *</label>
+          <input class="form-input" id="f-nama" type="text" placeholder="PowerShield Ultra 5000" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-tipe">TIPE / KODE *</label>
+          <input class="form-input" id="f-tipe" type="text" placeholder="Online Double Conversion" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-seri">NOMOR SERI *</label>
+          <input class="form-input" id="f-seri" type="text" placeholder="SN-XXXX-20240101" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-tahun">TAHUN PEMBUATAN *</label>
+          <input class="form-input" id="f-tahun" type="number" placeholder="2024" min="2000" max="2099" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-status">STATUS *</label>
+          <select class="form-select" id="f-status">
+            <option value="aktif">Aktif</option>
+            <option value="tidak aktif">Tidak Aktif</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- SPESIFIKASI TEKNIS -->
+    <div class="form-section">
+      <div class="form-section-title">SPESIFIKASI TEKNIS</div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label class="form-label" for="f-input">INPUT</label>
+          <input class="form-input" id="f-input" type="text" placeholder="220V AC / 50Hz, Single Phase" />
+        </div>
+        <div class="form-group full">
+          <label class="form-label" for="f-output">OUTPUT</label>
+          <input class="form-input" id="f-output" type="text" placeholder="220V AC ±2%, Pure Sine Wave" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-frekuensi">FREKUENSI</label>
+          <input class="form-input" id="f-frekuensi" type="text" placeholder="50Hz / 60Hz (Auto)" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="f-socket">JUMLAH SOCKET</label>
+          <input class="form-input" id="f-socket" type="number" placeholder="6" min="1" max="99" />
+        </div>
+        <div class="form-group full">
+          <label class="form-label" for="f-spesifikasi">TAMBAHAN / OPSIONAL</label>
+          <textarea class="form-textarea" id="f-spesifikasi" placeholder="Kapasitas, fitur tambahan, catatan, dll..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- GAMBAR COVER -->
+    <div class="form-section">
+      <div class="form-section-title">GAMBAR COVER</div>
+      <div class="img-upload-slot cover-slot" id="slot-cover">
+        <img class="img-slot-preview" id="prev-cover" alt="Cover" />
+        <div class="img-slot-placeholder" id="ph-cover">
+          <svg class="img-slot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+          <span class="img-slot-lbl">COVER UTAMA<br/>Klik untuk upload</span>
+        </div>
+        <input class="img-slot-input" type="file" accept="image/*" onchange="handleImg(this,'cover')" />
+      </div>
+    </div>
+
+    <!-- FOTO PRODUK -->
+    <div class="form-section">
+      <div class="form-section-title">FOTO PRODUK</div>
+      <div class="img-grid">
+        <div class="form-group">
+          <label class="form-label">GAMBAR DEPAN</label>
+          <div class="img-upload-slot" id="slot-depan">
+            <img class="img-slot-preview" id="prev-depan" alt="Depan" />
+            <div class="img-slot-placeholder" id="ph-depan">
+              <svg class="img-slot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <span class="img-slot-lbl">DEPAN</span>
+            </div>
+            <input class="img-slot-input" type="file" accept="image/*" onchange="handleImg(this,'depan')" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">SAMPING KANAN</label>
+          <div class="img-upload-slot" id="slot-kanan">
+            <img class="img-slot-preview" id="prev-kanan" alt="Samping Kanan" />
+            <div class="img-slot-placeholder" id="ph-kanan">
+              <svg class="img-slot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <span class="img-slot-lbl">SAMPING KANAN</span>
+            </div>
+            <input class="img-slot-input" type="file" accept="image/*" onchange="handleImg(this,'kanan')" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">SAMPING KIRI</label>
+          <div class="img-upload-slot" id="slot-kiri">
+            <img class="img-slot-preview" id="prev-kiri" alt="Samping Kiri" />
+            <div class="img-slot-placeholder" id="ph-kiri">
+              <svg class="img-slot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <span class="img-slot-lbl">SAMPING KIRI</span>
+            </div>
+            <input class="img-slot-input" type="file" accept="image/*" onchange="handleImg(this,'kiri')" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">GAMBAR BELAKANG</label>
+          <div class="img-upload-slot" id="slot-belakang">
+            <img class="img-slot-preview" id="prev-belakang" alt="Belakang" />
+            <div class="img-slot-placeholder" id="ph-belakang">
+              <svg class="img-slot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <span class="img-slot-lbl">BELAKANG</span>
+            </div>
+            <input class="img-slot-input" type="file" accept="image/*" onchange="handleImg(this,'belakang')" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">GAMBAR DALAM</label>
+          <div class="img-upload-slot" id="slot-dalam">
+            <img class="img-slot-preview" id="prev-dalam" alt="Dalam" />
+            <div class="img-slot-placeholder" id="ph-dalam">
+              <svg class="img-slot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              <span class="img-slot-lbl">DALAM</span>
+            </div>
+            <input class="img-slot-input" type="file" accept="image/*" onchange="handleImg(this,'dalam')" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-row">
+      <button class="btn-submit" onclick="generateJSON()">GENERATE JSON ENTRY</button>
+      <button class="btn-reset" onclick="resetForm()">RESET</button>
+    </div>
+
+    <!-- OUTPUT -->
+    <div class="json-output-wrap" id="output-wrap">
+      <div class="json-output-label">SALIN & TAMBAHKAN KE data/product.json</div>
+      <pre class="json-output" id="json-out"></pre>
+      <button class="copy-btn" onclick="copyJSON()">SALIN JSON <span class="toast" id="toast">✓ Tersalin!</span></button>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <span>© 2024 Zanxa — MVP Demo</span>
+    <span class="footer-domain">qr.zanxa.site</span>
+  </footer>
+
+  <script>
+    const images = {};
+
+    function handleImg(input, key) {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        images[key] = dataUrl;
+
+        const prev = document.getElementById('prev-' + key);
+        const ph   = document.getElementById('ph-' + key);
+        prev.src = dataUrl;
+        prev.classList.add('visible');
+        ph.classList.add('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function val(id) {
+      return document.getElementById(id).value.trim();
+    }
+
+    function generateJSON() {
+      const id = val('f-id').toUpperCase();
+      if (!id || !val('f-nama') || !val('f-tipe') || !val('f-seri') || !val('f-tahun')) {
+        alert('Lengkapi field wajib: ID, Nama, Tipe, No. Seri, Tahun');
+        return;
+      }
+
+      const entry = {
+        id,
+        nama_produk: val('f-nama'),
+        tipe: val('f-tipe'),
+        tahun_pembuatan: parseInt(val('f-tahun')) || null,
+        nomor_seri: val('f-seri'),
+        input: val('f-input') || undefined,
+        output: val('f-output') || undefined,
+        frekuensi: val('f-frekuensi') || undefined,
+        jumlah_socket: val('f-socket') ? parseInt(val('f-socket')) : undefined,
+        spesifikasi: val('f-spesifikasi') || undefined,
+        status: document.getElementById('f-status').value,
+        gambar_cover: images['cover'] || undefined,
+        gambar_depan: images['depan'] || undefined,
+        gambar_samping_kanan: images['kanan'] || undefined,
+        gambar_samping_kiri: images['kiri'] || undefined,
+        gambar_belakang: images['belakang'] || undefined,
+        gambar_dalam: images['dalam'] || undefined,
+      };
+
+      // Remove undefined keys
+      Object.keys(entry).forEach(k => entry[k] === undefined && delete entry[k]);
+
+      const json = JSON.stringify(entry, null, 2);
+      document.getElementById('json-out').textContent = json;
+      document.getElementById('output-wrap').classList.add('visible');
+      document.getElementById('output-wrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function copyJSON() {
+      const text = document.getElementById('json-out').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const t = document.getElementById('toast');
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 2000);
+      });
+    }
+
+    function resetForm() {
+      ['f-id','f-nama','f-tipe','f-seri','f-tahun','f-input','f-output','f-frekuensi','f-socket','f-spesifikasi']
+        .forEach(id => document.getElementById(id).value = '');
+      document.getElementById('f-status').value = 'aktif';
+
+      Object.keys(images).forEach(k => delete images[k]);
+
+      ['cover','depan','kanan','kiri','belakang','dalam'].forEach(k => {
+        const prev = document.getElementById('prev-' + k);
+        const ph   = document.getElementById('ph-' + k);
+        if (prev) { prev.src = ''; prev.classList.remove('visible'); }
+        if (ph)   ph.classList.remove('hidden');
+      });
+
+      document.getElementById('output-wrap').classList.remove('visible');
+    }
+  </script>
+</body>
+</html>
