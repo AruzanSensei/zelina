@@ -212,25 +212,94 @@
 
   <script>
     // ── KONFIGURASI SUPABASE ───────────────────────────────────────
-    const SUPABASE_URL   = 'https://cxtmilenczpjetlnqiwo.supabase.co';
-    const SUPABASE_KEY   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4dG1pbGVuY3pwamV0bG5xaXdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMTEzMTUsImV4cCI6MjA5Mjc4NzMxNX0.OpTsBgQACFzE4ipIuOiTFaf-ldscH_hnTDQdY0U52AY';
+    const SUPABASE_URL = 'https://cxtmilenczpjetlnqiwo.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4dG1pbGVuY3pwamV0bG5xaXdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMTEzMTUsImV4cCI6MjA5Mjc4NzMxNX0.OpTsBgQACFzE4ipIuOiTFaf-ldscH_hnTDQdY0U52AY';
     const STORAGE_BUCKET = 'product-images'; // Nama bucket di Supabase Storage
     // ──────────────────────────────────────────────────────────────
 
-    // images[key] = File object (bukan base64)
+    // ── Kompresi gambar ke WebP via Canvas API ───────────────────
+    // maxW/maxH: batas resolusi, quality: 0-1 (0.8 = kualitas bagus, ukuran kecil)
+    function compressToWebP(file, maxW, maxH, quality) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        const objUrl = URL.createObjectURL(file);
+
+        img.onload = function () {
+          URL.revokeObjectURL(objUrl);
+
+          // Hitung dimensi baru agar proporsional
+          let w = img.naturalWidth, h = img.naturalHeight;
+          if (w > maxW || h > maxH) {
+            const ratio = Math.min(maxW / w, maxH / h);
+            w = Math.round(w * ratio);
+            h = Math.round(h * ratio);
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+
+          canvas.toBlob(blob => {
+            if (blob) resolve(blob);
+            else reject(new Error('canvas.toBlob gagal'));
+          }, 'image/webp', quality);
+        };
+
+        img.onerror = () => { URL.revokeObjectURL(objUrl); reject(new Error('Load gambar gagal')); };
+        img.src = objUrl;
+      });
+    }
+    // ─────────────────────────────────────────────────────────────
+
+    // images[key] = Blob (WebP terkompresi)
     const images = {};
 
     function handleImg(input, key) {
       const file = input.files[0];
       if (!file) return;
-      images[key] = file; // simpan File object untuk upload nanti
 
-      // Preview instan via object URL (jauh lebih cepat dari FileReader)
+      // Preview instan dari file original
       const prev = document.getElementById('prev-' + key);
-      const ph   = document.getElementById('ph-' + key);
+      const ph = document.getElementById('ph-' + key);
       prev.src = URL.createObjectURL(file);
       prev.classList.add('visible');
       ph.classList.add('hidden');
+
+      // Tampilkan badge 'Compressing...'
+      let badge = document.getElementById('badge-' + key);
+      if (!badge) {
+        badge = document.createElement('div');
+        badge.id = 'badge-' + key;
+        badge.style.cssText = 'position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,.7);color:#c8ff00;font-size:0.6rem;padding:2px 6px;border-radius:4px;pointer-events:none';
+        document.getElementById('slot-' + key).style.position = 'relative';
+        document.getElementById('slot-' + key).appendChild(badge);
+      }
+      badge.textContent = '⏳ Compressing...';
+      images[key] = null; // sementara null saat kompresi berlangsung
+
+      // Dimensi berbeda untuk cover vs foto biasa
+      const isCover = (key === 'cover');
+      const maxW = isCover ? 1200 : 900;
+      const maxH = isCover ? 800 : 600;
+      const quality = 0.82;
+
+      compressToWebP(file, maxW, maxH, quality)
+        .then(blob => {
+          images[key] = blob;
+          const origKB = (file.size / 1024).toFixed(0);
+          const newKB = (blob.size / 1024).toFixed(0);
+          const saved = Math.round((1 - blob.size / file.size) * 100);
+          badge.textContent = newKB + 'KB (-' + saved + '%) WebP';
+          badge.style.color = '#6dff9c';
+        })
+        .catch(err => {
+          // Fallback ke file asli jika browser tidak support
+          images[key] = file;
+          badge.textContent = 'No WebP support';
+          badge.style.color = '#ff9f6b';
+          console.warn('Kompresi gagal, gunakan file asli:', err);
+        });
     }
 
     function val(id) {
@@ -241,38 +310,42 @@
       const el = document.getElementById('save-status');
       el.style.display = 'block';
       const styles = {
-        loading: { bg: 'var(--bg2)',      border: 'var(--border)', color: 'var(--ink2)' },
-        success: { bg: 'var(--green-bg)', border: 'var(--green)',  color: 'var(--green)' },
-        error:   { bg: 'var(--red-bg)',   border: 'var(--accent)', color: 'var(--accent)' },
+        loading: { bg: 'var(--bg2)', border: 'var(--border)', color: 'var(--ink2)' },
+        success: { bg: 'var(--green-bg)', border: 'var(--green)', color: 'var(--green)' },
+        error: { bg: 'var(--red-bg)', border: 'var(--accent)', color: 'var(--accent)' },
       };
       const s = styles[type];
       el.style.background = s.bg;
-      el.style.border     = '1px solid ' + s.border;
-      el.style.color      = s.color;
-      el.innerHTML        = message;
+      el.style.border = '1px solid ' + s.border;
+      el.style.color = s.color;
+      el.innerHTML = message;
       el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
     // ── Upload semua gambar ke Supabase Storage (paralel) ─────────
     async function uploadImages(productId) {
-      const entries = Object.entries(images).filter(([, f]) => f instanceof File);
+      // Hanya upload gambar yang sudah selesai dikompresi (Blob/File, bukan null)
+      const entries = Object.entries(images).filter(([, b]) => b instanceof Blob || b instanceof File);
       if (!entries.length) return {};
 
-      const results = await Promise.all(entries.map(async ([key, file]) => {
-        const ext  = (file.name.split('.').pop() || 'jpg').toLowerCase();
+      const results = await Promise.all(entries.map(async ([key, blob]) => {
+        // Selalu simpan sebagai .webp karena sudah dikompresi
+        const isWebP = blob instanceof Blob && blob.type === 'image/webp';
+        const ext = isWebP ? 'webp' : ((blob.name || '').split('.').pop() || 'jpg').toLowerCase();
+        const mime = isWebP ? 'image/webp' : (blob.type || 'image/jpeg');
         const path = productId + '/' + key + '.' + ext;
 
         const res = await fetch(
           SUPABASE_URL + '/storage/v1/object/' + STORAGE_BUCKET + '/' + path,
           {
-            method:  'POST',
+            method: 'POST',
             headers: {
-              'apikey':        SUPABASE_KEY,
+              'apikey': SUPABASE_KEY,
               'Authorization': 'Bearer ' + SUPABASE_KEY,
-              'Content-Type':  file.type || 'image/jpeg',
-              'x-upsert':      'true',
+              'Content-Type': mime,
+              'x-upsert': 'true',
             },
-            body: file,
+            body: blob,
           }
         );
 
@@ -281,107 +354,105 @@
           throw new Error('Upload "' + key + '" gagal: ' + (err.message || res.status));
         }
 
-        const publicUrl =
-          SUPABASE_URL + '/storage/v1/object/public/' + STORAGE_BUCKET + '/' + path;
+        const publicUrl = SUPABASE_URL + '/storage/v1/object/public/' + STORAGE_BUCKET + '/' + path;
         return [key, publicUrl];
       }));
 
       return Object.fromEntries(results);
-    }
-    // ─────────────────────────────────────────────────────────────
 
-    async function saveToSupabase() {
-      const id = val('f-id').toUpperCase();
-      if (!id || !val('f-nama') || !val('f-tipe') || !val('f-seri') || !val('f-tahun')) {
-        showStatus('error', '&#x2715; <strong>Gagal:</strong> Lengkapi field wajib: ID, Nama, Tipe, No. Seri, Tahun.');
-        return;
+      async function saveToSupabase() {
+        const id = val('f-id').toUpperCase();
+        if (!id || !val('f-nama') || !val('f-tipe') || !val('f-seri') || !val('f-tahun')) {
+          showStatus('error', '&#x2715; <strong>Gagal:</strong> Lengkapi field wajib: ID, Nama, Tipe, No. Seri, Tahun.');
+          return;
+        }
+
+        const btn = document.getElementById('btn-save');
+        btn.disabled = true;
+        btn.textContent = 'MENYIMPAN...';
+
+        try {
+          // ── Langkah 1: Upload gambar ke Storage ─────────────────
+          const imgCount = Object.keys(images).length;
+          if (imgCount > 0) {
+            showStatus('loading',
+              '&#x23F3; Mengupload <strong>' + imgCount + ' gambar</strong> ke Storage...');
+          } else {
+            showStatus('loading', '&#x23F3; Menyimpan data produk <strong>' + id + '</strong>...');
+          }
+
+          const imageUrls = await uploadImages(id);
+
+          // ── Langkah 2: Simpan data ke database ──────────────────
+          if (imgCount > 0) {
+            showStatus('loading', '&#x23F3; Menyimpan data produk <strong>' + id + '</strong>...');
+          }
+
+          const payload = {
+            id,
+            nama_produk: val('f-nama'),
+            tipe: val('f-tipe'),
+            tahun_pembuatan: parseInt(val('f-tahun')) || null,
+            nomor_seri: val('f-seri'),
+            input: val('f-input') || null,
+            output: val('f-output') || null,
+            frekuensi: val('f-frekuensi') || null,
+            jumlah_socket: val('f-socket') ? parseInt(val('f-socket')) : null,
+            spesifikasi: val('f-spesifikasi') || null,
+            status: document.getElementById('f-status').value,
+            // URL dari Supabase Storage (bukan base64)
+            gambar_cover: imageUrls['cover'] || null,
+            gambar_depan: imageUrls['depan'] || null,
+            gambar_samping_kanan: imageUrls['kanan'] || null,
+            gambar_samping_kiri: imageUrls['kiri'] || null,
+            gambar_belakang: imageUrls['belakang'] || null,
+            gambar_dalam: imageUrls['dalam'] || null,
+          };
+
+          const res = await fetch(SUPABASE_URL + '/rest/v1/products', {
+            method: 'POST',
+            headers: {
+              'apikey': SUPABASE_KEY,
+              'Authorization': 'Bearer ' + SUPABASE_KEY,
+              'Content-Type': 'application/json',
+              'Prefer': 'resolution=merge-duplicates,return=representation'
+            },
+            body: JSON.stringify(payload)
+          });
+
+          if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.message || err.hint || 'HTTP ' + res.status);
+          }
+
+          const uploadedCount = Object.keys(imageUrls).length;
+          showStatus('success',
+            '&#x2713; <strong>Berhasil!</strong> Produk <strong>' + id + '</strong> tersimpan.' +
+            (uploadedCount > 0 ? ' ' + uploadedCount + ' gambar di Storage.' : '') +
+            ' &nbsp;<a href="product.html?id=' + id + '" style="color:var(--green);text-decoration:underline">Lihat produk &#x2192;</a>'
+          );
+
+        } catch (e) {
+          showStatus('error', '&#x2715; <strong>Gagal:</strong> ' + (e.message || 'Terjadi kesalahan jaringan.'));
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'SIMPAN KE SUPABASE';
+        }
       }
 
-      const btn = document.getElementById('btn-save');
-      btn.disabled    = true;
-      btn.textContent = 'MENYIMPAN...';
-
-      try {
-        // ── Langkah 1: Upload gambar ke Storage ─────────────────
-        const imgCount = Object.keys(images).length;
-        if (imgCount > 0) {
-          showStatus('loading',
-            '&#x23F3; Mengupload <strong>' + imgCount + ' gambar</strong> ke Storage...');
-        } else {
-          showStatus('loading', '&#x23F3; Menyimpan data produk <strong>' + id + '</strong>...');
-        }
-
-        const imageUrls = await uploadImages(id);
-
-        // ── Langkah 2: Simpan data ke database ──────────────────
-        if (imgCount > 0) {
-          showStatus('loading', '&#x23F3; Menyimpan data produk <strong>' + id + '</strong>...');
-        }
-
-        const payload = {
-          id,
-          nama_produk:          val('f-nama'),
-          tipe:                 val('f-tipe'),
-          tahun_pembuatan:      parseInt(val('f-tahun')) || null,
-          nomor_seri:           val('f-seri'),
-          input:                val('f-input')      || null,
-          output:               val('f-output')     || null,
-          frekuensi:            val('f-frekuensi')  || null,
-          jumlah_socket:        val('f-socket') ? parseInt(val('f-socket')) : null,
-          spesifikasi:          val('f-spesifikasi') || null,
-          status:               document.getElementById('f-status').value,
-          // URL dari Supabase Storage (bukan base64)
-          gambar_cover:         imageUrls['cover']    || null,
-          gambar_depan:         imageUrls['depan']    || null,
-          gambar_samping_kanan: imageUrls['kanan']    || null,
-          gambar_samping_kiri:  imageUrls['kiri']     || null,
-          gambar_belakang:      imageUrls['belakang'] || null,
-          gambar_dalam:         imageUrls['dalam']    || null,
-        };
-
-        const res = await fetch(SUPABASE_URL + '/rest/v1/products', {
-          method:  'POST',
-          headers: {
-            'apikey':        SUPABASE_KEY,
-            'Authorization': 'Bearer ' + SUPABASE_KEY,
-            'Content-Type':  'application/json',
-            'Prefer':        'resolution=merge-duplicates,return=representation'
-          },
-          body: JSON.stringify(payload)
+      function resetForm() {
+        ['f-id', 'f-nama', 'f-tipe', 'f-seri', 'f-tahun', 'f-input', 'f-output', 'f-frekuensi', 'f-socket', 'f-spesifikasi']
+          .forEach(id => document.getElementById(id).value = '');
+        document.getElementById('f-status').value = 'aktif';
+        Object.keys(images).forEach(k => delete images[k]);
+        ['cover', 'depan', 'kanan', 'kiri', 'belakang', 'dalam'].forEach(k => {
+          const prev = document.getElementById('prev-' + k);
+          const ph = document.getElementById('ph-' + k);
+          if (prev) { prev.src = ''; prev.classList.remove('visible'); }
+          if (ph) ph.classList.remove('hidden');
         });
-
-        if (!res.ok) {
-          const err = await res.json().catch(() => ({}));
-          throw new Error(err.message || err.hint || 'HTTP ' + res.status);
-        }
-
-        const uploadedCount = Object.keys(imageUrls).length;
-        showStatus('success',
-          '&#x2713; <strong>Berhasil!</strong> Produk <strong>' + id + '</strong> tersimpan.' +
-          (uploadedCount > 0 ? ' ' + uploadedCount + ' gambar di Storage.' : '') +
-          ' &nbsp;<a href="product.html?id=' + id + '" style="color:var(--green);text-decoration:underline">Lihat produk &#x2192;</a>'
-        );
-
-      } catch (e) {
-        showStatus('error', '&#x2715; <strong>Gagal:</strong> ' + (e.message || 'Terjadi kesalahan jaringan.'));
-      } finally {
-        btn.disabled    = false;
-        btn.textContent = 'SIMPAN KE SUPABASE';
+        document.getElementById('save-status').style.display = 'none';
       }
-    }
-
-    function resetForm() {
-      ['f-id','f-nama','f-tipe','f-seri','f-tahun','f-input','f-output','f-frekuensi','f-socket','f-spesifikasi']
-        .forEach(id => document.getElementById(id).value = '');
-      document.getElementById('f-status').value = 'aktif';
-      Object.keys(images).forEach(k => delete images[k]);
-      ['cover','depan','kanan','kiri','belakang','dalam'].forEach(k => {
-        const prev = document.getElementById('prev-' + k);
-        const ph   = document.getElementById('ph-' + k);
-        if (prev) { prev.src = ''; prev.classList.remove('visible'); }
-        if (ph)   ph.classList.remove('hidden');
-      });
-      document.getElementById('save-status').style.display = 'none';
     }
   </script>
 </body>
