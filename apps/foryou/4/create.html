@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buat Galeri Polaroid Baru</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5efe6;
+    --cream2: #ede4d8;
+    --cream3: #e2d5c3;
+    --warm: #c9b99a;
+    --ink: #3a2e22;
+    --ink2: #6b5c47;
+    --ink3: #9c8b78;
+    --accent: #d4845a;
+    --accent2: #e8a87c;
+    --green: #5a9e6f;
+    --green-bg: #edf6f0;
+    --red: #c05050;
+    --red-bg: #fdf0f0;
+    --shadow: rgba(58,46,34,.12);
+    --shadow2: rgba(58,46,34,.22);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--cream);
+    background-image:
+      radial-gradient(ellipse at 15% 10%, rgba(212,132,90,.08) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 90%, rgba(125,171,138,.07) 0%, transparent 55%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 22px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1.5px solid var(--cream3);
+    background: rgba(245,239,230,.92);
+    backdrop-filter: blur(12px);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .logo { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+  .logo span { color: var(--accent); font-style: italic; }
+  .logo-icon { width: 32px; height: 32px; background: var(--ink); border-radius: 5px; display: flex; align-items: center; justify-content: center; }
+  .logo-icon svg { width: 18px; height: 18px; }
+
+  .btn { padding: 9px 22px; border-radius: 100px; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: .88rem; font-weight: 500; transition: all .2s; text-decoration: none; display: inline-flex; align-items: center; gap: 7px; }
+  .btn-outline { background: transparent; border: 1.5px solid var(--cream3); color: var(--ink2); }
+  .btn-outline:hover { border-color: var(--warm); background: var(--cream2); }
+  .btn-primary { background: var(--ink); color: var(--cream); }
+  .btn-primary:hover:not(:disabled) { background: var(--accent); }
+  .btn-primary:disabled { opacity: .55; cursor: not-allowed; }
+  .btn-google { background: white; border: 1.5px solid #e0d8d0; color: #3c3c3c; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+  .btn-google:hover { box-shadow: 0 4px 14px rgba(0,0,0,.13); transform: translateY(-1px); }
+  .user-pill { display: flex; align-items: center; gap: 8px; background: white; border: 1.5px solid var(--cream3); border-radius: 100px; padding: 5px 14px 5px 6px; }
+  .user-pill img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+  .user-pill span { font-size: .83rem; color: var(--ink2); max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .nav-links { display: flex; align-items: center; gap: 12px; }
+
+  /* ── LOGIN GATE ── */
+  #login-gate {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 70vh; text-align: center; padding: 40px 20px;
+    animation: fadeUp .5s ease;
+  }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:none; } }
+  #login-gate .gate-icon { font-size: 3.5rem; margin-bottom: 20px; }
+  #login-gate h2 { font-family: 'DM Serif Display', serif; font-size: 2rem; margin-bottom: 10px; }
+  #login-gate p { color: var(--ink2); margin-bottom: 28px; font-size: .95rem; line-height: 1.65; max-width: 380px; }
+
+  /* ── MAIN LAYOUT ── */
+  #app { display: none; }
+  .container { max-width: 860px; margin: 0 auto; padding: 48px 28px 80px; }
+
+  .page-title { font-family: 'DM Serif Display', serif; font-size: 2.2rem; margin-bottom: 6px; }
+  .page-sub { color: var(--ink2); margin-bottom: 40px; font-size: .95rem; }
+
+  /* ── FORM CARD ── */
+  .form-card {
+    background: white;
+    border-radius: 20px;
+    border: 1.5px solid var(--cream3);
+    padding: 36px;
+    margin-bottom: 28px;
+    box-shadow: 0 4px 24px var(--shadow);
+  }
+  .form-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.25rem; margin-bottom: 22px; color: var(--ink); display: flex; align-items: center; gap: 10px; }
+  .form-card h3 .badge { width: 28px; height: 28px; background: var(--cream2); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-family: 'DM Sans', sans-serif; font-size: .75rem; font-weight: 700; color: var(--ink2); }
+
+  label { display: block; font-size: .83rem; font-weight: 500; color: var(--ink2); margin-bottom: 7px; letter-spacing: .03em; text-transform: uppercase; }
+  input[type=text], textarea {
+    width: 100%; padding: 12px 16px;
+    border: 1.5px solid var(--cream3); border-radius: 10px;
+    background: var(--cream); color: var(--ink);
+    font-family: 'DM Sans', sans-serif; font-size: .95rem;
+    outline: none; transition: border-color .2s, box-shadow .2s;
+    resize: vertical;
+  }
+  input[type=text]:focus, textarea:focus { border-color: var(--warm); box-shadow: 0 0 0 3px rgba(201,185,154,.2); }
+  .field { margin-bottom: 20px; }
+
+  /* ── DROP ZONE ── */
+  .drop-zone {
+    border: 2px dashed var(--cream3);
+    border-radius: 16px;
+    padding: 40px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+    background: var(--cream);
+    position: relative;
+  }
+  .drop-zone:hover, .drop-zone.drag-over { border-color: var(--accent); background: #fdf5f0; }
+  .drop-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+  .drop-icon { font-size: 2.4rem; margin-bottom: 12px; }
+  .drop-zone p { color: var(--ink2); font-size: .9rem; line-height: 1.5; }
+  .drop-zone strong { color: var(--accent); }
+  .drop-hint { font-size: .78rem; color: var(--ink3); margin-top: 6px; }
+
+  /* ── PREVIEW GRID ── */
+  .preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .preview-item {
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--cream2);
+    box-shadow: 0 3px 12px var(--shadow);
+    animation: popIn .3s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes popIn { from { opacity:0; transform:scale(.8); } to { opacity:1; transform:scale(1); } }
+
+  /* Polaroid frame for preview */
+  .preview-polaroid {
+    background: white;
+    padding: 8px 8px 28px;
+    box-shadow: 0 4px 16px var(--shadow);
+    border-radius: 2px;
+  }
+  .preview-polaroid img {
+    width: 100%;
+    /* preserve original aspect ratio */
+    height: auto;
+    max-height: 180px;
+    object-fit: cover;
+    display: block;
+    border-radius: 1px;
+  }
+  .preview-polaroid .p-caption {
+    padding: 6px 2px 0;
+    text-align: center;
+    font-family: 'Caveat', cursive;
+    font-size: .85rem;
+    color: var(--ink3);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  .preview-remove {
+    position: absolute; top: 6px; right: 6px;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: rgba(58,46,34,.7); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-size: .8rem;
+    transition: background .15s;
+    z-index: 2;
+  }
+  .preview-remove:hover { background: var(--red); }
+
+  .preview-badge {
+    position: absolute; bottom: 34px; left: 6px;
+    background: rgba(0,0,0,.65); color: #c8ff00;
+    font-size: .62rem; padding: 2px 6px; border-radius: 4px;
+    pointer-events: none; z-index: 2;
+  }
+  .preview-badge.done { color: #6dff9c; }
+
+  /* ── PHOTO COUNT ── */
+  .photo-count-bar {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 16px; padding: 10px 14px;
+    background: var(--cream2); border-radius: 10px;
+    font-size: .83rem; color: var(--ink2);
+  }
+  .photo-count-bar strong { color: var(--ink); }
+
+  /* ── LIVE POLAROID PREVIEW ── */
+  .polaroid-preview-wrap { display: none; margin-top: 32px; }
+  .polaroid-preview-wrap.visible { display: block; }
+  .polaroid-preview-label { font-size: .8rem; font-weight: 500; color: var(--ink3); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 14px; }
+
+  .polaroid-live {
+    background: white;
+    padding: 14px 14px 48px;
+    box-shadow: 0 8px 32px var(--shadow2);
+    border-radius: 3px;
+    max-width: 320px;
+    margin: 0 auto;
+    transform: rotate(-1.5deg);
+    position: relative;
+  }
+  .polaroid-live::before {
+    content: '';
+    position: absolute;
+    top: -12px; left: 50%; transform: translateX(-50%);
+    width: 64px; height: 22px;
+    background: rgba(201,185,154,.5);
+    border-radius: 2px;
+  }
+  .polaroid-live-photos { display: grid; gap: 3px; }
+  .polaroid-live-photos img { width: 100%; height: auto; max-height: 200px; object-fit: cover; display: block; border-radius: 1px; }
+  .polaroid-live-photos.multi { grid-template-columns: 1fr 1fr; }
+  .polaroid-live-photos.multi img { max-height: 120px; }
+  .polaroid-live-caption {
+    padding: 12px 4px 0;
+    font-family: 'Caveat', cursive;
+    font-size: 1.3rem; font-weight: 600;
+    color: var(--ink); text-align: center;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .polaroid-live-date { text-align: center; font-size: .72rem; color: var(--ink3); margin-top: 3px; }
+
+  /* ── STATUS BAR ── */
+  .status-bar {
+    display: none;
+    padding: 14px 18px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-size: .9rem;
+    line-height: 1.55;
+    border: 1.5px solid;
+  }
+  .status-bar.loading { background: var(--cream2); border-color: var(--cream3); color: var(--ink2); }
+  .status-bar.success { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+  .status-bar.error { background: var(--red-bg); border-color: var(--red); color: var(--red); }
+  .status-bar a { color: inherit; font-weight: 600; }
+
+  /* Progress bar */
+  .progress-wrap { margin-top: 10px; background: var(--cream3); border-radius: 100px; height: 6px; overflow: hidden; display: none; }
+  .progress-bar { height: 100%; background: var(--accent); border-radius: 100px; transition: width .3s; width: 0%; }
+
+  /* ── ACTIONS ── */
+  .actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* ── TOAST ── */
+  .toast { position: fixed; bottom: 28px; right: 28px; background: var(--ink); color: var(--cream); padding: 12px 20px; border-radius: 10px; font-size: .88rem; font-weight: 500; box-shadow: 0 8px 24px var(--shadow2); z-index: 9999; transform: translateY(80px); opacity: 0; transition: all .3s cubic-bezier(.34,1.56,.64,1); }
+  .toast.show { transform: translateY(0); opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <line x1="3" y1="17" x2="21" y2="17"/>
+        <circle cx="8" cy="10" r="2"/>
+      </svg>
+    </div>
+    Pola<span>roid</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="btn btn-outline">← Galeri Utama</a>
+    <div id="auth-area"></div>
+  </div>
+</header>
+
+<!-- ── LOGIN GATE ── -->
+<div id="login-gate">
+  <div class="gate-icon">🔒</div>
+  <h2>Login Dulu, Yuk!</h2>
+  <p>Untuk membuat galeri polaroid, kamu perlu masuk dengan akun Google-mu terlebih dahulu.</p>
+  <a href="#" id="btn-login" class="btn btn-google">
+    <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+    Masuk dengan Google
+  </a>
+</div>
+
+<!-- ── MAIN APP ── -->
+<div id="app">
+  <div class="container">
+    <h1 class="page-title">Buat Galeri Baru ✦</h1>
+    <p class="page-sub">Upload foto-fotomu, isi detail, dan bagikan momen polaroidmu ke dunia.</p>
+
+    <!-- Info -->
+    <div class="form-card">
+      <h3><span class="badge">1</span> Info Galeri</h3>
+
+      <div class="field">
+        <label>Judul Galeri *</label>
+        <input type="text" id="f-title" placeholder="cth: Liburan Bali 2025 🌊" maxlength="80">
+      </div>
+      <div class="field">
+        <label>Deskripsi (opsional)</label>
+        <textarea id="f-desc" rows="3" placeholder="Ceritakan sesuatu tentang momen ini…"></textarea>
+      </div>
+    </div>
+
+    <!-- Photos -->
+    <div class="form-card">
+      <h3><span class="badge">2</span> Foto-foto</h3>
+
+      <div class="drop-zone" id="drop-zone">
+        <input type="file" id="file-input" multiple accept="image/*">
+        <div class="drop-icon">🖼️</div>
+        <p><strong>Klik atau seret foto ke sini</strong><br>Bisa pilih banyak foto sekaligus</p>
+        <p class="drop-hint">JPG, PNG, WEBP, HEIC · Maks 20 foto</p>
+      </div>
+
+      <div class="preview-grid" id="preview-grid"></div>
+
+      <div class="photo-count-bar" id="count-bar" style="display:none">
+        <span><strong id="count-num">0</strong> foto dipilih</span>
+        <span id="compress-status" style="color:var(--ink3)">—</span>
+      </div>
+
+      <!-- Live polaroid preview -->
+      <div class="polaroid-preview-wrap" id="live-preview-wrap">
+        <div class="polaroid-preview-label">✦ Pratinjau Polaroid</div>
+        <div class="polaroid-live" id="polaroid-live">
+          <div class="polaroid-live-photos" id="live-photos"></div>
+          <div class="polaroid-live-caption" id="live-caption">Judul Galeri</div>
+          <div class="polaroid-live-date" id="live-date"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save -->
+    <div id="status-bar" class="status-bar"></div>
+    <div class="progress-wrap" id="progress-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="btn-save">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Simpan Galeri
+      </button>
+      <button class="btn btn-outline" id="btn-reset">Reset</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ───────────────────────────────────────────────────────────────────
+const WORKER_URL = 'https://YOUR_WORKER.YOUR_SUBDOMAIN.workers.dev'; // Ganti URL worker
+const SUPABASE_URL = 'https://cxtmilenczpjetlnqiwo.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4dG1pbGVuY3pwamV0bG5xaXdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMTEzMTUsImV4cCI6MjA5Mjc4NzMxNX0.OpTsBgQACFzE4ipIuOiTFaf-ldscH_hnTDQdY0U52AY';
+const STORAGE_BUCKET = 'product-images';
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let currentUser = null;
+let fileBlobs = []; // { file, blob, name, previewUrl, compressed }
+const MAX_PHOTOS = 20;
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+(async () => {
+  await checkAuth();
+  initDropZone();
+  initLivePreview();
+  document.getElementById('btn-save').addEventListener('click', saveGallery);
+  document.getElementById('btn-reset').addEventListener('click', resetAll);
+  document.getElementById('btn-login').href = `${WORKER_URL}/auth/google`;
+})();
+
+// ── AUTH ─────────────────────────────────────────────────────────────────────
+async function checkAuth() {
+  try {
+    const res = await fetch(`${WORKER_URL}/auth/me`, { credentials: 'include' });
+    const { user } = await res.json();
+    currentUser = user;
+  } catch {}
+
+  if (currentUser) {
+    document.getElementById('login-gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('auth-area').innerHTML = `
+      <div class="user-pill">
+        <img src="${currentUser.picture}" alt="">
+        <span>${currentUser.name || currentUser.email}</span>
+      </div>
+    `;
+  }
+}
+
+// ── IMAGE COMPRESSION ────────────────────────────────────────────────────────
+function compressToWebP(file, maxW = 1200, maxH = 1200, quality = 0.82) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      let w = img.naturalWidth, h = img.naturalHeight;
+      if (w > maxW || h > maxH) {
+        const ratio = Math.min(maxW / w, maxH / h);
+        w = Math.round(w * ratio); h = Math.round(h * ratio);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      canvas.toBlob(blob => blob ? resolve({ blob, w, h }) : reject(new Error('toBlob failed')), 'image/webp', quality);
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('load failed')); };
+    img.src = url;
+  });
+}
+
+// ── DROP ZONE ────────────────────────────────────────────────────────────────
+function initDropZone() {
+  const dz = document.getElementById('drop-zone');
+  const input = document.getElementById('file-input');
+
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('drag-over'); });
+  dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+  dz.addEventListener('drop', e => {
+    e.preventDefault(); dz.classList.remove('drag-over');
+    handleFiles(Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/')));
+  });
+  input.addEventListener('change', () => {
+    handleFiles(Array.from(input.files));
+    input.value = ''; // reset so same files can be re-selected
+  });
+}
+
+function handleFiles(newFiles) {
+  const remaining = MAX_PHOTOS - fileBlobs.length;
+  const toAdd = newFiles.slice(0, remaining);
+  if (!toAdd.length) { showToast(`Maksimal ${MAX_PHOTOS} foto!`); return; }
+
+  toAdd.forEach(file => {
+    const id = Date.now() + Math.random();
+    const previewUrl = URL.createObjectURL(file);
+    const entry = { id, file, blob: null, name: file.name, previewUrl, compressed: false };
+    fileBlobs.push(entry);
+    addPreviewItem(entry);
+    compressEntry(entry);
+  });
+
+  updateCountBar();
+  updateLivePreview();
+}
+
+function addPreviewItem(entry) {
+  const grid = document.getElementById('preview-grid');
+  const div = document.createElement('div');
+  div.className = 'preview-item';
+  div.id = `prev-${entry.id}`;
+  div.innerHTML = `
+    <div class="preview-polaroid">
+      <img src="${entry.previewUrl}" alt="" id="pimg-${entry.id}">
+      <div class="p-caption">${escHtml(entry.name)}</div>
+    </div>
+    <button class="preview-remove" onclick="removePhoto('${entry.id}')">✕</button>
+    <div class="preview-badge" id="badge-${entry.id}">⏳ Compressing…</div>
+  `;
+  grid.appendChild(div);
+}
+
+async function compressEntry(entry) {
+  try {
+    const { blob } = await compressToWebP(entry.file);
+    entry.blob = blob;
+    entry.compressed = true;
+    const saved = Math.round((1 - blob.size / entry.file.size) * 100);
+    const newKB = Math.round(blob.size / 1024);
+    const badge = document.getElementById(`badge-${entry.id}`);
+    if (badge) { badge.textContent = `${newKB}KB (-${saved}%) WebP`; badge.classList.add('done'); }
+  } catch {
+    entry.blob = entry.file; // fallback
+    entry.compressed = false;
+    const badge = document.getElementById(`badge-${entry.id}`);
+    if (badge) { badge.textContent = 'Original (no WebP)'; badge.style.color = '#ff9f6b'; }
+  }
+  updateCompressStatus();
+}
+
+function updateCompressStatus() {
+  const done = fileBlobs.filter(e => e.blob !== null).length;
+  const total = fileBlobs.length;
+  const el = document.getElementById('compress-status');
+  if (el) el.textContent = done === total ? `✓ Semua terkompresi` : `⏳ ${done}/${total} terkompresi`;
+}
+
+function removePhoto(id) {
+  const idx = fileBlobs.findIndex(e => String(e.id) === String(id));
+  if (idx !== -1) {
+    URL.revokeObjectURL(fileBlobs[idx].previewUrl);
+    fileBlobs.splice(idx, 1);
+  }
+  const el = document.getElementById(`prev-${id}`);
+  if (el) el.remove();
+  updateCountBar();
+  updateLivePreview();
+  updateCompressStatus();
+}
+
+function updateCountBar() {
+  const bar = document.getElementById('count-bar');
+  bar.style.display = fileBlobs.length ? 'flex' : 'none';
+  document.getElementById('count-num').textContent = fileBlobs.length;
+}
+
+// ── LIVE POLAROID PREVIEW ────────────────────────────────────────────────────
+function initLivePreview() {
+  document.getElementById('f-title').addEventListener('input', updateLivePreview);
+}
+
+function updateLivePreview() {
+  const wrap = document.getElementById('live-preview-wrap');
+  const title = document.getElementById('f-title').value || 'Judul Galeri';
+  const photos = fileBlobs.slice(0, 4);
+
+  if (!fileBlobs.length) { wrap.classList.remove('visible'); return; }
+  wrap.classList.add('visible');
+
+  const livePhotos = document.getElementById('live-photos');
+  const isMulti = photos.length > 1;
+  livePhotos.className = `polaroid-live-photos${isMulti ? ' multi' : ''}`;
+  livePhotos.innerHTML = photos.slice(0, isMulti ? 4 : 1).map(e => `
+    <img src="${e.previewUrl}" alt="">
+  `).join('');
+
+  document.getElementById('live-caption').textContent = title;
+  document.getElementById('live-date').textContent = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+}
+
+// ── SAVE ─────────────────────────────────────────────────────────────────────
+async function saveGallery() {
+  const title = document.getElementById('f-title').value.trim();
+  const desc = document.getElementById('f-desc').value.trim();
+
+  if (!title) { showStatus('error', '✕ Judul galeri wajib diisi!'); return; }
+  if (!fileBlobs.length) { showStatus('error', '✕ Tambahkan setidaknya 1 foto!'); return; }
+
+  // Wait for pending compressions
+  const pending = fileBlobs.filter(e => e.blob === null);
+  if (pending.length) {
+    showStatus('loading', `⏳ Menunggu kompresi ${pending.length} foto selesai…`);
+    await Promise.all(pending.map(e => new Promise(res => {
+      const check = setInterval(() => { if (e.blob !== null) { clearInterval(check); res(); } }, 300);
+    })));
+  }
+
+  const btn = document.getElementById('btn-save');
+  btn.disabled = true;
+
+  const galleryId = `${currentUser.email.replace(/[^a-z0-9]/gi, '_')}_${Date.now()}`;
+  const photoUrls = [];
+
+  try {
+    // Step 1: Upload each photo
+    setProgress(0);
+    document.getElementById('progress-wrap').style.display = 'block';
+
+    for (let i = 0; i < fileBlobs.length; i++) {
+      const entry = fileBlobs[i];
+      const ext = entry.compressed ? 'webp' : (entry.name.split('.').pop() || 'jpg').toLowerCase();
+      const path = `${galleryId}/${i}.${ext}`;
+
+      showStatus('loading', `⏳ Mengupload foto ${i + 1} dari ${fileBlobs.length}…`);
+      setProgress(Math.round((i / fileBlobs.length) * 70));
+
+      // Upload via Worker (authenticated)
+      const form = new FormData();
+      form.append('file', entry.blob instanceof Blob ? entry.blob : entry.file, `${i}.${ext}`);
+      form.append('path', path);
+
+      const res = await fetch(`${WORKER_URL}/api/upload`, {
+        method: 'POST',
+        credentials: 'include',
+        body: form,
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `Upload foto ${i + 1} gagal`);
+      }
+
+      const { url } = await res.json();
+      photoUrls.push(url);
+    }
+
+    // Step 2: Save gallery record
+    setProgress(80);
+    showStatus('loading', '⏳ Menyimpan data galeri…');
+
+    const saveRes = await fetch(`${WORKER_URL}/api/galleries`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, description: desc || null, photo_urls: photoUrls }),
+    });
+
+    if (!saveRes.ok) {
+      const err = await saveRes.json().catch(() => ({}));
+      throw new Error(err.error || 'Gagal menyimpan galeri');
+    }
+
+    const gallery = await saveRes.json();
+    setProgress(100);
+
+    showStatus('success', `✓ <strong>Berhasil!</strong> Galeri "<strong>${escHtml(title)}</strong>" dengan ${photoUrls.length} foto telah disimpan. <a href="index.html">Lihat di galeri utama →</a>`);
+    showToast('Galeri berhasil dibuat! 🎉');
+
+  } catch (e) {
+    showStatus('error', `✕ <strong>Gagal:</strong> ${e.message || 'Terjadi kesalahan'}`);
+    document.getElementById('progress-wrap').style.display = 'none';
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function setProgress(pct) {
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+function showStatus(type, msg) {
+  const el = document.getElementById('status-bar');
+  el.style.display = 'block';
+  el.className = `status-bar ${type}`;
+  el.innerHTML = msg;
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function resetAll() {
+  fileBlobs.forEach(e => URL.revokeObjectURL(e.previewUrl));
+  fileBlobs = [];
+  document.getElementById('preview-grid').innerHTML = '';
+  document.getElementById('f-title').value = '';
+  document.getElementById('f-desc').value = '';
+  document.getElementById('count-bar').style.display = 'none';
+  document.getElementById('status-bar').style.display = 'none';
+  document.getElementById('progress-wrap').style.display = 'none';
+  document.getElementById('live-preview-wrap').classList.remove('visible');
+}
+
+// ── UTILS ────────────────────────────────────────────────────────────────────
+function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>

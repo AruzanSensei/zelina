@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polaroid — Galeri Foto Bersama</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf6f0;
+    --cream2: #f3ede3;
+    --cream3: #ede5d8;
+    --brown: #7a6652;
+    --brown-dark: #4a3728;
+    --sage: #8fa888;
+    --rose: #d4907a;
+    --dust: #c9bfb0;
+    --ink: #2d2420;
+    --ink2: #6b5c50;
+    --white: #fffef9;
+    --shadow: rgba(74, 55, 40, 0.12);
+    --shadow2: rgba(74, 55, 40, 0.22);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Background Texture ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(212,144,122,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(143,168,136,0.08) 0%, transparent 50%),
+      radial-gradient(circle at 50% 100%, rgba(201,191,176,0.15) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(250,246,240,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--cream3);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.5rem;
+    color: var(--brown-dark);
+    letter-spacing: -0.02em;
+  }
+
+  .nav-logo span {
+    color: var(--rose);
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .nav-search {
+    display: flex;
+    align-items: center;
+    background: var(--cream2);
+    border: 1.5px solid var(--cream3);
+    border-radius: 99px;
+    padding: 0.4rem 1rem;
+    gap: 0.5rem;
+    transition: border-color 0.2s;
+  }
+
+  .nav-search:focus-within {
+    border-color: var(--brown);
+  }
+
+  .nav-search input {
+    border: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: var(--ink);
+    outline: none;
+    width: 180px;
+  }
+
+  .nav-search input::placeholder { color: var(--ink2); }
+
+  .nav-search svg { opacity: 0.5; flex-shrink: 0; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.5rem 1.2rem;
+    border-radius: 99px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: var(--brown-dark);
+    color: var(--white);
+  }
+  .btn-primary:hover { background: var(--brown); transform: translateY(-1px); }
+
+  .btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--brown);
+    color: var(--brown);
+  }
+  .btn-outline:hover { background: var(--cream2); }
+
+  .btn-google {
+    background: var(--white);
+    border: 1.5px solid var(--cream3);
+    color: var(--ink);
+    box-shadow: 0 1px 4px var(--shadow);
+  }
+  .btn-google:hover { box-shadow: 0 3px 10px var(--shadow2); transform: translateY(-1px); }
+
+  /* ── USER AVATAR ── */
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid var(--rose);
+    object-fit: cover;
+  }
+
+  .user-name {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--brown-dark);
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .user-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background: var(--white);
+    border: 1px solid var(--cream3);
+    border-radius: 12px;
+    padding: 0.5rem;
+    box-shadow: 0 8px 24px var(--shadow2);
+    min-width: 160px;
+    display: none;
+    z-index: 200;
+  }
+
+  .user-dropdown.open { display: block; }
+
+  .dropdown-item {
+    display: block;
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: var(--ink);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .dropdown-item:hover { background: var(--cream2); }
+  .dropdown-item.danger { color: var(--rose); }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 4rem 2rem 3rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    color: var(--brown-dark);
+    line-height: 1.15;
+    margin-bottom: 0.75rem;
+  }
+
+  .hero h1 em {
+    color: var(--rose);
+    font-style: italic;
+  }
+
+  .hero p {
+    color: var(--ink2);
+    font-size: 1rem;
+    font-weight: 300;
+    max-width: 480px;
+    margin: 0 auto 1.5rem;
+    line-height: 1.7;
+  }
+
+  /* ── FILTER BAR ── */
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0 2rem 2rem;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+
+  .filter-chip {
+    padding: 0.4rem 1rem;
+    border-radius: 99px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: 1.5px solid var(--cream3);
+    background: var(--cream2);
+    color: var(--ink2);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .filter-chip.active, .filter-chip:hover {
+    background: var(--brown-dark);
+    border-color: var(--brown-dark);
+    color: var(--white);
+  }
+
+  /* ── MASONRY GALLERY ── */
+  .gallery-wrap {
+    position: relative;
+    z-index: 1;
+    padding: 0 2rem 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .masonry {
+    columns: 4;
+    column-gap: 1.5rem;
+  }
+
+  @media (max-width: 1100px) { .masonry { columns: 3; } }
+  @media (max-width: 760px) { .masonry { columns: 2; column-gap: 1rem; } }
+  @media (max-width: 480px) { .masonry { columns: 1; } }
+
+  /* ── POLAROID CARD ── */
+  .polaroid-wrap {
+    break-inside: avoid;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .polaroid {
+    background: var(--white);
+    padding: 10px 10px 44px;
+    box-shadow:
+      0 2px 8px var(--shadow),
+      0 8px 24px rgba(74,55,40,0.08),
+      1px 1px 0 rgba(255,255,255,0.9) inset;
+    border-radius: 2px;
+    position: relative;
+    transform: rotate(var(--rot, 0deg));
+    transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.25s;
+    cursor: pointer;
+  }
+
+  .polaroid:hover {
+    transform: rotate(0deg) scale(1.03) translateY(-4px);
+    box-shadow: 0 12px 40px var(--shadow2), 0 2px 8px var(--shadow);
+    z-index: 10;
+    position: relative;
+  }
+
+  .polaroid img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+    background: var(--cream2);
+  }
+
+  .polaroid-caption {
+    padding: 8px 4px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .polaroid-title {
+    font-family: 'Caveat', cursive;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--brown-dark);
+    line-height: 1.3;
+  }
+
+  .polaroid-meta {
+    font-size: 0.68rem;
+    color: var(--ink2);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .polaroid-meta img {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  /* ── MULTIPLE IMAGES BADGE ── */
+  .polaroid-count {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: rgba(45,36,32,0.7);
+    color: #fff;
+    font-size: 0.65rem;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 99px;
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty {
+    text-align: center;
+    padding: 5rem 2rem;
+    color: var(--ink2);
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+
+  .empty h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: var(--brown);
+  }
+
+  /* ── LOADING SKELETON ── */
+  .skeleton-wrap {
+    break-inside: avoid;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .skeleton-card {
+    background: var(--white);
+    padding: 10px 10px 44px;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+
+  .skeleton-img {
+    background: linear-gradient(90deg, var(--cream2) 25%, var(--cream3) 50%, var(--cream2) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 1px;
+  }
+
+  .skeleton-line {
+    height: 10px;
+    background: linear-gradient(90deg, var(--cream2) 25%, var(--cream3) 50%, var(--cream2) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+    margin-top: 8px;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* ── LIGHTBOX ── */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(45,36,32,0.85);
+    backdrop-filter: blur(8px);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .lightbox.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .lightbox-inner {
+    display: flex;
+    gap: 2rem;
+    max-width: 900px;
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .lightbox-polaroid {
+    background: var(--white);
+    padding: 12px 12px 60px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    border-radius: 2px;
+    flex: 0 0 auto;
+    max-width: 420px;
+    width: 100%;
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  .lightbox.open .lightbox-polaroid { transform: scale(1); }
+
+  .lightbox-polaroid img {
+    width: 100%;
+    display: block;
+    border-radius: 1px;
+  }
+
+  .lightbox-caption {
+    font-family: 'Caveat', cursive;
+    font-size: 1.3rem;
+    color: var(--brown-dark);
+    padding: 10px 4px 0;
+  }
+
+  .lightbox-info {
+    flex: 1;
+    color: var(--white);
+  }
+
+  .lightbox-info h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .lightbox-info p { font-size: 0.9rem; opacity: 0.7; margin-bottom: 1.5rem; }
+
+  .lightbox-close {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+  }
+  .lightbox-close:hover { background: rgba(255,255,255,0.25); }
+
+  .thumb-strip {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+
+  .thumb {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border: 2px solid transparent;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: border-color 0.2s, opacity 0.2s;
+    opacity: 0.6;
+  }
+
+  .thumb.active, .thumb:hover { border-color: var(--rose); opacity: 1; }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--brown-dark);
+    color: var(--white);
+    padding: 0.7rem 1.5rem;
+    border-radius: 99px;
+    font-size: 0.85rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 9999;
+    white-space: nowrap;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ── SEARCH RESULTS HEADER ── */
+  .results-header {
+    padding: 0 2rem 1rem;
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .results-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--brown);
+  }
+
+  .results-title strong { color: var(--brown-dark); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">polar<span>oid</span></div>
+  <div class="nav-search">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input type="text" id="search-input" placeholder="Cari email pengguna..." autocomplete="off">
+  </div>
+  <div class="nav-right">
+    <div id="nav-auth">
+      <button class="btn btn-google" onclick="loginWithGoogle()">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Masuk dengan Google
+      </button>
+    </div>
+    <div id="nav-user" style="display:none">
+      <div class="user-info" onclick="toggleDropdown()">
+        <img class="user-avatar" id="user-avatar" src="" alt="">
+        <span class="user-name" id="user-name"></span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+        <div class="user-dropdown" id="user-dropdown">
+          <a href="create.html" class="dropdown-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;margin-right:6px"><path d="M12 5v14M5 12h14"/></svg>
+            Buat Koleksi Baru
+          </a>
+          <div class="dropdown-item" onclick="viewMyGallery()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:inline;margin-right:6px"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            Galeri Saya
+          </div>
+          <hr style="border:none;border-top:1px solid var(--cream3);margin:4px 0">
+          <div class="dropdown-item danger" onclick="logout()">Keluar</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <h1>Momen yang <em>tersimpan</em><br>untuk selamanya</h1>
+  <p>Bagikan kenangan indahmu dalam bingkai polaroid. Temukan cerita dari orang-orang di sekitarmu.</p>
+  <a href="create.html" class="btn btn-primary" id="hero-cta">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+    Mulai Berbagi
+  </a>
+</div>
+
+<!-- FILTER -->
+<div class="filter-bar">
+  <button class="filter-chip active" onclick="setFilter('all', this)">Semua</button>
+  <button class="filter-chip" onclick="setFilter('today', this)">Hari Ini</button>
+  <button class="filter-chip" onclick="setFilter('week', this)">Minggu Ini</button>
+  <button class="filter-chip" onclick="setFilter('month', this)">Bulan Ini</button>
+</div>
+
+<!-- RESULTS HEADER -->
+<div class="results-header" id="results-header" style="display:none">
+  <p class="results-title" id="results-title"></p>
+</div>
+
+<!-- GALLERY -->
+<div class="gallery-wrap">
+  <div class="masonry" id="gallery"></div>
+  <div class="empty" id="empty-state" style="display:none">
+    <div class="empty-icon">🎞️</div>
+    <h3>Belum ada foto</h3>
+    <p>Jadilah yang pertama berbagi momen!</p>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <div class="lightbox-inner">
+    <div class="lightbox-polaroid">
+      <img id="lb-img" src="" alt="">
+      <div class="lightbox-caption" id="lb-caption"></div>
+    </div>
+    <div class="lightbox-info">
+      <h2 id="lb-title"></h2>
+      <p id="lb-owner"></p>
+      <div class="thumb-strip" id="lb-thumbs"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ─────────────────────────────────────────────────────────
+const WORKER_URL = 'https://YOUR_WORKER.YOUR_SUBDOMAIN.workers.dev'; // ← ganti dengan URL Cloudflare Worker kamu
+const SUPABASE_URL = 'https://cxtmilenczpjetlnqiwo.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN4dG1pbGVuY3pwamV0bG5xaXdvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMTEzMTUsImV4cCI6MjA5Mjc4NzMxNX0.OpTsBgQACFzE4ipIuOiTFaf-ldscH_hnTDQdY0U52AY';
+
+let currentUser = null;
+let currentFilter = 'all';
+let lbUrls = [], lbIdx = 0;
+
+// ── AUTH ─────────────────────────────────────────────────────────
+function loginWithGoogle() {
+  // Redirect ke Cloudflare Worker yang handle OAuth
+  window.location.href = WORKER_URL + '/auth/google?redirect=' + encodeURIComponent(window.location.href);
+}
+
+function logout() {
+  localStorage.removeItem('polaroid_session');
+  currentUser = null;
+  document.getElementById('nav-auth').style.display = '';
+  document.getElementById('nav-user').style.display = 'none';
+  showToast('Berhasil keluar 👋');
+  window.location.reload();
+}
+
+function toggleDropdown() {
+  document.getElementById('user-dropdown').classList.toggle('open');
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.user-info')) {
+    document.getElementById('user-dropdown')?.classList.remove('open');
+  }
+});
+
+function viewMyGallery() {
+  if (!currentUser) return;
+  document.getElementById('search-input').value = currentUser.email;
+  searchByEmail(currentUser.email);
+}
+
+// Cek session dari localStorage atau URL callback
+async function initAuth() {
+  // Cek URL param dari OAuth callback
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('session_token');
+  if (token) {
+    localStorage.setItem('polaroid_session', token);
+    window.history.replaceState({}, '', window.location.pathname);
+  }
+
+  const session = localStorage.getItem('polaroid_session');
+  if (!session) return;
+
+  try {
+    const res = await fetch(WORKER_URL + '/auth/me', {
+      headers: { 'Authorization': 'Bearer ' + session }
+    });
+    if (!res.ok) throw new Error('Invalid session');
+    currentUser = await res.json();
+    showUserNav(currentUser);
+  } catch {
+    localStorage.removeItem('polaroid_session');
+  }
+}
+
+function showUserNav(user) {
+  document.getElementById('nav-auth').style.display = 'none';
+  document.getElementById('nav-user').style.display = '';
+  document.getElementById('user-avatar').src = user.avatar_url || '';
+  document.getElementById('user-name').textContent = user.name || user.email;
+}
+
+// ── SEARCH ─────────────────────────────────────────────────────────
+let searchTimeout;
+document.getElementById('search-input').addEventListener('input', (e) => {
+  clearTimeout(searchTimeout);
+  const q = e.target.value.trim();
+  if (!q) {
+    document.getElementById('results-header').style.display = 'none';
+    loadGallery();
+    return;
+  }
+  searchTimeout = setTimeout(() => searchByEmail(q), 400);
+});
+
+async function searchByEmail(email) {
+  document.getElementById('results-header').style.display = 'block';
+  document.getElementById('results-title').innerHTML = `Menampilkan foto milik <strong>${email}</strong>`;
+  loadGallery({ email });
+}
+
+// ── GALLERY ─────────────────────────────────────────────────────────
+let currentPage = 0;
+const PAGE_SIZE = 20;
+
+async function loadGallery(filters = {}) {
+  const gallery = document.getElementById('gallery');
+  gallery.innerHTML = '';
+  showSkeletons(gallery, 8);
+
+  try {
+    let url = SUPABASE_URL + '/rest/v1/collections?select=*,users(name,email,avatar_url)&order=created_at.desc&limit=' + PAGE_SIZE;
+
+    if (filters.email) {
+      url += '&users.email=eq.' + encodeURIComponent(filters.email);
+      // Use join filter
+      url = SUPABASE_URL + '/rest/v1/collections?select=*,users!inner(name,email,avatar_url)&users.email=eq.' + encodeURIComponent(filters.email) + '&order=created_at.desc&limit=' + PAGE_SIZE;
+    }
+
+    if (currentFilter === 'today') {
+      const today = new Date().toISOString().split('T')[0];
+      url += '&created_at=gte.' + today + 'T00:00:00';
+    } else if (currentFilter === 'week') {
+      const week = new Date(Date.now() - 7*24*60*60*1000).toISOString();
+      url += '&created_at=gte.' + week;
+    } else if (currentFilter === 'month') {
+      const month = new Date(Date.now() - 30*24*60*60*1000).toISOString();
+      url += '&created_at=gte.' + month;
+    }
+
+    const res = await fetch(url, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY,
+      }
+    });
+
+    const data = await res.json();
+    gallery.innerHTML = '';
+
+    if (!data || data.length === 0) {
+      document.getElementById('empty-state').style.display = 'block';
+      return;
+    }
+
+    document.getElementById('empty-state').style.display = 'none';
+
+    // Rotasi acak tapi konsisten per item
+    const rotations = [-2.5, -1.5, 0, 1.5, 2.5, -1, 1, -2, 2];
+    data.forEach((item, i) => {
+      const rot = rotations[i % rotations.length];
+      gallery.appendChild(buildPolaroid(item, rot));
+    });
+
+  } catch (err) {
+    gallery.innerHTML = '';
+    console.error(err);
+    showToast('Gagal memuat galeri 😕');
+  }
+}
+
+function showSkeletons(container, count) {
+  const heights = [200, 280, 180, 240, 300, 160, 220, 260];
+  for (let i = 0; i < count; i++) {
+    const h = heights[i % heights.length];
+    container.innerHTML += `
+      <div class="skeleton-wrap">
+        <div class="skeleton-card">
+          <div class="skeleton-img" style="height:${h}px"></div>
+          <div class="skeleton-line" style="width:70%;margin-top:10px"></div>
+          <div class="skeleton-line" style="width:40%"></div>
+        </div>
+      </div>`;
+  }
+}
+
+function buildPolaroid(item, rot) {
+  const urls = parseUrls(item.image_urls);
+  const firstUrl = urls[0] || '';
+  const count = urls.length;
+  const owner = item.users || {};
+
+  const wrap = document.createElement('div');
+  wrap.className = 'polaroid-wrap';
+
+  const dateStr = item.created_at
+    ? new Date(item.created_at).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' })
+    : '';
+
+  wrap.innerHTML = `
+    <div class="polaroid" style="--rot:${rot}deg" onclick="openLightbox(${JSON.stringify(item).replace(/"/g, '&quot;')})">
+      ${count > 1 ? `<div class="polaroid-count"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>${count} foto</div>` : ''}
+      <img src="${escHtml(firstUrl)}" alt="${escHtml(item.title || '')}" loading="lazy"
+           style="aspect-ratio: auto"
+           onload="this.style.aspectRatio='auto'"
+      >
+      <div class="polaroid-caption">
+        <div class="polaroid-title">${escHtml(item.title || 'Tanpa judul')}</div>
+        <div class="polaroid-meta">
+          ${owner.avatar_url ? `<img src="${escHtml(owner.avatar_url)}" alt="">` : ''}
+          <span>${escHtml(owner.name || owner.email || 'Anonim')}</span>
+          ${dateStr ? `<span>· ${dateStr}</span>` : ''}
+        </div>
+      </div>
+    </div>`;
+
+  return wrap;
+}
+
+function parseUrls(raw) {
+  if (!raw) return [];
+  if (Array.isArray(raw)) return raw.filter(Boolean);
+  // Stored as comma-separated or JSON array string
+  try { const p = JSON.parse(raw); if (Array.isArray(p)) return p.filter(Boolean); } catch {}
+  return raw.split(',').map(s => s.trim()).filter(Boolean);
+}
+
+function escHtml(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── LIGHTBOX ─────────────────────────────────────────────────────
+function openLightbox(item) {
+  lbUrls = parseUrls(item.image_urls);
+  lbIdx = 0;
+
+  document.getElementById('lb-title').textContent = item.title || 'Tanpa judul';
+  const owner = item.users || {};
+  const dateStr = item.created_at
+    ? new Date(item.created_at).toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' })
+    : '';
+  document.getElementById('lb-owner').textContent = `${owner.name || owner.email || 'Anonim'} · ${dateStr}`;
+  document.getElementById('lb-caption').textContent = item.caption || item.title || '';
+
+  renderLightboxImg(0);
+  renderThumbs();
+
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function renderLightboxImg(idx) {
+  lbIdx = idx;
+  document.getElementById('lb-img').src = lbUrls[idx] || '';
+  document.querySelectorAll('.thumb').forEach((t, i) => {
+    t.classList.toggle('active', i === idx);
+  });
+}
+
+function renderThumbs() {
+  const strip = document.getElementById('lb-thumbs');
+  strip.innerHTML = '';
+  if (lbUrls.length <= 1) return;
+  lbUrls.forEach((url, i) => {
+    const img = document.createElement('img');
+    img.src = url;
+    img.className = 'thumb' + (i === 0 ? ' active' : '');
+    img.onclick = () => renderLightboxImg(i);
+    strip.appendChild(img);
+  });
+}
+
+function closeLightbox(e) {
+  if (e && e.target !== document.getElementById('lightbox') && !e.target.classList.contains('lightbox-close')) return;
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', (e) => {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox({target: document.getElementById('lightbox')});
+  if (e.key === 'ArrowRight') renderLightboxImg((lbIdx + 1) % lbUrls.length);
+  if (e.key === 'ArrowLeft') renderLightboxImg((lbIdx - 1 + lbUrls.length) % lbUrls.length);
+});
+
+// ── FILTER ─────────────────────────────────────────────────────────
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('results-header').style.display = 'none';
+  document.getElementById('search-input').value = '';
+  loadGallery();
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+initAuth().then(() => loadGallery());
+</script>
+</body>
+</html>

@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polaroid — Gallery</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ── CSS Variables ─────────────────────────────── */
+    :root {
+      --cream: #f5f0e8;
+      --cream2: #ede6d6;
+      --cream3: #e4dbc8;
+      --paper: #faf7f2;
+      --shadow: #c9b99a;
+      --ink: #3d2f1e;
+      --ink2: #7a6550;
+      --accent: #c4694f;
+      --accent2: #e8a87c;
+      --green: #6b8f71;
+      --tape: rgba(255, 240, 180, 0.75);
+      --tape-border: rgba(200, 180, 100, 0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--cream);
+      background-image:
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9b99a' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    /* ── Header ──────────────────────────────────── */
+    header {
+      background: var(--paper);
+      border-bottom: 2px solid var(--cream3);
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(61, 47, 30, 0.08);
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+
+    .logo {
+      font-family: 'Caveat', cursive;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .logo::before {
+      content: '📷';
+      font-size: 1.4rem;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .search-wrap {
+      position: relative;
+    }
+
+    .search-wrap input {
+      background: var(--cream);
+      border: 1.5px solid var(--cream3);
+      border-radius: 24px;
+      padding: 7px 16px 7px 36px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      color: var(--ink);
+      width: 220px;
+      outline: none;
+      transition: border-color 0.2s, width 0.3s;
+    }
+
+    .search-wrap input:focus {
+      border-color: var(--accent2);
+      width: 280px;
+    }
+
+    .search-wrap input::placeholder {
+      color: var(--ink2);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--ink2);
+      font-size: 0.85rem;
+      pointer-events: none;
+    }
+
+    .search-results {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      background: var(--paper);
+      border: 1.5px solid var(--cream3);
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(61, 47, 30, 0.12);
+      overflow: hidden;
+      display: none;
+      z-index: 200;
+    }
+
+    .search-results.show {
+      display: block;
+    }
+
+    .search-result-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .search-result-item:hover {
+      background: var(--cream);
+    }
+
+    .search-result-item img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid var(--cream3);
+    }
+
+    .search-result-item .sr-name {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .search-result-item .sr-email {
+      font-size: 0.75rem;
+      color: var(--ink2);
+    }
+
+    .btn {
+      padding: 8px 20px;
+      border-radius: 24px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1.5px solid var(--cream3);
+      color: var(--ink);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--ink2);
+    }
+
+    /* User avatar pill */
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--cream);
+      border: 1.5px solid var(--cream3);
+      border-radius: 24px;
+      padding: 4px 14px 4px 4px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .user-pill:hover {
+      border-color: var(--ink2);
+    }
+
+    .user-pill img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .user-pill span {
+      font-size: 0.83rem;
+      font-weight: 500;
+    }
+
+    /* ── Hero ────────────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 3.5rem 2rem 1.5rem;
+    }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      color: var(--ink);
+      line-height: 1.15;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero h1 em {
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    .hero p {
+      font-size: 1rem;
+      color: var(--ink2);
+      max-width: 440px;
+      margin: 0 auto 1.5rem;
+      line-height: 1.6;
+    }
+
+    .viewing-banner {
+      display: none;
+      background: var(--tape);
+      border: 1px solid var(--tape-border);
+      border-radius: 8px;
+      padding: 8px 20px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.1rem;
+      color: var(--ink);
+      margin: 0 auto 1rem;
+      max-width: 400px;
+    }
+
+    .viewing-banner.show {
+      display: block;
+    }
+
+    /* ── Gallery grid ────────────────────────────── */
+    .gallery-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1rem 2rem 4rem;
+    }
+
+    /* Masonry-style grid */
+    .gallery-grid {
+      columns: 4 220px;
+      column-gap: 1.5rem;
+    }
+
+    /* ── Polaroid card ─────────────────────────── */
+    .polaroid-card {
+      break-inside: avoid;
+      margin-bottom: 1.5rem;
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    /* tape strip top */
+    .polaroid-card::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-1deg);
+      width: 56px;
+      height: 20px;
+      background: var(--tape);
+      border: 1px solid var(--tape-border);
+      z-index: 2;
+      border-radius: 2px;
+    }
+
+    .polaroid-inner {
+      background: #fff;
+      padding: 10px 10px 18px;
+      box-shadow:
+        0 1px 3px rgba(61, 47, 30, 0.10),
+        0 6px 20px rgba(61, 47, 30, 0.12),
+        3px 4px 0px rgba(61, 47, 30, 0.04);
+      border: 1px solid rgba(200, 185, 155, 0.3);
+      position: relative;
+      transition: transform 0.25s cubic-bezier(.34, 1.56, .64, 1), box-shadow 0.25s;
+      cursor: pointer;
+    }
+
+    .polaroid-card:nth-child(3n+1) .polaroid-inner {
+      transform: rotate(-1.2deg);
+    }
+
+    .polaroid-card:nth-child(3n+2) .polaroid-inner {
+      transform: rotate(0.8deg);
+    }
+
+    .polaroid-card:nth-child(3n+3) .polaroid-inner {
+      transform: rotate(-0.4deg);
+    }
+
+    .polaroid-card:hover .polaroid-inner {
+      transform: rotate(0deg) translateY(-6px) scale(1.02) !important;
+      box-shadow: 0 16px 40px rgba(61, 47, 30, 0.18), 0 2px 6px rgba(61, 47, 30, 0.10);
+      z-index: 10;
+    }
+
+    /* image strip — aspect ratio preserved */
+    .polaroid-img-wrap {
+      width: 100%;
+      background: var(--cream);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .polaroid-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.3s;
+    }
+
+    .polaroid-img-count {
+      position: absolute;
+      bottom: 6px;
+      right: 6px;
+      background: rgba(0, 0, 0, 0.55);
+      color: #fff;
+      font-size: 0.65rem;
+      padding: 2px 7px;
+      border-radius: 10px;
+      font-weight: 500;
+    }
+
+    /* Caption area */
+    .polaroid-caption {
+      padding: 10px 4px 2px;
+      text-align: center;
+    }
+
+    .polaroid-caption .title {
+      font-family: 'Caveat', cursive;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .polaroid-caption .author {
+      font-size: 0.7rem;
+      color: var(--ink2);
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .polaroid-caption .author img {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    /* Loading skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, var(--cream2) 25%, var(--cream3) 50%, var(--cream2) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    .polaroid-skeleton .sk-img {
+      width: 100%;
+      padding-top: 80%;
+    }
+
+    .polaroid-skeleton .sk-line {
+      height: 12px;
+      margin: 8px auto 4px;
+      width: 70%;
+    }
+
+    .polaroid-skeleton .sk-line2 {
+      height: 10px;
+      margin: 4px auto;
+      width: 45%;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--ink2);
+    }
+
+    .empty-state .icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    .empty-state p {
+      font-family: 'Caveat', cursive;
+      font-size: 1.4rem;
+    }
+
+    /* ── Lightbox ─────────────────────────────── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 20, 10, 0.92);
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      backdrop-filter: blur(4px);
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox-inner {
+      background: #fff;
+      border-radius: 4px;
+      padding: 14px 14px 28px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+      animation: popIn 0.25s cubic-bezier(.34, 1.56, .64, 1);
+    }
+
+    @keyframes popIn {
+      from {
+        transform: scale(0.85);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 1.2rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--ink2);
+      line-height: 1;
+      z-index: 10;
+    }
+
+    .lb-imgs {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .lb-imgs img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 2px;
+    }
+
+    /* Thumbnail strip for multi-image */
+    .lb-thumbs {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .lb-thumbs img {
+      width: 58px;
+      height: 58px;
+      object-fit: cover;
+      border-radius: 2px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color 0.15s;
+    }
+
+    .lb-thumbs img.active {
+      border-color: var(--accent);
+    }
+
+    .lb-main-img {
+      width: 100%;
+      height: auto;
+      border-radius: 2px;
+      display: block;
+    }
+
+    .lb-title {
+      font-family: 'Caveat', cursive;
+      font-size: 1.5rem;
+      margin-top: 14px;
+      color: var(--ink);
+    }
+
+    .lb-desc {
+      font-size: 0.9rem;
+      color: var(--ink2);
+      margin-top: 6px;
+      line-height: 1.5;
+    }
+
+    .lb-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--cream3);
+    }
+
+    .lb-meta img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .lb-meta-text {
+      font-size: 0.8rem;
+      color: var(--ink2);
+    }
+
+    .lb-meta-text strong {
+      color: var(--ink);
+      display: block;
+      font-weight: 500;
+    }
+
+    /* ── Load more ─────────────────────────────── */
+    .load-more-wrap {
+      text-align: center;
+      padding: 1rem 0 2rem;
+    }
+
+    /* ── Toast ─────────────────────────────────── */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--ink);
+      color: var(--paper);
+      padding: 10px 24px;
+      border-radius: 24px;
+      font-size: 0.85rem;
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 900;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Filter tabs ─────────────────────────── */
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-tab {
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1.5px solid var(--cream3);
+      background: transparent;
+      color: var(--ink2);
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .filter-tab.active,
+    .filter-tab:hover {
+      background: var(--ink);
+      color: var(--paper);
+      border-color: var(--ink);
+    }
+
+    @media (max-width: 640px) {
+      .gallery-grid {
+        columns: 2 140px;
+        column-gap: 1rem;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .search-wrap input {
+        width: 160px;
+      }
+
+      .search-wrap input:focus {
+        width: 200px;
+      }
+
+      nav .btn-ghost {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── Header ── -->
+  <header>
+    <div class="header-inner">
+      <div class="logo">Polaro<span>id</span></div>
+      <nav>
+        <div class="search-wrap">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Cari email pengguna..." autocomplete="off">
+          <div class="search-results" id="searchResults"></div>
+        </div>
+        <div id="authArea">
+          <a href="create.html" class="btn btn-ghost">+ Buat</a>
+          <a id="loginBtn" href="#" class="btn btn-primary" onclick="loginWithGoogle()">Masuk Google</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ── Hero ── -->
+  <section class="hero">
+    <h1>Momen dalam <em>bingkai</em><br>yang tak terlupakan</h1>
+    <p>Bagikan foto-fotomu dalam frame polaroid yang hangat. Temukan karya orang lain.</p>
+    <div class="viewing-banner" id="viewingBanner">📌 Melihat foto dari: <strong id="viewingName"></strong></div>
+  </section>
+
+  <!-- ── Gallery ── -->
+  <div class="gallery-wrap">
+    <div class="filter-bar" id="filterBar">
+      <button class="filter-tab active" onclick="setFilter('all', this)">Semua</button>
+      <button class="filter-tab" id="myPostsTab" style="display:none" onclick="setFilter('mine', this)">Punyaku</button>
+    </div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+    <div class="load-more-wrap">
+      <button class="btn btn-ghost" id="loadMoreBtn" onclick="loadMore()" style="display:none">Muat lebih
+        banyak</button>
+    </div>
+  </div>
+
+  <!-- ── Lightbox ── -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+    <div class="lightbox-inner" id="lightboxInner">
+      <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+      <div id="lbContent"></div>
+    </div>
+  </div>
+
+  <!-- ── Toast ── -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ── Config — REPLACE with your Cloudflare Worker URL ────────────────
+    const WORKER_URL = 'https://foryou1.zanxa-studio.workers.dev';
+    // ────────────────────────────────────────────────────────────────────
+
+    let currentUser = null;
+    let currentFilter = 'all';
+    let currentPage = 1;
+    let viewingEmail = null;
+    let isLoading = false;
+    let hasMore = true;
+
+    // ── Session ──────────────────────────────────────────────────────────
+    function saveToken(t) { localStorage.setItem('polaro_token', t); }
+    function getToken() { return localStorage.getItem('polaro_token'); }
+    function clearToken() { localStorage.removeItem('polaro_token'); }
+
+    async function fetchMe() {
+      const token = getToken();
+      if (!token) return null;
+      const res = await fetch(WORKER_URL + '/auth/me', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (!res.ok) { clearToken(); return null; }
+      const { user } = await res.json();
+      return user;
+    }
+
+    function loginWithGoogle() {
+      window.location.href = WORKER_URL + '/auth/google';
+    }
+
+    function logout() {
+      clearToken();
+      currentUser = null;
+      renderAuthUI(null);
+      currentFilter = 'all';
+      currentPage = 1;
+      hasMore = true;
+      document.getElementById('galleryGrid').innerHTML = '';
+      loadPosts();
+      toast('Berhasil keluar');
+    }
+
+    function renderAuthUI(user) {
+      const area = document.getElementById('authArea');
+      if (user) {
+        area.innerHTML = `
+      <a href="create.html" class="btn btn-primary">+ Buat</a>
+      <div class="user-pill" onclick="toggleUserMenu()">
+        <img src="${user.avatar || ''}" alt="">
+        <span>${user.name.split(' ')[0]}</span>
+      </div>
+      <button class="btn btn-ghost" onclick="logout()" style="font-size:0.78rem;padding:6px 12px">Keluar</button>
+    `;
+        document.getElementById('myPostsTab').style.display = '';
+      } else {
+        area.innerHTML = `
+      <a href="create.html" class="btn btn-ghost">+ Buat</a>
+      <a href="#" class="btn btn-primary" onclick="loginWithGoogle()">Masuk Google</a>
+    `;
+        document.getElementById('myPostsTab').style.display = 'none';
+      }
+    }
+
+    // ── Filter ───────────────────────────────────────────────────────────
+    function setFilter(f, btn) {
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = f;
+      currentPage = 1;
+      hasMore = true;
+      viewingEmail = null;
+      document.getElementById('viewingBanner').classList.remove('show');
+      document.getElementById('galleryGrid').innerHTML = '';
+      loadPosts();
+    }
+
+    // ── Load posts ───────────────────────────────────────────────────────
+    async function loadPosts() {
+      if (isLoading || !hasMore) return;
+      isLoading = true;
+
+      // Show skeletons on first page
+      if (currentPage === 1) {
+        document.getElementById('galleryGrid').innerHTML = skeletons(8);
+      }
+
+      let url = WORKER_URL + '/posts?page=' + currentPage + '&limit=20';
+      if (viewingEmail) url += '&user_email=' + encodeURIComponent(viewingEmail);
+      else if (currentFilter === 'mine' && currentUser) url += '&user_email=' + encodeURIComponent(currentUser.email);
+
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (currentPage === 1) document.getElementById('galleryGrid').innerHTML = '';
+
+      if (!Array.isArray(data) || data.length === 0) {
+        if (currentPage === 1) {
+          document.getElementById('galleryGrid').innerHTML = `
+        <div class="empty-state" style="column-span:all">
+          <div class="icon">🌿</div>
+          <p>Belum ada foto di sini.<br>Jadilah yang pertama berbagi!</p>
+        </div>`;
+        }
+        hasMore = false;
+        document.getElementById('loadMoreBtn').style.display = 'none';
+        isLoading = false;
+        return;
+      }
+
+      data.forEach(post => {
+        const card = buildCard(post);
+        document.getElementById('galleryGrid').appendChild(card);
+      });
+
+      hasMore = data.length === 20;
+      document.getElementById('loadMoreBtn').style.display = hasMore ? '' : 'none';
+      currentPage++;
+      isLoading = false;
+    }
+
+    function loadMore() { loadPosts(); }
+
+    // ── Build polaroid card ───────────────────────────────────────────────
+    function buildCard(post) {
+      const urls = Array.isArray(post.image_urls) ? post.image_urls : [];
+      const cover = urls[0] || '';
+      const user = post.users || {};
+      const dateStr = new Date(post.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+
+      const wrap = document.createElement('div');
+      wrap.className = 'polaroid-card';
+      wrap.innerHTML = `
+    <div class="polaroid-inner" onclick="openLightbox(${JSON.stringify(post).replace(/"/g, "&quot;")})">
+      <div class="polaroid-img-wrap">
+        <img src="${cover}" alt="${post.title}" loading="lazy" onload="this.style.opacity=1" style="opacity:0;transition:opacity 0.4s">
+        ${urls.length > 1 ? `<div class="polaroid-img-count">+${urls.length - 1}</div>` : ''}
+      </div>
+      <div class="polaroid-caption">
+        <div class="title">${post.title || 'Tanpa judul'}</div>
+        <div class="author">
+          ${user.avatar_url ? `<img src="${user.avatar_url}" alt="">` : '📍'}
+          ${user.name || 'Anonim'} · ${dateStr}
+        </div>
+      </div>
+    </div>
+  `;
+
+      // Preserve original image ratio by loading it
+      const img = wrap.querySelector('img');
+      img.onload = function () {
+        const r = this.naturalHeight / this.naturalWidth;
+        this.parentElement.style.paddingTop = (r * 100) + '%';
+        this.style.position = 'absolute';
+        this.style.inset = '0';
+        this.style.opacity = '1';
+      };
+      // Set initial ratio as square until image loads
+      wrap.querySelector('.polaroid-img-wrap').style.paddingTop = '75%';
+      img.style.position = 'absolute';
+      img.style.inset = '0';
+
+      return wrap;
+    }
+
+    function skeletons(n) {
+      return Array(n).fill(0).map(() => `
+    <div class="polaroid-card polaroid-skeleton">
+      <div class="polaroid-inner" style="pointer-events:none">
+        <div class="polaroid-img-wrap"><div class="skeleton sk-img" style="position:relative;padding-top:75%"></div></div>
+        <div class="polaroid-caption">
+          <div class="skeleton sk-line"></div>
+          <div class="skeleton sk-line2"></div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+    }
+
+    // ── Lightbox ──────────────────────────────────────────────────────────
+    let lbPost = null;
+    let lbActive = 0;
+
+    function openLightbox(post) {
+      lbPost = post;
+      lbActive = 0;
+      renderLightbox();
+      document.getElementById('lightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function renderLightbox() {
+      const urls = Array.isArray(lbPost.image_urls) ? lbPost.image_urls : [];
+      const user = lbPost.users || {};
+      const date = new Date(lbPost.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+      const thumbs = urls.length > 1 ? `
+    <div class="lb-thumbs">
+      ${urls.map((u, i) => `<img src="${u}" class="${i === lbActive ? 'active' : ''}" onclick="lbSetActive(${i})">`).join('')}
+    </div>` : '';
+
+      document.getElementById('lbContent').innerHTML = `
+    <img class="lb-main-img" id="lbMainImg" src="${urls[lbActive] || ''}" alt="">
+    ${thumbs}
+    ${lbPost.title ? `<div class="lb-title">${lbPost.title}</div>` : ''}
+    ${lbPost.description ? `<div class="lb-desc">${lbPost.description}</div>` : ''}
+    <div class="lb-meta">
+      ${user.avatar_url ? `<img src="${user.avatar_url}" alt="">` : ''}
+      <div class="lb-meta-text">
+        <strong>${user.name || 'Anonim'}</strong>
+        ${date}
+      </div>
+      ${user.email ? `<button class="btn btn-ghost" style="margin-left:auto;font-size:0.75rem;padding:4px 12px" onclick="viewUserPosts('${user.email}','${user.name}')">Lihat semua →</button>` : ''}
+    </div>
+  `;
+    }
+
+    function lbSetActive(i) {
+      lbActive = i;
+      document.getElementById('lbMainImg').src = lbPost.image_urls[i];
+      document.querySelectorAll('.lb-thumbs img').forEach((el, idx) => {
+        el.classList.toggle('active', idx === i);
+      });
+    }
+
+    function closeLightbox(e) {
+      if (e && e.target !== document.getElementById('lightbox') && !e.target.classList.contains('lightbox-close')) return;
+      document.getElementById('lightbox').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function viewUserPosts(email, name) {
+      closeLightbox({ target: document.getElementById('lightbox') });
+      viewingEmail = email;
+      document.getElementById('viewingName').textContent = name;
+      document.getElementById('viewingBanner').classList.add('show');
+      currentPage = 1;
+      hasMore = true;
+      document.getElementById('galleryGrid').innerHTML = '';
+      loadPosts();
+      // Clear filter tabs
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+    }
+
+    // ── User search ────────────────────────────────────────────────────────
+    let searchTimer;
+    document.getElementById('searchInput').addEventListener('input', function () {
+      clearTimeout(searchTimer);
+      const q = this.value.trim();
+      if (q.length < 2) {
+        document.getElementById('searchResults').classList.remove('show');
+        return;
+      }
+      searchTimer = setTimeout(() => doSearch(q), 300);
+    });
+
+    document.getElementById('searchInput').addEventListener('blur', function () {
+      setTimeout(() => document.getElementById('searchResults').classList.remove('show'), 200);
+    });
+
+    async function doSearch(q) {
+      const res = await fetch(WORKER_URL + '/users/search?email=' + encodeURIComponent(q));
+      const data = await res.json();
+      const box = document.getElementById('searchResults');
+      if (!data.length) { box.classList.remove('show'); return; }
+      box.innerHTML = data.map(u => `
+    <div class="search-result-item" onclick="viewUserPosts('${u.email}','${u.name}')">
+      ${u.avatar_url ? `<img src="${u.avatar_url}" alt="">` : '<div style="width:32px;height:32px;border-radius:50%;background:var(--cream2);flex-shrink:0"></div>'}
+      <div>
+        <div class="sr-name">${u.name}</div>
+        <div class="sr-email">${u.email}</div>
+      </div>
+    </div>
+  `).join('');
+      box.classList.add('show');
+    }
+
+    // ── Toast ─────────────────────────────────────────────────────────────
+    function toast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 2800);
+    }
+
+    // ── Init ──────────────────────────────────────────────────────────────
+    (async () => {
+      // Check for token in hash (coming back from OAuth)
+      if (location.hash.startsWith('#token=')) {
+        const t = decodeURIComponent(location.hash.slice(7));
+        saveToken(t);
+        history.replaceState(null, '', location.pathname);
+        toast('Berhasil masuk! 🎉');
+      }
+
+      currentUser = await fetchMe();
+      renderAuthUI(currentUser);
+      loadPosts();
+    })();
+  </script>
+</body>
+
+</html>
