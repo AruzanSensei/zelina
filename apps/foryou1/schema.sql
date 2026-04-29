@@ -64,4 +64,4 @@ create policy "public_read_post_images"
 -- Allow authenticated uploads (via service key from Worker)
 create policy "service_upload_post_images"
   on storage.objects for insert
-  using ( bucket_id = 'post-images' );
+  with check ( bucket_id = 'post-images' );
