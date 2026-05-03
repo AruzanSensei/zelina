@@ -413,6 +413,19 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- PDF page mode (Segmented Control) -->
+                        <div class="setting-row" style="flex-direction: column; align-items: flex-start; gap: 12px; border-bottom: none;">
+                            <div class="setting-info">
+                                <span class="setting-label">Mode Halaman PDF</span>
+                                <span class="setting-subtext">Cetak Invoice &amp; Surat Jalan terpisah atau dalam satu dokumen.</span>
+                            </div>
+                            <div class="setting-control" style="width: 100%;">
+                                <div class="segmented-control" id="pdf-page-mode-selector">
+                                    <button class="segmented-btn active" data-value="single">Satu per Satu</button>
+                                    <button class="segmented-btn" data-value="combined">Bersamaan</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Group 2: Validation & Filenames -->
@@ -582,8 +595,8 @@
     <!-- Bottom Sheet for History Details -->
     <div id="detail-sheet" class="modal hidden">
         <div class="modal-content">
-            <div class="modal-header modal-header-history" style="display: flex; flex-direction: column; gap: 8px;">
-                <div style="display:flex; gap:8px; justify-content: flex-end; width: 100%; align-items: center;">
+            <div class="modal-header modal-header-history" style="display: block;">
+                <div style="float: right; display:flex; gap:8px; margin-left: 10px; margin-bottom: 4px;">
                     <button id="btn-detail-download" class="btn btn-action-green"
                         style="padding:10px 10px; font-size:0.85rem; border-radius:10px;" title="Unduh">
                         <i data-lucide="download" style="width:16px;height:16px;stroke-width:2.5"></i>
@@ -597,9 +610,9 @@
                         <i data-lucide="trash-2" style="width:16px;height:16px;stroke-width:2.5"></i>
                     </button>
                 </div>
-                <h2 id="detail-title"
-                    style="width: 100%; line-height:1.2; word-break: break-word; font-size: 1.15rem; margin-top: 4px;">
+                <h2 id="detail-title" style="line-height:1.2; word-break: break-word; font-size: 1.15rem; margin: 0;">
                     Detail Invoice</h2>
+                <div style="clear: both;"></div>
             </div>
             <div id="detail-content" class="modal-body">
                 <!-- Content injected via JS -->
@@ -877,13 +890,37 @@
     }
 
     .labels-hidden .item-note {
-        margin-top: 2px !important;
+        margin-top: 6px !important;
     }
 
     /* --- HISTORY MODE --- */
     .history-content-wrapper {
         width: 100%;
         transition: all 400ms ease;
+    }
+
+    .form-input.item-inv-keterangan {
+        margin-bottom: 0px !important;
+    }
+
+    .labels-hidden .form-input.item-inv-keterangan {
+        margin-bottom: 6px !important;
+    }
+
+    .form-input.item-sj-keterangan {
+        margin-bottom: 0px !important;
+    }
+
+    .labels-hidden .form-input.item-sj-keterangan {
+        margin-bottom: 6px !important;
+    }
+
+    .labels-hidden .unit-switch.adv {
+        margin-top: -2px !important;
+    }
+
+    .labels-hidden .item-row.adv {
+        margin-bottom: 0px !important;
     }
 
     .age-badge,

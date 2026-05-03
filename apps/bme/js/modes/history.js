@@ -2,7 +2,7 @@
  * History Mode Logic with Search, Multi-Select, Swipe, and Detail Preview
  */
 import { appState } from '../state.js';
-import { printInvoicePDF, buildInvoiceHTML, buildSuratJalanHTML, openPreviewModal } from '../pdf/generator.js';
+import { printInvoicePDF, buildInvoiceHTML, buildSuratJalanHTML, openPreviewModal, pdfPrintQueue, buildCombinedPDFHTML } from '../pdf/generator.js';
 import { exportToPNG, exportToJPEG, exportBothDocuments } from '../pdf/imageExporter.js';
 export function initHistoryMode() {
     const container = document.getElementById('history-list');
@@ -391,7 +391,7 @@ export function initHistoryMode() {
             case 'download': {
                 const defaultMethod = appState.state.settings.defaultDownloadMethod || 'pdf';
                 if (defaultMethod === 'pdf') {
-                    printInvoicePDF(entry.items, entry.title);
+                    _queuePDF([entry], appState.state.settings.pdfPageMode || 'single');
                 } else {
                     exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML, entry.items, entry.title, defaultMethod);
                 }
@@ -399,7 +399,7 @@ export function initHistoryMode() {
             }
 
             case 'print':
-                printInvoicePDF(entry.items, entry.title);
+                _queuePDF([entry], appState.state.settings.pdfPageMode || 'single');
                 break;
 
             case 'delete':
@@ -411,6 +411,49 @@ export function initHistoryMode() {
                 });
                 break;
         }
+    };
+
+    /**
+     * Helper: tambahkan entry/entries ke pdfPrintQueue lalu mulai.
+     * @param {object[]} entries  - array history entry
+     * @param {'single'|'combined'} mode
+     * @param {boolean} forceCombined - paksa combined (untuk batch)
+     */
+    const _queuePDF = (entries, mode, forceCombined = false) => {
+        pdfPrintQueue._reset();
+        const useMode = forceCombined ? 'combined' : mode;
+        entries.forEach(entry => {
+            const { items, title } = entry;
+            if (useMode === 'combined') {
+                const html = buildCombinedPDFHTML(items, title);
+                pdfPrintQueue.add(`${title} (Invoice + SJ)`, () => {
+                    const w = window.open('', '_blank');
+                    if (!w) return;
+                    w.document.open(); w.document.write(html); w.document.close();
+                    w.document.title = title;
+                    setTimeout(() => { try { w.focus(); w.print(); } catch {} }, 300);
+                });
+            } else {
+                const invHtml = buildInvoiceHTML(items, title);
+                const sjHtml  = buildSuratJalanHTML(items);
+                pdfPrintQueue
+                    .add(`Invoice — ${title}`, () => {
+                        const w = window.open('', '_blank');
+                        if (!w) return;
+                        w.document.open(); w.document.write(invHtml); w.document.close();
+                        w.document.title = `Invoice-${title}`;
+                        setTimeout(() => { try { w.focus(); w.print(); } catch {} }, 300);
+                    })
+                    .add(`Surat Jalan — ${title}`, () => {
+                        const w = window.open('', '_blank');
+                        if (!w) return;
+                        w.document.open(); w.document.write(sjHtml); w.document.close();
+                        w.document.title = `Surat Jalan-${title}`;
+                        setTimeout(() => { try { w.focus(); w.print(); } catch {} }, 300);
+                    });
+            }
+        });
+        pdfPrintQueue.start();
     };
 
     // ===================================
@@ -615,33 +658,33 @@ export function initHistoryMode() {
             const selectedEntries = [...selectedIndices].map(i => appState.state.history[i]).filter(Boolean);
             const count = selectedEntries.length;
 
-            // First-time notification about multiple downloads
+            // First-time notification
             const NOTIF_KEY = 'bme_batch_dl_notified';
             if (!localStorage.getItem(NOTIF_KEY)) {
                 const ok = confirm(
-                    `Akan mengunduh ${count} file invoice.\n\n` +
-                    `⚠️ Browser membatasi unduhan dari satu situs secara bersamaan.\n` +
-                    `Jika muncul perintah izin, pilih "Izinkan".\n\n` +
+                    `Akan mengunduh ${count} entri via antrian PDF.\n\n` +
+                    `⚠️ Setiap entri akan menjadi satu cetak gabungan (Invoice + Surat Jalan).\n` +
+                    `Gunakan indikator di pojok kanan bawah untuk lanjut ke cetak berikutnya.\n\n` +
                     `Lanjutkan?`
                 );
                 if (!ok) return;
                 localStorage.setItem(NOTIF_KEY, '1');
-            } else if (!confirm(`Unduh ${count} file invoice?`)) {
+            } else if (!confirm(`Cetak ${count} entri via antrian PDF?`)) {
                 return;
             }
 
             const defaultMethod = appState.state.settings.defaultDownloadMethod || 'pdf';
-            for (const entry of selectedEntries) {
-                if (defaultMethod === 'pdf') {
-                    printInvoicePDF(entry.items, entry.title);
-                } else {
+            if (defaultMethod === 'pdf') {
+                // Batch: always combined (1 window per entry) to prevent tab explosion
+                _queuePDF(selectedEntries, 'combined', true);
+            } else {
+                // Non-PDF: keep sequential loop with delay
+                for (const entry of selectedEntries) {
                     exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML, entry.items, entry.title, defaultMethod);
+                    await new Promise(r => setTimeout(r, 400));
                 }
-                // Small delay to avoid browser throttling
-                await new Promise(r => setTimeout(r, 400));
             }
 
-            // Deactivate multiselect after all downloads are done
             exitMultiSelect();
         });
     }
@@ -1016,6 +1059,8 @@ export function initHistoryMode() {
             card.className = 'detail-item-card';
             if (isDetailEditMode) card.classList.add('editing');
 
+            const isAdvance = currentDetailItem?.cardMode === 'advance';
+
             if (isDetailEditMode) {
                 card.innerHTML = `
                     <div style="margin-bottom:6px;">
@@ -1032,9 +1077,18 @@ export function initHistoryMode() {
                         <span style="color:var(--text-muted);">•</span>
                         <input class="edit-input edit-price" type="number" value="${item.price}" style="flex:1;" data-idx="${idx}">
                     </div>
+                    ${isAdvance ? `
+                    <div style="margin-bottom:4px;">
+                        <input class="edit-input edit-inv-keterangan" value="${item.invKeterangan || ''}" placeholder="Keterangan Invoice" data-idx="${idx}">
+                    </div>
+                    <div>
+                        <input class="edit-input edit-sj-keterangan" value="${item.sjKeterangan || ''}" placeholder="Keterangan Surat Jalan" data-idx="${idx}">
+                    </div>
+                    ` : `
                     <div>
                         <input class="edit-input edit-note" value="${item.note || ''}" placeholder="Note (opsional)" data-idx="${idx}">
                     </div>
+                    `}
                 `;
             } else {
                 card.innerHTML = `
@@ -1042,7 +1096,11 @@ export function initHistoryMode() {
                         <span class="d-item-name">${item.name || 'Tanpa Nama'}</span>
                         <span class="item-meta">${item.qty} ${unit} • <span class="item-price-tag"><sup style="font-size:0.6em;opacity:0.7;">Rp</sup>${priceFormatted}</span></span>
                     </div>
-                    ${item.note ? `<div class="item-note">${item.note}</div>` : ''}
+                    ${isAdvance
+                        ? (item.invKeterangan ? `<div class="item-note">- ${item.invKeterangan}</div>` : '') +
+                          (item.sjKeterangan  ? `<div class="item-note">- ${item.sjKeterangan}</div>`  : '')
+                        : (item.note ? `<div class="item-note">${item.note}</div>` : '')
+                    }
                 `;
             }
             detailContent.appendChild(card);
@@ -1121,7 +1179,7 @@ export function initHistoryMode() {
                     const template = type === 'surat' ? formats.suratJalan : formats.invoice;
                     const now = new Date();
                     const filename = template.replace(/\{judul\}/gi, title).replace(/%YYYY/g, String(now.getFullYear())).replace(/%MM/g, String(now.getMonth() + 1).padStart(2, '0')).replace(/%DD/g, String(now.getDate()).padStart(2, '0')).replace(/%HH/g, String(now.getHours()).padStart(2, '0')).replace(/%mm/g, String(now.getMinutes()).padStart(2, '0')).replace(/%ss/g, String(now.getSeconds()).padStart(2, '0'));
-                    if (defaultMethod === 'pdf') { printInvoicePDF(items, title); }
+                    if (defaultMethod === 'pdf') { _queuePDF([{ items, title }], appState.state.settings.pdfPageMode || 'single'); }
                     else {
                         const alertEl = document.getElementById('custom-alert');
                         const messageEl = document.getElementById('alert-message');
@@ -1180,21 +1238,36 @@ export function initHistoryMode() {
 
     const collectEditedData = () => {
         if (!currentDetailItem || !isDetailEditMode) return;
+        const isAdvance = currentDetailItem?.cardMode === 'advance';
         const names = detailContent.querySelectorAll('.edit-name');
         const qtys = detailContent.querySelectorAll('.edit-qty');
         const prices = detailContent.querySelectorAll('.edit-price');
-        const notes = detailContent.querySelectorAll('.edit-note');
         const unitSwitches = detailContent.querySelectorAll('.edit-unit-switch');
-        names.forEach((el, i) => {
-            currentDetailItem.items[i].name = el.value;
-            currentDetailItem.items[i].qty = parseInt(qtys[i].value) || 1;
-            currentDetailItem.items[i].price = parseFloat(prices[i].value) || 0;
-            currentDetailItem.items[i].note = notes[i].value;
-            const activeUnitEl = unitSwitches[i].querySelector('.unit-opt.active');
-            if (activeUnitEl) {
-                currentDetailItem.items[i].qtyUnit = activeUnitEl.dataset.unit;
-            }
-        });
+
+        if (isAdvance) {
+            const invKeterangans = detailContent.querySelectorAll('.edit-inv-keterangan');
+            const sjKeterangans = detailContent.querySelectorAll('.edit-sj-keterangan');
+            names.forEach((el, i) => {
+                currentDetailItem.items[i].name = el.value;
+                currentDetailItem.items[i].qty = parseInt(qtys[i].value) || 1;
+                currentDetailItem.items[i].price = parseFloat(prices[i].value) || 0;
+                currentDetailItem.items[i].invKeterangan = invKeterangans[i]?.value || '';
+                currentDetailItem.items[i].sjKeterangan = sjKeterangans[i]?.value || '';
+                const activeUnitEl = unitSwitches[i].querySelector('.unit-opt.active');
+                if (activeUnitEl) currentDetailItem.items[i].qtyUnit = activeUnitEl.dataset.unit;
+            });
+        } else {
+            const notes = detailContent.querySelectorAll('.edit-note');
+            names.forEach((el, i) => {
+                currentDetailItem.items[i].name = el.value;
+                currentDetailItem.items[i].qty = parseInt(qtys[i].value) || 1;
+                currentDetailItem.items[i].price = parseFloat(prices[i].value) || 0;
+                currentDetailItem.items[i].note = notes[i]?.value || '';
+                const activeUnitEl = unitSwitches[i].querySelector('.unit-opt.active');
+                if (activeUnitEl) currentDetailItem.items[i].qtyUnit = activeUnitEl.dataset.unit;
+            });
+        }
+
         // Also update title
         currentDetailItem.title = detailTitle.textContent;
         appState.updateHistoryEntry(currentDetailItem.id, {
@@ -1231,7 +1304,7 @@ export function initHistoryMode() {
             if (!currentDetailItem) return;
             const defaultMethod = appState.state.settings.defaultDownloadMethod || 'pdf';
             if (defaultMethod === 'pdf') {
-                printInvoicePDF(currentDetailItem.items, currentDetailItem.title);
+                _queuePDF([currentDetailItem], appState.state.settings.pdfPageMode || 'single');
             } else {
                 exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML, currentDetailItem.items, currentDetailItem.title, defaultMethod);
             }

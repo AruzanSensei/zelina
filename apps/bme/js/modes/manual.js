@@ -134,7 +134,7 @@ export function initManualMode() {
                     <textarea class="form-input item-inv-keterangan ${!item.invKeterangan ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Keterangan untuk Invoice" rows="1" style="resize:none; overflow:hidden; font-family:inherit; white-space:pre-wrap;">${item.invKeterangan || ''}</textarea>
                 </div>
 
-                <div class="item-row">
+                <div class="item-row adv" style="margin-bottom: 6px;">
                     <div class="item-field-wrap" style="flex: 1;">
                         <label class="field-label"><strong>SurJal</strong> - Nama Barang</label>
                         <div class="input-with-icon">
@@ -143,7 +143,7 @@ export function initManualMode() {
                         </div>
                     </div>
                     <div style="width: 100px; display: flex; flex-direction: column;">
-                        <div class="unit-switch" data-index="${index}" style="margin: 0 0 5px auto;">
+                        <div class="unit-switch adv" data-index="${index}" style="margin: 0 0 5px auto; margin-top: -4px;">
                             <span class="unit-opt ${(item.qtyUnit || 'pcs') === 'pcs' ? 'active' : ''}" data-unit="pcs">Pcs</span>
                             <span class="unit-opt ${item.qtyUnit === 'lot' ? 'active' : ''}" data-unit="lot">Lot</span>
                         </div>
@@ -157,7 +157,7 @@ export function initManualMode() {
 
                 <div class="input-group item-field-wrap" style="margin-bottom: 8px;">
                     <label class="field-label"><strong>SurJal</strong> - Keterangan</label>
-                    <textarea class="form-input item-sj-keterangan ${!item.sjKeterangan ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Keterangan untuk Surat Jalan" rows="1" style="resize:none; overflow:hidden; font-family:inherit; white-space:pre-wrap;">${item.sjKeterangan || ''}</textarea>
+                    <textarea class="form-input item-sj-keterangan ${!item.sjKeterangan ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Keterangan untuk Surat Jalan" rows="1" style="resize:none; overflow:hidden; font-family:inherit; white-space:pre-wrap; margin-bottom: 6px;">${item.sjKeterangan || ''}</textarea>
                 </div>
 
                 <div class="item-row" style="align-items: flex-end; margin-bottom: 0; justify-content: space-between;">
@@ -739,7 +739,7 @@ export function initManualMode() {
                 // Only format if not empty to allow deleting everything
                 if (raw === '') target.value = '';
                 else target.value = formatNumberStr(raw);
-                
+
                 // Sync with sizer
                 if (target.parentNode.classList.contains('input-sizer')) {
                     target.parentNode.dataset.value = target.value || '0';
@@ -749,7 +749,7 @@ export function initManualMode() {
             if (target.classList.contains('item-qty')) {
                 const num = parseInt(val) || 1;
                 items[index].qty = num;
-                
+
                 // Sync with sizer
                 if (target.parentNode.classList.contains('input-sizer')) {
                     target.parentNode.dataset.value = target.value || '1';

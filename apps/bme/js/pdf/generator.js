@@ -1303,18 +1303,49 @@ export function initPDFGenerator() {
     // ============================================
     const executeDownload = async (items, title, format) => {
         const sourceInvoice = manualEdits.invoice || buildInvoiceHTML;
-        const sourceLetter = manualEdits.letter || buildSuratJalanHTML;
+        const sourceLetter  = manualEdits.letter  || buildSuratJalanHTML;
 
         const formatToUse = format || appState.state.settings.defaultDownloadMethod || 'pdf';
 
         if (formatToUse === 'pdf') {
-            printInvoicePDF(items, title);
+            const pdfMode = appState.state.settings.pdfPageMode || 'single';
+            pdfPrintQueue._reset(); // clear any previous queue
+            if (pdfMode === 'combined') {
+                const html = buildCombinedPDFHTML(items, title);
+                pdfPrintQueue.add(`${title} (Invoice + Surat Jalan)`, () => {
+                    const w = window.open('', '_blank');
+                    if (!w) return;
+                    w.document.open(); w.document.write(html); w.document.close();
+                    w.document.title = title;
+                    setTimeout(() => { try { w.focus(); w.print(); } catch {} }, 300);
+                });
+            } else {
+                const invHtml = manualEdits.invoice || buildInvoiceHTML(items, title);
+                const sjHtml  = manualEdits.letter  || buildSuratJalanHTML(items);
+                pdfPrintQueue
+                    .add(`Invoice — ${title}`, () => {
+                        const w = window.open('', '_blank');
+                        if (!w) return;
+                        w.document.open(); w.document.write(invHtml); w.document.close();
+                        w.document.title = `Invoice-${title}`;
+                        setTimeout(() => { try { w.focus(); w.print(); } catch {} }, 300);
+                    })
+                    .add(`Surat Jalan — ${title}`, () => {
+                        const w = window.open('', '_blank');
+                        if (!w) return;
+                        w.document.open(); w.document.write(sjHtml); w.document.close();
+                        w.document.title = `Surat Jalan-${title}`;
+                        setTimeout(() => { try { w.focus(); w.print(); } catch {} }, 300);
+                    });
+            }
+            pdfPrintQueue.start();
         } else if (formatToUse === 'png') {
             await exportBothDocuments(sourceInvoice, sourceLetter, items, title, 'png');
         } else if (formatToUse === 'jpeg' || formatToUse === 'jpg') {
             await exportBothDocuments(sourceInvoice, sourceLetter, items, title, 'jpeg');
         }
     };
+
 
     // Download format menu is removed in favor of Settings selection.
     // ============================================
@@ -1583,8 +1614,160 @@ function saveToHistory(items, title) {
         title: title,
         date: `${today.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' })} | ${today.getHours()}.${String(today.getMinutes()).padStart(2, '0')}`,
         items: JSON.parse(JSON.stringify(items)),
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        cardMode: appState.state.manualCardMode || 'simple'
     });
+}
+
+
+// ============================================
+// PDF PRINT QUEUE  – antrian print + indikator
+// ============================================
+class PDFPrintQueue {
+    constructor() { this._reset(); }
+
+    _reset() {
+        this.jobs    = [];   // { label, fn }[]
+        this.done    = 0;
+        this._el     = null;
+    }
+
+    /** Tambah satu print-job ke antrian. */
+    add(label, fn) { this.jobs.push({ label, fn }); return this; }
+
+    /** Mulai eksekusi antrian. Job pertama langsung dijalankan. */
+    start() {
+        if (this.jobs.length === 0) return;
+        this._showIndicator();
+        this._runNext();
+    }
+
+    /** Kembalikan status antrian (dipakai oleh tombol di indicator) */
+    get hasNext() { return this.done < this.jobs.length; }
+
+    _runNext() {
+        if (this.done >= this.jobs.length) { this._finish(); return; }
+        const job = this.jobs[this.done];
+        this.done++;
+        job.fn();
+        this._updateIndicator();
+    }
+
+    // ── Indicator UI ──────────────────────────────────────────────
+    _showIndicator() {
+        this._removeIndicator();
+        const el = document.createElement('div');
+        el.id = 'pdf-queue-indicator';
+        el.innerHTML = this._html();
+        document.body.appendChild(el);
+        this._el = el;
+
+        // Wire up next button
+        el.querySelector('#pqi-next-btn')?.addEventListener('click', () => {
+            if (this.hasNext) {
+                this._runNext();
+            } else {
+                this._finish();
+            }
+        });
+    }
+
+    _html() {
+        const done  = this.done;            // after increment in _runNext
+        const total = this.jobs.length;
+        const pct   = total > 0 ? Math.round((done / total) * 100) : 0;
+        const hasN  = done < total;
+        const label = this.jobs[done - 1]?.label || '';
+
+        return `
+        <div class="pqi-header">
+            <span class="pqi-icon-wrap"><i data-lucide="file-text" style="width:16px;height:16px;stroke-width:2;"></i></span>
+            <span class="pqi-count">${done} <span class="pqi-sep">/</span> ${total}</span>
+            <span class="pqi-label-text">PDF</span>
+        </div>
+        <div class="pqi-doc-label">${label}</div>
+        <div class="pqi-bar-track"><div class="pqi-bar-fill" style="width:${pct}%"></div></div>
+        <button id="pqi-next-btn" class="pqi-btn ${hasN ? '' : 'pqi-btn-done'}">
+            ${hasN
+                ? `<i data-lucide="chevron-right" style="width:14px;height:14px;stroke-width:2.5;"></i> Cetak Berikutnya`
+                : `<i data-lucide="check-circle-2" style="width:14px;height:14px;stroke-width:2;"></i> Selesai`}
+        </button>`;
+    }
+
+    _updateIndicator() {
+        if (!this._el) return;
+        this._el.innerHTML = this._html();
+        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...this._el.querySelectorAll('[data-lucide]')] });
+
+        // Re-wire button
+        this._el.querySelector('#pqi-next-btn')?.addEventListener('click', () => {
+            if (this.hasNext) { this._runNext(); }
+            else { this._finish(); }
+        });
+
+        // Pulse animation
+        this._el.classList.remove('pqi-pulse');
+        void this._el.offsetWidth;
+        this._el.classList.add('pqi-pulse');
+    }
+
+    _finish() {
+        if (this._el) {
+            this._el.classList.add('pqi-out');
+            setTimeout(() => this._removeIndicator(), 600);
+        }
+        this._reset();
+    }
+
+    _removeIndicator() {
+        const old = document.getElementById('pdf-queue-indicator');
+        if (old) old.remove();
+        this._el = null;
+    }
+}
+
+/** Singleton antrian PDF — digunakan oleh semua titik unduhan. */
+export const pdfPrintQueue = new PDFPrintQueue();
+
+// ── Helper: bangun HTML gabungan Invoice + Surat Jalan dalam 1 dokumen ──
+export function buildCombinedPDFHTML(items, titleName) {
+    const invoiceHtml    = buildInvoiceHTML(items, titleName);
+    const suratJalanHtml = buildSuratJalanHTML(items);
+    const fileTitle      = `Dokumen-${titleName}`;
+
+    const extractBody = (fullHtml) => {
+        const m = fullHtml.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+        return m ? m[1] : fullHtml;
+    };
+
+    const scopedSuratJalanStyle = SURAT_JALAN_STYLE.replace(/([^\r\n,{}]+)(,(?=[^}]*{)|\s*{)/g, (match, selector, suffix) => {
+        if (selector.trim().startsWith('@') || selector.trim() === '') return match;
+        const scopedSelectors = selector.split(',').map(sel => {
+            const s = sel.trim();
+            if (!s) return '';
+            if (s === 'html' || s === 'body') return `#surat-jalan-wrapper`;
+            return `#surat-jalan-wrapper ${s}`;
+        }).join(', ');
+        return `${scopedSelectors} ${suffix}`;
+    });
+
+    return `<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>${fileTitle}</title>
+    <style>
+        ${INVOICE_STYLE}
+        ${scopedSuratJalanStyle}
+        @media print { .page-break { page-break-before: always; } body { margin:0; padding:0; } }
+    </style>
+</head>
+<body>
+    <div id="invoice-wrapper">${extractBody(invoiceHtml)}</div>
+    <div class="page-break"></div>
+    <div id="surat-jalan-wrapper">${extractBody(suratJalanHtml)}</div>
+</body>
+</html>`;
 }
 
 // ============================================

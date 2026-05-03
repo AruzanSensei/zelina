@@ -25,6 +25,7 @@ const DEFAULTS = {
         defaultDownloadMethod: 'pdf',
         downloadAndSave: false,
         titleRequired: true,
+        pdfPageMode: 'single',
         monthlyTarget: 3800000,
         fileNameFormat: {
             invoice: 'Invoice-{judul}',

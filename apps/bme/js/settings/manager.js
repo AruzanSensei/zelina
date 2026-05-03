@@ -140,6 +140,12 @@ export function initSettings() {
                 btn.classList.toggle('active', btn.dataset.value === settings.defaultDownloadMethod);
             });
         }
+
+        if (settings.pdfPageMode) {
+            document.querySelectorAll('#pdf-page-mode-selector .segmented-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.value === settings.pdfPageMode);
+            });
+        }
     });
 
     // Init Theme on load
@@ -162,6 +168,26 @@ export function initSettings() {
 
                 // Update UI visually
                 formatSelector.querySelectorAll('.segmented-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+    }
+
+    // ===================================
+    // PDF PAGE MODE SETTINGS (Segmented)
+    // ===================================
+    const pageModeSelector = document.getElementById('pdf-page-mode-selector');
+    const currentPageMode = appState.state.settings.pdfPageMode || 'single';
+
+    if (pageModeSelector) {
+        pageModeSelector.querySelectorAll('.segmented-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.value === currentPageMode);
+
+            btn.addEventListener('click', () => {
+                const value = btn.dataset.value;
+                appState.updateSettings({ pdfPageMode: value });
+
+                pageModeSelector.querySelectorAll('.segmented-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
             });
         });

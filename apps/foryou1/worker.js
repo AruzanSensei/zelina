@@ -123,7 +123,25 @@ async function handleAuthCallback(request, env) {
 
   const gUser = await userRes.json();
 
+  // ── Upsert user ke tabel users ──────────────────────────────────────────
+  await fetch(`${env.SUPABASE_URL}/rest/v1/users`, {
+    method: 'POST',
+    headers: {
+      apikey: env.SUPABASE_SERVICE_KEY,
+      Authorization: `Bearer ${env.SUPABASE_SERVICE_KEY}`,
+      'Content-Type': 'application/json',
+      Prefer: 'resolution=merge-duplicates,return=minimal'
+    },
+    body: JSON.stringify({
+      google_id: gUser.sub,
+      email: gUser.email,
+      name: gUser.name,
+      avatar_url: gUser.picture
+    })
+  });
+
   const sessionToken = await signToken({
+    google_id: gUser.sub,
     email: gUser.email,
     name: gUser.name,
     avatar: gUser.picture,
@@ -186,6 +204,20 @@ async function handleCreatePost(request, env) {
 
   const body = await request.json();
 
+  // Ambil user_id dari tabel users berdasarkan email di session
+  const userRes = await fetch(
+    `${env.SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(session.email)}&select=id&limit=1`,
+    {
+      headers: {
+        apikey: env.SUPABASE_SERVICE_KEY,
+        Authorization: `Bearer ${env.SUPABASE_SERVICE_KEY}`
+      }
+    }
+  );
+  const users = await userRes.json();
+  if (!users || users.length === 0) return json({ error: 'User tidak ditemukan di database' }, 404);
+  const userId = users[0].id;
+
   const res = await fetch(`${env.SUPABASE_URL}/rest/v1/posts`, {
     method: 'POST',
     headers: {
@@ -195,11 +227,17 @@ async function handleCreatePost(request, env) {
       Prefer: 'return=representation'
     },
     body: JSON.stringify({
+      user_id: userId,
       title: body.title,
       description: body.description,
       image_urls: body.image_urls
     })
   });
+
+  if (!res.ok) {
+    const errData = await res.json().catch(() => ({}));
+    return json({ error: 'Supabase error', detail: errData }, res.status);
+  }
 
   const data = await res.json();
   return json(data);

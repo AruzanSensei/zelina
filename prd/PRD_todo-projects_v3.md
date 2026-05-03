@@ -74,21 +74,21 @@ src/
 
 ## 1.1 Warna
 
-| Token | Hex | Penggunaan |
-|---|---|---|
-| `--color-bg` | `#FFFFFF` | Background utama |
-| `--color-bg-soft` | `#F7F8FA` | Background sidebar, card subtle |
-| `--color-bg-card` | `#FFFFFF` | Card background |
-| `--color-border` | `#E5E7EB` | Border tipis |
-| `--color-primary` | `#111827` | Text utama, heading |
-| `--color-secondary` | `#6B7280` | Subtext, placeholder |
-| `--color-accent` | `#16A34A` | Aksi utama (hijau, seperti Planti) |
-| `--color-accent-soft` | `#DCFCE7` | Hover accent, badge done |
-| `--color-hover` | `#F3F4F6` | Hover state item |
-| `--color-active` | `#EDE9FE` | Selected state |
-| `--color-danger` | `#EF4444` | Priority tinggi, overdue, error |
-| `--color-warning` | `#F59E0B` | Warning state |
-| `--color-info` | `#3B82F6` | Tag, badge info |
+| Token                 | Hex       | Penggunaan                         |
+| --------------------- | --------- | ---------------------------------- |
+| `--color-bg`          | `#FFFFFF` | Background utama                   |
+| `--color-bg-soft`     | `#F7F8FA` | Background sidebar, card subtle    |
+| `--color-bg-card`     | `#FFFFFF` | Card background                    |
+| `--color-border`      | `#E5E7EB` | Border tipis                       |
+| `--color-primary`     | `#111827` | Text utama, heading                |
+| `--color-secondary`   | `#6B7280` | Subtext, placeholder               |
+| `--color-accent`      | `#16A34A` | Aksi utama (hijau, seperti Planti) |
+| `--color-accent-soft` | `#DCFCE7` | Hover accent, badge done           |
+| `--color-hover`       | `#F3F4F6` | Hover state item                   |
+| `--color-active`      | `#EDE9FE` | Selected state                     |
+| `--color-danger`      | `#EF4444` | Priority tinggi, overdue, error    |
+| `--color-warning`     | `#F59E0B` | Warning state                      |
+| `--color-info`        | `#3B82F6` | Tag, badge info                    |
 
 ### Status Badge Color
 
