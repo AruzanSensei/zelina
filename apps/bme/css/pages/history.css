@@ -624,7 +624,6 @@
 .detail-item-card .item-note {
     font-size: 0.8rem;
     color: var(--text-muted);
-    margin-top: 4px;
     line-height: 1.4;
 }
 

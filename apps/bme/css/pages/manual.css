@@ -416,13 +416,22 @@
     box-shadow: var(--app-shadow-sm);
 }
 
+.table-note {
+    width: 250px;
+}
+
 @media (min-width: 768px) {
     .table-view-container {
         width: 95vw;
-        max-width: 1200px;
+        max-width: 1000px;
         position: relative;
         left: 50%;
         transform: translateX(-50%);
+    }
+
+    .table-note {
+        width: none !important;
+        max-width: auto;
     }
 }
 

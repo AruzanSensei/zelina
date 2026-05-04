@@ -333,7 +333,7 @@ export function initManualMode() {
                             <input type="text" class="item-qty table-qty-input" value="${item.qty}" data-index="${index}" inputmode="numeric" oninput="this.parentNode.dataset.value = this.value || '1'">
                         </span>
                     </td>
-                    <td><textarea class="item-note ${!item.note ? 'required-empty-orange' : ''}" data-index="${index}" style="width: 250px" placeholder="Deskripsi (wajib)" rows="2">${item.note || ''}</textarea></td>
+                    <td><textarea class="item-note table-note ${!item.note ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Deskripsi (wajib)" rows="1">${item.note || ''}</textarea></td>
                     <td>
                         <button class="remove-item-btn" data-index="${index}"><i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i></button>
                     </td>
@@ -537,11 +537,20 @@ export function initManualMode() {
         document.addEventListener('click', (e) => {
             if (!e.target.closest('#bme-context-menu')) closeContextMenu();
 
-            // Exit custom selects
-            if (!e.target.closest('.custom-select')) {
-                document.querySelectorAll('.select-items:not(.select-hide)').forEach(el => {
-                    el.classList.add('select-hide');
-                });
+            // Handle custom select portal option click
+            const portalOption = e.target.closest('.select-items-portal div');
+            if (portalOption) {
+                const portal = portalOption.closest('.select-items-portal');
+                const index = parseInt(portal.dataset.sourceIndex);
+                items[index].tipe = portalOption.dataset.value;
+                portal.remove();
+                render();
+                return;
+            }
+
+            // Exit custom selects portal
+            if (!e.target.closest('.select-selected') && !e.target.closest('.select-items-portal')) {
+                document.querySelectorAll('.select-items-portal').forEach(el => el.remove());
             }
 
             // Exit multi-select if clicking away from any card or inputs
@@ -554,6 +563,12 @@ export function initManualMode() {
     };
 
     setupContextMenuListeners();
+
+    // Close custom select portal on scroll
+    document.addEventListener('scroll', (e) => {
+        if (e.target.closest && e.target.closest('.select-items-portal')) return;
+        document.querySelectorAll('.select-items-portal').forEach(el => el.remove());
+    }, true);
 
     // ============================================
     // EVENTS
@@ -619,22 +634,29 @@ export function initManualMode() {
         const selectSelected = target.closest('.select-selected');
         if (selectSelected) {
             const wrapper = selectSelected.closest('.custom-select');
-            const itemsList = wrapper.querySelector('.select-items');
-            const isHidden = itemsList.classList.contains('select-hide');
-            
-            document.querySelectorAll('.select-items:not(.select-hide)').forEach(el => el.classList.add('select-hide'));
-            if (isHidden) itemsList.classList.remove('select-hide');
-            return;
-        }
+            const itemsListTemplate = wrapper.querySelector('.select-items');
 
-        const selectOption = target.closest('.select-items div');
-        if (selectOption) {
-            const wrapper = selectOption.closest('.custom-select');
-            const index = parseInt(wrapper.dataset.index);
-            const val = selectOption.dataset.value;
-            
-            items[index].tipe = val;
-            render(); 
+            const existingPortal = document.querySelector('.select-items-portal');
+            if (existingPortal) existingPortal.remove();
+
+            if (existingPortal && existingPortal.dataset.sourceIndex === wrapper.dataset.index) {
+                return; // just toggling it closed
+            }
+
+            const portal = itemsListTemplate.cloneNode(true);
+            portal.classList.remove('select-hide');
+            portal.classList.add('select-items-portal');
+            portal.dataset.sourceIndex = wrapper.dataset.index;
+
+            const rect = wrapper.getBoundingClientRect();
+            portal.style.position = 'fixed';
+            portal.style.top = rect.bottom + 'px';
+            portal.style.left = rect.left + 'px';
+            portal.style.width = rect.width + 'px';
+            portal.style.zIndex = '999999';
+            portal.style.marginTop = '4px';
+
+            document.body.appendChild(portal);
             return;
         }
 
