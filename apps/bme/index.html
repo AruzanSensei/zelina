@@ -224,6 +224,20 @@
             <div id="history-list" class="history-list">
                 <!-- History items will be injected here -->
             </div>
+            
+            <!-- Batch Action Bar (fixed footer for multiselect) -->
+            <div id="batch-delete-bar" class="batch-delete-bar hidden">
+                <span id="batch-count">0 dipilih</span>
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <button id="btn-batch-download" class="btn btn-sm" style="background:#27ae60; color:white; border:none;"
+                        title="Unduh semua terpilih">
+                        <i data-lucide="download" style="width:14px;height:14px;stroke-width:2.5"></i> Unduh
+                    </button>
+                    <button id="btn-batch-delete" class="btn btn-sm" style="background:#ff4d4f; color:white; border:none;">
+                        <i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i> Hapus
+                    </button>
+                </div>
+            </div>
         </section>
 
         <!-- MODE 4: KEUANGAN -->
@@ -621,7 +635,7 @@
     </div>
 
     <!-- Custom Date Picker Modal -->
-    <div id="custom-date-picker" class="modal">
+    <div id="custom-date-picker" class="modal picker-modal">
         <div class="modal-content datepicker-content">
             <div class="datepicker-header">
                 <input type="text" id="dp-input" class="form-input" placeholder="dd/mm/yyyy"
@@ -651,7 +665,7 @@
     </div>
 
     <!-- Custom Time Picker Modal -->
-    <div id="custom-time-picker" class="modal">
+    <div id="custom-time-picker" class="modal picker-modal">
         <div class="modal-content datepicker-content" style="max-width:auto;">
             <div class="modal-header" style="border-bottom:none; padding-bottom:5px;">
                 <h2 style="font-size:1.1rem;">Atur Waktu</h2>
@@ -742,19 +756,6 @@
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script type="module" src="js/app.js?v=1.4"></script>
-    <!-- Batch Action Bar (fixed footer for multiselect) -->
-    <div id="batch-delete-bar" class="batch-delete-bar hidden">
-        <span id="batch-count">0 dipilih</span>
-        <div style="display:flex; gap:8px; align-items:center;">
-            <button id="btn-batch-download" class="btn btn-sm" style="background:#27ae60; color:white; border:none;"
-                title="Unduh semua terpilih">
-                <i data-lucide="download" style="width:14px;height:14px;stroke-width:2.5"></i> Unduh
-            </button>
-            <button id="btn-batch-delete" class="btn btn-sm" style="background:#ff4d4f; color:white; border:none;">
-                <i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i> Hapus
-            </button>
-        </div>
-    </div>
 
 </body>
 <script>

@@ -1662,18 +1662,18 @@ class PDFPrintQueue {
         document.body.appendChild(el);
         this._el = el;
 
-        // Wire up next button
-        el.querySelector('#pqi-next-btn')?.addEventListener('click', () => {
-            if (this.hasNext) {
-                this._runNext();
-            } else {
-                this._finish();
-            }
-        });
+        // Wire buttons
+        const wireButtons = (container) => {
+            container.querySelector('#pqi-next-btn')?.addEventListener('click', () => {
+                if (this.hasNext) { this._runNext(); } else { this._finish(); }
+            });
+            container.querySelector('#pqi-close-btn')?.addEventListener('click', () => this._finish());
+        };
+        wireButtons(el);
     }
 
     _html() {
-        const done  = this.done;            // after increment in _runNext
+        const done  = this.done;
         const total = this.jobs.length;
         const pct   = total > 0 ? Math.round((done / total) * 100) : 0;
         const hasN  = done < total;
@@ -1684,6 +1684,7 @@ class PDFPrintQueue {
             <span class="pqi-icon-wrap"><i data-lucide="file-text" style="width:16px;height:16px;stroke-width:2;"></i></span>
             <span class="pqi-count">${done} <span class="pqi-sep">/</span> ${total}</span>
             <span class="pqi-label-text">PDF</span>
+            <button id="pqi-close-btn" class="pqi-close" title="Tutup">×</button>
         </div>
         <div class="pqi-doc-label">${label}</div>
         <div class="pqi-bar-track"><div class="pqi-bar-fill" style="width:${pct}%"></div></div>
@@ -1699,11 +1700,11 @@ class PDFPrintQueue {
         this._el.innerHTML = this._html();
         if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...this._el.querySelectorAll('[data-lucide]')] });
 
-        // Re-wire button
+        // Re-wire buttons
         this._el.querySelector('#pqi-next-btn')?.addEventListener('click', () => {
-            if (this.hasNext) { this._runNext(); }
-            else { this._finish(); }
+            if (this.hasNext) { this._runNext(); } else { this._finish(); }
         });
+        this._el.querySelector('#pqi-close-btn')?.addEventListener('click', () => this._finish());
 
         // Pulse animation
         this._el.classList.remove('pqi-pulse');

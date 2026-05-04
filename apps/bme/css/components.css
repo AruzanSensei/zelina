@@ -1023,4 +1023,64 @@
 .pqi-btn-done {
     background: #27ae60;
     color: white;
-}
+}
+
+/* X close button — pojok kanan header */
+.pqi-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 1rem;
+    line-height: 1;
+    padding: 2px 5px;
+    border-radius: 6px;
+    transition: background 0.15s, color 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pqi-close:hover {
+    background: var(--border-color);
+    color: var(--text-main);
+}
+
+/* ============================================
+   CUSTOM SELECT DROPDOWN (form-input item-tipe)
+   Replaces browser-native appearance with
+   on-theme chevron icon via SVG inline.
+   ============================================ */
+select.form-input {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+    padding-right: 36px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+select.form-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent);
+}
+
+select.form-input option {
+    background: var(--bg-card);
+    color: var(--text-main);
+    font-size: 0.875rem;
+    padding: 8px;
+}
+
+/* Dark mode: chevron menjadi warna primary yang sama */
+[data-theme="dark"] select.form-input {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234A90E2' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    color-scheme: dark;
+}
+

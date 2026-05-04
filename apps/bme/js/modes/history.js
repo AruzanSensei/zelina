@@ -416,12 +416,12 @@ export function initHistoryMode() {
     /**
      * Helper: tambahkan entry/entries ke pdfPrintQueue lalu mulai.
      * @param {object[]} entries  - array history entry
-     * @param {'single'|'combined'} mode
-     * @param {boolean} forceCombined - paksa combined (untuk batch)
+     * @param {'single'|'combined'} mode  - ikut setting pdfPageMode
      */
-    const _queuePDF = (entries, mode, forceCombined = false) => {
+    const _queuePDF = (entries, mode) => {
         pdfPrintQueue._reset();
-        const useMode = forceCombined ? 'combined' : mode;
+        // Normalize: hanya 'combined' yang valid untuk gabung; semua selain itu = single
+        const useMode = mode === 'combined' ? 'combined' : 'single';
         entries.forEach(entry => {
             const { items, title } = entry;
             if (useMode === 'combined') {
@@ -434,6 +434,7 @@ export function initHistoryMode() {
                     setTimeout(() => { try { w.focus(); w.print(); } catch {} }, 300);
                 });
             } else {
+                // 'single': dua job terpisah — invoice dulu, surat jalan via queue
                 const invHtml = buildInvoiceHTML(items, title);
                 const sjHtml  = buildSuratJalanHTML(items);
                 pdfPrintQueue
@@ -455,6 +456,7 @@ export function initHistoryMode() {
         });
         pdfPrintQueue.start();
     };
+
 
     // ===================================
     // RENDER LIST
@@ -544,7 +546,7 @@ export function initHistoryMode() {
         const shownAgeLabels = new Set();
 
         filtered.forEach((entry, filteredIdx) => {
-            const realIndex = appState.state.history.findIndex(h => h.id === entry.id || h.timestamp === entry.timestamp);
+            const realIndex = appState.state.history.indexOf(entry);
             const age = getDataAge(entry.timestamp);
 
             // Badge dedup: show label only for first occurrence of each exact label
@@ -662,9 +664,9 @@ export function initHistoryMode() {
             const NOTIF_KEY = 'bme_batch_dl_notified';
             if (!localStorage.getItem(NOTIF_KEY)) {
                 const ok = confirm(
-                    `Akan mengunduh ${count} entri via antrian PDF.\n\n` +
-                    `⚠️ Setiap entri akan menjadi satu cetak gabungan (Invoice + Surat Jalan).\n` +
-                    `Gunakan indikator di pojok kanan bawah untuk lanjut ke cetak berikutnya.\n\n` +
+                    `Akan mencetak ${count} entri via antrian PDF.\n\n` +
+                    `⚠️ Gunakan indikator di pojok kanan bawah untuk lanjut ke cetak berikutnya.\n` +
+                    `Mode cetak mengikuti pengaturan Format Unduhan.\n\n` +
                     `Lanjutkan?`
                 );
                 if (!ok) return;
@@ -675,8 +677,9 @@ export function initHistoryMode() {
 
             const defaultMethod = appState.state.settings.defaultDownloadMethod || 'pdf';
             if (defaultMethod === 'pdf') {
-                // Batch: always combined (1 window per entry) to prevent tab explosion
-                _queuePDF(selectedEntries, 'combined', true);
+                // Ikut setting pdfPageMode — user bisa ganti di Settings
+                const pageMode = appState.state.settings.pdfPageMode || 'single';
+                _queuePDF(selectedEntries, pageMode);
             } else {
                 // Non-PDF: keep sequential loop with delay
                 for (const entry of selectedEntries) {
