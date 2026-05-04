@@ -148,8 +148,9 @@
     background: var(--bg-input);
     color: var(--text-main);
     -moz-appearance: textfield;
+    appearance: textfield;
     text-decoration: none;
-    -moz-text-decoration-style: none;
+    text-decoration-style: none;
     box-decoration-break: none;
 }
 
@@ -657,6 +658,7 @@
 
 .table-qty-input[type="text"] {
     -moz-appearance: textfield;
+    appearance: textfield;
     text-align: center;
     font-weight: 600;
 }
