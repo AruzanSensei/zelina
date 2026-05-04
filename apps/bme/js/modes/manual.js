@@ -82,6 +82,23 @@ export function initManualMode() {
         }
     };
 
+    const indicatorEl = document.getElementById('required-fields-indicator');
+    if (indicatorEl) {
+        indicatorEl.style.cursor = 'pointer';
+        indicatorEl.style.pointerEvents = 'auto'; // ensure it can be clicked
+        indicatorEl.addEventListener('click', () => {
+            const firstEmpty = document.querySelector('.required-empty-orange, .required-empty-red');
+            if (firstEmpty) {
+                firstEmpty.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                if (firstEmpty.tagName === 'INPUT' || firstEmpty.tagName === 'TEXTAREA') {
+                    setTimeout(() => firstEmpty.focus(), 400);
+                } else if (firstEmpty.classList.contains('select-selected')) {
+                    setTimeout(() => firstEmpty.click(), 400);
+                }
+            }
+        });
+    }
+
     // ============================================
     // MICRO UX HANDLERS
     // ============================================
@@ -212,13 +229,18 @@ export function initManualMode() {
                         </div>
                         <div class="item-tipe-wrap" style="flex: 2; padding-top: 4px;">
                             <label class="field-label"><i data-lucide="tag" style="width:12px;height:12px;vertical-align:middle;margin-top:-2px;"></i> Tipe</label>
-                            <select class="form-input item-tipe ${!item.tipe ? 'required-empty-orange' : ''}" data-index="${index}">
-                                <option value="" ${!item.tipe ? 'selected' : ''}></option>
-                                <option value="ICA" ${item.tipe === 'ICA' ? 'selected' : ''}>ICA</option>
-                                <option value="Protecta" ${item.tipe === 'Protecta' ? 'selected' : ''}>Protecta</option>
-                                <option value="Prolink" ${item.tipe === 'Prolink' ? 'selected' : ''}>Prolink</option>
-                                <option value="APC" ${item.tipe === 'APC' ? 'selected' : ''}>APC</option>
-                            </select>
+                            <div class="custom-select item-tipe" data-index="${index}" data-value="${item.tipe || ''}">
+                                <div class="select-selected form-input ${!item.tipe ? 'required-empty-orange' : ''}" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
+                                    <span class="selected-text" style="opacity: ${!item.tipe ? '0.5' : '1'}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.tipe || 'Tipe'}</span>
+                                    <i data-lucide="chevron-down" style="width:14px;height:14px;stroke-width:2;opacity:0.5;flex-shrink:0;"></i>
+                                </div>
+                                <div class="select-items select-hide">
+                                    <div data-value="ICA" class="${item.tipe === 'ICA' ? 'same-as-selected' : ''}">ICA</div>
+                                    <div data-value="Protecta" class="${item.tipe === 'Protecta' ? 'same-as-selected' : ''}">Protecta</div>
+                                    <div data-value="Prolink" class="${item.tipe === 'Prolink' ? 'same-as-selected' : ''}">Prolink</div>
+                                    <div data-value="APC" class="${item.tipe === 'APC' ? 'same-as-selected' : ''}">APC</div>
+                                </div>
+                            </div>
                         </div>
                         <div class="item-qty-wrap" style="min-width: 90px; margin-top:17px; display: flex; flex-direction: column;">
                             <div class="unit-switch" data-index="${index}" style="margin: 0 0 6px auto;">
@@ -293,13 +315,18 @@ export function initManualMode() {
                         </span>
                     </td>
                     <td>
-                        <select class="item-tipe ${!item.tipe ? 'required-empty-orange' : ''}" data-index="${index}">
-                            <option value="" ${!item.tipe ? 'selected' : ''}></option>
-                            <option value="ICA" ${item.tipe === 'ICA' ? 'selected' : ''}>ICA</option>
-                            <option value="Protecta" ${item.tipe === 'Protecta' ? 'selected' : ''}>Protecta</option>
-                            <option value="Prolink" ${item.tipe === 'Prolink' ? 'selected' : ''}>Prolink</option>
-                            <option value="APC" ${item.tipe === 'APC' ? 'selected' : ''}>APC</option>
-                        </select>
+                        <div class="custom-select item-tipe table-select" data-index="${index}" data-value="${item.tipe || ''}">
+                            <div class="select-selected ${!item.tipe ? 'required-empty-orange' : ''}" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; width:100%; padding: 4px;">
+                                <span class="selected-text" style="opacity: ${!item.tipe ? '0.5' : '1'}">${item.tipe || 'Tipe'}</span>
+                                <i data-lucide="chevron-down" style="width:12px;height:12px;stroke-width:2;opacity:0.5;"></i>
+                            </div>
+                            <div class="select-items select-hide">
+                                <div data-value="ICA" class="${item.tipe === 'ICA' ? 'same-as-selected' : ''}">ICA</div>
+                                <div data-value="Protecta" class="${item.tipe === 'Protecta' ? 'same-as-selected' : ''}">Protecta</div>
+                                <div data-value="Prolink" class="${item.tipe === 'Prolink' ? 'same-as-selected' : ''}">Prolink</div>
+                                <div data-value="APC" class="${item.tipe === 'APC' ? 'same-as-selected' : ''}">APC</div>
+                            </div>
+                        </div>
                     </td>
                     <td>
                         <span class="input-sizer" data-value="${item.qty || '1'}">
@@ -510,6 +537,13 @@ export function initManualMode() {
         document.addEventListener('click', (e) => {
             if (!e.target.closest('#bme-context-menu')) closeContextMenu();
 
+            // Exit custom selects
+            if (!e.target.closest('.custom-select')) {
+                document.querySelectorAll('.select-items:not(.select-hide)').forEach(el => {
+                    el.classList.add('select-hide');
+                });
+            }
+
             // Exit multi-select if clicking away from any card or inputs
             if (isMultiSelectMode && !e.target.closest('.item-card') && !e.target.closest('#bme-context-menu') && !e.target.closest('.sticky-action-bar')) {
                 isMultiSelectMode = false;
@@ -580,6 +614,29 @@ export function initManualMode() {
     // Container Interactions
     container.addEventListener('click', (e) => {
         const target = e.target;
+
+        // Custom Select Handler
+        const selectSelected = target.closest('.select-selected');
+        if (selectSelected) {
+            const wrapper = selectSelected.closest('.custom-select');
+            const itemsList = wrapper.querySelector('.select-items');
+            const isHidden = itemsList.classList.contains('select-hide');
+            
+            document.querySelectorAll('.select-items:not(.select-hide)').forEach(el => el.classList.add('select-hide'));
+            if (isHidden) itemsList.classList.remove('select-hide');
+            return;
+        }
+
+        const selectOption = target.closest('.select-items div');
+        if (selectOption) {
+            const wrapper = selectOption.closest('.custom-select');
+            const index = parseInt(wrapper.dataset.index);
+            const val = selectOption.dataset.value;
+            
+            items[index].tipe = val;
+            render(); 
+            return;
+        }
 
         // Remove Item
         const removeBtn = target.closest('.remove-item-btn') || target.closest('.swipe-delete');

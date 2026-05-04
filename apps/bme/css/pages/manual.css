@@ -408,17 +408,22 @@
    ============================================ */
 .table-view-container {
     overflow-x: auto;
+    width: 100%;
+    margin-bottom: 20px;
     background: var(--bg-card);
     border-radius: var(--radius-sm);
     border: 1px solid var(--border-color);
+    box-shadow: var(--app-shadow-sm);
 }
 
-.table-view-container {
-    overflow-x: auto;
-    width: 100%;
-    margin-bottom: 20px;
-    border-radius: var(--radius-sm);
-    box-shadow: var(--app-shadow-sm);
+@media (min-width: 768px) {
+    .table-view-container {
+        width: 95vw;
+        max-width: 1200px;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+    }
 }
 
 .table-view-container::-webkit-scrollbar {
@@ -589,10 +594,7 @@
 .item-table td:nth-child(5) {
     /* Note */
     text-align: left;
-    width: 1%;
-    /* Take remaining space if any */
-    min-width: 100px;
-    max-width: 250px;
+    width: auto;
     white-space: normal;
 }
 
