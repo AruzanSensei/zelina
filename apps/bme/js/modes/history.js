@@ -23,6 +23,14 @@ export function initHistoryMode() {
     const btnDetailEditToggle = document.getElementById('btn-detail-edit-toggle');
     const btnDetailDelete = document.getElementById('btn-detail-delete');
 
+    // Helper to format currency string (e.g. "10000" -> "10.000")
+    const formatNumberStr = (str) => {
+        if (!str) return '';
+        const num = parseInt(str.replace(/\D/g, ''));
+        if (isNaN(num)) return '';
+        return new Intl.NumberFormat('id-ID').format(num);
+    };
+
     let currentDetailItem = null;
     let currentDetailIndex = null;
     let isDetailEditMode = false;
@@ -1078,7 +1086,7 @@ export function initHistoryMode() {
                         </div>
                         
                         <span style="color:var(--text-muted);">•</span>
-                        <input class="edit-input edit-price" type="number" value="${item.price}" style="flex:1;" data-idx="${idx}">
+                        <input class="edit-input edit-price item-price-format" type="text" inputmode="numeric" value="${formatNumberStr(String(item.price))}" style="flex:1;" data-idx="${idx}" oninput="this.value = formatNumberStr(this.value)">
                     </div>
                     ${isAdvance ? `
                     <div style="margin-bottom:4px;">
@@ -1253,7 +1261,7 @@ export function initHistoryMode() {
             names.forEach((el, i) => {
                 currentDetailItem.items[i].name = el.value;
                 currentDetailItem.items[i].qty = parseInt(qtys[i].value) || 1;
-                currentDetailItem.items[i].price = parseFloat(prices[i].value) || 0;
+                currentDetailItem.items[i].price = parseFloat(prices[i].value.replace(/\D/g, '')) || 0;
                 currentDetailItem.items[i].invKeterangan = invKeterangans[i]?.value || '';
                 currentDetailItem.items[i].sjKeterangan = sjKeterangans[i]?.value || '';
                 const activeUnitEl = unitSwitches[i].querySelector('.unit-opt.active');
@@ -1264,7 +1272,7 @@ export function initHistoryMode() {
             names.forEach((el, i) => {
                 currentDetailItem.items[i].name = el.value;
                 currentDetailItem.items[i].qty = parseInt(qtys[i].value) || 1;
-                currentDetailItem.items[i].price = parseFloat(prices[i].value) || 0;
+                currentDetailItem.items[i].price = parseFloat(prices[i].value.replace(/\D/g, '')) || 0;
                 currentDetailItem.items[i].note = notes[i]?.value || '';
                 const activeUnitEl = unitSwitches[i].querySelector('.unit-opt.active');
                 if (activeUnitEl) currentDetailItem.items[i].qtyUnit = activeUnitEl.dataset.unit;

@@ -306,7 +306,7 @@ export function initManualMode() {
                             <input type="text" class="item-qty table-qty-input" value="${item.qty}" data-index="${index}" inputmode="numeric" oninput="this.parentNode.dataset.value = this.value || '1'">
                         </span>
                     </td>
-                    <td><textarea class="item-note ${!item.note ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Deskripsi (wajib)" rows="2">${item.note || ''}</textarea></td>
+                    <td><textarea class="item-note ${!item.note ? 'required-empty-orange' : ''}" data-index="${index}" style="width: 250px" placeholder="Deskripsi (wajib)" rows="2">${item.note || ''}</textarea></td>
                     <td>
                         <button class="remove-item-btn" data-index="${index}"><i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i></button>
                     </td>
