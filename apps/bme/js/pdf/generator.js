@@ -462,15 +462,20 @@ export const buildInvoiceHTML = (items, titleName) => {
     const dateStr = getDateStr();
     const total = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
 
-    const rows = items.map((item, index) => `
+    const rows = items.map((item, index) => {
+        const tipeStr = item.tipe === '-' ? '' : item.tipe;
+        const autoInv = [item.name, tipeStr, item.note].filter(Boolean).join(' ');
+        const ket = item.invKeterangan || autoInv;
+        return `
                 <tr>
                     <td>${index + 1}</td>
-                    <td>${(item.invKeterangan || `${item.name || ''} ${item.tipe || ''} ${item.note || ''}`).trim().replace(/\n/g, '<br>')}</td>
+                    <td>${ket.trim().replace(/\n/g, '<br>')}</td>
                     <td>${item.qty} ${item.qtyUnit || 'pcs'}</td>
                     <td>Rp ${formatNumber(item.price)}</td>
                     <td>Rp ${formatNumber(item.price * item.qty)}</td>
                 </tr>
-    `).join('');
+        `;
+    }).join('');
 
     return `<!DOCTYPE html>
 <html lang="id">
@@ -548,14 +553,20 @@ ${rows}
 };
 
 export const buildSuratJalanHTML = (items) => {
-    const rows = items.map((item, index) => `
+    const rows = items.map((item, index) => {
+        const prefix = item.tipe === '-' ? '' : 'UPS';
+        const tipeStr = item.tipe === '-' ? '' : item.tipe;
+        const autoSj = [prefix, tipeStr, item.note].filter(Boolean).join(' ');
+        const ket = item.sjKeterangan || autoSj;
+        return `
                 <tr>
                     <td>${index + 1}</td>
                     <td>${item.name || ''}</td>
                     <td>${item.qty} ${item.qtyUnit || 'pcs'}</td>
-                    <td>${(item.sjKeterangan || `UPS ${item.tipe || ''} ${item.note || ''}`).trim().replace(/\n/g, '<br>')}</td>
+                    <td>${ket.trim().replace(/\n/g, '<br>')}</td>
                 </tr>
-    `).join('');
+        `;
+    }).join('');
 
     return `<!DOCTYPE html>
 <html lang="id">
