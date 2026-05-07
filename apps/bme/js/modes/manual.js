@@ -235,6 +235,7 @@ export function initManualMode() {
                                     <i data-lucide="chevron-down" style="width:14px;height:14px;stroke-width:2;opacity:0.5;flex-shrink:0;"></i>
                                 </div>
                                 <div class="select-items select-hide">
+                                    <div data-value="" class="${item.tipe === '' ? 'same-as-selected' : ''}">-</div>
                                     <div data-value="ICA" class="${item.tipe === 'ICA' ? 'same-as-selected' : ''}">ICA</div>
                                     <div data-value="Protecta" class="${item.tipe === 'Protecta' ? 'same-as-selected' : ''}">Protecta</div>
                                     <div data-value="Prolink" class="${item.tipe === 'Prolink' ? 'same-as-selected' : ''}">Prolink</div>
@@ -321,6 +322,7 @@ export function initManualMode() {
                                 <i data-lucide="chevron-down" style="width:12px;height:12px;stroke-width:2;opacity:0.5;"></i>
                             </div>
                             <div class="select-items select-hide">
+                                <div data-value="" class="${item.tipe === '' ? 'same-as-selected' : ''}">-</div>
                                 <div data-value="ICA" class="${item.tipe === 'ICA' ? 'same-as-selected' : ''}">ICA</div>
                                 <div data-value="Protecta" class="${item.tipe === 'Protecta' ? 'same-as-selected' : ''}">Protecta</div>
                                 <div data-value="Prolink" class="${item.tipe === 'Prolink' ? 'same-as-selected' : ''}">Prolink</div>

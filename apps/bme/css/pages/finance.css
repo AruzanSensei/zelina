@@ -307,3 +307,11 @@
     border-radius: 0;
     margin-bottom: 0;
 }
+
+[data-theme="dark"] .finance-chart-card {
+    box-shadow: none;
+}
+
+[data-theme="dark"] .finance-history-section {
+    box-shadow: none;
+}

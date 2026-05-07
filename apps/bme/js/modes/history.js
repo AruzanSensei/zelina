@@ -1212,7 +1212,9 @@ export function initHistoryMode() {
             btn.className = 'btn';
             btn.innerHTML = '<i data-lucide="download" style="width:15px;height:15px;stroke-width:2.5"></i>';
             btn.style.cssText = 'position:absolute; right:10px; bottom:8px; padding:7px 11px; font-size:0.78rem; z-index:2; background:#e67e22; border-color:#d35400; color:white;';
-            if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...btn.querySelectorAll('[data-lucide]')] });
+            setTimeout(() => {
+                if (window.lucide) lucide.createIcons();
+            }, 10);
             btn.title = type === 'invoice' ? 'Unduh Invoice' : 'Unduh Surat Jalan';
             btn.addEventListener('click', async (e) => {
                 e.stopPropagation();

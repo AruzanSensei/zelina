@@ -435,6 +435,12 @@
     }
 }
 
+@media (max-width: 767px) {
+    .table-note {
+        width: 250px !important;
+    }
+}
+
 .table-view-container::-webkit-scrollbar {
     height: 6px;
 }

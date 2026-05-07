@@ -465,7 +465,7 @@ export const buildInvoiceHTML = (items, titleName) => {
     const rows = items.map((item, index) => `
                 <tr>
                     <td>${index + 1}</td>
-                    <td>${item.invKeterangan || `${item.name || ''} ${item.tipe || ''} ${item.note || ''}`.trim()}</td>
+                    <td>${(item.invKeterangan || `${item.name || ''} ${item.tipe || ''} ${item.note || ''}`).trim().replace(/\n/g, '<br>')}</td>
                     <td>${item.qty} ${item.qtyUnit || 'pcs'}</td>
                     <td>Rp ${formatNumber(item.price)}</td>
                     <td>Rp ${formatNumber(item.price * item.qty)}</td>
@@ -553,7 +553,7 @@ export const buildSuratJalanHTML = (items) => {
                     <td>${index + 1}</td>
                     <td>${item.name || ''}</td>
                     <td>${item.qty} ${item.qtyUnit || 'pcs'}</td>
-                    <td>${item.sjKeterangan || `UPS ${item.tipe || ''} ${item.note || ''}`.trim()}</td>
+                    <td>${(item.sjKeterangan || `UPS ${item.tipe || ''} ${item.note || ''}`).trim().replace(/\n/g, '<br>')}</td>
                 </tr>
     `).join('');
 
