@@ -1,6 +1,6 @@
 // scripts/public/product.js — Product detail page
 
-const QR_BASE = 'https://qr.zanxa.site/product.html?id=';
+const QR_BASE = 'https://qr.zanxa.site/p/';
 const id = new URLSearchParams(location.search).get('id') || '';
 
 if (!id) {

@@ -1,6 +1,6 @@
 // scripts/admin/qrcodes.js
 
-var QR_BASE_URL = 'https://qr.zanxa.site/product.html?id=';
+var QR_BASE_URL = 'https://qr.zanxa.site/p/';
 var allProducts = [];
 var qrInstances = {}; // { nomor_seri: QRCode instance }
 

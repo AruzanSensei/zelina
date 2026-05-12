@@ -3,7 +3,7 @@
 const CACHE_KEY = 'ets_products_v2';
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 const DEMO_MAX  = 6;
-const QR_BASE   = 'https://qr.zanxa.site/product.html?id=';
+const QR_BASE   = 'https://qr.zanxa.site/p/';
 
 let allProducts = [];
 let showingAll  = false;
@@ -24,7 +24,7 @@ function doSearch() {
   const err = document.getElementById('search-error');
   err.textContent = '';
   if (!val) { err.textContent = 'Masukkan nomor seri terlebih dahulu.'; return; }
-  window.location.href = 'product.html?id=' + encodeURIComponent(val);
+  window.location.href = 'p/' + encodeURIComponent(val);
 }
 
 // Load products
@@ -65,7 +65,7 @@ function renderDemo() {
 
   const visible = showingAll ? allProducts : allProducts.slice(0, DEMO_MAX);
   grid.innerHTML = visible.map(p => `
-    <a class="demo-item fade-in" href="product.html?id=${encodeURIComponent(p.nomor_seri)}">
+    <a class="demo-item fade-in" href="p/${encodeURIComponent(p.nomor_seri)}">
       <div class="demo-id">${p.nomor_seri}</div>
       <div class="demo-name">${p.nama_produk}</div>
       ${p.tipe_kode ? `<div class="demo-type">${p.tipe_kode}</div>` : ''}

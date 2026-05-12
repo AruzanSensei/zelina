@@ -439,7 +439,7 @@ function renderDetail(p) {
   // 5. QR Code
   const qrBox = document.getElementById('detail-qr-box');
   qrBox.innerHTML = '';
-  const publicUrl = `https://qr.zanxa.site/product.html?id=${p.nomor_seri}`;
+  const publicUrl = `https://qr.zanxa.site/p/${p.nomor_seri}`;
   new QRCode(qrBox, {
     text: publicUrl,
     width: 90,
