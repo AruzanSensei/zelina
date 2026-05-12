@@ -1,5 +1,3 @@
-// scripts/admin/products.js — CRUD Products page logic
-
 // Use window-level state to persist through SPA navigation re-injections
 window.PAGE_SIZE = window.PAGE_SIZE || 20;
 window.currentMode = 'list'; 
@@ -11,10 +9,32 @@ window.currentPage = 1;
 window.pendingImages = {};
 window.existingUrls = {};
 
+async function ensureQRDependencies() {
+  if (!window.QRCode) {
+    await new Promise(r => {
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+      s.onload = r;
+      document.body.appendChild(s);
+    });
+  }
+  if (typeof generateQRCode === 'undefined') {
+    await new Promise(r => {
+      const s = document.createElement('script');
+      s.src = '../components/qr-generator.js';
+      s.onload = r;
+      document.body.appendChild(s);
+    });
+  }
+}
+
 (async () => {
   // 1. Initial Render Sidebar & Static Listeners (Instant)
   renderSidebar('products');
   attachStaticEventListeners();
+
+  // 1.5 Load dependencies
+  await ensureQRDependencies();
 
   // 2. Auth Check (Async)
   await requireAuth();

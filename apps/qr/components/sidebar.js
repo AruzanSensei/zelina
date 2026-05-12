@@ -163,6 +163,18 @@ window.navigateTo = async (url, forceRefresh = false) => {
       document.title = doc.title;
       history.pushState(null, '', url);
 
+      // Inject missing stylesheets dynamically
+      const newLinks = Array.from(doc.querySelectorAll('link[rel="stylesheet"]'));
+      newLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        if (href && !document.querySelector(`link[rel="stylesheet"][href="${href}"]`)) {
+          const newLink = document.createElement('link');
+          newLink.rel = 'stylesheet';
+          newLink.href = href;
+          document.head.appendChild(newLink);
+        }
+      });
+
       // Close sidebar if open on mobile
       const sidebarEl = document.getElementById('sidebar');
       if (sidebarEl) sidebarEl.classList.remove('open');
