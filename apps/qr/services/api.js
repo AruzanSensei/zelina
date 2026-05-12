@@ -3,7 +3,21 @@
 // Requires: config.js + auth.js loaded before this file
 // ============================================================
 
+const apiCache = new Map();
+
+window.clearApiCache = () => {
+  apiCache.clear();
+};
+
 async function apiFetch(path, options = {}) {
+  const isGET = !options.method || options.method === 'GET';
+  const cacheKey = path;
+
+  // Use cache if it's a GET request and not explicitly bypassing cache
+  if (isGET && !options.bypassCache && apiCache.has(cacheKey)) {
+    return apiCache.get(cacheKey);
+  }
+
   const token = await getAccessToken();
   const headers = {
     'Content-Type': 'application/json',
@@ -20,6 +34,11 @@ async function apiFetch(path, options = {}) {
   if (!res.ok) {
     throw new Error(json.error || `HTTP ${res.status}`);
   }
+
+  if (isGET) {
+    apiCache.set(cacheKey, json);
+  }
+
   return json;
 }
 

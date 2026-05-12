@@ -1,7 +1,7 @@
 // scripts/admin/media.js
 
-const SLOTS = ['depan','kanan','kiri','belakang'];
-let allProducts = [];
+var SLOTS = ['depan','kanan','kiri','belakang'];
+var allProducts = [];
 
 (async () => {
   await requireAuth();

@@ -18,12 +18,14 @@
     const res = await getAnalytics();
     const d = res.data;
 
-    setVal('stat-total',    fmt(d.total_scans));
-    setVal('stat-today',    fmt(d.scans_today));
+    setVal('stat-total', fmt(d.total_scans));
+    setVal('stat-today', fmt(d.scans_today));
     setVal('stat-products', fmt(d.total_products));
 
-    // Top products table
+    // Top products table 
     const wrap = document.getElementById('top-table-wrap');
+    if (!wrap) return; // Prevent SPA race condition if user navigated away
+
     if (!d.top_products?.length) {
       wrap.innerHTML = `
         <div class="empty-state" style="padding:30px 0;">
@@ -54,9 +56,9 @@
                   <td>
                     <div style="display:flex;align-items:center;gap:8px;">
                       <div style="flex:1;background:var(--gray-100);border-radius:99px;height:6px;">
-                        <div style="width:${Math.round((p.scan_count/total)*100)}%;background:var(--green);border-radius:99px;height:6px;"></div>
+                        <div style="width:${Math.round((p.scan_count / total) * 100)}%;background:var(--green);border-radius:99px;height:6px;"></div>
                       </div>
-                      <span style="font-size:.78rem;color:var(--text-sub);min-width:36px;">${Math.round((p.scan_count/total)*100)}%</span>
+                      <span style="font-size:.78rem;color:var(--text-sub);min-width:36px;">${Math.round((p.scan_count / total) * 100)}%</span>
                     </div>
                   </td>
                 </tr>
@@ -66,7 +68,9 @@
         </div>`;
     }
   } catch (e) {
-    showToast('Gagal memuat analytics: ' + e.message, 'error');
-    ['stat-total','stat-today','stat-products'].forEach(id => setVal(id, '—'));
+    if (document.getElementById('stat-total')) {
+      showToast('Gagal memuat analytics: ' + e.message, 'error');
+      ['stat-total', 'stat-today', 'stat-products'].forEach(id => setVal(id, '—'));
+    }
   }
 })();

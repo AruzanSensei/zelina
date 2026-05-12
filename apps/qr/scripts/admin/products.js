@@ -1,14 +1,14 @@
 // scripts/admin/products.js — CRUD Products page logic
 
-const PAGE_SIZE = 20;
-let currentMode = 'list';   // 'list' | 'form' | 'detail'
-let currentProduct = null;  // product being edited/viewed
-let isEdit = false;
-let allProducts = [];
-let filteredProducts = [];
-let currentPage = 1;
-const pendingImages = {};   // { slot: File }
-const existingUrls  = {};   // { slot: url } from existing product
+var PAGE_SIZE = 20;
+var currentMode = 'list';   // 'list' | 'form' | 'detail'
+var currentProduct = null;  // product being edited/viewed
+var isEdit = false;
+var allProducts = [];
+var filteredProducts = [];
+var currentPage = 1;
+var pendingImages = {};   // { slot: File }
+var existingUrls  = {};   // { slot: url } from existing product
 
 (async () => {
   await requireAuth();
@@ -107,8 +107,9 @@ function renderTable() {
   const page   = filteredProducts.slice(start, start + PAGE_SIZE);
   const total  = Math.ceil(filteredProducts.length / PAGE_SIZE);
 
-  tbody.innerHTML = page.map(p => `
+  tbody.innerHTML = page.map((p, i) => `
     <tr>
+      <td style="text-align: center; color: var(--text-muted); font-weight: 500;">${start + i + 1}</td>
       <td><span style="font-family:var(--mono);font-size:.78rem;">${p.nomor_seri}</span></td>
       <td>
         <span class="truncate" style="max-width:220px;display:block;cursor:pointer;font-weight:500;"

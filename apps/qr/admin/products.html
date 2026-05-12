@@ -7,37 +7,6 @@
   <link rel="stylesheet" href="../styles/base.css">
   <link rel="stylesheet" href="../styles/components.css">
   <link rel="stylesheet" href="../styles/admin.css">
-  <style>
-    /* Mode sections */
-    .mode-section { display: none; }
-    .mode-section.active { display: block; }
-    /* Back link */
-    .back-link-admin {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: .82rem; color: var(--text-sub); cursor: pointer;
-      margin-bottom: 16px; transition: color var(--ease);
-    }
-    .back-link-admin:hover { color: var(--green); }
-    /* Form header */
-    .form-page-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 24px; }
-    /* Detail view */
-    .detail-info-grid {
-      display: grid; grid-template-columns: repeat(3,1fr); gap: 0;
-      border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; margin-bottom: 24px;
-    }
-    .detail-info-item {
-      padding: 14px 16px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border);
-    }
-    .detail-info-item:nth-child(3n) { border-right: none; }
-    .detail-info-key { font-size: .65rem; font-weight: 600; letter-spacing: .1em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
-    .detail-info-val { font-size: .9rem; font-weight: 500; }
-    .detail-photos { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 24px; }
-    .detail-photo-wrap { display: flex; flex-direction: column; gap: 4px; }
-    .detail-photo { aspect-ratio: 4/3; object-fit: cover; border-radius: var(--r-md); width: 100%; border: 1px solid var(--border); background: var(--gray-100); }
-    .detail-photo-label { font-size: .65rem; color: var(--text-muted); text-align: center; letter-spacing: .06em; }
-    /* Form submit bar */
-    .form-submit-bar { display: flex; gap: 12px; padding-top: 20px; border-top: 1px solid var(--border); margin-top: 28px; }
-  </style>
 </head>
 <body>
   <div class="admin-layout">
@@ -73,6 +42,7 @@
             <table>
               <thead>
                 <tr>
+                  <th style="width: 40px; text-align: center;">No.</th>
                   <th>No. Seri</th>
                   <th>Nama Produk</th>
                   <th>Tipe / Kode</th>

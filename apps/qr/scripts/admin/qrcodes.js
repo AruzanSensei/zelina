@@ -1,11 +1,34 @@
 // scripts/admin/qrcodes.js
 
-const QR_BASE_URL = 'https://qr.zanxa.site/product.html?id=';
-let allProducts = [];
-let qrInstances = {}; // { nomor_seri: QRCode instance }
+var QR_BASE_URL = 'https://qr.zanxa.site/product.html?id=';
+var allProducts = [];
+var qrInstances = {}; // { nomor_seri: QRCode instance }
+
+async function ensureDependencies() {
+  return new Promise((resolve) => {
+    if (window.QRCode && window.JSZip) return resolve();
+    let loaded = 0;
+    const check = () => { if (++loaded === 2) resolve(); };
+    
+    if (!window.QRCode) {
+      const s1 = document.createElement('script');
+      s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+      s1.onload = check;
+      document.body.appendChild(s1);
+    } else check();
+
+    if (!window.JSZip) {
+      const s2 = document.createElement('script');
+      s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+      s2.onload = check;
+      document.body.appendChild(s2);
+    } else check();
+  });
+}
 
 (async () => {
   await requireAuth();
+  await ensureDependencies();
   renderSidebar('qrcodes');
   await loadAndRender();
 
@@ -49,9 +72,13 @@ function renderGrid(products) {
   }
   emptyEl.classList.add('hidden');
 
-  grid.innerHTML = products.map(p => `
+  grid.innerHTML = products.map(p => {
+    const safeId = p.nomor_seri.replace(/[^a-zA-Z0-9]/g, '-');
+    return `
     <div class="qr-card fade-in">
-      <div id="qr-${CSS.escape(p.nomor_seri)}"></div>
+      <div id="qr-${safeId}" data-seri="${p.nomor_seri}" class="qr-render-target" style="width:160px; height:160px; min-width:160px; min-height:160px; display:flex; align-items:center; justify-content:center; margin: 0 auto;">
+        <div class="sk" style="width:160px;height:160px;border-radius:12px;"></div>
+      </div>
       <div class="qr-card__id">${p.nomor_seri}</div>
       <div class="qr-card__name">${p.nama_produk}</div>
       <div class="qr-card__actions">
@@ -62,31 +89,39 @@ function renderGrid(products) {
         <button class="btn btn-ghost btn-sm" onclick="openPreview('${p.nomor_seri}','${p.nama_produk.replace(/'/g,"\\'")}')">Preview</button>
       </div>
     </div>
-  `).join('');
+  `}).join('');
 
-  // Generate QR codes after DOM update
+  // Double rAF: first frame paints the DOM, second frame guarantees layout is ready.
+  // Then stagger each QR render with a small delay so they pop in one by one.
   requestAnimationFrame(() => {
-    products.forEach(p => {
-      const el = document.getElementById(`qr-${CSS.escape(p.nomor_seri)}`);
-      if (!el) return;
-      el.innerHTML = '';
-      try {
-        const qr = new QRCode(el, {
-          text: QR_BASE_URL + encodeURIComponent(p.nomor_seri),
-          width: 160, height: 160,
-          colorDark: '#0a0a0a', colorLight: '#ffffff',
-          correctLevel: 1 // QRCode.CorrectLevel.L
-        });
-        qrInstances[p.nomor_seri] = { el, qr, name: p.nama_produk };
-      } catch (err) {
-        el.innerHTML = '<div style="width:160px;height:160px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:.72rem;">Error</div>';
-      }
+    requestAnimationFrame(() => {
+      products.forEach((p, i) => {
+        setTimeout(() => {
+          const safeId = p.nomor_seri.replace(/[^a-zA-Z0-9]/g, '-');
+          const el = document.getElementById(`qr-${safeId}`);
+          if (!el) return; // User may have navigated away
+
+          el.innerHTML = '';
+          try {
+            const qr = new QRCode(el, {
+              text: QR_BASE_URL + encodeURIComponent(p.nomor_seri),
+              width: 160, height: 160,
+              colorDark: '#0a0a0a', colorLight: '#ffffff',
+              correctLevel: 1
+            });
+            qrInstances[p.nomor_seri] = { el, qr, name: p.nama_produk };
+          } catch (err) {
+            el.innerHTML = '<div style="width:160px;height:160px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:.72rem;">Error</div>';
+          }
+        }, i * 80); // 80ms stagger per card → "pop-in" effect
+      });
     });
   });
 }
 
 function getCanvas(nomor_seri) {
-  const el = document.getElementById(`qr-${CSS.escape(nomor_seri)}`);
+  const safeId = nomor_seri.replace(/[^a-zA-Z0-9]/g, '-');
+  const el = document.getElementById(`qr-${safeId}`);
   if (!el) return null;
   return el.querySelector('canvas') || el.querySelector('img');
 }
@@ -135,7 +170,7 @@ async function downloadAllZip() {
   }
 }
 
-let previewNomor = null;
+var previewNomor = null;
 
 function openPreview(nomor_seri, nama) {
   previewNomor = nomor_seri;

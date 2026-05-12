@@ -1,5 +1,5 @@
 // scripts/admin/dashboard.js
-(async () => {
+window.initDashboard = async () => {
   await requireAuth();
   renderSidebar('dashboard');
 
@@ -67,4 +67,7 @@
     showToast('Gagal memuat data dashboard: ' + e.message, 'error');
     ['stat-products','stat-qr','stat-scans','stat-today'].forEach(id => setVal(id, '—'));
   }
-})();
+};
+
+// Execute on first load
+window.initDashboard();

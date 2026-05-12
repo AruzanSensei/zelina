@@ -88,11 +88,11 @@ textarea.form-control { resize: vertical; min-height: 88px; }
   justify-content: center; gap: 6px; height: 100%; pointer-events: none;
 }
 .img-slot__placeholder span { font-size: .68rem; color: var(--text-muted); letter-spacing: .05em; text-align: center; }
-.img-slot__preview { width: 100%; height: 100%; object-fit: cover; display: none; }
+.img-slot__preview { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; z-index: 1; }
 .img-slot__preview.visible { display: block; }
 .img-slot__badge {
   position: absolute; bottom: 6px; left: 6px; font-size: .6rem;
-  background: rgba(0,0,0,.75); color: #a0f4b0; padding: 2px 7px; border-radius: 4px; pointer-events: none;
+  background: rgba(0,0,0,.75); color: #a0f4b0; padding: 2px 7px; border-radius: 4px; pointer-events: none; z-index: 2;
 }
 
 /* MODAL */

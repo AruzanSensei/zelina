@@ -52,7 +52,17 @@ async function getAccessToken() {
   return session?.access_token ?? null;
 }
 
+let _cachedAuth = null;
+
 async function requireAuth() {
+  if (_cachedAuth) {
+    const emailEl  = document.getElementById('user-email');
+    const avatarEl = document.getElementById('user-avatar');
+    if (emailEl)  emailEl.textContent  = _cachedAuth.email;
+    if (avatarEl) avatarEl.textContent = _cachedAuth.email[0].toUpperCase();
+    return _cachedAuth.sessionData;
+  }
+
   const session = await getSession();
   if (!session) {
     window.location.href = '../admin/login.html';
@@ -72,11 +82,18 @@ async function requireAuth() {
     return null;
   }
 
+  const displayEmail = adminRow.email || session.user.email;
+  
+  _cachedAuth = {
+    email: displayEmail,
+    sessionData: { user: session.user, role: adminRow.role }
+  };
+
   // Populate topbar user info jika element ada
   const emailEl  = document.getElementById('user-email');
   const avatarEl = document.getElementById('user-avatar');
-  if (emailEl)  emailEl.textContent  = adminRow.email || session.user.email;
-  if (avatarEl) avatarEl.textContent = (adminRow.email || session.user.email || '?')[0].toUpperCase();
+  if (emailEl)  emailEl.textContent  = displayEmail;
+  if (avatarEl) avatarEl.textContent = displayEmail[0].toUpperCase();
 
-  return { user: session.user, role: adminRow.role };
+  return _cachedAuth.sessionData;
 }
