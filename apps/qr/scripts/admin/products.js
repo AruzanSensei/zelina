@@ -139,7 +139,7 @@ function renderTable() {
       <td onclick="event.stopPropagation()">
         <!-- Desktop: 3 buttons inline -->
         <div class="table-actions desktop-actions">
-          <button class="btn btn-ghost btn-action" onclick="window.open('../p/${p.nomor_seri}', '_blank')" title="Lihat Halaman Publik">
+          <button class="btn btn-ghost btn-action" onclick="window.open('../public/product.html?id=${p.nomor_seri}', '_blank')" title="Lihat Halaman Publik">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
             Public
           </button>
@@ -180,7 +180,7 @@ function toggleActionMenu(e, seri) {
 
   const escapedSeri = seri.replace(/"/g, '&quot;');
   menu.innerHTML = `
-    <button onclick="closeAllActionMenus(); window.open('../p/${escapedSeri}', '_blank')" style="width:100%;text-align:left;padding:10px 14px;font-size:.82rem;background:none;border:none;cursor:pointer;color:var(--text-main);display:flex;align-items:center;gap:8px;">
+    <button onclick="closeAllActionMenus(); window.open('../public/product.html?id=${escapedSeri}', '_blank')" style="width:100%;text-align:left;padding:10px 14px;font-size:.82rem;background:none;border:none;cursor:pointer;color:var(--text-main);display:flex;align-items:center;gap:8px;">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg> Public
     </button>
     <button onclick="closeAllActionMenus(); editProduct('${escapedSeri}')" style="width:100%;text-align:left;padding:10px 14px;font-size:.82rem;background:none;border:none;cursor:pointer;color:var(--text-main);display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);">
