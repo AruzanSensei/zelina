@@ -241,84 +241,82 @@
             </div>
           </form>
         </div>
+        <!-- MODE: DETAIL MODAL OVERLAY (Matches public design) -->
+        <div class="modal-overlay mode-section" id="mode-detail" style="display:none; padding: 20px;">
+          <div class="modal-box" style="max-width: 1040px; width: 95%; padding: 0; overflow: hidden; display: flex; flex-direction: column;">
+            
+            <!-- Admin Header (Floating top right or sticky) -->
+            <div class="detail-modal__header" style="background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <button class="btn btn-ghost" id="btn-back-detail" style="padding:8px;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
+                </button>
+                <span style="font-weight:600; font-size:.9rem; color:var(--text-sub);">Preview Produk</span>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <button class="btn btn-outline btn-sm" id="btn-edit-from-detail">Edit</button>
+                <button class="btn btn-danger btn-sm" id="btn-delete-from-detail">Hapus</button>
+              </div>
+            </div>
 
+            <!-- Public Design Content -->
+            <div class="product-main" style="padding: 32px; background: var(--white); overflow-y: auto;">
+              <!-- Cover image -->
+              <div class="product-cover-wrap" id="detail-cover-wrap" style="display:none;">
+                <img class="product-cover-img" id="detail-cover-img" src="" alt="">
+              </div>
 
+              <!-- Product top -->
+              <div class="product-top">
+                <div class="product-info">
+                  <div class="info-header">
+                    <div class="product-type-tag" id="detail-prod-type" style="display:none;"></div>
+                  </div>
+                  <div class="product-name" id="detail-prod-name" style="font-size: 1.8rem;"></div>
+                </div>
+
+                <div class="product-details-row">
+                  <div class="details-left">
+                    <!-- Info grid -->
+                    <div class="info-grid" id="detail-info-grid"></div>
+
+                    <!-- Tambahan -->
+                    <div id="detail-tambahan-wrap" style="display:none; margin-top: 24px;">
+                      <div style="font-family:var(--mono);font-size:.6rem;letter-spacing:.15em;color:var(--text-muted);margin-bottom:8px;">TAMBAHAN / OPTIONAL</div>
+                      <div id="detail-tambahan" style="font-size:.875rem;line-height:1.7;color:var(--text-sub);white-space:pre-wrap;"></div>
+                    </div>
+                  </div>
+
+                  <!-- QR Panel -->
+                  <div class="details-right">
+                    <div class="qr-panel" id="detail-qr-panel">
+                      <div class="demo-label qr-panel-title" style="margin-bottom:0; font-size:.65rem; color:var(--text-muted);">QR CODE</div>
+                      <div class="qr-panel-left">
+                        <div id="detail-qr-box"></div>
+                      </div>
+                      <div class="qr-panel-right">
+                        <div style="font-size:.875rem;font-weight:600;margin-bottom:4px;color:var(--text-main);" id="detail-qr-nomor"></div>
+                        <div class="qr-url" id="detail-qr-url" style="font-size:.6rem;"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Gallery -->
+              <div class="gallery-section" id="detail-gallery-section" style="display:none; margin-top: 40px;">
+                <div class="section-label">FOTO PRODUK</div>
+                <div class="gallery-grid" id="detail-gallery-grid"></div>
+              </div>
+            </div>
+          </div>
+        </div>
 
       </main>
     </div>
   </div>
+
   <div id="toast-container"></div>
-
-  <!-- MODE: DETAIL MODAL OVERLAY (Matches public design) -->
-  <div class="modal-overlay mode-section" id="mode-detail" style="display:none; padding: 20px;">
-    <div class="modal-box" style="max-width: 1040px; width: 95%; padding: 0; overflow: hidden; display: flex; flex-direction: column;">
-      
-      <!-- Admin Header (Floating top right or sticky) -->
-      <div class="detail-modal__header" style="background: var(--bg-card); border-bottom: 1px solid var(--border); padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;">
-        <div style="display:flex; align-items:center; gap:12px;">
-          <button class="btn btn-ghost" id="btn-back-detail" style="padding:8px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
-          </button>
-          <span style="font-weight:600; font-size:.9rem; color:var(--text-sub);">Preview Produk</span>
-        </div>
-        <div style="display:flex; gap:8px;">
-          <button class="btn btn-outline btn-sm" id="btn-edit-from-detail">Edit</button>
-          <button class="btn btn-danger btn-sm" id="btn-delete-from-detail">Hapus</button>
-        </div>
-      </div>
-
-      <!-- Public Design Content -->
-      <div class="product-main" style="padding: 32px; background: var(--white); overflow-y: auto;">
-        <!-- Cover image -->
-        <div class="product-cover-wrap" id="detail-cover-wrap" style="display:none;">
-          <img class="product-cover-img" id="detail-cover-img" src="" alt="">
-        </div>
-
-        <!-- Product top -->
-        <div class="product-top">
-          <div class="product-info">
-            <div class="info-header">
-              <div class="product-type-tag" id="detail-prod-type" style="display:none;"></div>
-            </div>
-            <div class="product-name" id="detail-prod-name" style="font-size: 1.8rem;"></div>
-          </div>
-
-          <div class="product-details-row">
-            <div class="details-left">
-              <!-- Info grid -->
-              <div class="info-grid" id="detail-info-grid"></div>
-
-              <!-- Tambahan -->
-              <div id="detail-tambahan-wrap" style="display:none; margin-top: 24px;">
-                <div style="font-family:var(--mono);font-size:.6rem;letter-spacing:.15em;color:var(--text-muted);margin-bottom:8px;">TAMBAHAN / OPTIONAL</div>
-                <div id="detail-tambahan" style="font-size:.875rem;line-height:1.7;color:var(--text-sub);white-space:pre-wrap;"></div>
-              </div>
-            </div>
-
-            <!-- QR Panel -->
-            <div class="details-right">
-              <div class="qr-panel" id="detail-qr-panel">
-                <div class="demo-label qr-panel-title" style="margin-bottom:0; font-size:.65rem; color:var(--text-muted);">QR CODE</div>
-                <div class="qr-panel-left">
-                  <div id="detail-qr-box"></div>
-                </div>
-                <div class="qr-panel-right">
-                  <div style="font-size:.875rem;font-weight:600;margin-bottom:4px;color:var(--text-main);" id="detail-qr-nomor"></div>
-                  <div class="qr-url" id="detail-qr-url" style="font-size:.6rem;"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Gallery -->
-        <div class="gallery-section" id="detail-gallery-section" style="display:none; margin-top: 40px;">
-          <div class="section-label">FOTO PRODUK</div>
-          <div class="gallery-grid" id="detail-gallery-grid"></div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <script src="../config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

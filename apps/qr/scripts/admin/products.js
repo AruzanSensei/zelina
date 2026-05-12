@@ -102,11 +102,19 @@ function switchMode(mode, product = null, edit = false) {
 
   if (mode === 'detail') {
     if (product) renderDetail(product);
-    detailModal.style.display = 'flex';
-    requestAnimationFrame(() => detailModal.classList.add('active'));
+    if (detailModal) {
+      detailModal.style.display = 'flex';
+      requestAnimationFrame(() => detailModal.classList.add('active'));
+    }
   } else {
-    detailModal.classList.remove('active');
-    setTimeout(() => { if (currentMode !== 'detail') detailModal.style.display = 'none'; }, 200);
+    if (detailModal) {
+      detailModal.classList.remove('active');
+      setTimeout(() => { 
+        if (window.currentMode !== 'detail' && detailModal) {
+          detailModal.style.display = 'none'; 
+        }
+      }, 200);
+    }
 
     const target = document.getElementById(`mode-${mode}`);
     if (target) target.classList.add('active');
