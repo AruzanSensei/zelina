@@ -120,7 +120,10 @@ function renderTable() {
       <td>${fmtDate(p.created_at)}</td>
       <td>
         <div class="table-actions">
-          <button class="btn btn-ghost btn-action" onclick="viewDetail('${p.nomor_seri}')">Detail</button>
+          <button class="btn btn-ghost btn-action" onclick="window.open('../public/product.html?id=${p.nomor_seri}', '_blank')" title="Lihat Halaman Publik">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            Public
+          </button>
           <button class="btn btn-outline btn-action" onclick="editProduct('${p.nomor_seri}')">Edit</button>
           <button class="btn btn-danger btn-action" onclick="confirmDelete('${p.nomor_seri}')">Hapus</button>
         </div>

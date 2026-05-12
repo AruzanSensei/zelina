@@ -12,13 +12,12 @@
   <div class="admin-layout">
     <aside id="sidebar"></aside>
     <div class="admin-main">
-      <header class="topbar">
+      <header class="topbar" style="justify-content: flex-start; gap: 16px;">
         <button class="topbar__ham" id="ham-btn" aria-label="Toggle sidebar"></button>
-        <span class="topbar__title">Scan Analytics</span>
-        <div class="topbar__user">
-          <div class="topbar__avatar" id="user-avatar">?</div>
-          <span id="user-email">—</span>
-        </div>
+        <div style="flex: 1;"></div>
+        <button onclick="location.reload()" title="Refresh" style="display:flex; align-items:center; gap:6px; padding:6px 12px; border:1px solid var(--border-md); border-radius:8px; box-shadow:var(--shadow-sm); background:var(--bg-card); color:var(--text-main); cursor:pointer; font-size:.8rem; font-weight:500;">
+          <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> Refresh
+        </button>
       </header>
       <main class="page-content">
         <div class="page-header">
@@ -80,6 +79,7 @@
   <div id="toast-container"></div>
   <script src="../config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
   <script src="../services/auth.js"></script>
   <script src="../services/api.js"></script>
   <script src="../components/sidebar.js"></script>

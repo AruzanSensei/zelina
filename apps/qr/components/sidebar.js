@@ -4,21 +4,38 @@
 // ============================================================
 
 const SIDEBAR_MENU = [
-  { id: 'dashboard',  label: 'Dashboard',       href: 'index.html',     icon: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2" width="7" height="7" rx="1.5"/><rect x="11" y="2" width="7" height="7" rx="1.5"/><rect x="2" y="11" width="7" height="7" rx="1.5"/><rect x="11" y="11" width="7" height="7" rx="1.5"/></svg>` },
-  { id: 'products',   label: 'Products',         href: 'products.html',  icon: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="4" width="16" height="14" rx="1.5"/><path d="M6 4V3a2 2 0 0 1 4 0v1"/></svg>` },
-  { id: 'qrcodes',    label: 'QR Codes',         href: 'qrcodes.html',   icon: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="2" width="6" height="6" rx="1"/><rect x="12" y="2" width="6" height="6" rx="1"/><rect x="2" y="12" width="6" height="6" rx="1"/><path d="M12 14h2m2 0h2M14 12v2m0 2v2"/></svg>` },
-  { id: 'analytics',  label: 'Scan Analytics',   href: 'analytics.html', icon: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 14l4-4 4 3 4-5 4 2"/><path d="M2 18h16"/></svg>` },
-  { id: 'media',      label: 'Media',            href: 'media.html',     icon: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="4" width="16" height="13" rx="1.5"/><circle cx="7" cy="9" r="1.5"/><path d="M2 14l4-4 4 4 2-2 4 4"/></svg>` },
+  { id: 'dashboard', label: 'Dashboard', href: 'index.html', icon: `<i data-lucide="layout-grid"></i>` },
+  { id: 'products', label: 'Products', href: 'products.html', icon: `<i data-lucide="package-search"></i>` },
+  { id: 'qrcodes', label: 'QR Codes', href: 'qrcodes.html', icon: `<i data-lucide="qr-code"></i>` },
+  { id: 'analytics', label: 'Scan Analytics', href: 'analytics.html', icon: `<i data-lucide="chart-no-axes-combined"></i>` },
+  { id: 'media', label: 'Media', href: 'media.html', icon: `<i data-lucide="image"></i>` },
 ];
 
 const SIDEBAR_BOTTOM = [
-  { id: 'settings', label: 'Settings', href: 'settings.html', icon: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="2.5"/><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4"/></svg>` },
+  { id: 'settings', label: 'Settings', href: 'settings.html', icon: `<i data-lucide="settings"></i>` },
 ];
 
 function renderSidebar(activePage) {
   const sidebarEl = document.getElementById('sidebar');
   if (!sidebarEl) return;
   sidebarEl.classList.add('sidebar');
+
+  // If already rendered, just update active states to prevent logo refresh
+  if (sidebarEl.querySelector('.sidebar__nav')) {
+    sidebarEl.querySelectorAll('.sidebar__item').forEach(el => {
+      const href = el.getAttribute('href');
+      if (SIDEBAR_MENU.find(m => m.id === activePage && m.href === href) ||
+        SIDEBAR_BOTTOM.find(m => m.id === activePage && m.href === href)) {
+        el.classList.add('active');
+      } else {
+        el.classList.remove('active');
+      }
+    });
+    
+    // Ensure Lucide icons in the newly injected page content are transformed
+    if (window.lucide) lucide.createIcons();
+    return;
+  }
 
   const menuHtml = SIDEBAR_MENU.map(item => `
     <a href="${item.href}" class="sidebar__item${activePage === item.id ? ' active' : ''}">
@@ -34,6 +51,14 @@ function renderSidebar(activePage) {
     </a>
   `).join('');
 
+  // Extract user info from topbar if it exists to mirror it in sidebar
+  let userEmail = '—';
+  let userAvatar = '?';
+  const emailEl = document.getElementById('user-email');
+  const avatarEl = document.getElementById('user-avatar');
+  if (emailEl) userEmail = emailEl.textContent;
+  if (avatarEl) userAvatar = avatarEl.textContent;
+
   sidebarEl.innerHTML = `
     <div class="sidebar__logo">
       <img src="../assets/ets-logo.png" alt="ETS">
@@ -44,15 +69,18 @@ function renderSidebar(activePage) {
       ${bottomHtml}
     </nav>
     <div class="sidebar__footer">
+      <div class="sidebar__user" style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; margin: 0 12px 8px; background: rgba(255,255,255,0.04); border-radius: 8px;">
+        <div class="sidebar__avatar" id="user-avatar" style="width: 32px; height: 32px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.9); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .85rem;">${userAvatar}</div>
+        <span id="user-email" style="font-size: .85rem; font-weight: 500; color: rgba(255,255,255,0.85); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${userEmail}</span>
+      </div>
       <div class="sidebar__logout" id="sidebar-logout">
-        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" width="18" height="18">
-          <path d="M13 15l4-5-4-5M17 10H7"/>
-          <path d="M7 3H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h3"/>
-        </svg>
+        <i data-lucide="log-out"></i>
         <span>Logout</span>
       </div>
     </div>
   `;
+
+  if (window.lucide) lucide.createIcons();
 
   // Logout handler
   document.getElementById('sidebar-logout').addEventListener('click', () => {
@@ -62,8 +90,15 @@ function renderSidebar(activePage) {
   // Mobile hamburger toggle
   const ham = document.getElementById('ham-btn');
   if (ham) {
-    ham.innerHTML = `<svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 5h16M2 10h16M2 15h16" stroke-linecap="round"/></svg>`;
-    ham.addEventListener('click', () => sidebarEl.classList.toggle('open'));
+    if (!ham.innerHTML.includes('lucide')) {
+      ham.innerHTML = `<i data-lucide="menu"></i>`;
+      if (window.lucide) lucide.createIcons({ root: ham });
+    }
+    // Use onclick to prevent duplicate listeners from SPA navigation, and stop propagation to prevent global click from instantly closing it
+    ham.onclick = (e) => {
+      e.stopPropagation();
+      sidebarEl.classList.toggle('open');
+    };
   }
 }
 
@@ -72,8 +107,8 @@ document.addEventListener('click', e => {
   const sidebarEl = document.getElementById('sidebar');
   const ham = document.getElementById('ham-btn');
   if (sidebarEl && sidebarEl.classList.contains('open') &&
-      !sidebarEl.contains(e.target) &&
-      e.target !== ham) {
+    !sidebarEl.contains(e.target) &&
+    ham && !ham.contains(e.target)) {
     sidebarEl.classList.remove('open');
   }
 });
@@ -101,22 +136,22 @@ window.navigateTo = async (url, forceRefresh = false) => {
       if (!r.ok) throw new Error('Fetch failed');
       return r.text();
     });
-    
+
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
-    
+
     // Replace the main application content without reloading the browser
     const currentMain = document.querySelector('.admin-main');
     const newMain = doc.querySelector('.admin-main');
     if (currentMain && newMain) {
-      
+
       // Preserve topbar user info to prevent the "—" flash
       const oldEmail = currentMain.querySelector('#user-email');
       const newEmail = newMain.querySelector('#user-email');
       if (oldEmail && newEmail && oldEmail.textContent !== '—') {
         newEmail.textContent = oldEmail.textContent;
       }
-      
+
       const oldAvatar = currentMain.querySelector('#user-avatar');
       const newAvatar = newMain.querySelector('#user-avatar');
       if (oldAvatar && newAvatar && oldAvatar.textContent !== '?') {
@@ -126,14 +161,14 @@ window.navigateTo = async (url, forceRefresh = false) => {
       currentMain.innerHTML = newMain.innerHTML;
       document.title = doc.title;
       history.pushState(null, '', url);
-      
+
       // Close sidebar if open on mobile
       const sidebarEl = document.getElementById('sidebar');
       if (sidebarEl) sidebarEl.classList.remove('open');
       window.scrollTo(0, 0);
 
       injectRefreshBtn(); // Re-inject refresh button since topbar was replaced
-      
+
       // Execute page-specific script — wait for it to fully load before calling init
       const pageScript = Array.from(doc.querySelectorAll('script')).find(s => s.src.includes('/scripts/admin/'));
       if (pageScript) {
@@ -144,7 +179,7 @@ window.navigateTo = async (url, forceRefresh = false) => {
     } else {
       window.location.href = url;
     }
-  } catch(err) {
+  } catch (err) {
     window.location.href = url;
   }
 };
@@ -178,14 +213,14 @@ function injectRefreshBtn() {
     btn.style.gap = '6px';
     btn.style.borderRadius = 'var(--r-sm)';
     btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg> <span style="font-size:0.75rem;font-weight:600;">Refresh</span>`;
-    
+
     // Hover effects using standard JS instead of messy inline CSS
     btn.onmouseover = () => btn.style.background = 'var(--gray-100)';
     btn.onmouseout = () => btn.style.background = 'transparent';
 
     btn.onclick = () => {
       const icon = btn.querySelector('svg');
-      if(icon) icon.style.animation = 'spin 1s linear infinite';
+      if (icon) icon.style.animation = 'spin 1s linear infinite';
       btn.style.pointerEvents = 'none';
       btn.querySelector('span').innerText = 'Memuat...';
       const currentFile = window.location.pathname.split('/').pop() || 'index.html';

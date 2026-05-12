@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,17 +9,17 @@
   <link rel="stylesheet" href="../styles/components.css">
   <link rel="stylesheet" href="../styles/admin.css">
 </head>
+
 <body>
   <div class="admin-layout">
     <aside id="sidebar"></aside>
     <div class="admin-main">
-      <header class="topbar">
+      <header class="topbar" style="justify-content: flex-start; gap: 16px;">
         <button class="topbar__ham" id="ham-btn" aria-label="Toggle sidebar"></button>
-        <span class="topbar__title" id="topbar-title">Products</span>
-        <div class="topbar__user">
-          <div class="topbar__avatar" id="user-avatar">?</div>
-          <span id="user-email">—</span>
-        </div>
+        <div style="flex: 1;"></div>
+        <button onclick="location.reload()" title="Refresh" style="display:flex; align-items:center; gap:6px; padding:6px 12px; border:1px solid var(--border-md); border-radius:8px; box-shadow:var(--shadow-sm); background:var(--bg-card); color:var(--text-main); cursor:pointer; font-size:.8rem; font-weight:500;">
+          <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> Refresh
+        </button>
       </header>
       <main class="page-content">
 
@@ -30,11 +31,16 @@
           </div>
           <div class="toolbar">
             <div class="search-bar" style="flex:1;min-width:200px;">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3" stroke-linecap="round"/></svg>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="7" cy="7" r="5" />
+                <path d="M11 11l3 3" stroke-linecap="round" />
+              </svg>
               <input type="text" id="search-input" placeholder="Cari nama produk...">
             </div>
             <button class="btn btn-primary" id="btn-add">
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 1v12M1 7h12" stroke-linecap="round"/></svg>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M7 1v12M1 7h12" stroke-linecap="round" />
+              </svg>
               Tambah Produk
             </button>
           </div>
@@ -52,14 +58,29 @@
                 </tr>
               </thead>
               <tbody id="product-tbody">
-                <tr><td colspan="6"><div class="sk" style="height:16px;margin:4px 0;"></div></td></tr>
-                <tr><td colspan="6"><div class="sk" style="height:16px;margin:4px 0;width:80%;"></div></td></tr>
-                <tr><td colspan="6"><div class="sk" style="height:16px;margin:4px 0;width:60%;"></div></td></tr>
+                <tr>
+                  <td colspan="6">
+                    <div class="sk" style="height:16px;margin:4px 0;"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="6">
+                    <div class="sk" style="height:16px;margin:4px 0;width:80%;"></div>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="6">
+                    <div class="sk" style="height:16px;margin:4px 0;width:60%;"></div>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
           <div id="empty-state-list" class="empty-state hidden">
-            <svg class="empty-state__icon" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="12" width="40" height="34" rx="3"/><path d="M20 12V8a4 4 0 0 1 8 0v4M24 28h8M24 34h6"/></svg>
+            <svg class="empty-state__icon" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="8" y="12" width="40" height="34" rx="3" />
+              <path d="M20 12V8a4 4 0 0 1 8 0v4M24 28h8M24 34h6" />
+            </svg>
             <div class="empty-state__title">Belum ada produk</div>
             <div class="empty-state__sub">Tambahkan produk pertama untuk memulai.</div>
             <button class="btn btn-primary" id="btn-add-empty" style="margin-top:8px;">+ Tambah Produk Pertama</button>
@@ -70,7 +91,9 @@
         <!-- MODE: CREATE / EDIT -->
         <div class="mode-section" id="mode-form">
           <div class="back-link-admin" id="btn-back-form">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 2L3 7l6 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M9 2L3 7l6 5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
             Kembali ke Daftar
           </div>
           <div class="form-page-title" id="form-title">Tambah Produk Baru</div>
@@ -94,7 +117,7 @@
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="f-tahun">Tahun Pembuatan</label>
-                  <input class="form-control" id="f-tahun" type="number" min="1990" max="2099" placeholder="cth. 2024">
+                  <input class="form-control" id="f-tahun" type="number" min="1990" max="2099" placeholder="cth. 2026">
                 </div>
               </div>
             </div>
@@ -137,7 +160,8 @@
                 </div>
                 <div class="form-group full">
                   <label class="form-label" for="f-tambahan">Tambahan / Optional</label>
-                  <textarea class="form-control" id="f-tambahan" placeholder="Informasi tambahan, fitur khusus, dll."></textarea>
+                  <textarea class="form-control" id="f-tambahan"
+                    placeholder="Informasi tambahan, fitur khusus, dll."></textarea>
                 </div>
               </div>
             </div>
@@ -150,7 +174,12 @@
                   <div class="img-slot" id="slot-depan">
                     <input type="file" accept="image/*" data-slot="depan">
                     <div class="img-slot__placeholder">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.4">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <circle cx="8.5" cy="8.5" r="1.5" />
+                        <path d="M21 15l-5-5L5 21" />
+                      </svg>
                       <span>DEPAN</span>
                     </div>
                     <img class="img-slot__preview" id="prev-depan" alt="">
@@ -161,7 +190,12 @@
                   <div class="img-slot" id="slot-kanan">
                     <input type="file" accept="image/*" data-slot="kanan">
                     <div class="img-slot__placeholder">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.4">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <circle cx="8.5" cy="8.5" r="1.5" />
+                        <path d="M21 15l-5-5L5 21" />
+                      </svg>
                       <span>KANAN</span>
                     </div>
                     <img class="img-slot__preview" id="prev-kanan" alt="">
@@ -172,7 +206,12 @@
                   <div class="img-slot" id="slot-kiri">
                     <input type="file" accept="image/*" data-slot="kiri">
                     <div class="img-slot__placeholder">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.4">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <circle cx="8.5" cy="8.5" r="1.5" />
+                        <path d="M21 15l-5-5L5 21" />
+                      </svg>
                       <span>KIRI</span>
                     </div>
                     <img class="img-slot__preview" id="prev-kiri" alt="">
@@ -183,7 +222,12 @@
                   <div class="img-slot" id="slot-belakang">
                     <input type="file" accept="image/*" data-slot="belakang">
                     <div class="img-slot__placeholder">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="1.4">
+                        <rect x="3" y="3" width="18" height="18" rx="2" />
+                        <circle cx="8.5" cy="8.5" r="1.5" />
+                        <path d="M21 15l-5-5L5 21" />
+                      </svg>
                       <span>BELAKANG</span>
                     </div>
                     <img class="img-slot__preview" id="prev-belakang" alt="">
@@ -203,13 +247,17 @@
         <!-- MODE: DETAIL -->
         <div class="mode-section" id="mode-detail">
           <div class="back-link-admin" id="btn-back-detail">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 2L3 7l6 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path d="M9 2L3 7l6 5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
             Kembali ke Daftar
           </div>
-          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap;">
+          <div
+            style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap;">
             <div>
               <div id="detail-name" style="font-size:1.5rem;font-weight:700;"></div>
-              <div id="detail-seri" style="font-family:var(--mono);font-size:.8rem;color:var(--text-sub);margin-top:4px;"></div>
+              <div id="detail-seri"
+                style="font-family:var(--mono);font-size:.8rem;color:var(--text-sub);margin-top:4px;"></div>
             </div>
             <div style="display:flex;gap:8px;">
               <button class="btn btn-outline btn-sm" id="btn-edit-from-detail">Edit Produk</button>
@@ -231,6 +279,7 @@
 
   <script src="../config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
   <script src="../services/auth.js"></script>
   <script src="../services/api.js"></script>
   <script src="../services/storage.js"></script>
@@ -239,4 +288,5 @@
   <script src="../components/modal.js"></script>
   <script src="../scripts/admin/products.js"></script>
 </body>
+
 </html>

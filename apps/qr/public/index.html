@@ -1,29 +1,35 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ETS Asset Tracking — Industrial QR System</title>
-  <meta name="description" content="Sistem tracking aset industri ETS menggunakan QR Code. Scan QR untuk melihat spesifikasi teknis produk.">
+  <meta name="description"
+    content="Sistem tracking aset industri ETS menggunakan QR Code. Scan QR untuk melihat spesifikasi teknis produk.">
 
   <link rel="stylesheet" href="../styles/base.css">
   <link rel="stylesheet" href="../styles/public.css">
   <link rel="stylesheet" href="../styles/scanner.css">
 </head>
+
 <body>
 
   <header class="site-header">
     <a href="../index.html">
       <img src="../assets/ets-logo.png" alt="ETS" class="site-logo">
     </a>
-    <span class="tagline" id="admin-link" title="Admin Panel">Admin</span>
+    <span class="tagline" id="admin-link" title="Admin Panel">
+      <i data-lucide="user-lock" style="width: 18px; height: 18px;"></i> Admin
+    </span>
   </header>
 
   <div class="landing-main">
     <!-- Hero -->
     <div class="hero">
       <div class="hero-eyebrow">INDUSTRIAL ASSET TRACKING v2.0</div>
-      <h1 style="font-size:clamp(2rem,5vw,3rem);font-weight:700;line-height:1.05;letter-spacing:-.02em;margin-bottom:14px;color:var(--text-main);">
+      <h1
+        style="font-size:clamp(2rem,5vw,3rem);font-weight:700;line-height:1.05;letter-spacing:-.02em;margin-bottom:14px;color:var(--text-main);">
         Verifikasi Aset<br>via QR Code
       </h1>
       <div class="hero-sub">Masukkan nomor seri atau scan QR produk ETS untuk melihat spesifikasi teknis lengkap.</div>
@@ -33,9 +39,9 @@
     <div class="search-card">
       <div class="search-label">CARI NOMOR SERI / ID PRODUK</div>
       <div class="search-row">
-        <input class="id-input" id="search-id" type="text" placeholder="SN-UPS-20240101" autocomplete="off" spellcheck="false">
+        <input class="id-input" id="search-id" type="text" placeholder="SN-UPS-20240101" autocomplete="off"
+          spellcheck="false">
         <button class="go-btn" id="btn-go">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 7h10M8 3l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           CARI
         </button>
       </div>
@@ -66,21 +72,26 @@
   </div>
 
   <footer class="site-footer">
-    <span>© 2024 ETS — Industrial Asset Tracking</span>
+    <span>© 2026 ETS — Industrial Asset Tracking</span>
     <span class="footer-domain">qr.zanxa.site</span>
   </footer>
 
   <script src="../config.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
   <!-- QR Scanner library (Nimiq) — UMD build, ~50kb, no backend needed -->
   <script src="https://unpkg.com/qr-scanner@1.4.2/qr-scanner.umd.min.js"></script>
   <script src="../scripts/public/index.js"></script>
   <script src="../scripts/public/scanner.js"></script>
   <script>
+    if (window.lucide) {
+      lucide.createIcons();
+    }
     // Admin link → navigate to admin panel
     document.getElementById('admin-link').addEventListener('click', () => {
       window.location.href = '../admin/login.html';
     });
   </script>
 </body>
+
 </html>

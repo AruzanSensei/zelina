@@ -75,18 +75,16 @@ function renderGrid(products) {
   grid.innerHTML = products.map(p => {
     const safeId = p.nomor_seri.replace(/[^a-zA-Z0-9]/g, '-');
     return `
-    <div class="qr-card fade-in">
-      <div id="qr-${safeId}" data-seri="${p.nomor_seri}" class="qr-render-target" style="width:160px; height:160px; min-width:160px; min-height:160px; display:flex; align-items:center; justify-content:center; margin: 0 auto;">
-        <div class="sk" style="width:160px;height:160px;border-radius:12px;"></div>
+    <div class="qr-card fade-in" style="padding: 12px; gap: 8px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-md)';" onmouseout="this.style.transform='none'; this.style.boxShadow='var(--shadow-sm)';" onclick="openPreview('${p.nomor_seri}','${p.nama_produk.replace(/'/g,"\\'")}')">
+      <div id="qr-${safeId}" data-seri="${p.nomor_seri}" class="qr-render-target" style="width:110px; height:110px; min-width:110px; min-height:110px; display:flex; align-items:center; justify-content:center; margin: 0 auto;">
+        <div class="sk" style="width:110px;height:110px;border-radius:10px;"></div>
       </div>
-      <div class="qr-card__id">${p.nomor_seri}</div>
-      <div class="qr-card__name">${p.nama_produk}</div>
-      <div class="qr-card__actions">
-        <button class="btn btn-outline btn-sm" onclick="downloadSingle('${p.nomor_seri}','${p.nama_produk.replace(/'/g,"\\'")}')">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 1v7M3 6l3 3 3-3M1 10h10" stroke-linecap="round"/></svg>
-          Download
+      <div class="qr-card__id" style="font-size: .7rem;">${p.nomor_seri}</div>
+      <div class="qr-card__name" style="font-size: .8rem;">${p.nama_produk}</div>
+      <div class="qr-card__actions" style="margin-top: 4px; justify-content: center;">
+        <button class="btn btn-outline btn-sm" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;" title="Download" onclick="event.stopPropagation(); downloadSingle('${p.nomor_seri}','${p.nama_produk.replace(/'/g,"\\'")}')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg> Download
         </button>
-        <button class="btn btn-ghost btn-sm" onclick="openPreview('${p.nomor_seri}','${p.nama_produk.replace(/'/g,"\\'")}')">Preview</button>
       </div>
     </div>
   `}).join('');

@@ -62,7 +62,7 @@ function renderProduct(p) {
 
   // Info grid
   const fields = [
-    ['NOMOR SERI',    p.nomor_seri,             true],
+    ['NOMOR SERI',    p.nomor_seri,              true],
     ['TAHUN',         p.tahun_pembuatan,         false],
     ['INPUT',         p.input,                   false],
     ['OUTPUT',        p.output,                  false],
@@ -72,14 +72,17 @@ function renderProduct(p) {
     ['SOFT FUSE',     p.soft_fuse_protection,    false],
     ['HARD FUSE',     p.hard_fuse_protection,    false],
     ['GROUND OUTPUT', p.ground_output,           false],
-  ].filter(([,v]) => v !== null && v !== undefined && v !== '');
+  ];
 
-  document.getElementById('info-grid').innerHTML = fields.map(([k, v, mono]) => `
-    <div class="info-item">
-      <div class="info-key">${k}</div>
-      <div class="info-val${mono ? ' mono' : ''}">${v}</div>
-    </div>
-  `).join('');
+  document.getElementById('info-grid').innerHTML = fields.map(([k, v, mono]) => {
+    const displayVal = (v !== null && v !== undefined && v !== '') ? v : '-';
+    return `
+      <div class="info-item">
+        <div class="info-key">${k}</div>
+        <div class="info-val${mono ? ' mono' : ''}">${displayVal}</div>
+      </div>
+    `;
+  }).join('');
 
   // Tambahan
   if (p.tambahan_optional) {
@@ -91,8 +94,10 @@ function renderProduct(p) {
   const qrUrl = QR_BASE + encodeURIComponent(p.nomor_seri);
   document.getElementById('qr-nomor').textContent = p.nomor_seri;
   document.getElementById('qr-url').textContent   = qrUrl;
+  
+  const qrSize = window.innerWidth <= 768 ? 90 : 140;
   new QRCode(document.getElementById('qr-box'), {
-    text: qrUrl, width: 90, height: 90,
+    text: qrUrl, width: qrSize, height: qrSize,
     colorDark: '#0a0a0a', colorLight: '#ffffff',
     correctLevel: 1 // QRCode.CorrectLevel.L
   });
