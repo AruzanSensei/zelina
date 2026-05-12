@@ -4,6 +4,28 @@ window.QR_BASE_URL = 'https://qr.zanxa.site/p/';
 window.allProductsQR = window.allProductsQR || [];
 window.qrInstances = window.qrInstances || {};
 
+async function ensureDependencies() {
+  return new Promise((resolve) => {
+    if (window.QRCode && window.JSZip) return resolve();
+    let loaded = 0;
+    const check = () => { if (++loaded === 2) resolve(); };
+    
+    if (!window.QRCode) {
+      const s1 = document.createElement('script');
+      s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+      s1.onload = check;
+      document.body.appendChild(s1);
+    } else check();
+
+    if (!window.JSZip) {
+      const s2 = document.createElement('script');
+      s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+      s2.onload = check;
+      document.body.appendChild(s2);
+    } else check();
+  });
+}
+
 (async () => {
   renderSidebar('qrcodes');
   attachQRListeners();
@@ -44,10 +66,10 @@ async function loadAndRender() {
 function onSearch() {
   const q = document.getElementById('qr-search').value.trim().toLowerCase();
   const filtered = q
-    ? allProducts.filter(p =>
+    ? window.allProductsQR.filter(p =>
         p.nama_produk?.toLowerCase().includes(q) ||
         p.nomor_seri?.toLowerCase().includes(q))
-    : [...allProducts];
+    : [...window.allProductsQR];
   renderGrid(filtered);
 }
 
