@@ -86,7 +86,7 @@ function renderQR() {
   if (!items.length) { container.innerHTML = ''; return; }
 
   container.innerHTML = items.map(p => `
-    <div class="qr-card">
+    <div class="qr-card" onclick="showQRPreview('${p.nomor_seri}', '${p.nama_produk.replace(/'/g, "\\'")}')">
       <div id="qr-pub-${CSS.escape(p.nomor_seri)}"></div>
       <span>${p.nomor_seri}</span>
     </div>
@@ -101,5 +101,45 @@ function renderQR() {
     }, i * 120);
   });
 }
+
+// QR Preview Logic
+function showQRPreview(seri, nama) {
+  const modal = document.getElementById('qr-preview-modal');
+  const canvasBox = document.getElementById('qr-preview-canvas');
+  const title = document.getElementById('qr-preview-title');
+  const urlBox = document.getElementById('qr-preview-url');
+  const fullUrl = QR_BASE + encodeURIComponent(seri);
+
+  title.textContent = seri;
+  urlBox.textContent = fullUrl;
+  
+  // Clear and generate large QR
+  canvasBox.innerHTML = '';
+  generateQRCode(canvasBox, fullUrl, { width: 180, height: 180 });
+
+  modal.classList.add('active');
+
+  // Actions
+  document.getElementById('qr-preview-download').onclick = () => {
+    const canvas = canvasBox.querySelector('canvas') || canvasBox.querySelector('img');
+    if (!canvas) return;
+    const dataUrl = canvas.tagName === 'CANVAS' ? canvas.toDataURL('image/png') : canvas.src;
+    const a = document.createElement('a');
+    a.href = dataUrl;
+    a.download = `QR_${seri}.png`;
+    a.click();
+  };
+
+  document.getElementById('qr-preview-visit').onclick = () => {
+    window.location.href = `product.html?id=${encodeURIComponent(seri)}`;
+  };
+}
+
+// Modal closing
+document.getElementById('qr-preview-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'qr-preview-modal') {
+    e.target.classList.remove('active');
+  }
+});
 
 loadProducts();

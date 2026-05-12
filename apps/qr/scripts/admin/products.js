@@ -1,51 +1,83 @@
 // scripts/admin/products.js — CRUD Products page logic
 
-var PAGE_SIZE = 20;
-var currentMode = 'list';   // 'list' | 'form' | 'detail'
-var currentProduct = null;  // product being edited/viewed
-var isEdit = false;
-var allProducts = [];
-var filteredProducts = [];
-var currentPage = 1;
-var pendingImages = {};   // { slot: File }
-var existingUrls = {};   // { slot: url } from existing product
+// Use window-level state to persist through SPA navigation re-injections
+window.PAGE_SIZE = window.PAGE_SIZE || 20;
+window.currentMode = 'list'; 
+window.currentProduct = null;
+window.isEdit = false;
+window.allProducts = window.allProducts || [];
+window.filteredProducts = window.filteredProducts || [];
+window.currentPage = 1;
+window.pendingImages = {};
+window.existingUrls = {};
 
 (async () => {
-  await requireAuth();
+  // 1. Initial Render Sidebar & Static Listeners (Instant)
   renderSidebar('products');
+  attachStaticEventListeners();
+
+  // 2. Auth Check (Async)
+  await requireAuth();
+
+  // 3. Load Data (Async)
   await loadProducts();
 
-  // Check ?action=create in URL
+  // 4. Check URL actions
   if (new URL(location.href).searchParams.get('action') === 'create') {
     switchMode('form', null, false);
   }
+})();
 
-  // Events: list
-  document.getElementById('btn-add').addEventListener('click', () => switchMode('form', null, false));
-  document.getElementById('btn-add-empty')?.addEventListener('click', () => switchMode('form', null, false));
-  document.getElementById('search-input').addEventListener('input', debounce(onSearch, 300));
+function attachStaticEventListeners() {
+  const btnAdd = document.getElementById('btn-add');
+  if (btnAdd) {
+    // Remove old listeners if any (though innerHTML replace usually handles this)
+    btnAdd.onclick = () => switchMode('form', null, false);
+  }
+  
+  const btnAddEmpty = document.getElementById('btn-add-empty');
+  if (btnAddEmpty) btnAddEmpty.onclick = () => switchMode('form', null, false);
 
-  // Events: form
-  document.getElementById('btn-back-form').addEventListener('click', () => switchMode('list'));
-  document.getElementById('btn-cancel-form').addEventListener('click', () => switchMode('list'));
-  document.getElementById('product-form').addEventListener('submit', onSubmitForm);
+  const searchInput = document.getElementById('search-input');
+  if (searchInput) {
+    searchInput.oninput = debounce(onSearch, 300);
+  }
+
+  // Form events
+  const backForm = document.getElementById('btn-back-form');
+  if (backForm) backForm.onclick = () => switchMode('list');
+  
+  const cancelForm = document.getElementById('btn-cancel-form');
+  if (cancelForm) cancelForm.onclick = () => switchMode('list');
+
+  const productForm = document.getElementById('product-form');
+  if (productForm) {
+    productForm.onsubmit = onSubmitForm;
+  }
 
   // Image slots
   document.querySelectorAll('.img-slot input[type=file]').forEach(input => {
-    input.addEventListener('change', onFileChange);
+    input.onchange = onFileChange;
   });
 
-  // Events: detail
-  document.getElementById('btn-back-detail').addEventListener('click', () => switchMode('list'));
-  document.getElementById('btn-edit-from-detail').addEventListener('click', () => switchMode('form', currentProduct, true));
-  document.getElementById('btn-delete-from-detail').addEventListener('click', () => confirmDelete(currentProduct.nomor_seri));
+  // Detail events
+  const backDetail = document.getElementById('btn-back-detail');
+  if (backDetail) backDetail.onclick = () => switchMode('list');
 
-  // Backdrop click to close detail
+  const editDetail = document.getElementById('btn-edit-from-detail');
+  if (editDetail) editDetail.onclick = () => switchMode('form', window.currentProduct, true);
+
+  const deleteDetail = document.getElementById('btn-delete-from-detail');
+  if (deleteDetail) deleteDetail.onclick = () => confirmDelete(window.currentProduct.nomor_seri);
+
+  // Backdrop click
   const detailOverlay = document.getElementById('mode-detail');
-  detailOverlay.addEventListener('click', (e) => {
-    if (e.target === detailOverlay) switchMode('list');
-  });
-})();
+  if (detailOverlay) {
+    detailOverlay.onclick = (e) => {
+      if (e.target === detailOverlay) switchMode('list');
+    };
+  }
+}
 
 // ── UTILS ────────────────────────────────────────────────────
 function debounce(fn, ms) {
@@ -59,9 +91,9 @@ function fmtDate(iso) {
 }
 
 function switchMode(mode, product = null, edit = false) {
-  currentMode = mode;
-  currentProduct = product;
-  isEdit = edit;
+  window.currentMode = mode;
+  window.currentProduct = product;
+  window.isEdit = edit;
 
   // Handle standard sections
   document.querySelectorAll('.mode-section:not(.modal-overlay)').forEach(el => el.classList.remove('active'));

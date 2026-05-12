@@ -1,50 +1,41 @@
 // scripts/admin/qrcodes.js
 
-var QR_BASE_URL = 'https://qr.zanxa.site/p/';
-var allProducts = [];
-var qrInstances = {}; // { nomor_seri: QRCode instance }
-
-async function ensureDependencies() {
-  return new Promise((resolve) => {
-    if (window.QRCode && window.JSZip) return resolve();
-    let loaded = 0;
-    const check = () => { if (++loaded === 2) resolve(); };
-    
-    if (!window.QRCode) {
-      const s1 = document.createElement('script');
-      s1.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
-      s1.onload = check;
-      document.body.appendChild(s1);
-    } else check();
-
-    if (!window.JSZip) {
-      const s2 = document.createElement('script');
-      s2.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
-      s2.onload = check;
-      document.body.appendChild(s2);
-    } else check();
-  });
-}
+window.QR_BASE_URL = 'https://qr.zanxa.site/p/';
+window.allProductsQR = window.allProductsQR || [];
+window.qrInstances = window.qrInstances || {};
 
 (async () => {
+  renderSidebar('qrcodes');
+  attachQRListeners();
+  
   await requireAuth();
   await ensureDependencies();
-  renderSidebar('qrcodes');
   await loadAndRender();
-
-  document.getElementById('qr-search').addEventListener('input', onSearch);
-  document.getElementById('btn-download-all').addEventListener('click', downloadAllZip);
-  document.getElementById('qr-preview-close').addEventListener('click', closePreview);
-  document.getElementById('qr-preview-modal').addEventListener('click', e => {
-    if (e.target === document.getElementById('qr-preview-modal')) closePreview();
-  });
 })();
+
+function attachQRListeners() {
+  const searchInput = document.getElementById('qr-search');
+  if (searchInput) searchInput.oninput = onSearch;
+
+  const btnDownload = document.getElementById('btn-download-all');
+  if (btnDownload) btnDownload.onclick = downloadAllZip;
+
+  const closeBtn = document.getElementById('qr-preview-close');
+  if (closeBtn) closeBtn.onclick = closePreview;
+
+  const modal = document.getElementById('qr-preview-modal');
+  if (modal) {
+    modal.onclick = (e) => {
+      if (e.target === modal) closePreview();
+    };
+  }
+}
 
 async function loadAndRender() {
   try {
     const res = await getProducts({ fields: 'nomor_seri,nama_produk', limit: 200 });
-    allProducts = res.data || [];
-    renderGrid(allProducts);
+    window.allProductsQR = res.data || [];
+    renderGrid(window.allProductsQR);
   } catch (e) {
     showToast('Gagal memuat produk: ' + e.message, 'error');
   }

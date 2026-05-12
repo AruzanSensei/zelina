@@ -9,6 +9,7 @@
     content="Sistem tracking aset industri ETS menggunakan QR Code. Scan QR untuk melihat spesifikasi teknis produk.">
 
   <link rel="stylesheet" href="../styles/base.css">
+  <link rel="stylesheet" href="../styles/components.css">
   <link rel="stylesheet" href="../styles/public.css">
   <link rel="stylesheet" href="../styles/scanner.css">
 </head>
@@ -20,7 +21,8 @@
       <a href="../index.html" style="display:block; height:32px;">
         <img src="../assets/ets-logo.png" alt="ETS" class="site-logo" style="height:100%;">
       </a>
-      <span style="font-size: 0.6rem; color: var(--text-muted); font-weight: 500; margin-top: 4px;">Protecting & improving Electricity</span>
+      <span style="font-size: 0.6rem; color: var(--text-muted); font-weight: 500; margin-top: 4px;">Protecting &
+        improving Electricity</span>
     </div>
     <span class="tagline" id="admin-link" title="Admin Panel">
       <i data-lucide="user-lock" style="width: 18px; height: 18px;"></i> Admin
@@ -79,6 +81,22 @@
     <span class="footer-domain">qr.zanxa.site</span>
   </footer>
 
+  <!-- QR Preview Modal -->
+  <div class="modal-overlay" id="qr-preview-modal">
+    <div class="modal-box" style="max-width:340px;text-align:center;">
+      <div class="modal-title" id="qr-preview-title" style="font-size:1.1rem;margin-bottom:4px;"></div>
+      <div id="qr-preview-canvas" style="display:flex;justify-content:center;margin:20px 0;"></div>
+      <div id="qr-preview-url"
+        style="font-size:.72rem;color:var(--text-sub);word-break:break-all;margin-bottom:24px;font-family:var(--mono);background:var(--gray-50);padding:8px;border-radius:6px;">
+      </div>
+      <div class="modal-footer" style="flex-direction:column;gap:10px;">
+        <button class="btn btn-primary" id="qr-preview-download" style="width:100%;">Download PNG</button>
+        <button class="btn btn-outline" id="qr-preview-visit" style="width:100%;">Lihat Detail Produk</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
   <script src="../config.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
