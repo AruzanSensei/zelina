@@ -31,7 +31,7 @@ function renderSidebar(activePage) {
         el.classList.remove('active');
       }
     });
-    
+
     // Ensure Lucide icons in the newly injected page content are transformed
     if (window.lucide) lucide.createIcons();
     return;
@@ -167,7 +167,7 @@ window.navigateTo = async (url, forceRefresh = false) => {
       if (sidebarEl) sidebarEl.classList.remove('open');
       window.scrollTo(0, 0);
 
-      injectRefreshBtn(); // Re-inject refresh button since topbar was replaced
+      reinitTopbar(); // Re-init ham-btn + Refresh button since topbar was replaced
 
       // Execute page-specific script — wait for it to fully load before calling init
       const pageScript = Array.from(doc.querySelectorAll('script')).find(s => s.src.includes('/scripts/admin/'));
@@ -196,53 +196,63 @@ document.addEventListener('click', (e) => {
   window.navigateTo(url);
 });
 
-// Inject Refresh button to Topbar
-function injectRefreshBtn() {
-  const topbarUser = document.querySelector('.topbar__user');
-  if (topbarUser && !document.getElementById('topbar-refresh')) {
-    const btn = document.createElement('button');
-    btn.id = 'topbar-refresh';
-    btn.className = 'btn btn-outline btn-sm';
-    btn.style.marginRight = '12px';
-    btn.style.padding = '6px 10px';
-    btn.style.border = '1px solid var(--border-md)';
-    btn.style.background = 'transparent';
-    btn.style.color = 'var(--text-sub)';
-    btn.style.display = 'flex';
-    btn.style.alignItems = 'center';
-    btn.style.gap = '6px';
-    btn.style.borderRadius = 'var(--r-sm)';
-    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 11-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg> <span style="font-size:0.75rem;font-weight:600;">Refresh</span>`;
+// ── Reinit entire topbar after SPA navigation ─────────────
+function reinitTopbar() {
+  const sidebarEl = document.getElementById('sidebar');
 
-    // Hover effects using standard JS instead of messy inline CSS
-    btn.onmouseover = () => btn.style.background = 'var(--gray-100)';
-    btn.onmouseout = () => btn.style.background = 'transparent';
-
-    btn.onclick = () => {
-      const icon = btn.querySelector('svg');
-      if (icon) icon.style.animation = 'spin 1s linear infinite';
-      btn.style.pointerEvents = 'none';
-      btn.querySelector('span').innerText = 'Memuat...';
-      const currentFile = window.location.pathname.split('/').pop() || 'index.html';
-      window.navigateTo(currentFile, true);
+  // 1. Re-attach hamburger icon + handler
+  const ham = document.getElementById('ham-btn');
+  if (ham) {
+    ham.innerHTML = `<i data-lucide="menu"></i>`;
+    if (window.lucide) lucide.createIcons({ nodes: [ham] });
+    ham.onclick = (e) => {
+      e.stopPropagation();
+      if (sidebarEl) sidebarEl.classList.toggle('open');
     };
+  }
 
-    // Add spin animation to document if not exists
-    if (!document.getElementById('spin-keyframes')) {
-      const style = document.createElement('style');
-      style.id = 'spin-keyframes';
-      style.innerHTML = `@keyframes spin { 100% { transform: rotate(360deg); } }`;
-      document.head.appendChild(style);
+  // 2. Inject page title from .page-header h1 into topbar
+  const topbar = document.querySelector('.topbar');
+  if (topbar) {
+    // Remove old injected title if exists
+    const oldTitle = topbar.querySelector('#topbar-page-title');
+    if (oldTitle) oldTitle.remove();
+
+    const pageH1 = document.querySelector('.page-header h1');
+    if (pageH1) {
+      const titleEl = document.createElement('span');
+      titleEl.id = 'topbar-page-title';
+      titleEl.textContent = pageH1.textContent;
+      titleEl.style.cssText = 'font-size: 1.3rem; font-weight: 800; color: var(--green); letter-spacing: -.01em;';
+      // Insert after ham-btn (first child)
+      const firstChild = topbar.firstElementChild;
+      if (firstChild && firstChild.nextSibling) {
+        topbar.insertBefore(titleEl, firstChild.nextSibling);
+      } else {
+        topbar.appendChild(titleEl);
+      }
     }
 
-    topbarUser.parentNode.insertBefore(btn, topbarUser);
+    // 3. Re-inject Refresh button if not already present
+    if (!topbar.querySelector('#topbar-refresh')) {
+      const btn = document.createElement('button');
+      btn.id = 'topbar-refresh';
+      btn.title = 'Refresh';
+      btn.style.cssText = 'display:flex; align-items:center; gap:6px; padding:6px 12px; border:1px solid var(--border-md); border-radius:8px; box-shadow:var(--shadow-sm); background:var(--bg-card); color:var(--text-main); cursor:pointer; font-size:.8rem; font-weight:500;';
+      btn.innerHTML = `<i data-lucide="refresh-cw" style="width:14px;height:14px;"></i> Refresh`;
+      if (window.lucide) lucide.createIcons({ nodes: [btn] });
+      btn.onclick = () => {
+        const currentFile = window.location.pathname.split('/').pop() || 'index.html';
+        window.navigateTo(currentFile, true);
+      };
+      topbar.appendChild(btn);
+    }
   }
 }
 
 // Initial injection
-document.addEventListener('DOMContentLoaded', injectRefreshBtn);
-// Call it immediately just in case DOM is already loaded
-injectRefreshBtn();
+document.addEventListener('DOMContentLoaded', reinitTopbar);
+reinitTopbar();
 
 // Handle browser Back/Forward buttons gracefully
 window.addEventListener('popstate', () => window.location.reload());

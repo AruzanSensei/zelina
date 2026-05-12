@@ -107,7 +107,9 @@ function renderTable() {
   const page   = filteredProducts.slice(start, start + PAGE_SIZE);
   const total  = Math.ceil(filteredProducts.length / PAGE_SIZE);
 
-  tbody.innerHTML = page.map((p, i) => `
+  tbody.innerHTML = page.map((p, i) => {
+    const safeId = p.nomor_seri.replace(/[^a-zA-Z0-9]/g, '_');
+    return `
     <tr>
       <td style="text-align: center; color: var(--text-muted); font-weight: 500;">${start + i + 1}</td>
       <td><span style="font-family:var(--mono);font-size:.78rem;">${p.nomor_seri}</span></td>
@@ -119,7 +121,8 @@ function renderTable() {
       <td>${p.tahun_pembuatan || '—'}</td>
       <td>${fmtDate(p.created_at)}</td>
       <td>
-        <div class="table-actions">
+        <!-- Desktop: 3 buttons inline -->
+        <div class="table-actions desktop-actions">
           <button class="btn btn-ghost btn-action" onclick="window.open('../public/product.html?id=${p.nomor_seri}', '_blank')" title="Lihat Halaman Publik">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
             Public
@@ -127,9 +130,26 @@ function renderTable() {
           <button class="btn btn-outline btn-action" onclick="editProduct('${p.nomor_seri}')">Edit</button>
           <button class="btn btn-danger btn-action" onclick="confirmDelete('${p.nomor_seri}')">Hapus</button>
         </div>
+        <!-- Mobile: single ellipsis button with dropdown -->
+        <div class="mobile-actions" style="position:relative;">
+          <button class="btn btn-ghost btn-action" onclick="toggleActionMenu(event,'menu-${safeId}')" style="padding:5px 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+          </button>
+          <div id="menu-${safeId}" class="action-dropdown" style="display:none; position:absolute; right:0; top:100%; z-index:50; background:var(--bg-card); border:1px solid var(--border-md); border-radius:8px; box-shadow:var(--shadow-md); min-width:140px; overflow:hidden;">
+            <button onclick="closeAllActionMenus(); window.open('../public/product.html?id=${p.nomor_seri}', '_blank')" style="width:100%; text-align:left; padding:10px 14px; font-size:.82rem; background:none; border:none; cursor:pointer; color:var(--text-main); display:flex; align-items:center; gap:8px;">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg> Public
+            </button>
+            <button onclick="closeAllActionMenus(); editProduct('${p.nomor_seri}')" style="width:100%; text-align:left; padding:10px 14px; font-size:.82rem; background:none; border:none; cursor:pointer; color:var(--text-main); display:flex; align-items:center; gap:8px; border-top:1px solid var(--border);">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Edit
+            </button>
+            <button onclick="closeAllActionMenus(); confirmDelete('${p.nomor_seri}')" style="width:100%; text-align:left; padding:10px 14px; font-size:.82rem; background:none; border:none; cursor:pointer; color:var(--red); display:flex; align-items:center; gap:8px; border-top:1px solid var(--border);">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v6M14 11v6"></path><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg> Hapus
+            </button>
+          </div>
+        </div>
       </td>
     </tr>
-  `).join('');
+  `}).join('');
 
   // Pagination
   paginEl.innerHTML = `
@@ -140,6 +160,23 @@ function renderTable() {
 }
 
 function goPage(n) { currentPage = n; renderTable(); }
+
+// ── ACTION DROPDOWN (Mobile) ──────────────────────────────────
+function toggleActionMenu(e, id) {
+  e.stopPropagation();
+  const menu = document.getElementById(id);
+  if (!menu) return;
+  const isOpen = menu.style.display !== 'none';
+  closeAllActionMenus();
+  if (!isOpen) menu.style.display = 'block';
+}
+
+function closeAllActionMenus() {
+  document.querySelectorAll('.action-dropdown').forEach(m => m.style.display = 'none');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', closeAllActionMenus);
 
 // ── VIEW / EDIT SHORTCUT ─────────────────────────────────────
 function viewDetail(nomor_seri) {

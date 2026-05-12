@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,16 +9,14 @@
   <link rel="stylesheet" href="../styles/components.css">
   <link rel="stylesheet" href="../styles/admin.css">
 </head>
+
 <body>
   <div class="admin-layout">
     <aside id="sidebar"></aside>
     <div class="admin-main">
-      <header class="topbar" style="justify-content: flex-start; gap: 16px;">
+      <header class="topbar" style="justify-content: flex-start; gap: 10px;">
         <button class="topbar__ham" id="ham-btn" aria-label="Toggle sidebar"></button>
         <div style="flex: 1;"></div>
-        <button onclick="location.reload()" title="Refresh" style="display:flex; align-items:center; gap:6px; padding:6px 12px; border:1px solid var(--border-md); border-radius:8px; box-shadow:var(--shadow-sm); background:var(--bg-card); color:var(--text-main); cursor:pointer; font-size:.8rem; font-weight:500;">
-          <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> Refresh
-        </button>
       </header>
       <main class="page-content">
         <div class="page-header">
@@ -29,21 +28,29 @@
         <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:24px;">
           <div class="stat-card">
             <div class="stat-card__icon">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12l3-3 3 2.5 3-4 3 2"/></svg>
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path d="M2 12l3-3 3 2.5 3-4 3 2" />
+              </svg>
             </div>
             <div class="stat-card__label">Total Scan</div>
             <div class="stat-card__value sk" id="stat-total" style="height:36px;width:80px;">&nbsp;</div>
           </div>
           <div class="stat-card">
             <div class="stat-card__icon">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="9" r="7"/><path d="M9 5v4l3 2"/></svg>
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6">
+                <circle cx="9" cy="9" r="7" />
+                <path d="M9 5v4l3 2" />
+              </svg>
             </div>
             <div class="stat-card__label">Scan Hari Ini</div>
             <div class="stat-card__value sk" id="stat-today" style="height:36px;width:80px;">&nbsp;</div>
           </div>
           <div class="stat-card">
             <div class="stat-card__icon">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="3" width="16" height="13" rx="1.5"/><path d="M5 3V2a2 2 0 0 1 4 0v1"/></svg>
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6">
+                <rect x="1" y="3" width="16" height="13" rx="1.5" />
+                <path d="M5 3V2a2 2 0 0 1 4 0v1" />
+              </svg>
             </div>
             <div class="stat-card__label">Produk Aktif</div>
             <div class="stat-card__value sk" id="stat-products" style="height:36px;width:80px;">&nbsp;</div>
@@ -68,9 +75,14 @@
             <span class="card__title">Grafik Scan Harian</span>
           </div>
           <div class="card__body" style="padding:40px;text-align:center;color:var(--text-muted);">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:12px;opacity:.4;"><rect x="4" y="4" width="32" height="32" rx="3"/><path d="M4 28l8-8 6 5 8-10 8 6"/></svg>
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5"
+              style="margin-bottom:12px;opacity:.4;">
+              <rect x="4" y="4" width="32" height="32" rx="3" />
+              <path d="M4 28l8-8 6 5 8-10 8 6" />
+            </svg>
             <div style="font-size:.875rem;font-weight:600;">Grafik belum tersedia</div>
-            <div style="font-size:.8rem;margin-top:4px;">Grafik scan harian akan ditampilkan setelah data terkumpul.</div>
+            <div style="font-size:.8rem;margin-top:4px;">Grafik scan harian akan ditampilkan setelah data terkumpul.
+            </div>
           </div>
         </div>
       </main>
@@ -86,4 +98,5 @@
   <script src="../components/toast.js"></script>
   <script src="../scripts/admin/analytics.js"></script>
 </body>
+
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,16 +9,14 @@
   <link rel="stylesheet" href="../styles/components.css">
   <link rel="stylesheet" href="../styles/admin.css">
 </head>
+
 <body>
   <div class="admin-layout">
     <aside id="sidebar"></aside>
     <div class="admin-main">
-      <header class="topbar" style="justify-content: flex-start; gap: 16px;">
+      <header class="topbar" style="justify-content: flex-start; gap: 10px;">
         <button class="topbar__ham" id="ham-btn" aria-label="Toggle sidebar"></button>
         <div style="flex: 1;"></div>
-        <button onclick="location.reload()" title="Refresh" style="display:flex; align-items:center; gap:6px; padding:6px 12px; border:1px solid var(--border-md); border-radius:8px; box-shadow:var(--shadow-sm); background:var(--bg-card); color:var(--text-main); cursor:pointer; font-size:.8rem; font-weight:500;">
-          <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i> Refresh
-        </button>
       </header>
       <main class="page-content">
         <div class="page-header">
@@ -59,7 +58,8 @@
                 </div>
                 <div style="display:flex;justify-content:space-between;gap:12px;">
                   <span style="color:var(--text-sub);">Worker URL</span>
-                  <span style="font-family:var(--mono);font-size:.72rem;word-break:break-all;text-align:right;" id="sys-worker">—</span>
+                  <span style="font-family:var(--mono);font-size:.72rem;word-break:break-all;text-align:right;"
+                    id="sys-worker">—</span>
                 </div>
                 <div style="display:flex;justify-content:space-between;gap:12px;">
                   <span style="color:var(--text-sub);">Supabase Project</span>
@@ -68,7 +68,8 @@
                 <div style="display:flex;justify-content:space-between;align-items:center;">
                   <span style="color:var(--text-sub);">Status DB</span>
                   <span style="display:flex;align-items:center;gap:6px;font-weight:600;color:var(--green);">
-                    <span style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;"></span>
+                    <span
+                      style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;"></span>
                     Online
                   </span>
                 </div>
@@ -92,7 +93,7 @@
     (async () => {
       const info = await requireAuth();
       renderSidebar('settings');
-      document.getElementById('sys-worker').textContent  = APP_CONFIG.WORKER_URL;
+      document.getElementById('sys-worker').textContent = APP_CONFIG.WORKER_URL;
       document.getElementById('sys-project').textContent = APP_CONFIG.SUPABASE_URL.split('//')[1]?.split('.')[0] || '—';
       if (info) document.getElementById('s-email').value = info.user?.email || '';
       document.getElementById('btn-save-settings').addEventListener('click', () => {
@@ -101,4 +102,5 @@
     })();
   </script>
 </body>
+
 </html>

@@ -62,7 +62,7 @@
 /* PAGE CONTENT */
 .page-content { flex: 1; padding: 28px; }
 .page-header  { margin-bottom: 24px; }
-.page-header h1 { font-size: 1.4rem; font-weight: 700; }
+.page-header h1 { display: none; }
 .page-header p  { font-size: .875rem; color: var(--text-sub); margin-top: 4px; }
 
 /* STATS GRID */
@@ -135,6 +135,10 @@
 @media (max-width: 1200px) {
   .stats-grid { grid-template-columns: repeat(2, 1fr); }
 }
+/* Action buttons: desktop default (must be before media queries) */
+.desktop-actions { display: flex; }
+.mobile-actions  { display: none; }
+
 @media (max-width: 1024px) {
   .qr-grid    { grid-template-columns: repeat(2, 1fr); }
   .img-slots-grid { grid-template-columns: repeat(2, 1fr); }
@@ -152,6 +156,18 @@
   .page-content { padding: 16px; }
   .qr-grid    { grid-template-columns: repeat(2, 1fr); }
   .topbar { padding: 0 16px; }
+
+  /* Table: scrollable on mobile so it doesn't overflow the page */
+  .table-view-container .table-wrap,
+  .mode-section .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: calc(100vw - 32px);
+  }
+
+  /* Action buttons: show ellipsis menu on mobile, hide inline buttons */
+  .desktop-actions { display: none !important; }
+  .mobile-actions  { display: flex; }
 }
 @media (max-width: 480px) {
   .stats-grid { grid-template-columns: 1fr; }
@@ -159,6 +175,8 @@
   .img-slots-grid { grid-template-columns: 1fr 1fr; }
   .media-slots { grid-template-columns: 1fr 1fr; }
 }
+
+
 
 /* ============================================================
    PAGE-SPECIFIC SPA STYLES (moved from inline HTML)
