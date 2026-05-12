@@ -8,7 +8,7 @@ var allProducts = [];
 var filteredProducts = [];
 var currentPage = 1;
 var pendingImages = {};   // { slot: File }
-var existingUrls  = {};   // { slot: url } from existing product
+var existingUrls = {};   // { slot: url } from existing product
 
 (async () => {
   await requireAuth();
@@ -39,6 +39,12 @@ var existingUrls  = {};   // { slot: url } from existing product
   document.getElementById('btn-back-detail').addEventListener('click', () => switchMode('list'));
   document.getElementById('btn-edit-from-detail').addEventListener('click', () => switchMode('form', currentProduct, true));
   document.getElementById('btn-delete-from-detail').addEventListener('click', () => confirmDelete(currentProduct.nomor_seri));
+
+  // Backdrop click to close detail
+  const detailOverlay = document.getElementById('mode-detail');
+  detailOverlay.addEventListener('click', (e) => {
+    if (e.target === detailOverlay) switchMode('list');
+  });
 })();
 
 // ── UTILS ────────────────────────────────────────────────────
@@ -53,17 +59,28 @@ function fmtDate(iso) {
 }
 
 function switchMode(mode, product = null, edit = false) {
-  currentMode    = mode;
+  currentMode = mode;
   currentProduct = product;
-  isEdit         = edit;
+  isEdit = edit;
 
-  document.querySelectorAll('.mode-section').forEach(el => el.classList.remove('active'));
-  document.getElementById(`mode-${mode}`).classList.add('active');
-  document.getElementById('topbar-title').textContent =
-    mode === 'list' ? 'Products' : mode === 'form' ? (edit ? 'Edit Produk' : 'Tambah Produk') : 'Detail Produk';
+  // Handle standard sections
+  document.querySelectorAll('.mode-section:not(.modal-overlay)').forEach(el => el.classList.remove('active'));
+
+  const detailModal = document.getElementById('mode-detail');
+
+  if (mode === 'detail') {
+    if (product) renderDetail(product);
+    detailModal.style.display = 'flex';
+    requestAnimationFrame(() => detailModal.classList.add('active'));
+  } else {
+    detailModal.classList.remove('active');
+    setTimeout(() => { if (currentMode !== 'detail') detailModal.style.display = 'none'; }, 200);
+
+    const target = document.getElementById(`mode-${mode}`);
+    if (target) target.classList.add('active');
+  }
 
   if (mode === 'form') populateForm(product, edit);
-  if (mode === 'detail' && product) renderDetail(product);
 }
 
 // ── LOAD LIST ────────────────────────────────────────────────
@@ -82,16 +99,16 @@ function onSearch() {
   const q = document.getElementById('search-input').value.trim().toLowerCase();
   filteredProducts = q
     ? allProducts.filter(p =>
-        p.nama_produk?.toLowerCase().includes(q) ||
-        p.nomor_seri?.toLowerCase().includes(q) ||
-        p.tipe_kode?.toLowerCase().includes(q))
+      p.nama_produk?.toLowerCase().includes(q) ||
+      p.nomor_seri?.toLowerCase().includes(q) ||
+      p.tipe_kode?.toLowerCase().includes(q))
     : [...allProducts];
   currentPage = 1;
   renderTable();
 }
 
 function renderTable() {
-  const tbody   = document.getElementById('product-tbody');
+  const tbody = document.getElementById('product-tbody');
   const emptyEl = document.getElementById('empty-state-list');
   const paginEl = document.getElementById('pagination');
 
@@ -103,24 +120,23 @@ function renderTable() {
   }
   emptyEl.classList.add('hidden');
 
-  const start  = (currentPage - 1) * PAGE_SIZE;
-  const page   = filteredProducts.slice(start, start + PAGE_SIZE);
-  const total  = Math.ceil(filteredProducts.length / PAGE_SIZE);
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const page = filteredProducts.slice(start, start + PAGE_SIZE);
+  const total = Math.ceil(filteredProducts.length / PAGE_SIZE);
 
   tbody.innerHTML = page.map((p, i) => {
     const safeId = p.nomor_seri.replace(/[^a-zA-Z0-9]/g, '_');
     return `
-    <tr>
+    <tr style="cursor:pointer;" onclick="viewDetail('${p.nomor_seri}')">
       <td style="text-align: center; color: var(--text-muted); font-weight: 500;">${start + i + 1}</td>
       <td><span style="font-family:var(--mono);font-size:.78rem;">${p.nomor_seri}</span></td>
       <td>
-        <span class="truncate" style="max-width:220px;display:block;cursor:pointer;font-weight:500;"
-          onclick="viewDetail('${p.nomor_seri}')">${p.nama_produk}</span>
+        <span class="truncate" style="max-width:220px;display:block;font-weight:500;">${p.nama_produk}</span>
       </td>
       <td>${p.tipe_kode || '—'}</td>
       <td>${p.tahun_pembuatan || '—'}</td>
       <td>${fmtDate(p.created_at)}</td>
-      <td>
+      <td onclick="event.stopPropagation()">
         <!-- Desktop: 3 buttons inline -->
         <div class="table-actions desktop-actions">
           <button class="btn btn-ghost btn-action" onclick="window.open('../public/product.html?id=${p.nomor_seri}', '_blank')" title="Lihat Halaman Publik">
@@ -130,22 +146,11 @@ function renderTable() {
           <button class="btn btn-outline btn-action" onclick="editProduct('${p.nomor_seri}')">Edit</button>
           <button class="btn btn-danger btn-action" onclick="confirmDelete('${p.nomor_seri}')">Hapus</button>
         </div>
-        <!-- Mobile: single ellipsis button with dropdown -->
-        <div class="mobile-actions" style="position:relative;">
-          <button class="btn btn-ghost btn-action" onclick="toggleActionMenu(event,'menu-${safeId}')" style="padding:5px 8px;">
+        <!-- Mobile: single ellipsis button trigger -->
+        <div class="mobile-actions">
+          <button class="btn btn-ghost btn-action" onclick="toggleActionMenu(event,'${p.nomor_seri}')" style="padding:5px 8px;">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
           </button>
-          <div id="menu-${safeId}" class="action-dropdown" style="display:none; position:absolute; right:0; top:100%; z-index:50; background:var(--bg-card); border:1px solid var(--border-md); border-radius:8px; box-shadow:var(--shadow-md); min-width:140px; overflow:hidden;">
-            <button onclick="closeAllActionMenus(); window.open('../public/product.html?id=${p.nomor_seri}', '_blank')" style="width:100%; text-align:left; padding:10px 14px; font-size:.82rem; background:none; border:none; cursor:pointer; color:var(--text-main); display:flex; align-items:center; gap:8px;">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg> Public
-            </button>
-            <button onclick="closeAllActionMenus(); editProduct('${p.nomor_seri}')" style="width:100%; text-align:left; padding:10px 14px; font-size:.82rem; background:none; border:none; cursor:pointer; color:var(--text-main); display:flex; align-items:center; gap:8px; border-top:1px solid var(--border);">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Edit
-            </button>
-            <button onclick="closeAllActionMenus(); confirmDelete('${p.nomor_seri}')" style="width:100%; text-align:left; padding:10px 14px; font-size:.82rem; background:none; border:none; cursor:pointer; color:var(--red); display:flex; align-items:center; gap:8px; border-top:1px solid var(--border);">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v6M14 11v6"></path><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg> Hapus
-            </button>
-          </div>
         </div>
       </td>
     </tr>
@@ -161,18 +166,35 @@ function renderTable() {
 
 function goPage(n) { currentPage = n; renderTable(); }
 
-// ── ACTION DROPDOWN (Mobile) ──────────────────────────────────
-function toggleActionMenu(e, id) {
+// ── ACTION DROPDOWN (Mobile) — rendered to body to escape table overflow ──
+function toggleActionMenu(e, seri) {
   e.stopPropagation();
-  const menu = document.getElementById(id);
-  if (!menu) return;
-  const isOpen = menu.style.display !== 'none';
   closeAllActionMenus();
-  if (!isOpen) menu.style.display = 'block';
+
+  const btn = e.currentTarget;
+  const rect = btn.getBoundingClientRect();
+
+  const menu = document.createElement('div');
+  menu.className = 'action-dropdown-float';
+  menu.style.cssText = `position:fixed; z-index:9000; right:${window.innerWidth - rect.right}px; top:${rect.bottom + 6}px; background:var(--bg-card); border:1px solid var(--border-md); border-radius:8px; box-shadow:var(--shadow-md); min-width:150px; overflow:hidden;`;
+
+  const escapedSeri = seri.replace(/"/g, '&quot;');
+  menu.innerHTML = `
+    <button onclick="closeAllActionMenus(); window.open('../public/product.html?id=${escapedSeri}', '_blank')" style="width:100%;text-align:left;padding:10px 14px;font-size:.82rem;background:none;border:none;cursor:pointer;color:var(--text-main);display:flex;align-items:center;gap:8px;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg> Public
+    </button>
+    <button onclick="closeAllActionMenus(); editProduct('${escapedSeri}')" style="width:100%;text-align:left;padding:10px 14px;font-size:.82rem;background:none;border:none;cursor:pointer;color:var(--text-main);display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg> Edit
+    </button>
+    <button onclick="closeAllActionMenus(); confirmDelete('${escapedSeri}')" style="width:100%;text-align:left;padding:10px 14px;font-size:.82rem;background:none;border:none;cursor:pointer;color:var(--red);display:flex;align-items:center;gap:8px;border-top:1px solid var(--border);">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14H6L5 6"></path><path d="M10 11v6M14 11v6"></path><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"></path></svg> Hapus
+    </button>
+  `;
+  document.body.appendChild(menu);
 }
 
 function closeAllActionMenus() {
-  document.querySelectorAll('.action-dropdown').forEach(m => m.style.display = 'none');
+  document.querySelectorAll('.action-dropdown-float').forEach(m => m.remove());
 }
 
 // Close dropdown when clicking outside
@@ -196,8 +218,8 @@ function populateForm(product, edit) {
   Object.keys(existingUrls).forEach(k => delete existingUrls[k]);
 
   // Reset all slots
-  ['depan','kanan','kiri','belakang'].forEach(slot => {
-    const prev  = document.getElementById(`prev-${slot}`);
+  ['depan', 'kanan', 'kiri', 'belakang'].forEach(slot => {
+    const prev = document.getElementById(`prev-${slot}`);
     const badge = document.getElementById(`badge-${slot}`);
     const input = document.querySelector(`.img-slot[id="slot-${slot}"] input`);
     prev.classList.remove('visible');
@@ -210,11 +232,11 @@ function populateForm(product, edit) {
 
   const fields = {
     'f-nama': edit ? product.nama_produk : '',
-    'f-tipe': edit ? product.tipe_kode   : '',
-    'f-seri': edit ? product.nomor_seri  : '',
+    'f-tipe': edit ? product.tipe_kode : '',
+    'f-seri': edit ? product.nomor_seri : '',
     'f-tahun': edit ? product.tahun_pembuatan || '' : '',
-    'f-input': edit ? product.input      : '',
-    'f-output': edit ? product.output    : '',
+    'f-input': edit ? product.input : '',
+    'f-output': edit ? product.output : '',
     'f-frekuensi': edit ? product.frekuensi : '',
     'f-socket': edit ? product.jumlah_socket || '' : '',
     'f-range': edit ? product.range_daya : '',
@@ -234,7 +256,7 @@ function populateForm(product, edit) {
 
   // Show existing images
   if (edit) {
-    ['depan','kanan','kiri','belakang'].forEach(slot => {
+    ['depan', 'kanan', 'kiri', 'belakang'].forEach(slot => {
       const url = product[`gambar_${slot}`];
       if (url) {
         existingUrls[slot] = url;
@@ -252,8 +274,8 @@ function populateForm(product, edit) {
 async function onFileChange(e) {
   const file = e.target.files[0];
   if (!file) return;
-  const slot  = e.target.dataset.slot;
-  const prev  = document.getElementById(`prev-${slot}`);
+  const slot = e.target.dataset.slot;
+  const prev = document.getElementById(`prev-${slot}`);
   const badge = document.getElementById(`badge-${slot}`);
 
   badge.textContent = 'Compressing...';
@@ -268,7 +290,7 @@ async function onFileChange(e) {
     prev.classList.add('visible');
 
     const origKB = (file.size / 1024).toFixed(0);
-    const newKB  = (blob.size / 1024).toFixed(0);
+    const newKB = (blob.size / 1024).toFixed(0);
     const saving = Math.round((1 - blob.size / file.size) * 100);
     badge.textContent = `${newKB}kB (-${saving}%) WebP`;
   } catch (err) {
@@ -280,10 +302,10 @@ async function onFileChange(e) {
 async function onSubmitForm(e) {
   e.preventDefault();
 
-  const nomor_seri  = document.getElementById('f-seri').value.trim();
+  const nomor_seri = document.getElementById('f-seri').value.trim();
   const nama_produk = document.getElementById('f-nama').value.trim();
 
-  if (!nomor_seri)  { showToast('Nomor seri wajib diisi', 'error'); return; }
+  if (!nomor_seri) { showToast('Nomor seri wajib diisi', 'error'); return; }
   if (!nama_produk) { showToast('Nama produk wajib diisi', 'error'); return; }
 
   const btn = document.getElementById('btn-save');
@@ -293,7 +315,7 @@ async function onSubmitForm(e) {
   try {
     // Upload new images
     const imageUrls = {};
-    for (const slot of ['depan','kanan','kiri','belakang']) {
+    for (const slot of ['depan', 'kanan', 'kiri', 'belakang']) {
       if (pendingImages[slot]) {
         const file = new File([pendingImages[slot]], `${slot}.webp`, { type: 'image/webp' });
         imageUrls[`gambar_${slot}`] = await uploadImage(file, nomor_seri, slot);
@@ -307,17 +329,17 @@ async function onSubmitForm(e) {
     const payload = {
       nomor_seri,
       nama_produk,
-      tipe_kode:            document.getElementById('f-tipe').value.trim()      || null,
-      tahun_pembuatan:      parseInt(document.getElementById('f-tahun').value)  || null,
-      input:                document.getElementById('f-input').value.trim()     || null,
-      output:               document.getElementById('f-output').value.trim()    || null,
-      frekuensi:            document.getElementById('f-frekuensi').value.trim() || null,
-      jumlah_socket:        parseInt(document.getElementById('f-socket').value) || null,
-      range_daya:           document.getElementById('f-range').value.trim()     || null,
-      soft_fuse_protection: document.getElementById('f-soft').value.trim()      || null,
-      hard_fuse_protection: document.getElementById('f-hard').value.trim()      || null,
-      ground_output:        document.getElementById('f-ground').value.trim()    || null,
-      tambahan_optional:    document.getElementById('f-tambahan').value.trim()  || null,
+      tipe_kode: document.getElementById('f-tipe').value.trim() || null,
+      tahun_pembuatan: parseInt(document.getElementById('f-tahun').value) || null,
+      input: document.getElementById('f-input').value.trim() || null,
+      output: document.getElementById('f-output').value.trim() || null,
+      frekuensi: document.getElementById('f-frekuensi').value.trim() || null,
+      jumlah_socket: parseInt(document.getElementById('f-socket').value) || null,
+      range_daya: document.getElementById('f-range').value.trim() || null,
+      soft_fuse_protection: document.getElementById('f-soft').value.trim() || null,
+      hard_fuse_protection: document.getElementById('f-hard').value.trim() || null,
+      ground_output: document.getElementById('f-ground').value.trim() || null,
+      tambahan_optional: document.getElementById('f-tambahan').value.trim() || null,
       ...imageUrls,
     };
 
@@ -342,12 +364,12 @@ async function onSubmitForm(e) {
 // ── DELETE ───────────────────────────────────────────────────
 function confirmDelete(nomor_seri) {
   showConfirmModal({
-    title:       'Hapus Produk?',
-    message:     `Produk <strong>${nomor_seri}</strong> akan dihapus permanen beserta semua gambarnya.`,
+    title: 'Hapus Produk?',
+    message: `Produk <strong>${nomor_seri}</strong> akan dihapus permanen beserta semua gambarnya.`,
     confirmText: 'Ya, Hapus',
-    onConfirm:   async () => {
+    onConfirm: async () => {
       try {
-        await deleteProductImages(nomor_seri).catch(() => {});
+        await deleteProductImages(nomor_seri).catch(() => { });
         await deleteProduct(nomor_seri);
         showToast('Produk dihapus', 'success');
         allProducts = allProducts.filter(p => p.nomor_seri !== nomor_seri);
@@ -361,50 +383,96 @@ function confirmDelete(nomor_seri) {
   });
 }
 
-// ── DETAIL ───────────────────────────────────────────────────
+// ── DETAIL (Public Design Parity) ───────────────────────────
 function renderDetail(p) {
-  document.getElementById('detail-name').textContent = p.nama_produk;
-  document.getElementById('detail-seri').textContent = p.nomor_seri;
+  // 1. Cover Image
+  const coverWrap = document.getElementById('detail-cover-wrap');
+  const coverImg = document.getElementById('detail-cover-img');
+  if (p.gambar_depan) {
+    coverWrap.style.display = 'block';
+    coverImg.src = p.gambar_depan;
+  } else {
+    coverWrap.style.display = 'none';
+  }
 
+  // 2. Basic Info
+  const prodType = document.getElementById('detail-prod-type');
+  if (p.tipe_kode) {
+    prodType.style.display = 'block';
+    prodType.textContent = p.tipe_kode;
+  } else {
+    prodType.style.display = 'none';
+  }
+  document.getElementById('detail-prod-name').textContent = p.nama_produk;
+
+  // 3. Info Grid (Public Style)
   const fields = [
-    ['Tipe / Kode',   p.tipe_kode],
-    ['Tahun',         p.tahun_pembuatan],
-    ['Input',         p.input],
-    ['Output',        p.output],
-    ['Frekuensi',     p.frekuensi],
-    ['Jumlah Socket', p.jumlah_socket],
-    ['Range Daya',    p.range_daya],
-    ['Soft Fuse',     p.soft_fuse_protection],
-    ['Hard Fuse',     p.hard_fuse_protection],
-    ['Ground Output', p.ground_output],
-    ['Dibuat',        fmtDate(p.created_at)],
+    { k: 'NOMOR SERI', v: p.nomor_seri, mono: true },
+    { k: 'TIPE / KODE', v: p.tipe_kode },
+    { k: 'TAHUN PEMBUATAN', v: p.tahun_pembuatan },
+    { k: 'INPUT', v: p.input },
+    { k: 'OUTPUT', v: p.output },
+    { k: 'FREKUENSI', v: p.frekuensi },
+    { k: 'JUMLAH SOCKET', v: p.jumlah_socket },
+    { k: 'RANGE DAYA', v: p.range_daya },
+    { k: 'SOFT FUSE', v: p.soft_fuse_protection },
+    { k: 'HARD FUSE', v: p.hard_fuse_protection },
+    { k: 'GROUND OUTPUT', v: p.ground_output },
   ];
 
-  document.getElementById('detail-info-grid').innerHTML = fields.map(([k, v]) => `
-    <div class="detail-info-item">
-      <div class="detail-info-key">${k}</div>
-      <div class="detail-info-val">${v || '—'}</div>
+  document.getElementById('detail-info-grid').innerHTML = fields.map(f => `
+    <div class="info-item">
+      <div class="info-key">${f.k}</div>
+      <div class="info-val ${f.mono ? 'mono' : ''}">${f.v || '—'}</div>
     </div>
   `).join('');
 
+  // 4. Tambahan
   const tambahanWrap = document.getElementById('detail-tambahan-wrap');
   if (p.tambahan_optional) {
-    tambahanWrap.style.display = '';
+    tambahanWrap.style.display = 'block';
     document.getElementById('detail-tambahan').textContent = p.tambahan_optional;
   } else {
     tambahanWrap.style.display = 'none';
   }
 
-  const slots = ['depan','kanan','kiri','belakang'];
-  document.getElementById('detail-photos').innerHTML = slots.map(slot => {
-    const url = p[`gambar_${slot}`];
-    return `
-      <div class="detail-photo-wrap">
-        ${url
-          ? `<img class="detail-photo" src="${url}" alt="${slot}" loading="lazy">`
-          : `<div class="detail-photo" style="display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:.75rem;">No photo</div>`
-        }
-        <div class="detail-photo-label">${slot.toUpperCase()}</div>
-      </div>`;
-  }).join('');
+  // 5. QR Code
+  const qrBox = document.getElementById('detail-qr-box');
+  qrBox.innerHTML = '';
+  const publicUrl = `https://qr.zanxa.site/product.html?id=${p.nomor_seri}`;
+  new QRCode(qrBox, {
+    text: publicUrl,
+    width: 90,
+    height: 90,
+    colorDark: "#1a1a1a",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H
+  });
+  document.getElementById('detail-qr-nomor').textContent = p.nomor_seri;
+  document.getElementById('detail-qr-url').textContent = publicUrl;
+
+  // 6. Gallery
+  const slots = [
+    { id: 'depan', label: 'Tampak Depan' },
+    { id: 'kanan', label: 'Sisi Kanan' },
+    { id: 'kiri', label: 'Sisi Kiri' },
+    { id: 'belakang', label: 'Tampak Belakang' }
+  ];
+  const hasPhotos = slots.some(s => p[`gambar_${s.id}`]);
+  const gallerySection = document.getElementById('detail-gallery-section');
+
+  if (hasPhotos) {
+    gallerySection.style.display = 'block';
+    document.getElementById('detail-gallery-grid').innerHTML = slots.map(s => {
+      const url = p[`gambar_${s.id}`];
+      if (!url) return '';
+      return `
+        <div class="gallery-item" onclick="window.open('${url}', '_blank')">
+          <img class="gallery-img" src="${url}" alt="${s.label}" loading="lazy">
+          <div class="gallery-label">${s.label}</div>
+        </div>`;
+    }).join('');
+  } else {
+    gallerySection.style.display = 'none';
+  }
 }

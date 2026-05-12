@@ -170,7 +170,7 @@
   .mobile-actions  { display: flex; }
 }
 @media (max-width: 480px) {
-  .stats-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
   .qr-grid    { grid-template-columns: 1fr; }
   .img-slots-grid { grid-template-columns: 1fr 1fr; }
   .media-slots { grid-template-columns: 1fr 1fr; }
