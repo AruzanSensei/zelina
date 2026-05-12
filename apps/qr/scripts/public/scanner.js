@@ -16,11 +16,6 @@
 
   const $ = id => document.getElementById(id);
 
-  // ── Configure Library ──────────────────────────────────────
-  if (typeof window.QrScanner !== 'undefined') {
-    window.QrScanner.WORKER_PATH = 'https://unpkg.com/qr-scanner@1.4.2/qr-scanner-worker.min.js';
-  }
-
   // ── Beep (Web Audio API, no file needed) ───────────────────
   function beep() {
     try {
