@@ -1,6 +1,6 @@
 // scripts/admin/qrcodes.js
 
-const QR_BASE_URL = 'https://qr.zanxa.site/public/product.html?id=';
+const QR_BASE_URL = 'https://qr.zanxa.site/product.html?id=';
 let allProducts = [];
 let qrInstances = {}; // { nomor_seri: QRCode instance }
 
@@ -51,7 +51,7 @@ function renderGrid(products) {
 
   grid.innerHTML = products.map(p => `
     <div class="qr-card fade-in">
-      <div id="qr-${CSS.escape(p.nomor_seri)}" style="border-radius:6px;overflow:hidden;"></div>
+      <div id="qr-${CSS.escape(p.nomor_seri)}"></div>
       <div class="qr-card__id">${p.nomor_seri}</div>
       <div class="qr-card__name">${p.nama_produk}</div>
       <div class="qr-card__actions">
@@ -75,6 +75,7 @@ function renderGrid(products) {
           text: QR_BASE_URL + encodeURIComponent(p.nomor_seri),
           width: 160, height: 160,
           colorDark: '#0a0a0a', colorLight: '#ffffff',
+          correctLevel: 1 // QRCode.CorrectLevel.L
         });
         qrInstances[p.nomor_seri] = { el, qr, name: p.nama_produk };
       } catch (err) {
@@ -149,7 +150,7 @@ function openPreview(nomor_seri, nama) {
     const url = canvas.tagName === 'CANVAS' ? canvas.toDataURL('image/png') : canvas.src;
     const img = document.createElement('img');
     img.src = url;
-    img.style.cssText = 'width:240px;height:240px;border-radius:8px;border:1px solid var(--border);';
+    img.style.cssText = 'width:240px;height:240px;border:1px solid var(--border);';
     previewDiv.appendChild(img);
   }
 

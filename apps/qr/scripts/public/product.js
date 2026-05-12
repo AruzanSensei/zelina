@@ -1,6 +1,6 @@
 // scripts/public/product.js — Product detail page
 
-const QR_BASE = 'https://qr.zanxa.site/public/product.html?id=';
+const QR_BASE = 'https://qr.zanxa.site/product.html?id=';
 const id = new URLSearchParams(location.search).get('id') || '';
 
 if (!id) {
@@ -93,7 +93,8 @@ function renderProduct(p) {
   document.getElementById('qr-url').textContent   = qrUrl;
   new QRCode(document.getElementById('qr-box'), {
     text: qrUrl, width: 90, height: 90,
-    colorDark: '#0a0a0a', colorLight: '#faf7f0',
+    colorDark: '#0a0a0a', colorLight: '#ffffff',
+    correctLevel: 1 // QRCode.CorrectLevel.L
   });
 
   // Copy link

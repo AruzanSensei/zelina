@@ -8,6 +8,7 @@
 
   <link rel="stylesheet" href="../styles/base.css">
   <link rel="stylesheet" href="../styles/public.css">
+  <link rel="stylesheet" href="../styles/scanner.css">
 </head>
 <body>
 
@@ -39,6 +40,7 @@
         </button>
       </div>
       <div class="search-error" id="search-error"></div>
+      <!-- Scan trigger button injected here by scanner.js -->
     </div>
 
     <!-- Demo grid -->
@@ -70,6 +72,15 @@
 
   <script src="../config.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- QR Scanner library (Nimiq) — UMD build, ~50kb, no backend needed -->
+  <script src="https://unpkg.com/qr-scanner@1.4.2/qr-scanner.umd.min.js"></script>
   <script src="../scripts/public/index.js"></script>
+  <script src="../scripts/public/scanner.js"></script>
+  <script>
+    // Admin link → navigate to admin panel
+    document.getElementById('admin-link').addEventListener('click', () => {
+      window.location.href = '../admin/login.html';
+    });
+  </script>
 </body>
 </html>

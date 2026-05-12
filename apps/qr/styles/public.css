@@ -129,7 +129,7 @@ body {
   padding: 14px; background: var(--bg-card); border: 1px solid var(--border);
   border-radius: var(--r-md); flex: 1; min-width: 110px; box-shadow: var(--shadow-sm);
 }
-.qr-card img  { border-radius: var(--r-sm); display: block; }
+.qr-card img  { display: block; }
 .qr-card span { font-family: var(--mono); font-size: .68rem; color: var(--text-muted); letter-spacing: .08em; text-align: center; }
 
 /* ── PRODUCT PAGE ─────────────────────────────────────────── */
@@ -289,7 +289,7 @@ body {
   .product-top { grid-template-columns: 1fr; gap: 20px; }
   .product-cover-wrap { aspect-ratio: 16/6; }
   .gallery-grid { grid-template-columns: repeat(2,1fr); }
-  .tagline { display: none; }
+  .tagline { font-size: .68rem; } /* tetap tampil di mobile */
   .site-footer { flex-direction: column; gap: 4px; }
 }
 @media (max-width: 480px) {

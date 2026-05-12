@@ -3,7 +3,7 @@
 const CACHE_KEY = 'ets_products_v2';
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 const DEMO_MAX  = 6;
-const QR_BASE   = 'https://qr.zanxa.site/public/product.html?id=';
+const QR_BASE   = 'https://qr.zanxa.site/product.html?id=';
 
 let allProducts = [];
 let showingAll  = false;
@@ -101,7 +101,8 @@ function renderQR() {
       new QRCode(el, {
         text: QR_BASE + encodeURIComponent(p.nomor_seri),
         width: 80, height: 80,
-        colorDark: '#0a0a0a', colorLight: '#faf7f0',
+        colorDark: '#0a0a0a', colorLight: '#ffffff',
+        correctLevel: 1 // QRCode.CorrectLevel.L
       });
     }, i * 120);
   });
