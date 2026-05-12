@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products — ETS Admin</title>
+  <link rel="stylesheet" href="../styles/base.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <link rel="stylesheet" href="../styles/admin.css">
+  <style>
+    /* Mode sections */
+    .mode-section { display: none; }
+    .mode-section.active { display: block; }
+    /* Back link */
+    .back-link-admin {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: .82rem; color: var(--text-sub); cursor: pointer;
+      margin-bottom: 16px; transition: color var(--ease);
+    }
+    .back-link-admin:hover { color: var(--green); }
+    /* Form header */
+    .form-page-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 24px; }
+    /* Detail view */
+    .detail-info-grid {
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 0;
+      border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; margin-bottom: 24px;
+    }
+    .detail-info-item {
+      padding: 14px 16px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border);
+    }
+    .detail-info-item:nth-child(3n) { border-right: none; }
+    .detail-info-key { font-size: .65rem; font-weight: 600; letter-spacing: .1em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
+    .detail-info-val { font-size: .9rem; font-weight: 500; }
+    .detail-photos { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 24px; }
+    .detail-photo-wrap { display: flex; flex-direction: column; gap: 4px; }
+    .detail-photo { aspect-ratio: 4/3; object-fit: cover; border-radius: var(--r-md); width: 100%; border: 1px solid var(--border); background: var(--gray-100); }
+    .detail-photo-label { font-size: .65rem; color: var(--text-muted); text-align: center; letter-spacing: .06em; }
+    /* Form submit bar */
+    .form-submit-bar { display: flex; gap: 12px; padding-top: 20px; border-top: 1px solid var(--border); margin-top: 28px; }
+  </style>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside id="sidebar"></aside>
+    <div class="admin-main">
+      <header class="topbar">
+        <button class="topbar__ham" id="ham-btn" aria-label="Toggle sidebar"></button>
+        <span class="topbar__title" id="topbar-title">Products</span>
+        <div class="topbar__user">
+          <div class="topbar__avatar" id="user-avatar">?</div>
+          <span id="user-email">—</span>
+        </div>
+      </header>
+      <main class="page-content">
+
+        <!-- MODE: LIST -->
+        <div class="mode-section active" id="mode-list">
+          <div class="page-header">
+            <h1>Products</h1>
+            <p>Kelola semua produk ETS Asset Tracking.</p>
+          </div>
+          <div class="toolbar">
+            <div class="search-bar" style="flex:1;min-width:200px;">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3" stroke-linecap="round"/></svg>
+              <input type="text" id="search-input" placeholder="Cari nama produk...">
+            </div>
+            <button class="btn btn-primary" id="btn-add">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 1v12M1 7h12" stroke-linecap="round"/></svg>
+              Tambah Produk
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>No. Seri</th>
+                  <th>Nama Produk</th>
+                  <th>Tipe / Kode</th>
+                  <th>Tahun</th>
+                  <th>Dibuat</th>
+                  <th>Aksi</th>
+                </tr>
+              </thead>
+              <tbody id="product-tbody">
+                <tr><td colspan="6"><div class="sk" style="height:16px;margin:4px 0;"></div></td></tr>
+                <tr><td colspan="6"><div class="sk" style="height:16px;margin:4px 0;width:80%;"></div></td></tr>
+                <tr><td colspan="6"><div class="sk" style="height:16px;margin:4px 0;width:60%;"></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div id="empty-state-list" class="empty-state hidden">
+            <svg class="empty-state__icon" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="12" width="40" height="34" rx="3"/><path d="M20 12V8a4 4 0 0 1 8 0v4M24 28h8M24 34h6"/></svg>
+            <div class="empty-state__title">Belum ada produk</div>
+            <div class="empty-state__sub">Tambahkan produk pertama untuk memulai.</div>
+            <button class="btn btn-primary" id="btn-add-empty" style="margin-top:8px;">+ Tambah Produk Pertama</button>
+          </div>
+          <div class="pagination" id="pagination"></div>
+        </div>
+
+        <!-- MODE: CREATE / EDIT -->
+        <div class="mode-section" id="mode-form">
+          <div class="back-link-admin" id="btn-back-form">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 2L3 7l6 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Kembali ke Daftar
+          </div>
+          <div class="form-page-title" id="form-title">Tambah Produk Baru</div>
+
+          <form id="product-form" autocomplete="off">
+            <!-- IDENTITAS -->
+            <div class="form-section">
+              <div class="form-section__title">Identitas Produk</div>
+              <div class="form-grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="f-nama">Nama Produk <span class="req">*</span></label>
+                  <input class="form-control" id="f-nama" type="text" placeholder="cth. PowerShield Ultra 5000VA">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="f-tipe">Tipe / Kode</label>
+                  <input class="form-control" id="f-tipe" type="text" placeholder="cth. Online DC, Offline">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="f-seri">Nomor Seri <span class="req">*</span></label>
+                  <input class="form-control" id="f-seri" type="text" placeholder="cth. SN-UPS-20240101">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="f-tahun">Tahun Pembuatan</label>
+                  <input class="form-control" id="f-tahun" type="number" min="1990" max="2099" placeholder="cth. 2024">
+                </div>
+              </div>
+            </div>
+
+            <!-- SPESIFIKASI -->
+            <div class="form-section">
+              <div class="form-section__title">Spesifikasi Teknis</div>
+              <div class="form-grid-2">
+                <div class="form-group full">
+                  <label class="form-label" for="f-input">Input (Tegangan Masuk)</label>
+                  <input class="form-control" id="f-input" type="text" placeholder="cth. 100-300VAC, 50/60Hz">
+                </div>
+                <div class="form-group full">
+                  <label class="form-label" for="f-output">Output (Tegangan Keluar)</label>
+                  <input class="form-control" id="f-output" type="text" placeholder="cth. 220VAC ±3%, 50Hz">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="f-frekuensi">Frekuensi</label>
+                  <input class="form-control" id="f-frekuensi" type="text" placeholder="cth. 50Hz / 60Hz">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="f-socket">Jumlah Socket</label>
+                  <input class="form-control" id="f-socket" type="number" min="1" placeholder="cth. 4">
+                </div>
+                <div class="form-group full">
+                  <label class="form-label" for="f-range">Range Daya</label>
+                  <input class="form-control" id="f-range" type="text" placeholder="cth. 500VA – 10000VA">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="f-soft">Soft Fuse Protection</label>
+                  <input class="form-control" id="f-soft" type="text" placeholder="cth. 16A">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="f-hard">Hard Fuse Protection</label>
+                  <input class="form-control" id="f-hard" type="text" placeholder="cth. 20A">
+                </div>
+                <div class="form-group full">
+                  <label class="form-label" for="f-ground">Ground Output</label>
+                  <input class="form-control" id="f-ground" type="text" placeholder="cth. Yes / No">
+                </div>
+                <div class="form-group full">
+                  <label class="form-label" for="f-tambahan">Tambahan / Optional</label>
+                  <textarea class="form-control" id="f-tambahan" placeholder="Informasi tambahan, fitur khusus, dll."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- FOTO -->
+            <div class="form-section">
+              <div class="form-section__title">Foto Produk</div>
+              <div class="img-slots-grid">
+                <div>
+                  <div class="img-slot" id="slot-depan">
+                    <input type="file" accept="image/*" data-slot="depan">
+                    <div class="img-slot__placeholder">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                      <span>DEPAN</span>
+                    </div>
+                    <img class="img-slot__preview" id="prev-depan" alt="">
+                    <div class="img-slot__badge" id="badge-depan" style="display:none;"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="img-slot" id="slot-kanan">
+                    <input type="file" accept="image/*" data-slot="kanan">
+                    <div class="img-slot__placeholder">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                      <span>KANAN</span>
+                    </div>
+                    <img class="img-slot__preview" id="prev-kanan" alt="">
+                    <div class="img-slot__badge" id="badge-kanan" style="display:none;"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="img-slot" id="slot-kiri">
+                    <input type="file" accept="image/*" data-slot="kiri">
+                    <div class="img-slot__placeholder">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                      <span>KIRI</span>
+                    </div>
+                    <img class="img-slot__preview" id="prev-kiri" alt="">
+                    <div class="img-slot__badge" id="badge-kiri" style="display:none;"></div>
+                  </div>
+                </div>
+                <div>
+                  <div class="img-slot" id="slot-belakang">
+                    <input type="file" accept="image/*" data-slot="belakang">
+                    <div class="img-slot__placeholder">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                      <span>BELAKANG</span>
+                    </div>
+                    <img class="img-slot__preview" id="prev-belakang" alt="">
+                    <div class="img-slot__badge" id="badge-belakang" style="display:none;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-submit-bar">
+              <button type="submit" class="btn btn-primary" id="btn-save">Simpan Produk</button>
+              <button type="button" class="btn btn-outline" id="btn-cancel-form">Batal</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- MODE: DETAIL -->
+        <div class="mode-section" id="mode-detail">
+          <div class="back-link-admin" id="btn-back-detail">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 2L3 7l6 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Kembali ke Daftar
+          </div>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap;">
+            <div>
+              <div id="detail-name" style="font-size:1.5rem;font-weight:700;"></div>
+              <div id="detail-seri" style="font-family:var(--mono);font-size:.8rem;color:var(--text-sub);margin-top:4px;"></div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-outline btn-sm" id="btn-edit-from-detail">Edit Produk</button>
+              <button class="btn btn-danger btn-sm" id="btn-delete-from-detail">Hapus</button>
+            </div>
+          </div>
+          <div class="detail-info-grid" id="detail-info-grid"></div>
+          <div id="detail-tambahan-wrap" class="card" style="margin-bottom:20px;display:none;">
+            <div class="card__header"><span class="card__title">Tambahan / Optional</span></div>
+            <div class="card__body" id="detail-tambahan" style="white-space:pre-wrap;font-size:.875rem;"></div>
+          </div>
+          <div class="detail-photos" id="detail-photos"></div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+  <div id="toast-container"></div>
+
+  <script src="../config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../services/auth.js"></script>
+  <script src="../services/api.js"></script>
+  <script src="../services/storage.js"></script>
+  <script src="../components/sidebar.js"></script>
+  <script src="../components/toast.js"></script>
+  <script src="../components/modal.js"></script>
+  <script src="../scripts/admin/products.js"></script>
+</body>
+</html>

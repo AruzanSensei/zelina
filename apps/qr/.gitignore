@@ -1,0 +1,29 @@
+# Secrets — JANGAN commit ke git
+wrangler.toml
+env.txt
+*.env
+.env.*
+config.local.js
+
+# Wrangler cache
+.wrangler/
+
+# Assets besar tidak perlu di-track
+assets/Picture2.png
+assets/Brosur_ETS_blank.pdf
+
+# Notes internal
+todo.txt
+
+# Arsip file lama
+_old/
+
+# Worker & SQL (deploy terpisah, bukan via GitHub Pages)
+/worker
+/sql
+
+# Internal docs
+PRD.md
+
+# config.js TIDAK di-ignore karena GitHub Pages memerlukannya
+# Key sb_publishable_... aman untuk public (dikontrol RLS)

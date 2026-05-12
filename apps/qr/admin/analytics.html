@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics — ETS Admin</title>
+  <link rel="stylesheet" href="../styles/base.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <link rel="stylesheet" href="../styles/admin.css">
+</head>
+<body>
+  <div class="admin-layout">
+    <aside id="sidebar"></aside>
+    <div class="admin-main">
+      <header class="topbar">
+        <button class="topbar__ham" id="ham-btn" aria-label="Toggle sidebar"></button>
+        <span class="topbar__title">Scan Analytics</span>
+        <div class="topbar__user">
+          <div class="topbar__avatar" id="user-avatar">?</div>
+          <span id="user-email">—</span>
+        </div>
+      </header>
+      <main class="page-content">
+        <div class="page-header">
+          <h1>Scan Analytics</h1>
+          <p>Statistik QR scan oleh pengguna publik.</p>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:24px;">
+          <div class="stat-card">
+            <div class="stat-card__icon">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12l3-3 3 2.5 3-4 3 2"/></svg>
+            </div>
+            <div class="stat-card__label">Total Scan</div>
+            <div class="stat-card__value sk" id="stat-total" style="height:36px;width:80px;">&nbsp;</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__icon">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="9" r="7"/><path d="M9 5v4l3 2"/></svg>
+            </div>
+            <div class="stat-card__label">Scan Hari Ini</div>
+            <div class="stat-card__value sk" id="stat-today" style="height:36px;width:80px;">&nbsp;</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__icon">
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="3" width="16" height="13" rx="1.5"/><path d="M5 3V2a2 2 0 0 1 4 0v1"/></svg>
+            </div>
+            <div class="stat-card__label">Produk Aktif</div>
+            <div class="stat-card__value sk" id="stat-products" style="height:36px;width:80px;">&nbsp;</div>
+          </div>
+        </div>
+
+        <!-- Top Products Table -->
+        <div class="card" style="margin-bottom:20px;">
+          <div class="card__header">
+            <span class="card__title">Top Produk — Scan Terbanyak</span>
+          </div>
+          <div class="card__body" id="top-table-wrap">
+            <div class="sk" style="height:16px;margin-bottom:12px;"></div>
+            <div class="sk" style="height:16px;margin-bottom:12px;width:80%;"></div>
+            <div class="sk" style="height:16px;width:60%;"></div>
+          </div>
+        </div>
+
+        <!-- Chart Placeholder -->
+        <div class="card">
+          <div class="card__header">
+            <span class="card__title">Grafik Scan Harian</span>
+          </div>
+          <div class="card__body" style="padding:40px;text-align:center;color:var(--text-muted);">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-bottom:12px;opacity:.4;"><rect x="4" y="4" width="32" height="32" rx="3"/><path d="M4 28l8-8 6 5 8-10 8 6"/></svg>
+            <div style="font-size:.875rem;font-weight:600;">Grafik belum tersedia</div>
+            <div style="font-size:.8rem;margin-top:4px;">Grafik scan harian akan ditampilkan setelah data terkumpul.</div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div id="toast-container"></div>
+  <script src="../config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../services/auth.js"></script>
+  <script src="../services/api.js"></script>
+  <script src="../components/sidebar.js"></script>
+  <script src="../components/toast.js"></script>
+  <script src="../scripts/admin/analytics.js"></script>
+</body>
+</html>
