@@ -96,11 +96,7 @@ function renderProduct(p) {
   document.getElementById('qr-url').textContent   = qrUrl;
   
   const qrSize = window.innerWidth <= 768 ? 90 : 140;
-  new QRCode(document.getElementById('qr-box'), {
-    text: qrUrl, width: qrSize, height: qrSize,
-    colorDark: '#0a0a0a', colorLight: '#ffffff',
-    correctLevel: 1 // QRCode.CorrectLevel.L
-  });
+  generateQRCode('qr-box', qrUrl, { width: qrSize, height: qrSize });
 
   // Copy link
   document.getElementById('copy-btn').addEventListener('click', () => {

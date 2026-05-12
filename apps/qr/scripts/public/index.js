@@ -98,12 +98,7 @@ function renderQR() {
     setTimeout(() => {
       const el = document.getElementById(`qr-pub-${CSS.escape(p.nomor_seri)}`);
       if (!el) return;
-      new QRCode(el, {
-        text: QR_BASE + encodeURIComponent(p.nomor_seri),
-        width: 80, height: 80,
-        colorDark: '#0a0a0a', colorLight: '#ffffff',
-        correctLevel: 1 // QRCode.CorrectLevel.L
-      });
+      generateQRCode(el, QR_BASE + encodeURIComponent(p.nomor_seri), { width: 80, height: 80 });
     }, i * 120);
   });
 }

@@ -99,17 +99,9 @@ function renderGrid(products) {
           const el = document.getElementById(`qr-${safeId}`);
           if (!el) return; // User may have navigated away
 
-          el.innerHTML = '';
-          try {
-            const qr = new QRCode(el, {
-              text: QR_BASE_URL + encodeURIComponent(p.nomor_seri),
-              width: 160, height: 160,
-              colorDark: '#0a0a0a', colorLight: '#ffffff',
-              correctLevel: 1
-            });
+          const qr = generateQRCode(el, QR_BASE_URL + encodeURIComponent(p.nomor_seri), { width: 160, height: 160 });
+          if (qr) {
             qrInstances[p.nomor_seri] = { el, qr, name: p.nama_produk };
-          } catch (err) {
-            el.innerHTML = '<div style="width:160px;height:160px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:.72rem;">Error</div>';
           }
         }, i * 80); // 80ms stagger per card → "pop-in" effect
       });

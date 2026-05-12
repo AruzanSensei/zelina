@@ -440,14 +440,7 @@ function renderDetail(p) {
   const qrBox = document.getElementById('detail-qr-box');
   qrBox.innerHTML = '';
   const publicUrl = `https://qr.zanxa.site/p/${p.nomor_seri}`;
-  new QRCode(qrBox, {
-    text: publicUrl,
-    width: 90,
-    height: 90,
-    colorDark: "#1a1a1a",
-    colorLight: "#ffffff",
-    correctLevel: QRCode.CorrectLevel.H
-  });
+  generateQRCode(qrBox, publicUrl, { width: 90, height: 90 });
   document.getElementById('detail-qr-nomor').textContent = p.nomor_seri;
   document.getElementById('detail-qr-url').textContent = publicUrl;
 
