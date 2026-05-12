@@ -60,8 +60,9 @@ function renderSidebar(activePage) {
   if (avatarEl) userAvatar = avatarEl.textContent;
 
   sidebarEl.innerHTML = `
-    <div class="sidebar__logo">
-      <img src="../assets/ets-logo.png" alt="ETS">
+    <div class="sidebar__logo" style="display:flex; flex-direction:column; align-items:flex-start; gap:6px;">
+      <img src="../assets/ets-logo.png" alt="ETS" style="height:32px;">
+      <span style="font-size: 0.55rem; color: rgba(255,255,255,0.4); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; line-height: 1.2;">Protecting & improving<br>Electricity</span>
     </div>
     <nav class="sidebar__nav">
       ${menuHtml}

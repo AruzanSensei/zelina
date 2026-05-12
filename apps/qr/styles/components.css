@@ -234,6 +234,11 @@ tbody tr:hover {
   width: 100%;
 }
 
+.form-control::placeholder {
+  color: var(--text-muted);
+  opacity: 1; /* Reset opacity if using a specific gray color */
+}
+
 .form-control:focus {
   border-color: var(--green);
   box-shadow: 0 0 0 3px rgba(26, 124, 62, .12);
