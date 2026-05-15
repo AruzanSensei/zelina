@@ -14,3 +14,5 @@ USER.md
 /.agent
 /.obsidian
 /apps/foryou1/problem.txt
+*/node_modules
+node_modules

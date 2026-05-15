@@ -60,7 +60,7 @@
 .topbar__ham { display: none; background: none; border: none; color: var(--text-main); padding: 4px; }
 
 /* PAGE CONTENT */
-.page-content { flex: 1; padding: 28px; }
+.page-content { flex: 1; padding: 18px 28px 28px 28px; }
 .page-header  { margin-bottom: 24px; }
 .page-header h1 { display: none; }
 .page-header p  { font-size: .875rem; color: var(--text-sub); margin-top: 4px; }
@@ -78,7 +78,7 @@
   display: flex; align-items: center; justify-content: space-between;
 }
 .card__title { font-size: .875rem; font-weight: 600; }
-.card__body  { padding: 20px; }
+.card__body  { padding: 0 20px; }
 
 /* QR GRID */
 .qr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }

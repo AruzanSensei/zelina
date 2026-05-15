@@ -1,6 +1,6 @@
 // Use window-level state to persist through SPA navigation re-injections
 window.PAGE_SIZE = window.PAGE_SIZE || 20;
-window.currentMode = 'list'; 
+window.currentMode = 'list';
 window.currentProduct = null;
 window.isEdit = false;
 window.allProducts = window.allProducts || [];
@@ -54,7 +54,7 @@ function attachStaticEventListeners() {
     // Remove old listeners if any (though innerHTML replace usually handles this)
     btnAdd.onclick = () => switchMode('form', null, false);
   }
-  
+
   const btnAddEmpty = document.getElementById('btn-add-empty');
   if (btnAddEmpty) btnAddEmpty.onclick = () => switchMode('form', null, false);
 
@@ -66,7 +66,7 @@ function attachStaticEventListeners() {
   // Form events
   const backForm = document.getElementById('btn-back-form');
   if (backForm) backForm.onclick = () => switchMode('list');
-  
+
   const cancelForm = document.getElementById('btn-cancel-form');
   if (cancelForm) cancelForm.onclick = () => switchMode('list');
 
@@ -86,6 +86,9 @@ function attachStaticEventListeners() {
 
   const editDetail = document.getElementById('btn-edit-from-detail');
   if (editDetail) editDetail.onclick = () => switchMode('form', window.currentProduct, true);
+
+  const previewDetail = document.getElementById('btn-preview-from-detail');
+  if (previewDetail) previewDetail.onclick = () => window.open(`../p/${window.currentProduct.nomor_seri}`, '_blank');
 
   const deleteDetail = document.getElementById('btn-delete-from-detail');
   if (deleteDetail) deleteDetail.onclick = () => confirmDelete(window.currentProduct.nomor_seri);
@@ -129,9 +132,9 @@ function switchMode(mode, product = null, edit = false) {
   } else {
     if (detailModal) {
       detailModal.classList.remove('active');
-      setTimeout(() => { 
+      setTimeout(() => {
         if (window.currentMode !== 'detail' && detailModal) {
-          detailModal.style.display = 'none'; 
+          detailModal.style.display = 'none';
         }
       }, 200);
     }
@@ -199,9 +202,8 @@ function renderTable() {
       <td onclick="event.stopPropagation()">
         <!-- Desktop: 3 buttons inline -->
         <div class="table-actions desktop-actions">
-          <button class="btn btn-ghost btn-action" onclick="window.open('../public/product.html?id=${p.nomor_seri}', '_blank')" title="Lihat Halaman Publik">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-            Public
+          <button class="btn btn-outline btn-action" onclick="window.open('../public/product.html?id=${p.nomor_seri}', '_blank')" title="Lihat Halaman Publik">
+            Preview
           </button>
           <button class="btn btn-outline btn-action" onclick="editProduct('${p.nomor_seri}')">Edit</button>
           <button class="btn btn-danger btn-action" onclick="confirmDelete('${p.nomor_seri}')">Hapus</button>

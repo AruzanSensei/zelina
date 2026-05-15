@@ -10,14 +10,14 @@ if (!id) {
 }
 
 function showScreen(name) {
-  ['skeleton-screen','product-screen','error-screen'].forEach(s => {
+  ['skeleton-screen', 'product-screen', 'error-screen'].forEach(s => {
     document.getElementById(s)?.classList.toggle('hidden', s !== name + '-screen');
   });
 }
 
 async function loadProduct(nomor_seri) {
   try {
-    const res  = await fetch(`${APP_CONFIG.WORKER_URL}/products/${encodeURIComponent(nomor_seri)}`);
+    const res = await fetch(`${APP_CONFIG.WORKER_URL}/products/${encodeURIComponent(nomor_seri)}`);
     const json = await res.json();
     if (!json.success || !json.data) { showScreen('error'); return; }
 
@@ -29,7 +29,7 @@ async function loadProduct(nomor_seri) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nomor_seri }),
-    }).catch(() => {});
+    }).catch(() => { });
 
   } catch {
     showScreen('error');
@@ -43,7 +43,7 @@ function renderProduct(p) {
     `Spesifikasi teknis ${p.nama_produk} (${p.nomor_seri}) — ETS Industrial Asset Tracking`;
 
   // Breadcrumb & name
-  document.getElementById('bc-name').textContent = p.nama_produk;
+  // document.getElementById('bc-name').textContent = p.nama_produk;
   document.getElementById('prod-name').textContent = p.nama_produk;
 
   // Type tag
@@ -62,16 +62,16 @@ function renderProduct(p) {
 
   // Info grid
   const fields = [
-    ['NOMOR SERI',    p.nomor_seri,              true],
-    ['TAHUN',         p.tahun_pembuatan,         false],
-    ['INPUT',         p.input,                   false],
-    ['OUTPUT',        p.output,                  false],
-    ['FREKUENSI',     p.frekuensi,               false],
-    ['JUMLAH SOCKET', p.jumlah_socket,           false],
-    ['RANGE DAYA',    p.range_daya,              false],
-    ['SOFT FUSE',     p.soft_fuse_protection,    false],
-    ['HARD FUSE',     p.hard_fuse_protection,    false],
-    ['GROUND OUTPUT', p.ground_output,           false],
+    ['NOMOR SERI', p.nomor_seri, true],
+    ['TAHUN', p.tahun_pembuatan, false],
+    ['INPUT', p.input, false],
+    ['OUTPUT', p.output, false],
+    ['FREKUENSI', p.frekuensi, false],
+    ['JUMLAH SOCKET', p.jumlah_socket, false],
+    ['RANGE DAYA', p.range_daya, false],
+    ['SOFT FUSE', p.soft_fuse_protection, false],
+    ['HARD FUSE', p.hard_fuse_protection, false],
+    ['GROUND OUTPUT', p.ground_output, false],
   ];
 
   document.getElementById('info-grid').innerHTML = fields.map(([k, v, mono]) => {
@@ -87,14 +87,14 @@ function renderProduct(p) {
   // Tambahan
   if (p.tambahan_optional) {
     document.getElementById('tambahan-wrap').style.display = '';
-    document.getElementById('tambahan-text').textContent   = p.tambahan_optional;
+    document.getElementById('tambahan-text').textContent = p.tambahan_optional;
   }
 
   // QR Code
   const qrUrl = QR_BASE + encodeURIComponent(p.nomor_seri);
   document.getElementById('qr-nomor').textContent = p.nomor_seri;
-  document.getElementById('qr-url').textContent   = qrUrl;
-  
+  document.getElementById('qr-url').textContent = qrUrl;
+
   const qrSize = window.innerWidth <= 768 ? 90 : 140;
   generateQRCode('qr-box', qrUrl, { width: qrSize, height: qrSize });
 
@@ -114,9 +114,9 @@ function renderProduct(p) {
 
   // Gallery
   const slots = [
-    { key: 'gambar_depan',    label: 'DEPAN' },
-    { key: 'gambar_kanan',    label: 'KANAN' },
-    { key: 'gambar_kiri',     label: 'KIRI' },
+    { key: 'gambar_depan', label: 'DEPAN' },
+    { key: 'gambar_kanan', label: 'KANAN' },
+    { key: 'gambar_kiri', label: 'KIRI' },
     { key: 'gambar_belakang', label: 'BELAKANG' },
   ];
   const photos = slots.filter(s => p[s.key]);
@@ -137,10 +137,10 @@ let lbScale = 1;
 
 function openLightbox(src, label) {
   lbScale = 1;
-  const lb  = document.getElementById('lb');
+  const lb = document.getElementById('lb');
   const img = document.getElementById('lb-img');
-  img.src   = src;
-  img.alt   = label;
+  img.src = src;
+  img.alt = label;
   img.style.transform = 'scale(1)';
   document.getElementById('lb-zoom-val').textContent = '100%';
   lb.classList.add('active');

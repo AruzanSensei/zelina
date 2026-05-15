@@ -27,3 +27,5 @@ PRD.md
 
 # config.js TIDAK di-ignore karena GitHub Pages memerlukannya
 # Key sb_publishable_... aman untuk public (dikontrol RLS)
+
+temp.txt

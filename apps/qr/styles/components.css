@@ -77,7 +77,7 @@
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: .875rem;
+  font-size: .7rem;
 }
 
 thead tr {
@@ -236,7 +236,8 @@ tbody tr:hover {
 
 .form-control::placeholder {
   color: var(--text-muted);
-  opacity: 1; /* Reset opacity if using a specific gray color */
+  opacity: 1;
+  /* Reset opacity if using a specific gray color */
 }
 
 .form-control:focus {
@@ -516,12 +517,15 @@ textarea.form-control {
   .detail-grid {
     grid-template-columns: 1fr;
   }
+
   .detail-info-list {
     grid-template-columns: 1fr;
   }
+
   .detail-modal__body {
     padding: 20px;
   }
+
   .gallery-grid-admin {
     grid-template-columns: repeat(2, 1fr);
   }
