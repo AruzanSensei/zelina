@@ -1,18 +1,11 @@
 .env
 /HTTRACK SITES
-.openclaw/
 /ngasal
-AGENTS.md
-BOOTSTRAP.md
-HEARTBEAT.md
-IDENTITY.md
-SOUL.md
-TOOLS.md
-USER.md
 /memory
 /apps/bme/.log
 /.agent
-/.obsidian
 /apps/foryou1/problem.txt
 */node_modules
 node_modules
+*/todo.txt
+/.vscode

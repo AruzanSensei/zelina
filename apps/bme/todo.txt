@@ -1,1 +1,12 @@
-- menjadikan show menu di manual dan history menjadi 1
+1. tambahkan fitur login, dan karena hal ini juga, pastikan agar data yang ada di history tersinkronisasi dengan database yang ada di Supabase. Karena itu, buatkan database berdasarkan variabel-variabel yang disimpan, dan karena ada dua jenis format data penyimpanan yaitu mode simple dan mode advanced, maka cari solusi entah itu membuat dua tabel yang berbeda atau hal lainnya yang lebih efektif.
+2. sekarang buat tampilan untuk desktopnya, jika di mobile menggunakan menu yang ada di bagian atas maka di desktop menggunakan sidebar. ( lihat pada foto ...)
+3. ketika menggunakan mode closed eye dan memunculkan card menu option pada item card, seringkali menu option ini berada lebih bawah dari posisi yang seharusnya, perbaiki 
+4. sekarang buka fitur ai pada menu ai. poin yang harus di implementasikan:- user bisa mengirim teks mentah yang berisikan variabel-variabel yang bisa diolah oleh ai sehingga bisa menghasilkan item data maupun beberapa file sekaligus - ea itulah diberikan format fix berupa. sehingga model ai yang terintegrasi di web bisa memberikan output item data maupun file-filenya. (lihat file json yang berasal dari ekspor webnya)- output dari ai-nya adalah card item atau beberapa file jika memang - gunakan api dari provider yang menyediakan model ai secara gratis. (gunakan cloudlfare worker untuk menyimpan API ai ini)- tambahkan juga fitur untuk menggunakan ai external, yaitu user memasukkan data mentah dan web akan memproses dengan menambahkan prompt yang diperlukan sehingga output dari ai lain akan user kembalikan ke web dan secara otomatis akan diproses oleh sistem tanpa bantuan ai dari web. 
+5. perbaiki tampilan setting agar lebih nyaman dilihat (gunakan tampilan setting seperti... )
+6. perbaiki agar ketika user mencoba untuk men-select teks yang ada di card item untuk tidak memunculkan card menu option. atau dengan kata lain pada teks input di kertas item tidak akan memunculkan card menu option
+7. pada halaman manual dan juga ai, tambahkan fitur seperti "tabs" yang ada di chrome
+8. ketika user merefresh halaman, pastikan agar user tetap berada di halaman persis sama seperti sebelumnya. misal ketika ada ri halaman history dan ter refresh, maka masih di halaman history. karena sebelumnya pasti kembali ke halaman manual ketika di refresh 
+
+Hal yang perlu di perhatikan:
+1. pembuatan table database di supabase
+2. implementasi OAuth2 Google pada supabase

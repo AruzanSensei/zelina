@@ -24,7 +24,7 @@ if (typedElement) {
 
     if (!deleting && charIndex === currentRole.length) {
       deleting = true;
-      setTimeout(type, 2500);
+      setTimeout(type, 1800);
       return;
     }
 
