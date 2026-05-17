@@ -1,0 +1,2114 @@
+<!doctype html>
+<html>
+  
+<!-- Mirrored from ai-agent.preview.uideck.com/signin by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 21 Apr 2026 05:04:45 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="assets/images/favicon.png" />
+    <title>Signin | AI Agent - AI UI Kit</title>
+    <link href="assets/css/output.css" rel="stylesheet" />
+  </head>
+  <body
+    x-data="{      
+       mobileMenuOpen: false,
+        activeDropdown: null,
+  darkMode: localStorage.getItem('darkMode') === 'true',
+  toggleDarkMode() {
+          this.darkMode = !this.darkMode;
+          localStorage.setItem('darkMode', this.darkMode);
+          
+          if (this.darkMode) {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+          } else {
+            document.documentElement.classList.add('light');
+            document.documentElement.classList.remove('dark');
+          }
+        },
+        toggleDropdown(dropdown) {
+          if (window.innerWidth < 1024) {
+            this.activeDropdown = this.activeDropdown === dropdown ? null : dropdown;
+          }
+        },
+        closeDropdowns() {
+          this.activeDropdown = null;
+        },
+        init() {
+          // Apply dark mode on page load if saved in localStorage
+          const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+          
+          if (savedDarkMode) {
+            this.darkMode = true;
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+          } else {
+            this.darkMode = false;
+            document.documentElement.classList.add('light');
+            document.documentElement.classList.remove('dark');
+          }
+          
+          // Close dropdowns when clicking outside
+          document.addEventListener('click', (e) => {
+            if (!e.target.closest('.nav-item') && !e.target.closest('.dropdown-menu') && !e.target.closest('.mobile-dropdown-toggle')) {
+              this.closeDropdowns();
+            }
+          });
+          
+          // Reset activeDropdown when resizing to desktop
+          window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+              this.activeDropdown = null;
+              this.mobileMenuOpen = false;
+            }
+          });
+        }
+      }"
+  >
+    <div class="dark:bg-dark-secondary">
+      <!-- Header Start -->
+      <header
+        class="bg-white dark:bg-dark-primary border-b dark:border-gray-800 border-gray-100 sticky top-0 z-50 py-4 lg:py-0"
+      >
+        <div class="px-4 sm:px-6 lg:px-7">
+          <div class="flex items-center justify-between">
+            <!-- Logo and Mobile Menu Button -->
+            <div class="flex items-center">
+              <!-- Logo -->
+              <a href="index.html">
+                <img
+                  src="assets/images/logo-black.svg"
+                  class="block dark:hidden"
+                  alt=""
+                />
+                <img
+                  src="assets/images/logo-white.svg"
+                  class="hidden dark:block"
+                  alt=""
+                />
+              </a>
+            </div>
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden lg:flex lg:items-center">
+              <a
+                href="index.html"
+                class="text-gray-500 dark:text-gray-400 text-sm px-4 py-6 hover:text-primary-500 font-medium"
+                >Home</a
+              >
+
+              <!-- Products Dropdown (Desktop) -->
+              <div class="relative nav-item">
+                <button
+                  class="text-gray-500 dark:text-gray-400 hover:text-primary-500 group text-sm inline-flex items-center px-4 py-6 font-medium rounded-full"
+                >
+                  Products
+                  <svg
+                    class="dropdown-arrow ml-1 h-4 w-4 transition-transform duration-200"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="17"
+                    height="16"
+                    viewBox="0 0 17 16"
+                    fill="none"
+                  >
+                    <path
+                      d="M4.33301 5.91666L8.49967 10.0833L12.6663 5.91666"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+
+                <!-- Products dropdown menu -->
+                <div
+                  class="dropdown-menu absolute dark:bg-dark-secondary dark:border-gray-800 left-0 w-[266px] bg-white rounded-2xl shadow-theme-lg border border-gray-100 p-3 z-50 hidden"
+                >
+                  <div class="space-y-1">
+                    <a
+                      href="text-generator.html"
+                      class="flex items-center px-2 py-2 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      <svg
+                        width="36"
+                        height="36"
+                        viewBox="0 0 36 36"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <g filter="url(#filter0_d_9289_13240)">
+                          <g filter="url(#filter1_i_9289_13240)">
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M8.73781 24.3018L8.73897 24.3004L8.74798 24.2896C8.7565 24.2794 8.76992 24.2632 8.78764 24.2413C8.8231 24.1974 8.87562 24.1311 8.94036 24.0452C9.07012 23.8731 9.24739 23.6245 9.43411 23.3229C9.76981 22.7807 10.1141 22.1021 10.2869 21.4087C9.20858 19.876 8.5752 18.0067 8.5752 15.9912C8.5752 10.7859 12.7949 6.56616 18.0002 6.56616C23.2055 6.56616 27.4252 10.7859 27.4252 15.9912C27.4252 21.1964 23.2055 25.4162 18.0002 25.4162C16.821 25.4162 15.691 25.1993 14.649 24.8028C13.5928 25.1989 12.2807 25.3471 11.2519 25.4026C10.6812 25.4334 10.1746 25.4366 9.81031 25.4322C9.62792 25.43 9.48055 25.4258 9.37793 25.4222C9.32661 25.4203 9.28643 25.4186 9.2586 25.4174L9.22626 25.4158L9.21731 25.4154L9.21385 25.4152L9.2502 24.7412C9.21332 25.4152 9.21385 25.4152 9.21385 25.4152C8.95726 25.4012 8.73037 25.2426 8.62944 25.0063C8.5286 24.7702 8.57089 24.4968 8.73781 24.3018ZM13.6251 14.8663C13.0038 14.8663 12.5001 15.37 12.5001 15.9913C12.5001 16.6127 13.0038 17.1163 13.6251 17.1163H13.6351C14.2564 17.1163 14.7601 16.6127 14.7601 15.9913C14.7601 15.37 14.2564 14.8663 13.6351 14.8663H13.6251ZM18.0001 14.8663C17.3788 14.8663 16.8751 15.37 16.8751 15.9913C16.8751 16.6127 17.3788 17.1163 18.0001 17.1163H18.0101C18.6314 17.1163 19.1351 16.6127 19.1351 15.9913C19.1351 15.37 18.6314 14.8663 18.0101 14.8663H18.0001ZM22.3751 14.8663C21.7538 14.8663 21.2501 15.37 21.2501 15.9913C21.2501 16.6127 21.7538 17.1163 22.3751 17.1163H22.3851C23.0064 17.1163 23.5101 16.6127 23.5101 15.9913C23.5101 15.37 23.0064 14.8663 22.3851 14.8663H22.3751Z"
+                              fill="url(#paint0_radial_9289_13240)"
+                            />
+                          </g>
+                        </g>
+                        <defs>
+                          <filter
+                            id="filter0_d_9289_13240"
+                            x="-2"
+                            y="-2"
+                            width="40"
+                            height="40"
+                            filterUnits="userSpaceOnUse"
+                            color-interpolation-filters="sRGB"
+                          >
+                            <feFlood
+                              flood-opacity="0"
+                              result="BackgroundImageFix"
+                            />
+                            <feColorMatrix
+                              in="SourceAlpha"
+                              type="matrix"
+                              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                              result="hardAlpha"
+                            />
+                            <feOffset dy="2" />
+                            <feGaussianBlur stdDeviation="4" />
+                            <feComposite in2="hardAlpha" operator="out" />
+                            <feColorMatrix
+                              type="matrix"
+                              values="0 0 0 0 0.498039 0 0 0 0 0.407843 0 0 0 0 1 0 0 0 0.25 0"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in2="BackgroundImageFix"
+                              result="effect1_dropShadow_9289_13240"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in="SourceGraphic"
+                              in2="effect1_dropShadow_9289_13240"
+                              result="shape"
+                            />
+                          </filter>
+                          <filter
+                            id="filter1_i_9289_13240"
+                            x="8.5752"
+                            y="6.56616"
+                            width="20.3734"
+                            height="20.3915"
+                            filterUnits="userSpaceOnUse"
+                            color-interpolation-filters="sRGB"
+                          >
+                            <feFlood
+                              flood-opacity="0"
+                              result="BackgroundImageFix"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in="SourceGraphic"
+                              in2="BackgroundImageFix"
+                              result="shape"
+                            />
+                            <feColorMatrix
+                              in="SourceAlpha"
+                              type="matrix"
+                              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                              result="hardAlpha"
+                            />
+                            <feOffset dx="1.52381" dy="1.52381" />
+                            <feGaussianBlur stdDeviation="1.14286" />
+                            <feComposite
+                              in2="hardAlpha"
+                              operator="arithmetic"
+                              k2="-1"
+                              k3="1"
+                            />
+                            <feColorMatrix
+                              type="matrix"
+                              values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in2="shape"
+                              result="effect1_innerShadow_9289_13240"
+                            />
+                          </filter>
+                          <radialGradient
+                            id="paint0_radial_9289_13240"
+                            cx="0"
+                            cy="0"
+                            r="1"
+                            gradientUnits="userSpaceOnUse"
+                            gradientTransform="translate(18.8131 22.0965) rotate(-60.1772) scale(18.6241 18.6153)"
+                          >
+                            <stop stop-color="#7F68FF" />
+                            <stop offset="1" stop-color="#BEB2FF" />
+                          </radialGradient>
+                        </defs>
+                      </svg>
+                      <span>Text Generator</span>
+                    </a>
+                    <a
+                      href="image-generator.html"
+                      class="flex items-center px-2 py-2 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="34"
+                        height="34"
+                        viewBox="0 0 34 34"
+                        fill="none"
+                      >
+                        <g filter="url(#filter0_d_9289_13232)">
+                          <g filter="url(#filter1_i_9289_13232)">
+                            <path
+                              d="M13.6522 10.124C12.8594 10.124 12.2166 10.7667 12.2166 11.5596C12.2166 12.3524 12.8594 12.9951 13.6522 12.9951C14.445 12.9951 15.0877 12.3524 15.0877 11.5596C15.0877 10.7667 14.445 10.124 13.6522 10.124Z"
+                              fill="url(#paint0_radial_9289_13232)"
+                            />
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M12 6.4375C10.0325 6.4375 8.4375 8.03249 8.4375 10V20C8.4375 21.9675 10.0325 23.5625 12 23.5625H22C23.9675 23.5625 25.5625 21.9675 25.5625 20V10C25.5625 8.03249 23.9675 6.4375 22 6.4375H12ZM9.5625 10C9.5625 8.65381 10.6538 7.5625 12 7.5625H22C23.3462 7.5625 24.4375 8.65381 24.4375 10V12.5688C23.8719 12.4375 23.2829 12.3681 22.6783 12.3681C19.4925 12.3681 16.7568 14.29 15.5652 17.0367C14.629 16.121 13.3471 15.5556 11.933 15.5556C11.0795 15.5556 10.2733 15.7619 9.5625 16.127V10Z"
+                              fill="url(#paint1_radial_9289_13232)"
+                            />
+                          </g>
+                        </g>
+                        <defs>
+                          <filter
+                            id="filter0_d_9289_13232"
+                            x="-3"
+                            y="-3"
+                            width="40"
+                            height="40"
+                            filterUnits="userSpaceOnUse"
+                            color-interpolation-filters="sRGB"
+                          >
+                            <feFlood
+                              flood-opacity="0"
+                              result="BackgroundImageFix"
+                            />
+                            <feColorMatrix
+                              in="SourceAlpha"
+                              type="matrix"
+                              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                              result="hardAlpha"
+                            />
+                            <feOffset dy="2" />
+                            <feGaussianBlur stdDeviation="4" />
+                            <feComposite in2="hardAlpha" operator="out" />
+                            <feColorMatrix
+                              type="matrix"
+                              values="0 0 0 0 1 0 0 0 0 0.435294 0 0 0 0 0.345098 0 0 0 0.25 0"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in2="BackgroundImageFix"
+                              result="effect1_dropShadow_9289_13232"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in="SourceGraphic"
+                              in2="effect1_dropShadow_9289_13232"
+                              result="shape"
+                            />
+                          </filter>
+                          <filter
+                            id="filter1_i_9289_13232"
+                            x="8.4375"
+                            y="6.4375"
+                            width="18.6488"
+                            height="18.6488"
+                            filterUnits="userSpaceOnUse"
+                            color-interpolation-filters="sRGB"
+                          >
+                            <feFlood
+                              flood-opacity="0"
+                              result="BackgroundImageFix"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in="SourceGraphic"
+                              in2="BackgroundImageFix"
+                              result="shape"
+                            />
+                            <feColorMatrix
+                              in="SourceAlpha"
+                              type="matrix"
+                              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                              result="hardAlpha"
+                            />
+                            <feOffset dx="1.52381" dy="1.52381" />
+                            <feGaussianBlur stdDeviation="1.14286" />
+                            <feComposite
+                              in2="hardAlpha"
+                              operator="arithmetic"
+                              k2="-1"
+                              k3="1"
+                            />
+                            <feColorMatrix
+                              type="matrix"
+                              values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in2="shape"
+                              result="effect1_innerShadow_9289_13232"
+                            />
+                          </filter>
+                          <radialGradient
+                            id="paint0_radial_9289_13232"
+                            cx="0"
+                            cy="0"
+                            r="1"
+                            gradientUnits="userSpaceOnUse"
+                            gradientTransform="translate(13.9454 22.1904) rotate(-58.7716) scale(25.6788 25.6788)"
+                          >
+                            <stop stop-color="#FF6F58" />
+                            <stop offset="1" stop-color="#FFA293" />
+                          </radialGradient>
+                          <radialGradient
+                            id="paint1_radial_9289_13232"
+                            cx="0"
+                            cy="0"
+                            r="1"
+                            gradientUnits="userSpaceOnUse"
+                            gradientTransform="translate(13.9454 22.1904) rotate(-58.7716) scale(25.6788 25.6788)"
+                          >
+                            <stop stop-color="#FF6F58" />
+                            <stop offset="1" stop-color="#FFA293" />
+                          </radialGradient>
+                        </defs>
+                      </svg>
+                      Image Generator
+                    </a>
+                    <a
+                      href="code-generator.html"
+                      class="flex items-center px-2 py-2 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="34"
+                        height="34"
+                        viewBox="0 0 34 34"
+                        fill="none"
+                      >
+                        <g filter="url(#filter0_d_9289_13238)">
+                          <g filter="url(#filter1_i_9289_13238)">
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M8.4375 10C8.4375 8.03249 10.0325 6.4375 12 6.4375H22C23.9675 6.4375 25.5625 8.03249 25.5625 10V20C25.5625 21.9675 23.9675 23.5625 22 23.5625H12C10.0325 23.5625 8.4375 21.9675 8.4375 20V10ZM18.4373 11.123C18.5047 10.8197 18.3134 10.5193 18.0102 10.4519C17.7069 10.3845 17.4064 10.5757 17.3391 10.879L15.5618 18.8766C15.4944 19.1798 15.6856 19.4803 15.9889 19.5477C16.2922 19.6151 16.5926 19.4239 16.66 19.1206L18.4373 11.123ZM20.2665 12.8471C20.0469 12.6275 19.6907 12.6274 19.471 12.8471C19.2513 13.0668 19.2513 13.4229 19.471 13.6426L20.8282 14.9999L19.471 16.357C19.2513 16.5767 19.2513 16.9329 19.471 17.1525C19.6907 17.3722 20.0468 17.3722 20.2665 17.1525L22.0214 15.3977C22.241 15.178 22.241 14.8219 22.0214 14.6022L20.2665 12.8471ZM14.5224 13.6494C14.742 13.4297 14.742 13.0736 14.5223 12.8539C14.3027 12.6343 13.9465 12.6343 13.7268 12.854L11.9788 14.6022C11.7591 14.8218 11.7591 15.178 11.9788 15.3977L13.7269 17.1457C13.9465 17.3654 14.3027 17.3654 14.5224 17.1457C14.742 16.926 14.742 16.5699 14.5224 16.3502L13.172 14.9999L14.5224 13.6494Z"
+                              fill="url(#paint0_radial_9289_13238)"
+                            />
+                          </g>
+                        </g>
+                        <defs>
+                          <filter
+                            id="filter0_d_9289_13238"
+                            x="-3"
+                            y="-3"
+                            width="40"
+                            height="40"
+                            filterUnits="userSpaceOnUse"
+                            color-interpolation-filters="sRGB"
+                          >
+                            <feFlood
+                              flood-opacity="0"
+                              result="BackgroundImageFix"
+                            />
+                            <feColorMatrix
+                              in="SourceAlpha"
+                              type="matrix"
+                              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                              result="hardAlpha"
+                            />
+                            <feOffset dy="2" />
+                            <feGaussianBlur stdDeviation="4" />
+                            <feComposite in2="hardAlpha" operator="out" />
+                            <feColorMatrix
+                              type="matrix"
+                              values="0 0 0 0 0.0901961 0 0 0 0 0.654902 0 0 0 0 1 0 0 0 0.25 0"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in2="BackgroundImageFix"
+                              result="effect1_dropShadow_9289_13238"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in="SourceGraphic"
+                              in2="effect1_dropShadow_9289_13238"
+                              result="shape"
+                            />
+                          </filter>
+                          <filter
+                            id="filter1_i_9289_13238"
+                            x="8.4375"
+                            y="6.4375"
+                            width="18.125"
+                            height="18.125"
+                            filterUnits="userSpaceOnUse"
+                            color-interpolation-filters="sRGB"
+                          >
+                            <feFlood
+                              flood-opacity="0"
+                              result="BackgroundImageFix"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in="SourceGraphic"
+                              in2="BackgroundImageFix"
+                              result="shape"
+                            />
+                            <feColorMatrix
+                              in="SourceAlpha"
+                              type="matrix"
+                              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                              result="hardAlpha"
+                            />
+                            <feOffset dx="1" dy="1" />
+                            <feGaussianBlur stdDeviation="1" />
+                            <feComposite
+                              in2="hardAlpha"
+                              operator="arithmetic"
+                              k2="-1"
+                              k3="1"
+                            />
+                            <feColorMatrix
+                              type="matrix"
+                              values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in2="shape"
+                              result="effect1_innerShadow_9289_13238"
+                            />
+                          </filter>
+                          <radialGradient
+                            id="paint0_radial_9289_13238"
+                            cx="0"
+                            cy="0"
+                            r="1"
+                            gradientUnits="userSpaceOnUse"
+                            gradientTransform="translate(17.7385 20.5335) rotate(-60.1541) scale(16.9079 16.9079)"
+                          >
+                            <stop stop-color="#17A7FF" />
+                            <stop offset="1" stop-color="#84D0FF" />
+                          </radialGradient>
+                        </defs>
+                      </svg>
+                      Code Generator
+                    </a>
+                    <a
+                      href="video-generator.html"
+                      class="flex items-center px-2 py-2 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="38"
+                        height="32"
+                        viewBox="0 0 38 32"
+                        fill="none"
+                      >
+                        <g filter="url(#filter0_d_9289_13236)">
+                          <g filter="url(#filter1_i_9289_13236)">
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M8.875 10.1306C8.875 8.1004 10.5208 6.45462 12.551 6.45462H25.449C27.4792 6.45462 29.125 8.1004 29.125 10.1306V17.8694C29.125 19.8996 27.4792 21.5454 25.449 21.5454H12.551C10.5208 21.5454 8.875 19.8996 8.875 17.8694V10.1306ZM21.8102 13.429C22.227 13.6955 22.227 14.3043 21.8102 14.5708L18.0934 16.9471C17.6424 17.2355 17.0509 16.9116 17.0509 16.3763V11.6236C17.0509 11.0883 17.6424 10.7643 18.0934 11.0527L21.8102 13.429Z"
+                              fill="url(#paint0_radial_9289_13236)"
+                            />
+                          </g>
+                        </g>
+                        <defs>
+                          <filter
+                            id="filter0_d_9289_13236"
+                            x="-1"
+                            y="-4"
+                            width="40"
+                            height="40"
+                            filterUnits="userSpaceOnUse"
+                            color-interpolation-filters="sRGB"
+                          >
+                            <feFlood
+                              flood-opacity="0"
+                              result="BackgroundImageFix"
+                            />
+                            <feColorMatrix
+                              in="SourceAlpha"
+                              type="matrix"
+                              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                              result="hardAlpha"
+                            />
+                            <feOffset dy="2" />
+                            <feGaussianBlur stdDeviation="4" />
+                            <feComposite in2="hardAlpha" operator="out" />
+                            <feColorMatrix
+                              type="matrix"
+                              values="0 0 0 0 1 0 0 0 0 0.67451 0 0 0 0 0.0980392 0 0 0 0.25 0"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in2="BackgroundImageFix"
+                              result="effect1_dropShadow_9289_13236"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in="SourceGraphic"
+                              in2="effect1_dropShadow_9289_13236"
+                              result="shape"
+                            />
+                          </filter>
+                          <filter
+                            id="filter1_i_9289_13236"
+                            x="8.875"
+                            y="6.45462"
+                            width="21.7738"
+                            height="16.6146"
+                            filterUnits="userSpaceOnUse"
+                            color-interpolation-filters="sRGB"
+                          >
+                            <feFlood
+                              flood-opacity="0"
+                              result="BackgroundImageFix"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in="SourceGraphic"
+                              in2="BackgroundImageFix"
+                              result="shape"
+                            />
+                            <feColorMatrix
+                              in="SourceAlpha"
+                              type="matrix"
+                              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                              result="hardAlpha"
+                            />
+                            <feOffset dx="1.52381" dy="1.52381" />
+                            <feGaussianBlur stdDeviation="1.14286" />
+                            <feComposite
+                              in2="hardAlpha"
+                              operator="arithmetic"
+                              k2="-1"
+                              k3="1"
+                            />
+                            <feColorMatrix
+                              type="matrix"
+                              values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in2="shape"
+                              result="effect1_innerShadow_9289_13236"
+                            />
+                          </filter>
+                          <radialGradient
+                            id="paint0_radial_9289_13236"
+                            cx="0"
+                            cy="0"
+                            r="1"
+                            gradientUnits="userSpaceOnUse"
+                            gradientTransform="translate(19.8733 18.8762) rotate(-52.4062) scale(16.3099 18.2642)"
+                          >
+                            <stop stop-color="#FFAC19" />
+                            <stop offset="1" stop-color="#FFCE78" />
+                          </radialGradient>
+                        </defs>
+                      </svg>
+                      Video Generator
+                    </a>
+                    <a
+                      href="email-generator.html"
+                      class="flex items-center px-2 py-2 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="38"
+                        height="32"
+                        viewBox="0 0 38 32"
+                        fill="none"
+                      >
+                        <g filter="url(#filter0_d_9289_13234)">
+                          <g filter="url(#filter1_i_9289_13234)">
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M8.875 10.1306C8.875 8.1004 10.5208 6.45462 12.551 6.45462H25.449C27.4792 6.45462 29.125 8.1004 29.125 10.1306V17.8694C29.125 19.8996 27.4792 21.5454 25.449 21.5454H12.551C10.5208 21.5454 8.875 19.8996 8.875 17.8694V10.1306ZM13.3072 10.5611C13.0443 10.3777 12.6825 10.4422 12.4991 10.7052C12.3158 10.9681 12.3803 11.3299 12.6432 11.5132L17.7831 15.0974C18.5145 15.6074 19.4863 15.6074 20.2177 15.0974L25.3575 11.5132C25.6204 11.3299 25.6849 10.9681 25.5016 10.7052C25.3182 10.4422 24.9564 10.3777 24.6935 10.5611L19.5537 14.1452C19.2212 14.377 18.7795 14.377 18.447 14.1452L13.3072 10.5611Z"
+                              fill="url(#paint0_radial_9289_13234)"
+                            />
+                          </g>
+                        </g>
+                        <defs>
+                          <filter
+                            id="filter0_d_9289_13234"
+                            x="-1"
+                            y="-4"
+                            width="40"
+                            height="40"
+                            filterUnits="userSpaceOnUse"
+                            color-interpolation-filters="sRGB"
+                          >
+                            <feFlood
+                              flood-opacity="0"
+                              result="BackgroundImageFix"
+                            />
+                            <feColorMatrix
+                              in="SourceAlpha"
+                              type="matrix"
+                              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                              result="hardAlpha"
+                            />
+                            <feOffset dy="2" />
+                            <feGaussianBlur stdDeviation="4" />
+                            <feComposite in2="hardAlpha" operator="out" />
+                            <feColorMatrix
+                              type="matrix"
+                              values="0 0 0 0 0.168627 0 0 0 0 0.811765 0 0 0 0 1 0 0 0 0.25 0"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in2="BackgroundImageFix"
+                              result="effect1_dropShadow_9289_13234"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in="SourceGraphic"
+                              in2="effect1_dropShadow_9289_13234"
+                              result="shape"
+                            />
+                          </filter>
+                          <filter
+                            id="filter1_i_9289_13234"
+                            x="8.875"
+                            y="6.45462"
+                            width="21.7738"
+                            height="16.6146"
+                            filterUnits="userSpaceOnUse"
+                            color-interpolation-filters="sRGB"
+                          >
+                            <feFlood
+                              flood-opacity="0"
+                              result="BackgroundImageFix"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in="SourceGraphic"
+                              in2="BackgroundImageFix"
+                              result="shape"
+                            />
+                            <feColorMatrix
+                              in="SourceAlpha"
+                              type="matrix"
+                              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                              result="hardAlpha"
+                            />
+                            <feOffset dx="1.52381" dy="1.52381" />
+                            <feGaussianBlur stdDeviation="1.14286" />
+                            <feComposite
+                              in2="hardAlpha"
+                              operator="arithmetic"
+                              k2="-1"
+                              k3="1"
+                            />
+                            <feColorMatrix
+                              type="matrix"
+                              values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                            />
+                            <feBlend
+                              mode="normal"
+                              in2="shape"
+                              result="effect1_innerShadow_9289_13234"
+                            />
+                          </filter>
+                          <radialGradient
+                            id="paint0_radial_9289_13234"
+                            cx="0"
+                            cy="0"
+                            r="1"
+                            gradientUnits="userSpaceOnUse"
+                            gradientTransform="translate(19.8733 18.8762) rotate(-52.4062) scale(16.3099 18.2642)"
+                          >
+                            <stop stop-color="#2BCFFF" />
+                            <stop offset="1" stop-color="#8EE5FF" />
+                          </radialGradient>
+                        </defs>
+                      </svg>
+                      Email Generator
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pages Dropdown (Desktop) -->
+              <div class="relative nav-item">
+                <button
+                  class="text-gray-500 group dark:text-gray-400 hover:text-primary-400 text-sm inline-flex items-center px-4 py-6 font-medium rounded-full"
+                >
+                  Pages
+                  <svg
+                    class="dropdown-arrow ml-1 h-4 w-4 transition-transform duration-200"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="17"
+                    height="16"
+                    viewBox="0 0 17 16"
+                    fill="none"
+                  >
+                    <path
+                      d="M4.33301 5.91666L8.49967 10.0833L12.6663 5.91666"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+
+                <!-- Pages dropdown menu -->
+                <div
+                  class="dropdown-menu absolute left-0 w-[266px] bg-white dark:bg-dark-secondary dark:border-gray-800 rounded-2xl shadow-theme-lg border border-gray-100 p-3 z-50 hidden"
+                >
+                  <div class="space-y-1">
+                    <a
+                      href="dashboard.html"
+                      class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      Dashboard
+                    </a>
+                    <a
+                      href="pricing.html"
+                      class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      Pricing
+                    </a>
+                    <a
+                      href="blog-grid.html"
+                      class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      Blog Grid
+                    </a>
+                    <a
+                      href="blog-details.html"
+                      class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      Blog Details
+                    </a>
+                    <a
+                      href="signin.html"
+                      class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      Sign In
+                    </a>
+                    <a
+                      href="signup.html"
+                      class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      Sign Up
+                    </a>
+                    <a
+                      href="forgot-password.html"
+                      class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      Reset Password
+                    </a>
+                    <a
+                      href="privacy.html"
+                      class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      Privacy Policy
+                    </a>
+                    <a
+                      href="404.html"
+                      class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                    >
+                      404 Error
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <a
+                href="contact.html"
+                class="text-gray-500 dark:text-gray-400 text-sm px-4 py-6 hover:text-primary-500 font-medium"
+                >Contact</a
+              >
+            </nav>
+
+            <!-- Right side buttons -->
+            <div class="flex items-center gap-4">
+              <!-- Theme toggle -->
+              <button
+                @click="toggleDarkMode()"
+                class="inline-flex items-center dark:hover:bg-white/5 dark:hover:text-white/90 hover:bg-gray-100 hover:text-gray-800 text-gray-500 dark:text-gray-400 justify-center border border-gray-200 dark:border-gray-700 rounded-full size-11"
+              >
+                <svg
+                  x-show="!darkMode"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                >
+                  <path
+                    d="M6.24683 7.08492C6.24683 10.7677 9.23232 13.7532 12.9151 13.7532C14.6687 13.7532 16.2641 13.0764 17.4545 11.9697C16.584 15.2727 13.5765 17.7083 10.0001 17.7083C5.74289 17.7083 2.29175 14.2572 2.29175 9.99996C2.29175 6.42356 4.72736 3.41602 8.03036 2.54558C6.92367 3.73594 6.24683 5.33139 6.24683 7.08492Z"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+                <svg
+                  x-show="darkMode"
+                  class="h-5 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                  />
+                </svg>
+              </button>
+              <!-- Mobile menu button -->
+              <button
+                @click.stop="mobileMenuOpen = !mobileMenuOpen"
+                type="button"
+                class="inline-flex items-center justify-center p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500 lg:hidden"
+              >
+                <span class="sr-only">Open main menu</span>
+                <svg
+                  class="h-6 w-6"
+                  x-show="!mobileMenuOpen"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+                <svg
+                  class="h-6 w-6"
+                  x-show="mobileMenuOpen"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+              <!-- Sign In button (desktop) -->
+              <a
+                href="signin.html"
+                class="text-sm hidden lg:block font-medium text-gray-700 dark:text-gray-400 hover:text-primary-500"
+                >Sign In</a
+              >
+              <a
+                href="signup.html"
+                class="lg:inline-flex items-center px-5 py-3 gradient-btn hidden text-sm text-white rounded-full button-bg h-11"
+                >Get Started Free</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile menu -->
+        <div
+          x-show="mobileMenuOpen"
+          x-cloak
+          class="lg:hidden absolute bg-white dark:bg-dark-primary w-full border-b border-gray-200 dark:border-gray-800"
+        >
+          <div class="pt-2 pb-3 space-y-1 px-4 sm:px-6">
+            <a
+              href="index.html"
+              class="block px-3 py-2 rounded-md text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              Home
+            </a>
+
+            <!-- Products Dropdown (Mobile) -->
+            <div>
+              <button
+                @click.stop="toggleDropdown('products')"
+                class="mobile-dropdown-toggle flex justify-between items-center w-full px-3 py-2 rounded-md text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                <span>Products</span>
+                <svg
+                  class="h-4 w-4 transition-transform duration-200"
+                  :class="{'transform rotate-180': activeDropdown === 'products'}"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              <div
+                x-show="activeDropdown === 'products'"
+                x-cloak
+                class="mt-2 space-y-1 pl-4"
+              >
+                <a
+                  href="text-generator.html"
+                  class="flex items-center px-3 py-2 gap-3 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g filter="url(#filter0_i_9289_13241)">
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M0.737805 18.3018L0.738973 18.3004L0.74798 18.2896C0.756498 18.2794 0.76992 18.2632 0.787638 18.2413C0.823096 18.1974 0.875621 18.1311 0.94036 18.0452C1.07012 17.8731 1.24739 17.6245 1.43411 17.3229C1.76981 16.7807 2.11411 16.1021 2.2869 15.4087C1.20858 13.876 0.575195 12.0067 0.575195 9.99116C0.575195 4.78588 4.79491 0.566162 10.0002 0.566162C15.2055 0.566162 19.4252 4.78588 19.4252 9.99116C19.4252 15.1964 15.2055 19.4162 10.0002 19.4162C8.82101 19.4162 7.69102 19.1993 6.64895 18.8028C5.59279 19.1989 4.28065 19.3471 3.25194 19.4026C2.68125 19.4334 2.17458 19.4366 1.81031 19.4322C1.62792 19.43 1.48055 19.4258 1.37793 19.4222C1.32661 19.4203 1.28643 19.4186 1.2586 19.4174L1.22626 19.4158L1.21731 19.4154L1.21385 19.4152L1.2502 18.7412C1.21332 19.4152 1.21385 19.4152 1.21385 19.4152C0.957258 19.4012 0.73037 19.2426 0.629439 19.0063C0.528598 18.7702 0.570892 18.4968 0.737805 18.3018ZM5.62511 8.86633C5.00379 8.86633 4.50011 9.37001 4.50011 9.99133C4.50011 10.6127 5.00379 11.1163 5.62511 11.1163H5.63511C6.25643 11.1163 6.76011 10.6127 6.76011 9.99133C6.76011 9.37001 6.25643 8.86633 5.63511 8.86633H5.62511ZM10.0001 8.86633C9.37879 8.86633 8.87511 9.37001 8.87511 9.99133C8.87511 10.6127 9.37879 11.1163 10.0001 11.1163H10.0101C10.6314 11.1163 11.1351 10.6127 11.1351 9.99133C11.1351 9.37001 10.6314 8.86633 10.0101 8.86633H10.0001ZM14.3751 8.86633C13.7538 8.86633 13.2501 9.37001 13.2501 9.99133C13.2501 10.6127 13.7538 11.1163 14.3751 11.1163H14.3851C15.0064 11.1163 15.5101 10.6127 15.5101 9.99133C15.5101 9.37001 15.0064 8.86633 14.3851 8.86633H14.3751Z"
+                        fill="url(#paint0_radial_9289_13241)"
+                      />
+                    </g>
+                    <defs>
+                      <filter
+                        id="filter0_i_9289_13241"
+                        x="0.575195"
+                        y="0.566162"
+                        width="20.3734"
+                        height="20.3915"
+                        filterUnits="userSpaceOnUse"
+                        color-interpolation-filters="sRGB"
+                      >
+                        <feFlood
+                          flood-opacity="0"
+                          result="BackgroundImageFix"
+                        />
+                        <feBlend
+                          mode="normal"
+                          in="SourceGraphic"
+                          in2="BackgroundImageFix"
+                          result="shape"
+                        />
+                        <feColorMatrix
+                          in="SourceAlpha"
+                          type="matrix"
+                          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                          result="hardAlpha"
+                        />
+                        <feOffset dx="1.52381" dy="1.52381" />
+                        <feGaussianBlur stdDeviation="1.14286" />
+                        <feComposite
+                          in2="hardAlpha"
+                          operator="arithmetic"
+                          k2="-1"
+                          k3="1"
+                        />
+                        <feColorMatrix
+                          type="matrix"
+                          values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                        />
+                        <feBlend
+                          mode="normal"
+                          in2="shape"
+                          result="effect1_innerShadow_9289_13241"
+                        />
+                      </filter>
+                      <radialGradient
+                        id="paint0_radial_9289_13241"
+                        cx="0"
+                        cy="0"
+                        r="1"
+                        gradientUnits="userSpaceOnUse"
+                        gradientTransform="translate(10.8131 16.0965) rotate(-60.1772) scale(18.6241 18.6153)"
+                      >
+                        <stop stop-color="#7F68FF" />
+                        <stop offset="1" stop-color="#BEB2FF" />
+                      </radialGradient>
+                    </defs>
+                  </svg>
+                  <span>Text Generator</span>
+                </a>
+                <a
+                  href="image-generator.html"
+                  class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 18 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g filter="url(#filter0_i_9289_13233)">
+                      <path
+                        d="M5.65219 4.12402C4.85936 4.12402 4.21665 4.76674 4.21665 5.55957C4.21665 6.3524 4.85936 6.99512 5.65219 6.99512C6.44502 6.99512 7.08774 6.3524 7.08774 5.55957C7.08774 4.76674 6.44502 4.12402 5.65219 4.12402Z"
+                        fill="url(#paint0_radial_9289_13233)"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M4 0.4375C2.03249 0.4375 0.4375 2.03249 0.4375 4V14C0.4375 15.9675 2.03249 17.5625 4 17.5625H14C15.9675 17.5625 17.5625 15.9675 17.5625 14V4C17.5625 2.03249 15.9675 0.4375 14 0.4375H4ZM1.5625 4C1.5625 2.65381 2.65381 1.5625 4 1.5625H14C15.3462 1.5625 16.4375 2.65381 16.4375 4V6.5688C15.8719 6.43748 15.2829 6.36814 14.6783 6.36814C11.4925 6.36814 8.75679 8.28996 7.5652 11.0367C6.62902 10.121 5.3471 9.55564 3.93303 9.55564C3.07946 9.55564 2.27335 9.76185 1.5625 10.127V4Z"
+                        fill="url(#paint1_radial_9289_13233)"
+                      />
+                    </g>
+                    <defs>
+                      <filter
+                        id="filter0_i_9289_13233"
+                        x="0.4375"
+                        y="0.4375"
+                        width="18.6488"
+                        height="18.6488"
+                        filterUnits="userSpaceOnUse"
+                        color-interpolation-filters="sRGB"
+                      >
+                        <feFlood
+                          flood-opacity="0"
+                          result="BackgroundImageFix"
+                        />
+                        <feBlend
+                          mode="normal"
+                          in="SourceGraphic"
+                          in2="BackgroundImageFix"
+                          result="shape"
+                        />
+                        <feColorMatrix
+                          in="SourceAlpha"
+                          type="matrix"
+                          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                          result="hardAlpha"
+                        />
+                        <feOffset dx="1.52381" dy="1.52381" />
+                        <feGaussianBlur stdDeviation="1.14286" />
+                        <feComposite
+                          in2="hardAlpha"
+                          operator="arithmetic"
+                          k2="-1"
+                          k3="1"
+                        />
+                        <feColorMatrix
+                          type="matrix"
+                          values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                        />
+                        <feBlend
+                          mode="normal"
+                          in2="shape"
+                          result="effect1_innerShadow_9289_13233"
+                        />
+                      </filter>
+                      <radialGradient
+                        id="paint0_radial_9289_13233"
+                        cx="0"
+                        cy="0"
+                        r="1"
+                        gradientUnits="userSpaceOnUse"
+                        gradientTransform="translate(5.94542 16.1904) rotate(-58.7716) scale(25.6788 25.6788)"
+                      >
+                        <stop stop-color="#FF6F58" />
+                        <stop offset="1" stop-color="#FFA293" />
+                      </radialGradient>
+                      <radialGradient
+                        id="paint1_radial_9289_13233"
+                        cx="0"
+                        cy="0"
+                        r="1"
+                        gradientUnits="userSpaceOnUse"
+                        gradientTransform="translate(5.94542 16.1904) rotate(-58.7716) scale(25.6788 25.6788)"
+                      >
+                        <stop stop-color="#FF6F58" />
+                        <stop offset="1" stop-color="#FFA293" />
+                      </radialGradient>
+                    </defs>
+                  </svg>
+                  <span>Image Generator</span>
+                </a>
+                <a
+                  href="code-generator.html"
+                  class="flex gap-3 items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 18 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g filter="url(#filter0_i_9289_13239)">
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M0.4375 4C0.4375 2.03249 2.03249 0.4375 4 0.4375H14C15.9675 0.4375 17.5625 2.03249 17.5625 4V14C17.5625 15.9675 15.9675 17.5625 14 17.5625H4C2.03249 17.5625 0.4375 15.9675 0.4375 14V4ZM10.4373 5.123C10.5047 4.81974 10.3134 4.51926 10.0102 4.45187C9.70692 4.38448 9.40645 4.57569 9.33906 4.87895L7.56181 12.8766C7.49442 13.1798 7.68563 13.4803 7.98889 13.5477C8.29215 13.6151 8.59263 13.4239 8.66002 13.1206L10.4373 5.123ZM12.2665 6.84713C12.0469 6.62745 11.6907 6.62744 11.471 6.8471C11.2513 7.06676 11.2513 7.42291 11.471 7.64259L12.8282 8.99989L11.471 10.357C11.2513 10.5767 11.2513 10.9329 11.471 11.1525C11.6907 11.3722 12.0468 11.3722 12.2665 11.1525L14.0214 9.39765C14.241 9.17799 14.241 8.82185 14.0214 8.60218L12.2665 6.84713ZM6.52237 7.64943C6.74203 7.42975 6.74201 7.07359 6.52233 6.85393C6.30265 6.63427 5.9465 6.63429 5.72684 6.85397L3.97879 8.60218C3.75914 8.82185 3.75915 9.17799 3.97881 9.39765L5.72686 11.1457C5.94653 11.3654 6.30268 11.3654 6.52235 11.1457C6.74202 10.926 6.74202 10.5699 6.52235 10.3502L5.17203 8.99989L6.52237 7.64943Z"
+                        fill="url(#paint0_radial_9289_13239)"
+                      />
+                    </g>
+                    <defs>
+                      <filter
+                        id="filter0_i_9289_13239"
+                        x="0.4375"
+                        y="0.4375"
+                        width="18.125"
+                        height="18.125"
+                        filterUnits="userSpaceOnUse"
+                        color-interpolation-filters="sRGB"
+                      >
+                        <feFlood
+                          flood-opacity="0"
+                          result="BackgroundImageFix"
+                        />
+                        <feBlend
+                          mode="normal"
+                          in="SourceGraphic"
+                          in2="BackgroundImageFix"
+                          result="shape"
+                        />
+                        <feColorMatrix
+                          in="SourceAlpha"
+                          type="matrix"
+                          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                          result="hardAlpha"
+                        />
+                        <feOffset dx="1" dy="1" />
+                        <feGaussianBlur stdDeviation="1" />
+                        <feComposite
+                          in2="hardAlpha"
+                          operator="arithmetic"
+                          k2="-1"
+                          k3="1"
+                        />
+                        <feColorMatrix
+                          type="matrix"
+                          values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                        />
+                        <feBlend
+                          mode="normal"
+                          in2="shape"
+                          result="effect1_innerShadow_9289_13239"
+                        />
+                      </filter>
+                      <radialGradient
+                        id="paint0_radial_9289_13239"
+                        cx="0"
+                        cy="0"
+                        r="1"
+                        gradientUnits="userSpaceOnUse"
+                        gradientTransform="translate(9.73852 14.5335) rotate(-60.1541) scale(16.9079 16.9079)"
+                      >
+                        <stop stop-color="#17A7FF" />
+                        <stop offset="1" stop-color="#84D0FF" />
+                      </radialGradient>
+                    </defs>
+                  </svg>
+                  <span>Code Generator</span>
+                </a>
+                <a
+                  href="video-generator.html"
+                  class="flex gap-3 items-center px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <svg
+                    width="22"
+                    height="16"
+                    viewBox="0 0 22 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g filter="url(#filter0_i_9289_13237)">
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M0.875 4.13058C0.875 2.1004 2.52078 0.45462 4.55096 0.45462H17.449C19.4792 0.45462 21.125 2.1004 21.125 4.13058V11.8694C21.125 13.8996 19.4792 15.5454 17.449 15.5454H4.55095C2.52078 15.5454 0.875 13.8996 0.875 11.8694V4.13058ZM13.8102 7.42904C14.227 7.69552 14.227 8.30432 13.8102 8.5708L10.0934 10.9471C9.64243 11.2355 9.05086 10.9116 9.05086 10.3763V5.62358C9.05086 5.08826 9.64243 4.76434 10.0934 5.05271L13.8102 7.42904Z"
+                        fill="url(#paint0_radial_9289_13237)"
+                      />
+                    </g>
+                    <defs>
+                      <filter
+                        id="filter0_i_9289_13237"
+                        x="0.875"
+                        y="0.45462"
+                        width="21.7738"
+                        height="16.6146"
+                        filterUnits="userSpaceOnUse"
+                        color-interpolation-filters="sRGB"
+                      >
+                        <feFlood
+                          flood-opacity="0"
+                          result="BackgroundImageFix"
+                        />
+                        <feBlend
+                          mode="normal"
+                          in="SourceGraphic"
+                          in2="BackgroundImageFix"
+                          result="shape"
+                        />
+                        <feColorMatrix
+                          in="SourceAlpha"
+                          type="matrix"
+                          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                          result="hardAlpha"
+                        />
+                        <feOffset dx="1.52381" dy="1.52381" />
+                        <feGaussianBlur stdDeviation="1.14286" />
+                        <feComposite
+                          in2="hardAlpha"
+                          operator="arithmetic"
+                          k2="-1"
+                          k3="1"
+                        />
+                        <feColorMatrix
+                          type="matrix"
+                          values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                        />
+                        <feBlend
+                          mode="normal"
+                          in2="shape"
+                          result="effect1_innerShadow_9289_13237"
+                        />
+                      </filter>
+                      <radialGradient
+                        id="paint0_radial_9289_13237"
+                        cx="0"
+                        cy="0"
+                        r="1"
+                        gradientUnits="userSpaceOnUse"
+                        gradientTransform="translate(11.8733 12.8762) rotate(-52.4062) scale(16.3099 18.2642)"
+                      >
+                        <stop stop-color="#FFAC19" />
+                        <stop offset="1" stop-color="#FFCE78" />
+                      </radialGradient>
+                    </defs>
+                  </svg>
+                  <span>Video Generator</span>
+                </a>
+                <a
+                  href="email-generator.html"
+                  class="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <svg
+                    width="22"
+                    height="16"
+                    viewBox="0 0 22 16"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g filter="url(#filter0_i_9289_13235)">
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M0.875 4.13057C0.875 2.1004 2.52078 0.45462 4.55096 0.45462H17.449C19.4792 0.45462 21.125 2.1004 21.125 4.13057V11.8694C21.125 13.8996 19.4792 15.5454 17.449 15.5454H4.55095C2.52078 15.5454 0.875 13.8996 0.875 11.8694V4.13057ZM5.30721 4.56105C5.04427 4.3777 4.68248 4.44222 4.49913 4.70515C4.31577 4.96809 4.38029 5.32988 4.64322 5.51323L9.78305 9.09739C10.5145 9.60742 11.4863 9.60742 12.2177 9.09739L17.3575 5.51323C17.6204 5.32988 17.6849 4.96809 17.5016 4.70515C17.3182 4.44222 16.9564 4.3777 16.6935 4.56105L11.5537 8.14521C11.2212 8.37704 10.7795 8.37704 10.447 8.14521L5.30721 4.56105Z"
+                        fill="url(#paint0_radial_9289_13235)"
+                      />
+                    </g>
+                    <defs>
+                      <filter
+                        id="filter0_i_9289_13235"
+                        x="0.875"
+                        y="0.45462"
+                        width="21.7738"
+                        height="16.6146"
+                        filterUnits="userSpaceOnUse"
+                        color-interpolation-filters="sRGB"
+                      >
+                        <feFlood
+                          flood-opacity="0"
+                          result="BackgroundImageFix"
+                        />
+                        <feBlend
+                          mode="normal"
+                          in="SourceGraphic"
+                          in2="BackgroundImageFix"
+                          result="shape"
+                        />
+                        <feColorMatrix
+                          in="SourceAlpha"
+                          type="matrix"
+                          values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                          result="hardAlpha"
+                        />
+                        <feOffset dx="1.52381" dy="1.52381" />
+                        <feGaussianBlur stdDeviation="1.14286" />
+                        <feComposite
+                          in2="hardAlpha"
+                          operator="arithmetic"
+                          k2="-1"
+                          k3="1"
+                        />
+                        <feColorMatrix
+                          type="matrix"
+                          values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                        />
+                        <feBlend
+                          mode="normal"
+                          in2="shape"
+                          result="effect1_innerShadow_9289_13235"
+                        />
+                      </filter>
+                      <radialGradient
+                        id="paint0_radial_9289_13235"
+                        cx="0"
+                        cy="0"
+                        r="1"
+                        gradientUnits="userSpaceOnUse"
+                        gradientTransform="translate(11.8733 12.8762) rotate(-52.4062) scale(16.3099 18.2642)"
+                      >
+                        <stop stop-color="#2BCFFF" />
+                        <stop offset="1" stop-color="#8EE5FF" />
+                      </radialGradient>
+                    </defs>
+                  </svg>
+                  <span>Email Generator</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Pages Dropdown (Mobile) -->
+            <div>
+              <button
+                @click.stop="toggleDropdown('pages')"
+                class="mobile-dropdown-toggle flex justify-between items-center w-full px-3 py-2 rounded-md text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                <span>Pages</span>
+                <svg
+                  class="h-4 w-4 transition-transform duration-200"
+                  :class="{'transform rotate-180': activeDropdown === 'pages'}"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              <div
+                x-show="activeDropdown === 'pages'"
+                x-cloak
+                class="mt-2 space-y-1 pl-4"
+              >
+                <a
+                  href="pricing.html"
+                  class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  Pricing
+                </a>
+                <a
+                  href="blog-grid.html"
+                  class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  Blog Grids
+                </a>
+                <a
+                  href="blog-details.html"
+                  class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  Blog Details
+                </a>
+                <a
+                  href="signin.html"
+                  class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  Sign In
+                </a>
+                <a
+                  href="signup.html"
+                  class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  Sign Up
+                </a>
+                <a
+                  href="forgot-password.html"
+                  class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  Reset Password
+                </a>
+                <a
+                  href="privacy.html"
+                  class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  Privacy Policy
+                </a>
+                <a
+                  href="404.html"
+                  class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  404 Error
+                </a>
+              </div>
+            </div>
+
+            <a
+              href="contact.html"
+              class="block px-3 py-2 rounded-md text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              Contact
+            </a>
+
+            <!-- Mobile-only buttons -->
+            <div class="px-3">
+              <a
+                href="signin.html"
+                class="text-sm block py-3 font-medium text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white/90"
+              >
+                Sign In
+              </a>
+              <a
+                href="signup.html"
+                class="lg:inline-flex items-center px-5 py-3 gradient-btn hidden text-sm text-white rounded-full button-bg h-11"
+                >Get Started Free</a
+              >
+            </div>
+          </div>
+        </div>
+      </header>
+      <!-- Header End -->
+
+      <!-- Main Start -->
+      <main>
+        <section class="py-28 relative">
+          <div class="wrapper">
+            <div class="relative max-w-[600px] mx-auto">
+              <div
+                class="contact-wrapper border p-14 relative z-30 bg-white dark:bg-dark-primary dark:border-dark-primary border-gray-100"
+              >
+                <div class="text-center mb-8">
+                  <h3
+                    class="text-gray-800 dark:text-white/90 font-bold text-3xl mb-2"
+                  >
+                    Sign In
+                  </h3>
+                  <p class="text-gray-500 dark:text-gray-400">
+                    Enter your email and password to sign in!
+                  </p>
+                </div>
+                <div class="flex flex-col sm:flex-row justify-center gap-5">
+                  <button
+                    class="bg-gray-100 w-full h-12 justify-center dark:hover:bg-white/10 dark:hover:text-white/90 dark:bg-white/5 transition dark:text-gray-400 font-normal text-sm hover:bg-gray-200 rounded-full text-gray-700 hover:text-gray-800 flex items-center gap-3 px-8 py-2.5"
+                  >
+                    <svg
+                      width="21"
+                      height="20"
+                      viewBox="0 0 21 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M19.2511 10.1943C19.2511 9.47489 19.1915 8.94989 19.0626 8.40546H10.6797V11.6526H15.6003C15.5011 12.4596 14.9654 13.6749 13.7749 14.4915L13.7582 14.6002L16.4087 16.6125L16.5924 16.6305C18.2788 15.104 19.2511 12.8582 19.2511 10.1943Z"
+                        fill="#4285F4"
+                      />
+                      <path
+                        d="M10.6788 18.75C13.0895 18.75 15.1133 17.9722 16.5915 16.6305L13.774 14.4916C13.0201 15.0069 12.0081 15.3666 10.6788 15.3666C8.31773 15.3666 6.31379 13.8402 5.59944 11.7305L5.49473 11.7392L2.73868 13.8295L2.70264 13.9277C4.17087 16.786 7.18674 18.75 10.6788 18.75Z"
+                        fill="#34A853"
+                      />
+                      <path
+                        d="M5.60014 11.7305C5.41165 11.1861 5.30257 10.6027 5.30257 9.99998C5.30257 9.39716 5.41165 8.81385 5.59022 8.26941L5.58523 8.15346L2.79464 6.0296L2.70333 6.07216C2.0982 7.25829 1.75098 8.59026 1.75098 9.99998C1.75098 11.4097 2.0982 12.7416 2.70333 13.9277L5.60014 11.7305Z"
+                        fill="#FBBC05"
+                      />
+                      <path
+                        d="M10.6789 4.63331C12.3554 4.63331 13.4864 5.34303 14.1312 5.93612L16.6511 3.525C15.1035 2.11528 13.0895 1.25 10.6789 1.25C7.18676 1.25 4.17088 3.21387 2.70264 6.07218L5.58953 8.26943C6.31381 6.15972 8.31776 4.63331 10.6789 4.63331Z"
+                        fill="#EB4335"
+                      />
+                    </svg>
+                    Sign in with Google
+                  </button>
+                  <button
+                    class="bg-gray-100 w-full h-12 justify-center dark:hover:bg-white/10 dark:hover:text-white/90 dark:bg-white/5 transition dark:text-gray-400 font-normal text-sm hover:bg-gray-200 rounded-full text-gray-700 hover:text-gray-800 flex items-center gap-3 px-8 py-2.5"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="21"
+                      height="20"
+                      viewBox="0 0 21 20"
+                      fill="none"
+                    >
+                      <path
+                        d="M15.6705 1.875H18.4272L12.4047 8.75833L19.4897 18.125H13.9422L9.59717 12.4442L4.62554 18.125H1.86721L8.30887 10.7625L1.51221 1.875H7.20054L11.128 7.0675L15.6705 1.875ZM14.703 16.475H16.2305L6.37054 3.43833H4.73137L14.703 16.475Z"
+                        fill="currentColor"
+                      /></svg
+                    >Sign in with X
+                  </button>
+                </div>
+                <div class="relative py-3 sm:py-5">
+                  <div class="absolute inset-0 flex items-center">
+                    <div
+                      class="w-full border-t border-gray-200 dark:border-gray-800"
+                    ></div>
+                  </div>
+                  <div class="relative flex justify-center text-sm">
+                    <span
+                      class="p-2 text-gray-400 bg-white dark:bg-dark-primary sm:px-5 sm:py-2"
+                      >Or</span
+                    >
+                  </div>
+                </div>
+                <form>
+                  <div class="grid gap-5">
+                    <div>
+                      <label
+                        for="email"
+                        class="mb-1 block dark:text-gray-400 text-gray-700 font-medium text-sm"
+                        >Email address</label
+                      >
+                      <input
+                        type="text"
+                        class="border w-full text-sm dark:text-white/90 dark:placeholder:text-white/30 dark:border-gray-700 text-gray-800 placeholder:text-sm placeholder:text-gray-400 focus:border-primary-300 dark:focus:border-primary-500 focus:outline-0 focus:ring-3 focus:ring-primary-300/20 text-left h-12 shadow-theme-xs border-gray-300 rounded-full px-5 py-2.5"
+                        placeholder="Enter your email address"
+                      />
+                    </div>
+                    <div x-data="{ showPassword: false, password: '' }">
+                      <label
+                        for="passowrd"
+                        class="mb-1 block dark:text-gray-400 text-gray-700 font-medium text-sm"
+                        >Password</label
+                      >
+                      <div class="relative">
+                        <input
+                          :type="showPassword ? 'text' : 'password'"
+                          x-model="password"
+                          class="border w-full pr-10 text-sm dark:text-white/90 dark:placeholder:text-white/30 dark:border-gray-700 text-gray-800 placeholder:text-sm placeholder:text-gray-400 focus:border-primary-300 dark:focus:border-primary-500 focus:outline-0 focus:ring-3 focus:ring-primary-300/20 text-left h-12 shadow-theme-xs border-gray-300 rounded-full px-5 py-2.5"
+                          placeholder="Enter your password"
+                        />
+                        <span
+                          @click="showPassword = !showPassword"
+                          class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-600"
+                        >
+                          <svg
+                            x-show="!showPassword"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M10.0002 13.862C7.23361 13.862 4.86803 12.1373 3.92328 9.7025C4.86804 7.2677 7.23361 5.54306 10.0002 5.54306C12.7667 5.54306 15.1323 7.26771 16.0771 9.70252C15.1323 12.1373 12.7667 13.862 10.0002 13.862ZM10.0002 4.04306C6.48191 4.04306 3.49489 6.30927 2.4155 9.45939C2.3615 9.61697 2.3615 9.78803 2.41549 9.94561C3.49488 13.0957 6.48191 15.362 10.0002 15.362C13.5184 15.362 16.5055 13.0958 17.5849 9.94564C17.6389 9.78806 17.6389 9.61699 17.5849 9.45941C16.5055 6.30928 13.5184 4.04306 10.0002 4.04306ZM9.99151 7.84422C8.96527 7.84422 8.13333 8.67616 8.13333 9.7024C8.13333 10.7286 8.96527 11.5606 9.99151 11.5606H10.0064C11.0326 11.5606 11.8646 10.7286 11.8646 9.7024C11.8646 8.67616 11.0326 7.84422 10.0064 7.84422H9.99151Z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                          <svg
+                            x-show="showPassword"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M4.63803 3.57709C4.34513 3.2842 3.87026 3.2842 3.57737 3.57709C3.28447 3.86999 3.28447 4.34486 3.57737 4.63775L4.85323 5.91362C3.74609 6.84199 2.89363 8.06395 2.4155 9.45936C2.3615 9.61694 2.3615 9.78801 2.41549 9.94558C3.49488 13.0957 6.48191 15.3619 10.0002 15.3619C11.255 15.3619 12.4422 15.0737 13.4994 14.5598L15.3625 16.4229C15.6554 16.7158 16.1302 16.7158 16.4231 16.4229C16.716 16.13 16.716 15.6551 16.4231 15.3622L4.63803 3.57709ZM12.3608 13.4212L10.4475 11.5079C10.3061 11.5423 10.1584 11.5606 10.0064 11.5606H9.99151C8.96527 11.5606 8.13333 10.7286 8.13333 9.70237C8.13333 9.5461 8.15262 9.39434 8.18895 9.24933L5.91885 6.97923C5.03505 7.69015 4.34057 8.62704 3.92328 9.70247C4.86803 12.1373 7.23361 13.8619 10.0002 13.8619C10.8326 13.8619 11.6287 13.7058 12.3608 13.4212ZM16.0771 9.70249C15.7843 10.4569 15.3552 11.1432 14.8199 11.7311L15.8813 12.7925C16.6329 11.9813 17.2187 11.0143 17.5849 9.94561C17.6389 9.78803 17.6389 9.61696 17.5849 9.45938C16.5055 6.30925 13.5184 4.04303 10.0002 4.04303C9.13525 4.04303 8.30244 4.17999 7.52218 4.43338L8.75139 5.66259C9.1556 5.58413 9.57311 5.54303 10.0002 5.54303C12.7667 5.54303 15.1323 7.26768 16.0771 9.70249Z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <label
+                        x-data="{ checked: false }"
+                        class="flex items-center space-x-3 cursor-pointer select-none"
+                      >
+                        <div
+                          class="w-4 h-4 rounded border border-gray-300 flex items-center justify-center transition-all duration-200"
+                          :class="checked ? 'bg-primary-500 border-primary-500' : 'bg-white dark:bg-transparent dark:border-gray-700'"
+                          @click.prevent="checked = !checked"
+                        >
+                          <!-- Checkmark icon -->
+                          <svg
+                            x-show="checked"
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-4 w-4 text-white"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            stroke-width="3"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                        </div>
+                        <span
+                          class="block text-sm text-gray-700 dark:text-gray-400"
+                          >Keep me logged in</span
+                        >
+                        <!-- Hidden actual checkbox for form submission -->
+                        <input
+                          type="checkbox"
+                          name="agreement"
+                          x-model="checked"
+                          class="hidden"
+                        />
+                      </label>
+                      <div>
+                        <a
+                          href="forgot-password.html"
+                          class="text-primary-500 text-sm"
+                        >
+                          Forgot password?
+                        </a>
+                      </div>
+                    </div>
+                    <div>
+                      <button
+                        class="bg-primary-500 hover:bg-primary-600 transition py-3 px-6 w-full font-medium text-white text-sm rounded-full"
+                      >
+                        Sign In
+                      </button>
+                    </div>
+                  </div>
+                </form>
+                <div class="mt-5">
+                  <p
+                    class="text-gray-700 dark:text-gray-400 font-normal text-sm"
+                  >
+                    Don’t have an account?
+                    <a
+                      href="signup.html"
+                      class="text-sm font-semibold text-primary-500"
+                    >
+                      Sign Up
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <span class="absolute -bottom-32 left-1/2 -translate-x-1/2 z-0">
+            <svg
+              width="930"
+              height="760"
+              viewBox="0 0 930 760"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g opacity="0.3" filter="url(#filter0_f_9248_10254)">
+                <circle cx="380.335" cy="380.335" r="179.665" fill="#FF58D5" />
+              </g>
+              <g opacity="0.7" filter="url(#filter1_f_9248_10254)">
+                <circle cx="549.665" cy="380.335" r="179.665" fill="#4E6EFF" />
+              </g>
+              <defs>
+                <filter
+                  id="filter0_f_9248_10254"
+                  x="0.669922"
+                  y="0.6698"
+                  width="759.33"
+                  height="759.33"
+                  filterUnits="userSpaceOnUse"
+                  color-interpolation-filters="sRGB"
+                >
+                  <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                  <feBlend
+                    mode="normal"
+                    in="SourceGraphic"
+                    in2="BackgroundImageFix"
+                    result="shape"
+                  />
+                  <feGaussianBlur
+                    stdDeviation="100"
+                    result="effect1_foregroundBlur_9248_10254"
+                  />
+                </filter>
+                <filter
+                  id="filter1_f_9248_10254"
+                  x="170"
+                  y="0.6698"
+                  width="759.33"
+                  height="759.33"
+                  filterUnits="userSpaceOnUse"
+                  color-interpolation-filters="sRGB"
+                >
+                  <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                  <feBlend
+                    mode="normal"
+                    in="SourceGraphic"
+                    in2="BackgroundImageFix"
+                    result="shape"
+                  />
+                  <feGaussianBlur
+                    stdDeviation="100"
+                    result="effect1_foregroundBlur_9248_10254"
+                  />
+                </filter>
+              </defs>
+            </svg>
+          </span>
+        </section>
+      </main>
+      <!-- Main End -->
+
+      <!-- Footer Start -->
+      <footer class="relative overflow-hidden bg-gray-900">
+        <span class="absolute top-0 -translate-x-1/2 left-1/2">
+          <svg
+            width="1260"
+            height="457"
+            viewBox="0 0 1260 457"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g filter="url(#filter0_f_11105_867)">
+              <circle cx="630" cy="-173.299" r="230" fill="#3B2EFF" />
+            </g>
+            <defs>
+              <filter
+                id="filter0_f_11105_867"
+                x="0"
+                y="-803.299"
+                width="1260"
+                height="1260"
+                filterUnits="userSpaceOnUse"
+                color-interpolation-filters="sRGB"
+              >
+                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                <feBlend
+                  mode="normal"
+                  in="SourceGraphic"
+                  in2="BackgroundImageFix"
+                  result="shape"
+                />
+                <feGaussianBlur
+                  stdDeviation="200"
+                  result="effect1_foregroundBlur_11105_867"
+                />
+              </filter>
+            </defs>
+          </svg>
+        </span>
+        <div class="relative z-10 py-16 xlpy-24">
+          <div class="container px-5 mx-auto sm:px-7">
+            <div class="grid gap-y-8 lg:grid-cols-12">
+              <div class="lg:col-span-3 xl:col-span-4">
+                <div>
+                  <a href="index.html" class="block mb-6">
+                    <img src="assets/images/logo-white.svg" alt="" />
+                  </a>
+                  <p class="block text-sm text-gray-400 mb-9">
+                    Create Smarter, Faster, and Effortless </br> AI Tools, Products and Startups with AI Agent - AI UI Kit.                  </p>
+                  <div class="flex">
+                    <a
+                      href="https://www.linkedin.com/company/pimjo/posts/?feedView=all"
+                      target="_blank"
+                      class="text-gray-400 hover:text-white/80 size-10"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="17"
+                        viewBox="0 0 16 17"
+                        fill="none"
+                      >
+                        <g clip-path="url(#clip0_11105_879)">
+                          <path
+                            d="M13.5447 3.68965C12.5249 3.22173 11.4313 2.87699 10.2879 2.67954C10.2671 2.67573 10.2463 2.68525 10.2356 2.7043C10.0949 2.95444 9.93915 3.28077 9.83006 3.53727C8.60027 3.35316 7.37679 3.35316 6.17221 3.53727C6.0631 3.27507 5.90166 2.95444 5.76038 2.7043C5.74966 2.68589 5.72886 2.67636 5.70803 2.67954C4.56527 2.87636 3.47171 3.2211 2.45129 3.68965C2.44246 3.69346 2.43488 3.69982 2.42986 3.70806C0.355594 6.80697 -0.212634 9.82971 0.0661201 12.815C0.0673814 12.8296 0.0755799 12.8435 0.086932 12.8524C1.45547 13.8574 2.78114 14.4676 4.08219 14.872C4.10301 14.8784 4.12507 14.8707 4.13832 14.8536C4.44608 14.4333 4.72043 13.9902 4.95565 13.5241C4.96953 13.4968 4.95628 13.4645 4.92791 13.4537C4.49275 13.2886 4.0784 13.0873 3.67982 12.8588C3.64829 12.8404 3.64577 12.7953 3.67477 12.7737C3.75865 12.7108 3.84255 12.6454 3.92264 12.5794C3.93713 12.5674 3.95732 12.5648 3.97435 12.5724C6.59286 13.7679 9.4277 13.7679 12.0153 12.5724C12.0323 12.5642 12.0525 12.5667 12.0677 12.5788C12.1478 12.6448 12.2316 12.7108 12.3161 12.7737C12.3451 12.7953 12.3433 12.8404 12.3117 12.8588C11.9131 13.0918 11.4988 13.2886 11.063 13.453C11.0346 13.4638 11.022 13.4968 11.0359 13.5241C11.2762 13.9895 11.5505 14.4327 11.8526 14.853C11.8652 14.8707 11.8879 14.8784 11.9087 14.872C13.2161 14.4676 14.5417 13.8574 15.9103 12.8524C15.9223 12.8435 15.9298 12.8302 15.9311 12.8156C16.2647 9.36431 15.3723 6.36636 13.5655 3.7087C13.5611 3.69982 13.5535 3.69346 13.5447 3.68965ZM5.34668 10.9973C4.55833 10.9973 3.90876 10.2735 3.90876 9.38464C3.90876 8.49578 4.54574 7.77202 5.34668 7.77202C6.15392 7.77202 6.79721 8.50214 6.78459 9.38464C6.78459 10.2735 6.14761 10.9973 5.34668 10.9973ZM10.6632 10.9973C9.87484 10.9973 9.22526 10.2735 9.22526 9.38464C9.22526 8.49578 9.86222 7.77202 10.6632 7.77202C11.4704 7.77202 12.1137 8.50214 12.1011 9.38464C12.1011 10.2735 11.4704 10.9973 10.6632 10.9973Z"
+                            fill="currentColor"
+                            fill-opacity="0.8"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_11105_879">
+                            <rect
+                              width="16"
+                              height="16"
+                              fill="currentColor"
+                              transform="translate(0 0.919434)"
+                            />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                    </a>
+                    <a
+                      href="https://x.com/PimjoHQ"
+                      target="_blank"
+                      class="text-gray-400 hover:text-white/80 size-10"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="17"
+                        viewBox="0 0 16 17"
+                        fill="none"
+                      >
+                        <path
+                          d="M12.2176 2.18848H14.4666L9.55323 7.80414L15.3334 15.4458H10.8076L7.26277 10.8112L3.20671 15.4458H0.956369L6.2117 9.43921L0.666748 2.18848H5.30749L8.51168 6.4247L12.2176 2.18848ZM11.4283 14.0997H12.6745L4.63034 3.4639H3.29306L11.4283 14.0997Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </a>
+                    <a
+                      href="https://github.com/PIMJO"
+                      target="_blank"
+                      class="text-gray-400 hover:text-white/80 size-10"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="17"
+                        viewBox="0 0 16 17"
+                        fill="none"
+                      >
+                        <g clip-path="url(#clip0_11105_885)">
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M8.00009 1.25293C6.10091 1.25392 4.264 1.92657 2.81783 3.15061C1.37166 4.37465 0.410521 6.07027 0.106282 7.93426C-0.197957 9.79825 0.174536 11.7091 1.15717 13.325C2.13979 14.941 3.66848 16.1568 5.46987 16.7549C5.86729 16.8287 6.01698 16.5824 6.01698 16.3729C6.01698 16.1635 6.00903 15.5563 6.00638 14.8924C3.78085 15.3732 3.31057 13.9533 3.31057 13.9533C2.9476 13.0312 2.42301 12.7889 2.42301 12.7889C1.69706 12.2962 2.47733 12.3054 2.47733 12.3054C3.28143 12.3621 3.70402 13.1261 3.70402 13.1261C4.41672 14.3418 5.57585 13.9901 6.03155 13.7847C6.10309 13.2696 6.31107 12.9193 6.54025 12.7204C4.76247 12.5202 2.89461 11.8378 2.89461 8.78988C2.88359 7.9994 3.1786 7.23496 3.71859 6.65472C3.63646 6.4545 3.36224 5.64575 3.79675 4.54722C3.79675 4.54722 4.46839 4.33383 5.99712 5.36256C7.30836 5.00601 8.69183 5.00601 10.0031 5.36256C11.5305 4.33383 12.2008 4.54722 12.2008 4.54722C12.6366 5.64312 12.3624 6.45187 12.2803 6.65472C12.822 7.23506 13.1176 8.00083 13.1056 8.79251C13.1056 11.8471 11.2337 12.5202 9.45331 12.7164C9.73945 12.964 9.99512 13.4475 9.99512 14.1903C9.99512 15.2546 9.98585 16.1108 9.98585 16.3729C9.98585 16.585 10.1302 16.8326 10.5356 16.7549C12.3372 16.1567 13.866 14.9407 14.8487 13.3245C15.8313 11.7082 16.2036 9.79713 15.899 7.93296C15.5944 6.0688 14.6328 4.37317 13.1861 3.14933C11.7395 1.9255 9.90215 1.25329 8.00274 1.25293H8.00009Z"
+                            fill="currentColor"
+                          />
+                          <path
+                            d="M3.02954 12.6743C3.01232 12.7139 2.94873 12.7257 2.89707 12.6981C2.84541 12.6704 2.80699 12.619 2.82554 12.5782C2.84408 12.5374 2.90635 12.5268 2.95801 12.5545C3.00967 12.5821 3.04941 12.6348 3.02954 12.6743Z"
+                            fill="currentColor"
+                          />
+                          <path
+                            d="M3.35423 13.0339C3.3268 13.0476 3.29541 13.0514 3.26545 13.0447C3.23548 13.038 3.2088 13.0211 3.18997 12.997C3.13831 12.9417 3.1277 12.8653 3.16744 12.831C3.20719 12.7968 3.27873 12.8126 3.33039 12.8679C3.38205 12.9232 3.39398 12.9996 3.35423 13.0339Z"
+                            fill="currentColor"
+                          />
+                          <path
+                            d="M3.66958 13.4908C3.62056 13.525 3.5371 13.4908 3.49074 13.4223C3.47791 13.41 3.46772 13.3953 3.46075 13.379C3.45379 13.3627 3.4502 13.3452 3.4502 13.3275C3.4502 13.3098 3.45379 13.2922 3.46075 13.2759C3.46772 13.2596 3.47791 13.2449 3.49074 13.2326C3.53975 13.1997 3.62321 13.2326 3.66958 13.2998C3.71594 13.367 3.71727 13.4565 3.66958 13.4908Z"
+                            fill="currentColor"
+                          />
+                          <path
+                            d="M4.09725 13.9334C4.05353 13.9822 3.96478 13.969 3.89192 13.9031C3.81906 13.8373 3.80183 13.7477 3.84555 13.7003C3.88926 13.6529 3.97802 13.666 4.05353 13.7306C4.12904 13.7951 4.14361 13.886 4.09725 13.9334Z"
+                            fill="currentColor"
+                          />
+                          <path
+                            d="M4.69753 14.1917C4.67766 14.2536 4.58758 14.2813 4.4975 14.2549C4.40742 14.2286 4.3478 14.1548 4.36502 14.0916C4.38225 14.0284 4.47365 13.9994 4.56506 14.0284C4.65646 14.0573 4.71475 14.1271 4.69753 14.1917Z"
+                            fill="currentColor"
+                          />
+                          <path
+                            d="M5.35189 14.2361C5.35189 14.3006 5.27771 14.3559 5.18233 14.3572C5.08695 14.3586 5.00879 14.3059 5.00879 14.2413C5.00879 14.1768 5.08297 14.1215 5.17835 14.1201C5.27373 14.1188 5.35189 14.1702 5.35189 14.2361Z"
+                            fill="currentColor"
+                          />
+                          <path
+                            d="M5.96118 14.1349C5.9731 14.1994 5.90687 14.2666 5.81149 14.2824C5.71611 14.2982 5.63265 14.26 5.62073 14.1968C5.60881 14.1336 5.67769 14.0651 5.77042 14.0479C5.86315 14.0308 5.94926 14.0703 5.96118 14.1349Z"
+                            fill="currentColor"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_11105_885">
+                            <rect
+                              width="16"
+                              height="16"
+                              fill="currentColor"
+                              transform="translate(0 0.919434)"
+                            />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                    </a>
+                    <a
+                      href="https://www.facebook.com/PimjoHQ"
+                      target="_blank"
+                      class="text-gray-400 hover:text-white/80 size-10"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="19"
+                        viewBox="0 0 18 19"
+                        fill="none"
+                      >
+                        <g clip-path="url(#clip0_11105_895)">
+                          <path
+                            d="M10.5 11.0444H12.375L13.125 8.04443H10.5V6.54443C10.5 5.7724 10.5 5.04443 12 5.04443H13.125V2.52451C12.8807 2.49207 11.9573 2.41943 10.9822 2.41943C8.9463 2.41943 7.5 3.66208 7.5 5.94422V8.04443H5.25V11.0444H7.5V17.4194H10.5V11.0444Z"
+                            fill="currentColor"
+                          />
+                        </g>
+                        <defs>
+                          <clipPath id="clip0_11105_895">
+                            <rect
+                              width="18"
+                              height="18"
+                              fill="currentColor"
+                              transform="translate(0 0.919434)"
+                            />
+                          </clipPath>
+                        </defs>
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="lg:col-span-6 xl:col-span-5">
+                <div class="grid sm:grid-cols-3 gap-7">
+                  <div>
+                    <span class="block mb-6 text-sm text-gray-400"
+                      >Services</span
+                    >
+                    <nav class="flex flex-col space-y-3">
+                      <a
+                        href="#"
+                        class="text-sm font-normal text-gray-400 transition hover:text-white"
+                      >
+                        Status
+                      </a>
+                      <a
+                        href="pricing.html"
+                        class="text-sm font-normal text-gray-400 transition hover:text-white"
+                      >
+                        Pricing
+                      </a>
+                      <a
+                        href="#"
+                        class="text-sm font-normal text-gray-400 transition hover:text-white"
+                      >
+                        FAQ
+                      </a>
+                      <a
+                        href="#"
+                        class="text-sm font-normal text-gray-400 transition hover:text-white"
+                      >
+                        Help Docs
+                      </a>
+                      <a
+                        href="privacy.html"
+                        class="text-sm font-normal text-gray-400 transition hover:text-white"
+                      >
+                        Privacy Policy
+                      </a>
+                    </nav>
+                  </div>
+                  <div>
+                    <span class="block mb-6 text-sm text-gray-400"
+                      >Features</span
+                    >
+                    <nav class="flex flex-col space-y-3">
+                      <a
+                        href="#"
+                        class="text-sm font-normal text-gray-400 transition hover:text-white"
+                      >
+                        HTML File Upload
+                      </a>
+                      <a
+                        href="#"
+                        class="text-sm font-normal text-gray-400 transition hover:text-white"
+                      >
+                        HTML website hosting
+                      </a>
+                      <a
+                        href="#"
+                        class="text-sm font-normal text-gray-400 transition hover:text-white"
+                      >
+                        Free Image Hosting
+                      </a>
+                      <a
+                        href="#"
+                        class="text-sm font-normal text-gray-400 transition hover:text-white"
+                      >
+                        Upload PDF Online
+                      </a>
+                      <a
+                        href="#"
+                        class="text-sm font-normal text-gray-400 transition hover:text-white"
+                      >
+                        Free Zip file hosting
+                      </a>
+                    </nav>
+                  </div>
+                  <div>
+                    <span class="relative block mb-6 text-sm text-gray-400"
+                      >Account</span
+                    >
+                    <nav class="flex flex-col space-y-3">
+                      <a
+                        href="signin.html"
+                        class="text-sm font-normal text-gray-400 transition hover:text-white"
+                      >
+                        Login
+                      </a>
+                      <a
+                        href="signup.html"
+                        class="text-sm font-normal text-gray-400 transition hover:text-white"
+                      >
+                        Sign Up
+                      </a>
+                      <a
+                        href="forgot-password.html"
+                        class="text-sm font-normal text-gray-400 transition hover:text-white"
+                      >
+                        Reset Password
+                      </a>
+                      <a
+                        href="contact.html"
+                        class="text-sm font-normal text-gray-400 transition hover:text-white"
+                      >
+                        Support
+                      </a>
+                    </nav>
+                  </div>
+                </div>
+              </div>
+              <div class="lg:col-span-3">
+                <div>
+                  <span class="block mb-6 text-sm text-gray-400"
+                    >Stay In Touch</span
+                  >
+                  <p class="block mb-5 text-sm text-gray-400">
+                    subscribe now for exclusive insights and offers!
+                  </p>
+                  <form>
+                    <div
+                      class="flex flex-col items-center gap-2 w-full sm:max-w-64"
+                    >
+                      <input
+                        type="text"
+                        placeholder="Enter your email"
+                        class="w-full h-12 p-4 text-sm text-white border border-gray-700 rounded-full placeholder:text-center placeholder:text-gray-400 placeholder:text-sm text-center placeholder:font-normal focus:outline-0"
+                      />
+                      <button
+                        class="w-full px-6 py-3 text-sm font-medium text-white transition rounded-full cursor-pointer bg-primary-500 hover:bg-primary-600"
+                      >
+                        Subscribe Now
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-gray-800">
+          <div class="container relative z-10 px-5 mx-auto sm:px-7">
+            <div
+              class="py-5 text-center"
+              x-data="{ currentYear: new Date().getFullYear() }"
+            >
+              <p class="text-sm text-gray-500">
+                &copy; <span x-text="currentYear"></span> AI Agent - All Rights
+                Reserved.
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <!-- Footer End -->
+
+      <script defer src="assets/js/alpine.min.js"></script>
+      <script defer src="assets/js/glightbox.min.js"></script>
+      <script defer src="assets/js/app.js"></script>
+    </div>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"9a6015d415bb4773a0bff22543062d3b","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ef9d8b3e85c819e',t:'MTc3Njc0Nzg1MA=='};var a=document.createElement('script');a.src='cdn-cgi/challenge-platform/h/b/scripts/jsd/0b8fb825cb67/maind41d.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+
+<!-- Mirrored from ai-agent.preview.uideck.com/signin by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 21 Apr 2026 05:04:46 GMT -->
+</html>

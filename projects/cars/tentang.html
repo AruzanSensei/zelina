@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Tentang AutoLux – Showroom mobil terpercaya dengan pengalaman 5+ tahun melayani pelanggan di seluruh Indonesia." />
+  <title>Tentang Kami – AutoLux</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --white: #FFFFFF;
+      --blue-light: #A7D8FF;
+      --blue-glow: #DFF1FF;
+      --blue-mid: #5BB8F5;
+      --blue-deep: #1A6FA8;
+      --dark: #1E1E1E;
+      --gray: #6B7280;
+      --gray-light: #F4F8FC;
+      --shadow-sm: 0 2px 12px rgba(91, 184, 245, 0.10);
+      --shadow-md: 0 8px 32px rgba(91, 184, 245, 0.16);
+      --font-head: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--white);
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      padding: 0 5%;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 2px 24px rgba(91, 184, 245, 0.12);
+    }
+
+    .nav-logo {
+      font-family: var(--font-head);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--dark);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-logo span {
+      color: var(--blue-mid);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .nav-links>li {
+      position: relative;
+    }
+
+    .nav-links>li>a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--dark);
+      padding: 8px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-links>li>a:hover,
+    .nav-links>li>a.active {
+      background: var(--blue-glow);
+      color: var(--blue-deep);
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      min-width: 160px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--blue-glow);
+      overflow: hidden;
+      z-index: 200;
+    }
+
+    .nav-links>li:hover .dropdown {
+      display: block;
+      animation: dropIn 0.2s ease;
+    }
+
+    @keyframes dropIn {
+      from {
+        opacity: 0;
+        transform: translateY(-8px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .dropdown a {
+      display: block;
+      padding: 10px 18px;
+      font-size: 0.875rem;
+      color: var(--dark);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .dropdown a:hover {
+      background: var(--blue-glow);
+      color: var(--blue-deep);
+      padding-left: 24px;
+    }
+
+    .nav-cta {
+      background: var(--blue-mid);
+      color: var(--white) !important;
+      border-radius: 100px !important;
+      padding: 8px 20px !important;
+      font-weight: 600 !important;
+    }
+
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--dark);
+      border-radius: 2px;
+    }
+
+    .page-header {
+      padding: 140px 5% 80px;
+      background: linear-gradient(135deg, #0F2744 0%, #1A6FA8 60%, #5BB8F5 100%);
+      text-align: center;
+    }
+
+    .page-header h1 {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      color: var(--white);
+    }
+
+    .page-header p {
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 1rem;
+      margin-top: 10px;
+      font-weight: 300;
+    }
+
+    section {
+      padding: 100px 5%;
+    }
+
+    /* Profil */
+    .profil-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      max-width: 1000px;
+      margin: 0 auto;
+      align-items: center;
+    }
+
+    .profil-img {
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, #DFF1FF, #A7D8FF);
+      height: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--blue-mid);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 14px;
+    }
+
+    .section-label::before {
+      content: '';
+      width: 20px;
+      height: 2px;
+      background: var(--blue-mid);
+      border-radius: 2px;
+    }
+
+    .section-title {
+      font-family: var(--font-head);
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      font-weight: 800;
+      color: var(--dark);
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+      margin-bottom: 16px;
+    }
+
+    .section-body {
+      color: var(--gray);
+      line-height: 1.8;
+      font-size: 0.95rem;
+      margin-bottom: 14px;
+    }
+
+    .profil-stats {
+      display: flex;
+      gap: 32px;
+      margin-top: 28px;
+    }
+
+    .profil-stat-num {
+      font-family: var(--font-head);
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--blue-deep);
+    }
+
+    .profil-stat-label {
+      font-size: 0.78rem;
+      color: var(--gray);
+      margin-top: 2px;
+    }
+
+    /* Visi Misi */
+    #visi-misi {
+      background: var(--gray-light);
+    }
+
+    .visi-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .visi-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 32px;
+      border: 1px solid var(--blue-glow);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .visi-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: var(--blue-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue-mid);
+      font-size: 1.3rem;
+      margin-bottom: 18px;
+    }
+
+    .visi-card h3 {
+      font-family: var(--font-head);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+
+    .visi-card p {
+      color: var(--gray);
+      line-height: 1.7;
+      font-size: 0.9rem;
+    }
+
+    /* Kenapa Kami */
+    #kenapa-kami {
+      background: var(--white);
+    }
+
+    .section-center {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .kenapa-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .kenapa-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 28px;
+      border: 1px solid var(--blue-glow);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .kenapa-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--blue-light);
+    }
+
+    .kenapa-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--blue-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue-mid);
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .kenapa-text h4 {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+
+    .kenapa-text p {
+      font-size: 0.86rem;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    /* Team */
+    #tim {
+      background: var(--gray-light);
+    }
+
+    .tim-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .tim-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 28px;
+      text-align: center;
+      border: 1px solid var(--blue-glow);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    .tim-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .tim-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--blue-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin: 0 auto 16px;
+    }
+
+    .tim-name {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .tim-role {
+      font-size: 0.82rem;
+      color: var(--blue-mid);
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--dark);
+      color: rgba(255, 255, 255, 0.6);
+      padding: 60px 5% 30px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-brand .nav-logo {
+      color: var(--white);
+    }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      margin-top: 14px;
+      line-height: 1.7;
+      max-width: 240px;
+    }
+
+    .footer-col h5 {
+      font-family: var(--font-head);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .footer-col ul li a {
+      font-size: 0.84rem;
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-col ul li a:hover {
+      color: var(--blue-light);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-bottom p {
+      font-size: 0.82rem;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 12px;
+    }
+
+    .footer-socials a {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-socials a:hover {
+      background: var(--blue-mid);
+      color: var(--white);
+    }
+
+    .wa-float {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #25D366;
+      color: var(--white);
+      padding: 12px 20px;
+      border-radius: 100px;
+      box-shadow: 0 8px 32px rgba(37, 211, 102, 0.4);
+      text-decoration: none;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.88rem;
+      animation: floatWA 3s ease-in-out infinite;
+    }
+
+    .wa-float:hover {
+      background: #1ebe5a;
+    }
+
+    .wa-float i {
+      font-size: 1.2rem;
+    }
+
+    @keyframes floatWA {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-5px)
+      }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width:768px) {
+      nav {
+        padding: 0 20px;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 72px;
+        left: 0;
+        width: 100%;
+        background: var(--white);
+        flex-direction: column;
+        gap: 0;
+        padding: 16px 0;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-links>li>a {
+        padding: 12px 24px;
+        border-radius: 0;
+      }
+
+      .dropdown {
+        position: static;
+        box-shadow: none;
+        border: none;
+        background: var(--gray-light);
+        border-radius: 0;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .profil-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .visi-grid,
+      .kenapa-grid,
+      .tim-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .wa-float .wa-text {
+        display: none;
+      }
+
+      .wa-float {
+        padding: 14px;
+        border-radius: 50%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><i class="fa-solid fa-car-side"></i>Auto<span>Lux</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="tentang.html" class="active">Tentang Kami</a></li>
+      <li>
+        <a href="produk.html">Produk <i class="fa-solid fa-chevron-down" style="font-size:0.65rem"></i></a>
+        <div class="dropdown">
+          <a href="produk.html?tipe=sedan"><i class="fa-solid fa-car"></i> Sedan</a>
+          <a href="produk.html?tipe=suv"><i class="fa-solid fa-truck-pickup"></i> SUV</a>
+          <a href="produk.html?tipe=hatchback"><i class="fa-solid fa-car-side"></i> Hatchback</a>
+          <a href="produk.html?tipe=mpv"><i class="fa-solid fa-van-shuttle"></i> MPV</a>
+          <a href="produk.html?tipe=electric"><i class="fa-solid fa-bolt"></i> Electric</a>
+        </div>
+      </li>
+      <li><a href="dokumentasi.html">Dokumentasi</a></li>
+      <li><a href="kontak.html">Kontak</a></li>
+      <li><a href="https://wa.me/6281234567890" class="nav-cta"><i class="fa-brands fa-whatsapp"></i> Konsultasi</a>
+      </li>
+    </ul>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+
+  <div class="page-header">
+    <h1>Tentang Kami</h1>
+    <p>Kenali lebih dekat AutoLux – partner terpercaya untuk kebutuhan mobil Anda</p>
+  </div>
+
+  <!-- Profil -->
+  <section>
+    <div class="profil-layout">
+      <div class="profil-img reveal">🏢</div>
+      <div class="reveal">
+        <span class="section-label">Siapa Kami</span>
+        <h2 class="section-title">Showroom Mobil Terpercaya Sejak 2018</h2>
+        <p class="section-body">AutoLux hadir sebagai solusi terbaik bagi Anda yang ingin memiliki kendaraan berkualitas
+          dengan layanan yang jujur dan profesional. Didirikan pada tahun 2018 di Jakarta, kami telah berkembang menjadi
+          salah satu dealer mobil terpercaya dengan 4 cabang di Indonesia.</p>
+        <p class="section-body">Kami menyediakan berbagai pilihan mobil dari brand ternama dunia, mulai dari kendaraan
+          keluarga hingga kendaraan premium dan electric. Setiap unit yang kami jual telah melalui proses inspeksi ketat
+          untuk memastikan kualitas terbaik bagi pelanggan.</p>
+        <div class="profil-stats">
+          <div>
+            <div class="profil-stat-num">5+</div>
+            <div class="profil-stat-label">Tahun Beroperasi</div>
+          </div>
+          <div>
+            <div class="profil-stat-num">100+</div>
+            <div class="profil-stat-label">Unit Terjual</div>
+          </div>
+          <div>
+            <div class="profil-stat-num">4</div>
+            <div class="profil-stat-label">Cabang</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Visi Misi -->
+  <section id="visi-misi">
+    <div style="text-align:center; margin-bottom:52px;" class="reveal">
+      <span class="section-label">Fondasi Kami</span>
+      <h2 class="section-title">Visi & Misi</h2>
+    </div>
+    <div class="visi-grid">
+      <div class="visi-card reveal">
+        <div class="visi-icon"><i class="fa-solid fa-eye"></i></div>
+        <h3>Visi</h3>
+        <p>Menjadi dealer mobil premium terpercaya nomor satu di Indonesia yang memberikan pengalaman membeli mobil yang
+          menyenangkan, transparan, dan berkesan bagi setiap pelanggan.</p>
+      </div>
+      <div class="visi-card reveal">
+        <div class="visi-icon"><i class="fa-solid fa-bullseye"></i></div>
+        <h3>Misi</h3>
+        <p>Menyediakan unit berkualitas tinggi dengan harga kompetitif, memberikan layanan purna jual yang handal, dan
+          terus berinovasi untuk memenuhi kebutuhan mobilitas pelanggan masa kini dan masa depan.</p>
+      </div>
+      <div class="visi-card reveal">
+        <div class="visi-icon"><i class="fa-solid fa-heart"></i></div>
+        <h3>Nilai Kami</h3>
+        <p>Integritas, transparansi, dan kepuasan pelanggan adalah inti dari setiap keputusan bisnis yang kami ambil.
+          Kami berkomitmen untuk selalu memberikan yang terbaik.</p>
+      </div>
+      <div class="visi-card reveal">
+        <div class="visi-icon"><i class="fa-solid fa-handshake"></i></div>
+        <h3>Komitmen</h3>
+        <p>Setiap pelanggan berhak mendapatkan layanan premium tanpa terkecuali. Kami hadir 7 hari seminggu untuk
+          memastikan kebutuhan Anda terpenuhi dengan cepat dan tepat.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Kenapa Kami -->
+  <section id="kenapa-kami">
+    <div class="section-center reveal">
+      <span class="section-label">Keunggulan Kami</span>
+      <h2 class="section-title">Kenapa Pilih AutoLux?</h2>
+      <p style="color:var(--gray); font-size:1rem; margin-top:10px;">Kami tidak hanya menjual mobil, kami membangun
+        hubungan jangka panjang</p>
+    </div>
+    <div class="kenapa-grid">
+      <div class="kenapa-card reveal">
+        <div class="kenapa-icon"><i class="fa-solid fa-shield-check"></i></div>
+        <div class="kenapa-text">
+          <h4>Mobil Berkualitas</h4>
+          <p>Setiap unit melewati inspeksi 100 titik oleh teknisi bersertifikat kami sebelum sampai ke tangan Anda.</p>
+        </div>
+      </div>
+      <div class="kenapa-card reveal">
+        <div class="kenapa-icon"><i class="fa-solid fa-bolt"></i></div>
+        <div class="kenapa-text">
+          <h4>Proses Cepat & Mudah</h4>
+          <p>Dari survei hingga pengiriman, proses pembelian kami dirancang untuk selesai dalam waktu singkat.</p>
+        </div>
+      </div>
+      <div class="kenapa-card reveal">
+        <div class="kenapa-icon"><i class="fa-solid fa-credit-card"></i></div>
+        <div class="kenapa-text">
+          <h4>Bisa Kredit</h4>
+          <p>Bekerjasama dengan 10+ lembaga keuangan terpercaya untuk memberikan cicilan terbaik sesuai kemampuan Anda.
+          </p>
+        </div>
+      </div>
+      <div class="kenapa-card reveal">
+        <div class="kenapa-icon"><i class="fa-solid fa-tools"></i></div>
+        <div class="kenapa-text">
+          <h4>Garansi Mesin</h4>
+          <p>Setiap pembelian dilengkapi garansi mesin 1 tahun dan layanan after-sales yang responsif.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tim -->
+  <section id="tim">
+    <div class="section-center reveal">
+      <span class="section-label">Orang-orang di Balik AutoLux</span>
+      <h2 class="section-title">Tim Kami</h2>
+    </div>
+    <div class="tim-grid">
+      <div class="tim-card reveal">
+        <div class="tim-avatar">👨‍💼</div>
+        <div class="tim-name">Ahmad Fauzi</div>
+        <div class="tim-role">Founder & CEO</div>
+      </div>
+      <div class="tim-card reveal">
+        <div class="tim-avatar">👩‍💼</div>
+        <div class="tim-name">Rina Susanti</div>
+        <div class="tim-role">Sales Director</div>
+      </div>
+      <div class="tim-card reveal">
+        <div class="tim-avatar">👨‍🔧</div>
+        <div class="tim-name">Budi Hartono</div>
+        <div class="tim-role">Head of Technical</div>
+      </div>
+      <div class="tim-card reveal">
+        <div class="tim-avatar">👩‍💻</div>
+        <div class="tim-name">Dewi Kusuma</div>
+        <div class="tim-role">Customer Experience</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo"><i class="fa-solid fa-car-side"></i>Auto<span>Lux</span></a>
+        <p>Dealer mobil premium terpercaya dengan pengalaman lebih dari 5 tahun.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Navigasi</h5>
+        <ul>
+          <li><a href="tentang.html">Tentang Kami</a></li>
+          <li><a href="produk.html">Produk</a></li>
+          <li><a href="dokumentasi.html">Dokumentasi</a></li>
+          <li><a href="kontak.html">Kontak</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Kategori</h5>
+        <ul>
+          <li><a href="produk.html?tipe=sedan">Sedan</a></li>
+          <li><a href="produk.html?tipe=suv">SUV</a></li>
+          <li><a href="produk.html?tipe=hatchback">Hatchback</a></li>
+          <li><a href="produk.html?tipe=mpv">MPV</a></li>
+          <li><a href="produk.html?tipe=electric">Electric</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Kontak</h5>
+        <ul>
+          <li><a href="tel:+622156789012"><i class="fa-solid fa-phone"></i> (021) 5678-9012</a></li>
+          <li><a href="https://wa.me/6281234567890"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a></li>
+          <li><a href="mailto:info@autolux.id"><i class="fa-solid fa-envelope"></i> info@autolux.id</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 AutoLux. All rights reserved.</p>
+      <div class="footer-socials">
+        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/6281234567890" class="wa-float" target="_blank">
+    <i class="fa-brands fa-whatsapp"></i>
+    <!-- <span class="wa-text">Konsultasi Gratis</span> -->
+  </a>
+
+  <script>
+    document.getElementById('hamburger').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - Waru Farm Land</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        .page-container {
+            width: 210mm;
+            min-height: 297mm;
+            height: 297mm;
+            background: white;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== TOP DECORATION ===== */
+        .top-decoration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 140px;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .top-wave-dark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100%;
+            background: #1a4a35;
+            clip-path: ellipse(52% 100% at 0% 0%);
+        }
+
+        .top-wave-light {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 42%;
+            height: 88%;
+            background: #2d6e50;
+            clip-path: ellipse(48% 100% at 0% 0%);
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+            padding: 22px 22mm 0 22mm;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+        }
+
+        .company-logo {
+            width: 80px;
+            height: auto;
+        }
+
+        .invoice-title {
+            font-size: 56px;
+            font-weight: 900;
+            color: #1a4a35;
+            letter-spacing: -1px;
+            line-height: 1;
+            margin-top: 6px;
+        }
+
+        .invoice-date {
+            font-size: 13px;
+            color: #222;
+            font-weight: 500;
+            margin-top: 6px;
+        }
+
+        .invoice-date strong {
+            font-weight: 700;
+        }
+
+        /* ===== CONTENT AREA ===== */
+        .content {
+            padding: 18px 22mm 0 22mm;
+            flex: 1;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ===== CUSTOMER SECTION ===== */
+        .customer-label {
+            display: inline-block;
+            background: #2d6e50;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            padding: 6px 20px;
+            border-radius: 3px;
+            margin-bottom: 14px;
+        }
+
+        .customer-info {
+            margin-bottom: 24px;
+        }
+
+        .customer-row {
+            display: flex;
+            align-items: flex-start;
+            font-size: 13px;
+            margin-bottom: 3px;
+            line-height: 1.5;
+        }
+
+        .customer-row .label {
+            font-weight: 700;
+            min-width: 160px;
+            color: #111;
+        }
+
+        .customer-row .separator-col {
+            font-weight: 700;
+            margin-right: 10px;
+            color: #111;
+        }
+
+        .customer-row .value {
+            font-weight: 400;
+            color: #222;
+        }
+
+        /* ===== TABLE ===== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 0;
+            margin-top: 8px;
+        }
+
+        table thead tr {
+            border-bottom: 2px solid #333;
+        }
+
+        table th {
+            background-color: transparent;
+            border: none;
+            padding: 10px 8px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #111;
+        }
+
+        table th:nth-child(1) {
+            text-align: left;
+            width: 40px;
+        }
+
+        table th:nth-child(3) {
+            text-align: right;
+        }
+
+        table th:nth-child(4) {
+            text-align: center;
+        }
+
+        table th:nth-child(5) {
+            text-align: right;
+        }
+
+        table td {
+            border: none;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 8px;
+            font-size: 12px;
+            color: #333;
+        }
+
+        table td:nth-child(1) {
+            text-align: left;
+            width: 40px;
+            color: #555;
+        }
+
+        table td:nth-child(2) {
+            text-align: left;
+        }
+
+        table td:nth-child(3) {
+            text-align: right;
+            width: 100px;
+        }
+
+        table td:nth-child(4) {
+            text-align: center;
+            width: 90px;
+        }
+
+        table td:nth-child(5) {
+            text-align: right;
+            width: 120px;
+        }
+
+        /* ===== SPACER AFTER TABLE ===== */
+        .table-spacer {
+            height: 65px;
+            border-bottom: 2px solid #333;
+        }
+
+        /* ===== TOTAL SECTION ===== */
+        .total-section {
+            width: 100%;
+            margin-top: 0;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: flex-end;
+            align-items: baseline;
+            padding: 6px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .total-row:last-child {
+            border-bottom: 2px solid #333;
+        }
+
+        .total-label {
+            text-align: right;
+            font-weight: 700;
+            font-size: 12px;
+            color: #111;
+            margin-right: 20px;
+        }
+
+        .total-value {
+            text-align: right;
+            font-weight: 700;
+            font-size: 13px;
+            width: 120px;
+            color: #111;
+        }
+
+        /* ===== NOTE & PAYMENT SECTION ===== */
+        .bottom-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 18px;
+            gap: 20px;
+        }
+
+        .left-bottom {
+            flex: 1;
+        }
+
+        .note-text {
+            font-size: 11px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 16px;
+            line-height: 1.7;
+        }
+
+        .payment-method-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 8px;
+        }
+
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 14px;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #111;
+        }
+
+        .radio-circle {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #e87722;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        .radio-circle.selected {
+            background: #e87722;
+        }
+
+        .bank-info {
+            background: #2d6e50;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.7;
+            display: inline-block;
+        }
+
+        /* ===== SIGNATURE SECTION ===== */
+        .right-bottom {
+            min-width: 170px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding-top: 10px;
+        }
+
+        .signature-img {
+            width: 110px;
+            height: auto;
+            margin-bottom: 0;
+        }
+
+        .signature-line {
+            width: 150px;
+            border-top: 1.5px solid #111;
+            margin-bottom: 4px;
+        }
+
+        .signature-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .signature-company {
+            font-size: 12px;
+            font-weight: 800;
+            color: #1a4a35;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            margin-top: auto;
+            position: relative;
+        }
+
+        .footer-decoration {
+            position: relative;
+            width: 100%;
+            height: 90px;
+            overflow: hidden;
+        }
+
+        .footer-wave-green {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 55%;
+            height: 100%;
+            background: #1a4a35;
+            clip-path: ellipse(62% 100% at 100% 100%);
+        }
+
+        .footer-wave-light {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 45%;
+            height: 80%;
+            background: #2d6e50;
+            clip-path: ellipse(55% 100% at 100% 100%);
+        }
+
+        /* Social row inside the bottom bar */
+        .footer-social-bar {
+            position: absolute;
+            bottom: 36px;
+            left: 0;
+            right: 0;
+            padding: 0 18mm;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 28px;
+            z-index: 3;
+        }
+
+        .social-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            font-weight: 600;
+            color: #1a4a35;
+        }
+
+        .social-item .social-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: white;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .social-icon.ig {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            border-radius: 6px;
+        }
+        .social-icon.fb {
+            background: #1877f2;
+            border-radius: 50%;
+        }
+        .social-icon.wa {
+            background: #25d366;
+            border-radius: 50%;
+        }
+
+        /* Address bar */
+        .footer-address-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1a4a35;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 4;
+        }
+
+        .footer-address-bar p {
+            color: white;
+            font-size: 9.5px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        /* ===== PRINT ===== */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .page-container {
+                box-shadow: none;
+                margin: 0;
+                width: 210mm;
+                min-height: 297mm;
+                height: 297mm;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-container">
+
+        <!-- Top Wave Decoration -->
+        <div class="top-decoration">
+            <div class="top-wave-dark"></div>
+            <div class="top-wave-light"></div>
+        </div>
+
+        <!-- Header: Logo + INVOICE title + Date -->
+        <div class="header">
+            <div class="header-right">
+                <img src="LOGO WFL.png" alt="Waru Farm Land Logo" class="company-logo">
+                <div class="invoice-title">INVOICE</div>
+                <div class="invoice-date"><strong>Date:</strong>&nbsp; 05 Februari 2026</div>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+
+            <!-- Customer Section -->
+            <div class="customer-info">
+                <div class="customer-label">CUSTOMER</div>
+                <div class="customer-row">
+                    <span class="label">MR/MS</span>
+                    <span class="separator-col">:</span>
+                    <span class="value">Bu Lina Marlina</span>
+                </div>
+                <div class="customer-row">
+                    <span class="label">PHONE</span>
+                    <span class="separator-col">:</span>
+                    <span class="value">+62 81514555182</span>
+                </div>
+                <div class="customer-row">
+                    <span class="label">Periode Kunjungan</span>
+                    <span class="separator-col">:</span>
+                    <span class="value">11 Februari 2026</span>
+                </div>
+            </div>
+
+            <!-- Invoice Table -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>NO</th>
+                        <th>UNSUR BIAYA</th>
+                        <th>HARGA</th>
+                        <th>JUMLAH</th>
+                        <th>TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Melukis Caping Anak</td>
+                        <td>Rp. 30.000</td>
+                        <td>75 Anak</td>
+                        <td>Rp. 2.250.000</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Berkuda</td>
+                        <td>Rp. 15.000</td>
+                        <td>75 Anak</td>
+                        <td>Rp. 1.125.000</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Edukasi Pertanian</td>
+                        <td>Rp. 15.000</td>
+                        <td>75 Anak</td>
+                        <td>Rp. 1.125.000</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Menangkap Ikan</td>
+                        <td>Rp. 10.000</td>
+                        <td>75 Anak</td>
+                        <td>Rp. 750.000</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Spacer (empty space after table like reference) -->
+            <div class="table-spacer"></div>
+
+            <!-- Total Section -->
+            <div class="total-section">
+                <div class="total-row">
+                    <div class="total-label">Total</div>
+                    <div class="total-value">Rp.5.250.000</div>
+                </div>
+                <div class="total-row">
+                    <div class="total-label">Diskon/Cashback</div>
+                    <div class="total-value">Rp 0</div>
+                </div>
+                <div class="total-row">
+                    <div class="total-label">Sisa Pembayaran</div>
+                    <div class="total-value">Rp.5.250.000</div>
+                </div>
+            </div>
+
+            <!-- Bottom: Note + Payment + Signature -->
+            <div class="bottom-section">
+                <div class="left-bottom">
+                    <!-- Note -->
+                    <div class="note-text">
+                        Note : 78 Peserta<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;78 - 3 Anak Yatim Free<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 75 Peserta bayar full
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div class="payment-method-label">Payment method:</div>
+                    <div class="payment-options">
+                        <div class="payment-option">
+                            <div class="radio-circle selected"></div>
+                            <span>CASH</span>
+                        </div>
+                        <div class="payment-option">
+                            <div class="radio-circle"></div>
+                            <span>TRANSFER</span>
+                        </div>
+                    </div>
+
+                    <!-- Bank Info -->
+                    <div class="bank-info">
+                        BANK MANDIRI<br>
+                        133-00154220-74<br>
+                        Mitra Buana Asri Sentosa
+                    </div>
+                </div>
+
+                <!-- Signature -->
+                <div class="right-bottom">
+                    <img src="Tanda tangan Andini Nurannisa.png" alt="Tanda Tangan Andini Nurannisa" class="signature-img">
+                    <div class="signature-line"></div>
+                    <div class="signature-name">Andini Nurannisa</div>
+                    <div class="signature-company">WARU FARM LAND</div>
+                </div>
+            </div>
+
+        </div>
+        <!-- end .content -->
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-decoration">
+                <div class="footer-wave-green"></div>
+                <div class="footer-wave-light"></div>
+
+                <!-- Social media bar -->
+                <div class="footer-social-bar">
+                    <div class="social-item">
+                        <div class="social-icon ig">&#9737;</div>
+                        <span>@warufarmland</span>
+                    </div>
+                    <div class="social-item">
+                        <div class="social-icon fb">f</div>
+                        <span>Agrowisata Waru Farm Land Bogor</span>
+                    </div>
+                    <div class="social-item">
+                        <div class="social-icon wa">&#10003;</div>
+                        <span>+62 811-1137-007</span>
+                    </div>
+                </div>
+
+                <!-- Address bar at the very bottom -->
+                <div class="footer-address-bar">
+                    <p>Jl. Baru Manunggal 51 No. 39 Kec. Ciampea, Bogor, Jawa Barat 16620</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+</html>

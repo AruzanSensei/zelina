@@ -1,0 +1,168 @@
+/* ============================================
+   RESPONSIVE.CSS — Media Queries
+   ============================================ */
+
+/* Tablet & below */
+@media (max-width: 1024px) {
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .grid-3 {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+
+    /* Sidebar hidden by default on mobile */
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+        box-shadow: var(--shadow-xl);
+    }
+
+    .sidebar-overlay.open {
+        display: block;
+    }
+
+    .main-area {
+        margin-left: 0;
+    }
+
+    .hamburger-btn {
+        display: flex;
+    }
+
+    .main-content {
+        padding: var(--space-4);
+    }
+
+    .topbar {
+        padding: 0 var(--space-4);
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-3);
+    }
+
+    .grid-3 {
+        grid-template-columns: 1fr;
+    }
+
+    .page-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .page-toolbar .toolbar-left,
+    .page-toolbar .toolbar-right {
+        flex-wrap: wrap;
+    }
+
+    .search-bar {
+        max-width: 100%;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .modal {
+        max-width: 100%;
+        margin: var(--space-4);
+        max-height: 90vh;
+    }
+
+    .toast-container {
+        top: var(--space-4);
+        right: var(--space-4);
+        left: var(--space-4);
+    }
+
+    .toast {
+        max-width: 100%;
+    }
+
+    .login-card {
+        padding: var(--space-8) var(--space-6);
+    }
+
+    .filter-tabs {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        flex-wrap: nowrap;
+    }
+
+    /* Exam taking */
+    .exam-take-layout {
+        flex-direction: column;
+    }
+
+    .exam-take-sidebar {
+        width: 100%;
+        position: relative;
+        height: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card {
+        padding: var(--space-4);
+    }
+
+    .card-header {
+        padding: var(--space-4);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-2);
+    }
+
+    .card-body {
+        padding: var(--space-4);
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: var(--space-2) var(--space-3);
+        font-size: var(--text-xs);
+    }
+
+    .question-card {
+        padding: var(--space-4);
+    }
+}
+
+/* Exam Taking Layout (Desktop) */
+.exam-take-layout {
+    display: flex;
+    gap: var(--space-5);
+    min-height: calc(100vh - var(--header-height) - var(--space-12));
+}
+
+.exam-take-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.exam-take-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-6));
+    height: fit-content;
+}
+
+.exam-take-sidebar .card {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-6));
+}

@@ -1,0 +1,273 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+:root {
+    --bg-color: #f5f7fa;
+    --text-color: #2c3e50;
+    --card-bg: white;
+    --border-color: #eee;
+    --hover-bg: #f8f9fa;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --search-bg: white;
+    --search-border: #e0e0e0;
+    --header-bg: #f8f9fa;
+}
+
+[data-theme="dark"] {
+    --bg-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --card-bg: #2d2d2d;
+    --border-color: #404040;
+    --hover-bg: #363636;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --search-bg: #363636;
+    --search-border: #404040;
+    --header-bg: #2d2d2d;
+}
+
+body {
+    background: linear-gradient(135deg, var(--bg-color) 0%, var(--card-bg) 100%);
+    color: var(--text-color);
+    line-height: 1.6;
+    min-height: 100vh;
+    transition: all 0.3s ease;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+}
+
+header {
+    margin-bottom: 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.theme-toggle {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--text-color);
+    cursor: pointer;
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    background: var(--hover-bg);
+}
+
+h1 {
+    color: var(--text-color);
+    margin-bottom: 1rem;
+    font-size: 2.2rem;
+    font-weight: 600;
+    text-shadow: 1px 1px 2px var(--shadow-color);
+}
+
+.search-box {
+    position: relative;
+    max-width: 500px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #95a5a6;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    border: 2px solid var(--search-border);
+    border-radius: 50px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: var(--search-bg);
+    color: var(--text-color);
+}
+
+#searchInput:focus {
+    outline: none;
+    border-color: #25D366;
+    box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1);
+}
+
+.table-container {
+    background: var(--card-bg);
+    border-radius: 15px;
+    box-shadow: 0 4px 6px var(--shadow-color);
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+th, td {
+    padding: 1.2rem 1.5rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+th {
+    background: var(--header-bg);
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 0.95rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+tr:hover {
+    background: var(--hover-bg);
+}
+
+.sortable {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    padding-right: 2rem !important;
+}
+
+.sortable:hover {
+    background: var(--hover-bg);
+}
+
+.sortable i {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #95a5a6;
+    transition: all 0.3s ease;
+}
+
+.sortable.asc i {
+    color: #25D366;
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.sortable.desc i {
+    color: #25D366;
+}
+
+.whatsapp-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: #25D366;
+    color: white;
+    text-decoration: none;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.whatsapp-btn:hover {
+    background: #128C7E;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(37, 211, 102, 0.2);
+}
+
+.phone-number {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.phone-number:hover {
+    color: #25D366;
+}
+
+.category-badge {
+    display: inline-block;
+    padding: 0.4rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.category-keluarga {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.category-kantor {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.category-teman {
+    background: #e8f5e9;
+    color: #388e3c;
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin: 1rem auto;
+        padding: 0 1rem;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    th, td {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
+    
+    .category-column,
+    .action-column {
+        display: none;
+    }
+    
+    .whatsapp-btn {
+        display: none;
+    }
+    
+    .phone-number {
+        color: #25D366;
+        text-decoration: underline;
+    }
+    
+    .category-badge {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.8rem;
+    }
+
+
+    .sortable {
+        padding-right: 1rem !important;
+    }
+
+    table {
+        min-width: 80%;
+        max-width: 100%;
+    }
+} 

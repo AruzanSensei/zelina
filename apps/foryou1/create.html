@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polaroid — Buat Postingan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --cream: #f5f0e8;
+      --cream2: #ede6d6;
+      --cream3: #e4dbc8;
+      --paper: #faf7f2;
+      --shadow: #c9b99a;
+      --ink: #3d2f1e;
+      --ink2: #7a6550;
+      --accent: #c4694f;
+      --accent2: #e8a87c;
+      --green: #6b8f71;
+      --green-bg: #edf5ee;
+      --red-bg: #fdf0ee;
+      --tape: rgba(255, 240, 180, 0.80);
+      --tape-border: rgba(200, 180, 100, 0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--cream);
+      background-image:
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c9b99a' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    /* ── Header ─────────────────────────────────── */
+    header {
+      background: var(--paper);
+      border-bottom: 2px solid var(--cream3);
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(61, 47, 30, 0.08);
+    }
+
+    .header-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+
+    .logo {
+      font-family: 'Caveat', cursive;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--ink);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .logo::before {
+      content: '📷';
+      font-size: 1.4rem;
+    }
+
+    .btn {
+      padding: 8px 20px;
+      border-radius: 24px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 1.5px solid var(--cream3);
+      color: var(--ink);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--ink2);
+    }
+
+    .btn-danger {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-danger:hover {
+      background: #a8503b;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .user-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--cream);
+      border: 1.5px solid var(--cream3);
+      border-radius: 24px;
+      padding: 4px 14px 4px 4px;
+    }
+
+    .user-pill img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .user-pill span {
+      font-size: 0.83rem;
+      font-weight: 500;
+    }
+
+    /* ── Login wall ──────────────────────────────── */
+    #loginWall {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: calc(100vh - 68px);
+      padding: 2rem;
+      text-align: center;
+    }
+
+    #loginWall .lw-icon {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+    }
+
+    #loginWall h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    #loginWall p {
+      color: var(--ink2);
+      margin-bottom: 2rem;
+      max-width: 360px;
+      line-height: 1.6;
+    }
+
+    .btn-google {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border: 1.5px solid var(--cream3);
+      border-radius: 12px;
+      padding: 12px 28px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--ink);
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(61, 47, 30, 0.08);
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-google:hover {
+      box-shadow: 0 4px 20px rgba(61, 47, 30, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .btn-google svg {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+
+    /* ── Main layout ─────────────────────────────── */
+    #mainContent {
+      display: none;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 2rem;
+      gap: 2.5rem;
+      /* Two-column: left=form, right=preview */
+    }
+
+    @media (min-width: 768px) {
+      #mainContent {
+        display: grid;
+        grid-template-columns: 1fr 360px;
+      }
+    }
+
+    @media (max-width: 767px) {
+      #mainContent {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    /* ── Form panel ──────────────────────────────── */
+    .form-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .form-section {
+      background: var(--paper);
+      border: 1.5px solid var(--cream3);
+      border-radius: 16px;
+      padding: 1.5rem;
+    }
+
+    .form-section h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.15rem;
+      margin-bottom: 1rem;
+      color: var(--ink);
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--ink2);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      background: var(--cream);
+      border: 1.5px solid var(--cream3);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: var(--accent2);
+    }
+
+    input[type="text"]::placeholder,
+    textarea::placeholder {
+      color: var(--ink2);
+    }
+
+    .field {
+      margin-bottom: 1rem;
+    }
+
+    .field:last-child {
+      margin-bottom: 0;
+    }
+
+    /* ── Drop zone ────────────────────────────────── */
+    .drop-zone {
+      border: 2px dashed var(--cream3);
+      border-radius: 14px;
+      padding: 2.5rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: var(--cream);
+      position: relative;
+    }
+
+    .drop-zone:hover,
+    .drop-zone.dragover {
+      border-color: var(--accent2);
+      background: #fdf6ed;
+    }
+
+    .drop-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .drop-zone-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .drop-zone-text {
+      font-size: 0.9rem;
+      color: var(--ink2);
+      line-height: 1.5;
+    }
+
+    .drop-zone-text strong {
+      color: var(--ink);
+    }
+
+    /* ── Image grid (uploaded) ───────────────────── */
+    .img-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 8px;
+      margin-top: 1rem;
+    }
+
+    .img-item {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--cream2);
+      aspect-ratio: 1;
+    }
+
+    .img-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .img-item-remove {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 20px;
+      height: 20px;
+      background: rgba(196, 105, 79, 0.9);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      font-size: 0.65rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: background 0.15s;
+    }
+
+    .img-item-remove:hover {
+      background: var(--accent);
+    }
+
+    .img-item .compress-badge {
+      position: absolute;
+      bottom: 3px;
+      left: 3px;
+      background: rgba(0, 0, 0, 0.6);
+      color: #c8ff00;
+      font-size: 0.55rem;
+      padding: 1px 5px;
+      border-radius: 4px;
+      pointer-events: none;
+    }
+
+    .img-item .compress-badge.done {
+      color: #6dff9c;
+    }
+
+    /* Add more slot */
+    .img-add-slot {
+      border: 2px dashed var(--cream3);
+      border-radius: 8px;
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--ink2);
+      font-size: 1.5rem;
+      position: relative;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .img-add-slot:hover {
+      border-color: var(--accent2);
+      background: #fdf6ed;
+    }
+
+    .img-add-slot input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* ── Status bar ──────────────────────────────── */
+    .status-bar {
+      display: none;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      border: 1px solid;
+    }
+
+    .status-bar.loading {
+      background: var(--cream2);
+      border-color: var(--cream3);
+      color: var(--ink2);
+    }
+
+    .status-bar.success {
+      background: var(--green-bg);
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .status-bar.error {
+      background: var(--red-bg);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ── Preview panel ────────────────────────────── */
+    .preview-panel {
+      position: sticky;
+      top: 88px;
+      height: fit-content;
+    }
+
+    .preview-label {
+      font-family: 'Caveat', cursive;
+      font-size: 1.1rem;
+      color: var(--ink2);
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    /* Polaroid preview */
+    .polaroid-preview {
+      background: #fff;
+      padding: 12px 12px 24px;
+      box-shadow:
+        0 2px 6px rgba(61, 47, 30, 0.10),
+        0 10px 30px rgba(61, 47, 30, 0.14),
+        4px 5px 0 rgba(61, 47, 30, 0.04);
+      border: 1px solid rgba(200, 185, 155, 0.3);
+      transform: rotate(-1.5deg);
+      transition: transform 0.3s;
+      position: relative;
+      max-width: 320px;
+      margin: 0 auto;
+    }
+
+    .polaroid-preview:hover {
+      transform: rotate(0deg);
+    }
+
+    /* tape */
+    .polaroid-preview::before {
+      content: '';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-1deg);
+      width: 64px;
+      height: 22px;
+      background: var(--tape);
+      border: 1px solid var(--tape-border);
+      z-index: 2;
+      border-radius: 2px;
+    }
+
+    .preview-img-wrap {
+      width: 100%;
+      background: var(--cream2);
+      overflow: hidden;
+      position: relative;
+      min-height: 160px;
+    }
+
+    .preview-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* arrow nav for multi-image preview */
+    .preview-nav {
+      display: none;
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      gap: 5px;
+      align-items: center;
+    }
+
+    .preview-nav.show {
+      display: flex;
+    }
+
+    .preview-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .preview-dot.active {
+      background: #fff;
+    }
+
+    .preview-caption-area {
+      padding: 12px 4px 2px;
+      text-align: center;
+    }
+
+    .preview-title {
+      font-family: 'Caveat', cursive;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--ink);
+      min-height: 1.5rem;
+    }
+
+    .preview-placeholder {
+      color: var(--ink2);
+      font-style: italic;
+      font-size: 0.9rem;
+      opacity: 0.5;
+    }
+
+    /* img count badge */
+    .preview-count {
+      position: absolute;
+      bottom: 6px;
+      right: 6px;
+      background: rgba(0, 0, 0, 0.55);
+      color: #fff;
+      font-size: 0.65rem;
+      padding: 2px 7px;
+      border-radius: 10px;
+    }
+
+    /* hint boxes */
+    .hint-box {
+      background: var(--paper);
+      border: 1.5px solid var(--cream3);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .hint-box h4 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--ink2);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+
+    .hint-box ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .hint-box ul li {
+      font-size: 0.8rem;
+      color: var(--ink2);
+      padding-left: 1.2rem;
+      position: relative;
+    }
+
+    .hint-box ul li::before {
+      content: '✦';
+      position: absolute;
+      left: 0;
+      font-size: 0.6rem;
+      color: var(--accent2);
+      top: 2px;
+    }
+
+    /* progress bar */
+    .progress-wrap {
+      margin-top: 0.75rem;
+      display: none;
+    }
+
+    .progress-wrap.show {
+      display: block;
+    }
+
+    .progress-bar-bg {
+      background: var(--cream3);
+      border-radius: 8px;
+      height: 6px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent2), var(--accent));
+      border-radius: 8px;
+      width: 0%;
+      transition: width 0.3s;
+    }
+
+    .progress-label {
+      font-size: 0.75rem;
+      color: var(--ink2);
+      margin-top: 4px;
+    }
+
+    @media (max-width: 767px) {
+      .preview-panel {
+        position: static;
+        order: -1;
+      }
+
+      .polaroid-preview {
+        max-width: 260px;
+      }
+
+      #mainContent {
+        padding: 1rem;
+        gap: 1.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── Header ── -->
+  <header>
+    <div class="header-inner">
+      <a href="index.html" class="logo">Polaro<span>id</span></a>
+      <div id="headerRight">
+        <a href="index.html" class="btn btn-ghost">← Galeri</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ── Login Wall ── -->
+  <div id="loginWall">
+    <div class="lw-icon">🔒</div>
+    <h2>Login untuk berbagi</h2>
+    <p>Kamu perlu masuk dengan akun Google untuk membuat postingan polaroid.</p>
+    <a href="#" class="btn-google" onclick="loginWithGoogle()">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+          fill="#4285F4" />
+        <path
+          d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+          fill="#34A853" />
+        <path
+          d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+          fill="#FBBC05" />
+        <path
+          d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+          fill="#EA4335" />
+      </svg>
+      Masuk dengan Google
+    </a>
+  </div>
+
+  <!-- ── Main Create Form ── -->
+  <div id="mainContent">
+
+    <!-- Left: Form -->
+    <div class="form-panel">
+
+      <!-- Info -->
+      <div class="form-section">
+        <h3>📝 Detail Postingan</h3>
+        <div class="field">
+          <label>Judul</label>
+          <input type="text" id="f-title" placeholder="Nama momen ini..." maxlength="80" oninput="updatePreview()">
+        </div>
+        <div class="field">
+          <label>Deskripsi <span style="font-weight:300;text-transform:none;letter-spacing:0">(opsional)</span></label>
+          <textarea id="f-desc" rows="3" placeholder="Ceritakan sedikit..."></textarea>
+        </div>
+      </div>
+
+      <!-- Upload -->
+      <div class="form-section">
+        <h3>🖼️ Foto</h3>
+        <div class="drop-zone" id="dropZone">
+          <input type="file" accept="image/*" multiple id="fileInput" onchange="handleFiles(this.files)">
+          <div class="drop-zone-icon">📎</div>
+          <div class="drop-zone-text">
+            <strong>Klik atau seret foto ke sini</strong><br>
+            Bisa lebih dari satu · JPEG, PNG, WebP
+          </div>
+        </div>
+
+        <div class="img-grid" id="imgGrid"></div>
+
+        <div class="progress-wrap" id="progressWrap">
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="progressFill"></div>
+          </div>
+          <div class="progress-label" id="progressLabel">Mengkompresi...</div>
+        </div>
+      </div>
+
+      <!-- Status + Submit -->
+      <div>
+        <div class="status-bar" id="statusBar"></div>
+        <div style="display:flex;gap:10px;margin-top:1rem;flex-wrap:wrap">
+          <button class="btn btn-primary" id="btnSave" onclick="savePost()" style="flex:1;justify-content:center">
+            💾 Simpan Postingan
+          </button>
+          <button class="btn btn-ghost" onclick="resetForm()">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Preview -->
+    <div class="preview-panel">
+      <div class="preview-label">✦ Preview polaroid ✦</div>
+      <div class="polaroid-preview" id="polaroidPreview">
+        <div class="preview-img-wrap" id="previewImgWrap" style="padding-top:75%">
+          <div
+            style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--ink2);font-size:0.85rem;opacity:0.5"
+            id="previewEmpty">
+            Foto akan tampil di sini
+          </div>
+          <img id="previewMainImg" src="" alt="" style="position:absolute;inset:0;display:none">
+          <div class="preview-nav" id="previewNav"></div>
+          <div class="preview-count" id="previewCount" style="display:none"></div>
+        </div>
+        <div class="preview-caption-area">
+          <div class="preview-title" id="previewTitle">
+            <span class="preview-placeholder">Judul postingan</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hint-box">
+        <h4>Tips</h4>
+        <ul>
+          <li>Foto dikompresi otomatis ke WebP</li>
+          <li>Upload hingga 10 foto sekaligus</li>
+          <li>Rasio foto asli tetap dipertahankan</li>
+          <li>Postingan tampil di galeri semua orang</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ── Config ────────────────────────────────────────────────────────────
+    const WORKER_URL = 'https://foryou1.zanxa-studio.workers.dev';
+    const MAX_PHOTOS = 10;
+    // ─────────────────────────────────────────────────────────────────────
+
+    let currentUser = null;
+    let imageBlobs = [];   // { file, blob, url(object URL), compressed, name }
+    let previewIdx = 0;
+
+    // ── Session ────────────────────────────────────────────────────────────
+    function getToken() { return localStorage.getItem('polaro_token'); }
+    function saveToken(t) { localStorage.setItem('polaro_token', t); }
+    function clearToken() { localStorage.removeItem('polaro_token'); }
+
+    async function fetchMe() {
+      const token = getToken();
+      if (!token) return null;
+      const res = await fetch(WORKER_URL + '/auth/me', {
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
+      if (!res.ok) { clearToken(); return null; }
+      const { user } = await res.json();
+      return user;
+    }
+
+    function loginWithGoogle() {
+      window.location.href = WORKER_URL + '/auth/google';
+    }
+
+    function logout() {
+      clearToken();
+      location.reload();
+    }
+
+    // ── Compression ────────────────────────────────────────────────────────
+    function compressToWebP(file, quality = 0.82) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        const objUrl = URL.createObjectURL(file);
+
+        img.onload = function () {
+          URL.revokeObjectURL(objUrl);
+          // Preserve original aspect ratio exactly — no forced resize
+          const w = img.naturalWidth;
+          const h = img.naturalHeight;
+          // Cap at 1800px on longest side to avoid huge files
+          const maxPx = 1800;
+          let sw = w, sh = h;
+          if (w > maxPx || h > maxPx) {
+            const r = Math.min(maxPx / w, maxPx / h);
+            sw = Math.round(w * r);
+            sh = Math.round(h * r);
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = sw;
+          canvas.height = sh;
+          canvas.getContext('2d').drawImage(img, 0, 0, sw, sh);
+          canvas.toBlob(blob => {
+            if (blob) resolve({ blob, w: sw, h: sh });
+            else reject(new Error('toBlob failed'));
+          }, 'image/webp', quality);
+        };
+        img.onerror = () => { URL.revokeObjectURL(objUrl); reject(new Error('Load failed')); };
+        img.src = objUrl;
+      });
+    }
+
+    // ── File handling ──────────────────────────────────────────────────────
+    function handleFiles(fileList) {
+      const files = Array.from(fileList);
+      const remaining = MAX_PHOTOS - imageBlobs.length;
+      if (remaining <= 0) { showStatus('error', `Maksimal ${MAX_PHOTOS} foto.`); return; }
+      files.slice(0, remaining).forEach(addFile);
+    }
+
+    async function addFile(file) {
+      if (!file.type.startsWith('image/')) return;
+
+      const idx = imageBlobs.length;
+      const objUrl = URL.createObjectURL(file);
+
+      // Get original dimensions for ratio
+      const dims = await getImgDims(objUrl);
+
+      imageBlobs.push({ file, blob: null, objUrl, compressed: false, name: file.name, w: dims.w, h: dims.h });
+      renderImgGrid();
+      if (imageBlobs.length === 1) setPreviewIdx(0);
+
+      // Show progress
+      updateProgress();
+
+      try {
+        const { blob, w, h } = await compressToWebP(file);
+        imageBlobs[idx].blob = blob;
+        imageBlobs[idx].compressed = true;
+        imageBlobs[idx].w = w;
+        imageBlobs[idx].h = h;
+      } catch {
+        imageBlobs[idx].blob = file;
+        imageBlobs[idx].compressed = false;
+      }
+
+      renderImgGrid();
+      updateProgress();
+      if (idx === previewIdx) updatePreviewImg();
+    }
+
+    function getImgDims(url) {
+      return new Promise(res => {
+        const i = new Image();
+        i.onload = () => res({ w: i.naturalWidth, h: i.naturalHeight });
+        i.onerror = () => res({ w: 1, h: 1 });
+        i.src = url;
+      });
+    }
+
+    function removeImg(idx) {
+      URL.revokeObjectURL(imageBlobs[idx].objUrl);
+      imageBlobs.splice(idx, 1);
+      if (previewIdx >= imageBlobs.length) previewIdx = Math.max(0, imageBlobs.length - 1);
+      renderImgGrid();
+      updatePreviewImg();
+    }
+
+    function renderImgGrid() {
+      const grid = document.getElementById('imgGrid');
+      grid.innerHTML = imageBlobs.map((item, i) => {
+        const kb = item.blob ? (item.blob.size / 1024).toFixed(0) : '…';
+        const origKB = (item.file.size / 1024).toFixed(0);
+        const saved = item.blob ? Math.round((1 - item.blob.size / item.file.size) * 100) : 0;
+        const badge = item.blob
+          ? `<div class="compress-badge done">${kb}KB (-${saved}%) WebP</div>`
+          : `<div class="compress-badge">⏳ Compressing</div>`;
+        return `
+      <div class="img-item" onclick="setPreviewIdx(${i})" style="outline:${i === previewIdx ? '2px solid var(--accent)' : 'none'};outline-offset:1px">
+        <img src="${item.objUrl}" alt="">
+        <button class="img-item-remove" onclick="event.stopPropagation();removeImg(${i})">✕</button>
+        ${badge}
+      </div>
+    `;
+      }).join('') + (imageBlobs.length < MAX_PHOTOS ? `
+    <div class="img-add-slot">
+      <input type="file" accept="image/*" multiple onchange="handleFiles(this.files)">
+      +
+    </div>
+  ` : '');
+    }
+
+    function updateProgress() {
+      const total = imageBlobs.length;
+      const done = imageBlobs.filter(i => i.blob !== null).length;
+      const wrap = document.getElementById('progressWrap');
+      const fill = document.getElementById('progressFill');
+      const lbl = document.getElementById('progressLabel');
+      if (total === 0 || done === total) {
+        wrap.classList.remove('show');
+        return;
+      }
+      wrap.classList.add('show');
+      const pct = Math.round((done / total) * 100);
+      fill.style.width = pct + '%';
+      lbl.textContent = `Mengkompresi ${done}/${total} foto...`;
+    }
+
+    // ── Preview ────────────────────────────────────────────────────────────
+    function setPreviewIdx(i) {
+      previewIdx = i;
+      renderImgGrid();
+      updatePreviewImg();
+    }
+
+    function updatePreviewImg() {
+      const wrap = document.getElementById('previewImgWrap');
+      const img = document.getElementById('previewMainImg');
+      const empty = document.getElementById('previewEmpty');
+      const nav = document.getElementById('previewNav');
+      const count = document.getElementById('previewCount');
+
+      if (imageBlobs.length === 0) {
+        img.style.display = 'none';
+        empty.style.display = '';
+        nav.classList.remove('show');
+        count.style.display = 'none';
+        wrap.style.paddingTop = '75%';
+        return;
+      }
+
+      const item = imageBlobs[previewIdx];
+      img.src = item.objUrl;
+      img.style.display = 'block';
+      empty.style.display = 'none';
+
+      // Set aspect ratio from image dimensions
+      if (item.w && item.h) {
+        const r = (item.h / item.w * 100).toFixed(2);
+        wrap.style.paddingTop = r + '%';
+      }
+
+      // Dots nav
+      if (imageBlobs.length > 1) {
+        nav.classList.add('show');
+        nav.innerHTML = imageBlobs.map((_, i) =>
+          `<div class="preview-dot${i === previewIdx ? ' active' : ''}" onclick="setPreviewIdx(${i})"></div>`
+        ).join('');
+        count.style.display = '';
+        count.textContent = `${previewIdx + 1}/${imageBlobs.length}`;
+      } else {
+        nav.classList.remove('show');
+        count.style.display = 'none';
+      }
+    }
+
+    function updatePreview() {
+      const title = document.getElementById('f-title').value.trim();
+      const el = document.getElementById('previewTitle');
+      el.innerHTML = title
+        ? title
+        : '<span class="preview-placeholder">Judul postingan</span>';
+    }
+
+    // ── Drag & drop ────────────────────────────────────────────────────────
+    const dz = document.getElementById('dropZone');
+    dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragover'); });
+    dz.addEventListener('dragleave', () => dz.classList.remove('dragover'));
+    dz.addEventListener('drop', e => {
+      e.preventDefault();
+      dz.classList.remove('dragover');
+      handleFiles(e.dataTransfer.files);
+    });
+
+    // ── Status ─────────────────────────────────────────────────────────────
+    function showStatus(type, msg) {
+      const el = document.getElementById('statusBar');
+      el.className = 'status-bar ' + type;
+      el.style.display = 'block';
+      el.innerHTML = msg;
+      el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // ── Save ───────────────────────────────────────────────────────────────
+    async function savePost() {
+      const title = document.getElementById('f-title').value.trim();
+      if (!title) { showStatus('error', '✕ Judul wajib diisi.'); return; }
+      if (imageBlobs.length === 0) { showStatus('error', '✕ Upload minimal 1 foto.'); return; }
+
+      const stillCompressing = imageBlobs.some(i => i.blob === null);
+      if (stillCompressing) { showStatus('error', '✕ Tunggu kompresi foto selesai.'); return; }
+
+      const btn = document.getElementById('btnSave');
+      btn.disabled = true;
+      btn.textContent = 'Menyimpan...';
+
+      try {
+        // Step 1: Upload semua gambar
+        showStatus('loading', `⏳ Mengupload ${imageBlobs.length} foto...`);
+        const token = getToken();
+        const urls = [];
+
+        for (let i = 0; i < imageBlobs.length; i++) {
+          const item = imageBlobs[i];
+          const fd = new FormData();
+          fd.append('file', item.blob, (i + '_' + item.name).replace(/\.[^.]+$/, '.webp'));
+          fd.append('filename', (i + '_' + item.name).replace(/\.[^.]+$/, '.webp'));
+
+          showStatus('loading', `⏳ Mengupload foto ${i + 1}/${imageBlobs.length}...`);
+          const res = await fetch(WORKER_URL + '/upload', {
+            method: 'POST',
+            headers: { 'Authorization': 'Bearer ' + token },
+            body: fd,
+          });
+          if (!res.ok) {
+            const e = await res.json().catch(() => ({}));
+            throw new Error(e.error || 'Upload gagal: ' + res.status);
+          }
+          const { url } = await res.json();
+          urls.push(url);
+        }
+
+        // Step 2: Simpan post ke database
+        showStatus('loading', '⏳ Menyimpan postingan...');
+        const postRes = await fetch(WORKER_URL + '/posts', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            title,
+            description: document.getElementById('f-desc').value.trim(),
+            image_urls: urls,   // TEXT[] — multiple URLs in one column
+          }),
+        });
+
+        if (!postRes.ok) {
+          const e = await postRes.json().catch(() => ({}));
+          throw new Error(e.error || 'Gagal menyimpan');
+        }
+
+        const post = await postRes.json();
+        showStatus('success',
+          `✓ <strong>Berhasil!</strong> ${urls.length} foto tersimpan. &nbsp;<a href="index.html" style="color:var(--green);text-decoration:underline">Lihat galeri →</a>`
+        );
+        // Auto reset after success
+        setTimeout(() => resetForm(), 3000);
+
+      } catch (e) {
+        showStatus('error', '✕ <strong>Gagal:</strong> ' + (e.message || 'Terjadi kesalahan.'));
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '💾 Simpan Postingan';
+      }
+    }
+
+    // ── Reset ──────────────────────────────────────────────────────────────
+    function resetForm() {
+      imageBlobs.forEach(i => URL.revokeObjectURL(i.objUrl));
+      imageBlobs = [];
+      previewIdx = 0;
+      document.getElementById('f-title').value = '';
+      document.getElementById('f-desc').value = '';
+      document.getElementById('fileInput').value = '';
+      document.getElementById('imgGrid').innerHTML = '';
+      document.getElementById('statusBar').style.display = 'none';
+      updatePreview();
+      updatePreviewImg();
+      document.getElementById('progressWrap').classList.remove('show');
+    }
+
+    // ── Init ───────────────────────────────────────────────────────────────
+    (async () => {
+      // Handle OAuth return
+      if (location.hash.startsWith('#token=')) {
+        const t = decodeURIComponent(location.hash.slice(7));
+        saveToken(t);
+        history.replaceState(null, '', location.pathname);
+      }
+
+      currentUser = await fetchMe();
+
+      if (!currentUser) {
+        document.getElementById('loginWall').style.display = 'flex';
+        document.getElementById('mainContent').style.display = 'none';
+        document.getElementById('headerRight').innerHTML = `
+      <a href="#" class="btn btn-primary" onclick="loginWithGoogle()">Masuk Google</a>
+    `;
+        return;
+      }
+
+      document.getElementById('loginWall').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'grid';
+      document.getElementById('headerRight').innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px">
+      <a href="index.html" class="btn btn-ghost">← Galeri</a>
+      <div class="user-pill">
+        <img src="${currentUser.avatar || ''}" alt="">
+        <span>${currentUser.name.split(' ')[0]}</span>
+      </div>
+      <button class="btn btn-ghost" onclick="logout()" style="font-size:0.78rem;padding:6px 12px">Keluar</button>
+    </div>
+  `;
+
+      // Keyboard shortcut: Cmd/Ctrl+S
+      document.addEventListener('keydown', e => {
+        if ((e.metaKey || e.ctrlKey) && e.key === 's') { e.preventDefault(); savePost(); }
+      });
+    })();
+  </script>
+</body>
+
+</html>

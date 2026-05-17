@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>ETS Asset Tracking</title>
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { margin: 0; background: #f8f9fa; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+    .loader { width: 32px; height: 32px; border: 3px solid #e8eaed; border-top-color: #1a7c3e; border-radius: 50%; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="loader"></div>
+  <script>
+    (async () => {
+      try {
+        const sb = supabase.createClient(APP_CONFIG.SUPABASE_URL, APP_CONFIG.SUPABASE_ANON_KEY);
+        const { data: { session } } = await sb.auth.getSession();
+        window.location.replace(session ? 'admin/index.html' : 'public/index.html');
+      } catch {
+        window.location.replace('public/index.html');
+      }
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+# dependencies
+**/node_modules
+
+# env
+.env
+.env.*
+
+# IDE
+.vscode/
+.idea/
+
+# logs
+*.log
+
+# temp
+*.tmp
+*.cache
+
+# wrangler
+.wrangler/
+
+# httrack
+**/HTTRACK SITES
+
+# ngasal
+**/ngasal
+
+# memory
+**/memory
+
+# old versions
+**/old
+
+# personal notes
+**/todo.txt
+**/update.txt
+*.md

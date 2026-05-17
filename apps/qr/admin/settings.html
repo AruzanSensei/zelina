@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — ETS Admin</title>
+  <link rel="stylesheet" href="../styles/base.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <link rel="stylesheet" href="../styles/admin.css">
+</head>
+
+<body>
+  <div class="admin-layout">
+    <aside id="sidebar"></aside>
+    <div class="admin-main">
+      <header class="topbar" style="justify-content: flex-start; gap: 10px;">
+        <button class="topbar__ham" id="ham-btn" aria-label="Toggle sidebar"></button>
+        <div style="flex: 1;"></div>
+      </header>
+      <main class="page-content">
+        <div class="page-header">
+          <h1>Settings</h1>
+          <p>Konfigurasi aplikasi ETS Asset Tracking.</p>
+        </div>
+
+        <div class="two-col" style="align-items:start;">
+          <!-- Company Info (dummy) -->
+          <div class="card">
+            <div class="card__header"><span class="card__title">Company Info</span></div>
+            <div class="card__body">
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <div class="form-group">
+                  <label class="form-label">Nama Perusahaan</label>
+                  <input class="form-control" type="text" value="ETS (Engineering Technology Solution)">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Domain QR</label>
+                  <input class="form-control" type="text" value="qr.zanxa.site">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Email Admin</label>
+                  <input class="form-control" type="email" id="s-email">
+                </div>
+                <button class="btn btn-primary btn-sm" id="btn-save-settings">Simpan</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- System Info (read-only) -->
+          <div class="card">
+            <div class="card__header"><span class="card__title">Informasi Sistem</span></div>
+            <div class="card__body">
+              <div style="display:flex;flex-direction:column;gap:12px;font-size:.875rem;">
+                <div style="display:flex;justify-content:space-between;">
+                  <span style="color:var(--text-sub);">Versi Aplikasi</span>
+                  <span style="font-weight:600;">2.0.0</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;gap:12px;">
+                  <span style="color:var(--text-sub);">Worker URL</span>
+                  <span style="font-family:var(--mono);font-size:.72rem;word-break:break-all;text-align:right;"
+                    id="sys-worker">—</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;gap:12px;">
+                  <span style="color:var(--text-sub);">Supabase Project</span>
+                  <span style="font-family:var(--mono);font-size:.72rem;" id="sys-project">—</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <span style="color:var(--text-sub);">Status DB</span>
+                  <span style="display:flex;align-items:center;gap:6px;font-weight:600;color:var(--green);">
+                    <span
+                      style="width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;"></span>
+                    Online
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div id="toast-container"></div>
+  <script src="../config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="../services/auth.js"></script>
+  <script src="../components/sidebar.js"></script>
+  <script src="../components/toast.js"></script>
+  <script src="../components/modal.js"></script>
+  <script src="../services/storage.js"></script>
+  <script>
+    (async () => {
+      const info = await requireAuth();
+      renderSidebar('settings');
+      document.getElementById('sys-worker').textContent = APP_CONFIG.WORKER_URL;
+      document.getElementById('sys-project').textContent = APP_CONFIG.SUPABASE_URL.split('//')[1]?.split('.')[0] || '—';
+      if (info) document.getElementById('s-email').value = info.user?.email || '';
+      document.getElementById('btn-save-settings').addEventListener('click', () => {
+        showToast('Tersimpan (demo — tidak tersimpan ke database)', 'info');
+      });
+    })();
+  </script>
+</body>
+
+</html>

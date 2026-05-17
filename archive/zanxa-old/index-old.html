@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zanxa - Studio Kreatif Digital Indonesia</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#786FFB',secondary:'#4437A6'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Inter', sans-serif;
+}
+h1, h2, h3, h4, h5, h6 {
+font-family: 'Poppins', sans-serif;
+}
+.hero-gradient {
+background: linear-gradient(135deg, rgba(120, 111, 251, 0.1) 0%, rgba(68, 55, 166, 0.2) 100%);
+}
+.nav-link {
+position: relative;
+}
+.nav-link::after {
+content: '';
+position: absolute;
+width: 0;
+height: 2px;
+bottom: -4px;
+left: 0;
+background-color: #786FFB;
+transition: width 0.3s ease;
+}
+.nav-link:hover::after {
+width: 100%;
+}
+.nav-link.active::after {
+width: 100%;
+}
+.service-card:hover {
+transform: translateY(-5px);
+}
+.portfolio-item:hover .portfolio-overlay {
+opacity: 1;
+}
+.custom-input {
+border: 1px solid #e2e8f0;
+transition: all 0.3s ease;
+}
+.custom-input:focus {
+border-color: #786FFB;
+box-shadow: 0 0 0 3px rgba(120, 111, 251, 0.1);
+}
+.custom-checkbox {
+position: relative;
+display: inline-block;
+width: 20px;
+height: 20px;
+margin-right: 8px;
+}
+.custom-checkbox input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+.checkmark {
+position: absolute;
+top: 0;
+left: 0;
+width: 20px;
+height: 20px;
+background-color: #fff;
+border: 2px solid #e2e8f0;
+border-radius: 4px;
+transition: all 0.2s ease;
+}
+.custom-checkbox input:checked ~ .checkmark {
+background-color: #786FFB;
+border-color: #786FFB;
+}
+.checkmark:after {
+content: "";
+position: absolute;
+display: none;
+}
+.custom-checkbox input:checked ~ .checkmark:after {
+display: block;
+}
+.custom-checkbox .checkmark:after {
+left: 6px;
+top: 2px;
+width: 5px;
+height: 10px;
+border: solid white;
+border-width: 0 2px 2px 0;
+transform: rotate(45deg);
+}
+.custom-switch {
+position: relative;
+display: inline-block;
+width: 50px;
+height: 24px;
+}
+.custom-switch input {
+opacity: 0;
+width: 0;
+height: 0;
+}
+.slider {
+position: absolute;
+cursor: pointer;
+top: 0;
+left: 0;
+right: 0;
+bottom: 0;
+background-color: #e2e8f0;
+transition: .4s;
+border-radius: 34px;
+}
+.slider:before {
+position: absolute;
+content: "";
+height: 18px;
+width: 18px;
+left: 3px;
+bottom: 3px;
+background-color: white;
+transition: .4s;
+border-radius: 50%;
+}
+input:checked + .slider {
+background-color: #786FFB;
+}
+input:checked + .slider:before {
+transform: translateX(26px);
+}
+.tab-button {
+transition: all 0.3s ease;
+}
+.tab-button.active {
+background-color: #786FFB;
+color: white;
+}
+</style>
+</head>
+<body class="bg-white text-gray-800">
+<!-- Navbar -->
+<nav class="fixed top-0 left-0 w-full bg-white shadow-sm z-50">
+<div class="container mx-auto px-4 py-4 flex items-center justify-between">
+<a href="#" class="text-2xl font-['Pacifico'] text-primary">Zanxa</a>
+<!-- Desktop Menu -->
+<div class="hidden md:flex items-center space-x-8">
+<a href="#beranda" class="nav-link active font-medium text-gray-800 hover:text-primary transition">Beranda</a>
+<a href="#tentang" class="nav-link font-medium text-gray-800 hover:text-primary transition">Tentang Kami</a>
+<a href="#layanan" class="nav-link font-medium text-gray-800 hover:text-primary transition">Layanan</a>
+<a href="#portofolio" class="nav-link font-medium text-gray-800 hover:text-primary transition">Portofolio</a>
+<a href="#kontak" class="nav-link font-medium text-gray-800 hover:text-primary transition">Kontak</a>
+<a href="#pembayaran" class="nav-link font-medium text-gray-800 hover:text-primary transition">Pembayaran</a>
+</div>
+<a href="#kontak" class="hidden md:block bg-primary text-white px-6 py-2 !rounded-button font-medium hover:bg-opacity-90 transition whitespace-nowrap">Hubungi Kami</a>
+<!-- Mobile Menu Button -->
+<button id="mobile-menu-button" class="md:hidden w-10 h-10 flex items-center justify-center text-gray-700">
+<i class="ri-menu-line ri-lg"></i>
+</button>
+</div>
+<!-- Mobile Menu -->
+<div id="mobile-menu" class="md:hidden bg-white shadow-md hidden">
+<div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+<a href="#beranda" class="py-2 font-medium text-gray-800 hover:text-primary transition">Beranda</a>
+<a href="#tentang" class="py-2 font-medium text-gray-800 hover:text-primary transition">Tentang Kami</a>
+<a href="#layanan" class="py-2 font-medium text-gray-800 hover:text-primary transition">Layanan</a>
+<a href="#portofolio" class="py-2 font-medium text-gray-800 hover:text-primary transition">Portofolio</a>
+<a href="#kontak" class="py-2 font-medium text-gray-800 hover:text-primary transition">Kontak</a>
+<a href="#pembayaran" class="py-2 font-medium text-gray-800 hover:text-primary transition">Pembayaran</a>
+<a href="#kontak" class="bg-primary text-white px-6 py-2 !rounded-button font-medium hover:bg-opacity-90 transition text-center whitespace-nowrap">Hubungi Kami</a>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<section id="beranda" class="pt-24 md:pt-28 overflow-hidden relative">
+<div class="absolute inset-0" style="background: linear-gradient(135deg, #ffffff 0%, rgba(120, 111, 251, 0.8) 100%); background-image: radial-gradient(circle at 25px 25px, rgba(120, 111, 251, 0.4) 2%, transparent 0%), radial-gradient(circle at 75px 75px, rgba(120, 111, 251, 0.3) 2%, transparent 0%); background-size: 50px 50px;"></div>
+<div class="container mx-auto px-4 py-16 md:py-24 relative">
+<div class="w-full flex flex-col md:flex-row items-center">
+<div class="w-full md:w-1/2 text-center md:text-left mb-10 md:mb-0">
+<h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-4 drop-shadow-sm">Bangun Identitas Digitalmu Bersama <span class="text-primary">Zanxa</span></h1>
+<p class="text-lg md:text-xl text-gray-800 mb-8 drop-shadow-sm font-medium">Studio Kreatif Digital untuk Website, Desain Grafis & Branding Profesional di Indonesia</p>
+<div class="flex flex-wrap gap-4 justify-center md:justify-start">
+<a href="/portofolio" class="bg-primary text-white px-6 py-2.5 rounded-full font-medium hover:bg-opacity-90 transition whitespace-nowrap text-center inline-flex items-center gap-2">
+    <i class="ri-gallery-line"></i>
+    Portofolio
+</a>
+<a href="/crack" class="bg-white text-primary border border-primary px-6 py-2.5 rounded-full font-medium hover:bg-gray-50 transition whitespace-nowrap text-center inline-flex items-center gap-2">
+    <i class="ri-code-box-line"></i>
+    Crack
+</a>
+<a href="/foryou" class="bg-white text-primary border border-primary px-6 py-2.5 rounded-full font-medium hover:bg-gray-50 transition whitespace-nowrap text-center inline-flex items-center gap-2">
+    <i class="ri-heart-line"></i>
+    For You
+</a>
+<a href="/projects" class="bg-white text-primary border border-primary px-6 py-2.5 rounded-full font-medium hover:bg-gray-50 transition whitespace-nowrap text-center inline-flex items-center gap-2">
+    <i class="ri-color-filter-line"></i>
+    Random Projects
+</a>
+<a href="#kontak" class="bg-primary text-white px-6 py-2.5 rounded-full font-medium hover:bg-opacity-90 transition whitespace-nowrap text-center inline-flex items-center gap-2">
+    <i class="ri-mail-line"></i>
+    Hubungi Kami
+</a>
+</div>
+</div>
+<div class="w-full md:w-1/2 relative">
+<!-- Hero image is part of the background -->
+</div>
+</div>
+</div>
+</section>
+<!-- Services Overview -->
+<section id="layanan" class="py-16 md:py-24 bg-gray-50">
+<div class="container mx-auto px-4">
+<div class="text-center mb-16">
+<h2 class="text-3xl md:text-4xl font-bold mb-4">Layanan Kami</h2>
+<p class="text-gray-600 max-w-2xl mx-auto">Kami menyediakan berbagai layanan kreatif digital untuk membantu bisnis Anda tumbuh dan berkembang di era digital.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Service 1 -->
+<div class="bg-white p-8 rounded-lg shadow-sm service-card transition duration-300 hover:shadow-md">
+<div class="w-16 h-16 flex items-center justify-center bg-primary bg-opacity-10 rounded-full mb-6">
+<i class="ri-code-s-slash-line ri-xl text-primary"></i>
+</div>
+<h3 class="text-xl font-semibold mb-3">Pengembangan Website</h3>
+<p class="text-gray-600 mb-4">Kami membangun website responsif dan modern yang sesuai dengan kebutuhan bisnis Anda, mulai dari landing page hingga e-commerce.</p>
+<ul class="mb-6 space-y-2">
+<li class="flex items-start">
+<div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-check-line"></i>
+</div>
+<span class="ml-2 text-gray-700">Website Responsif</span>
+</li>
+<li class="flex items-start">
+<div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-check-line"></i>
+</div>
+<span class="ml-2 text-gray-700">E-commerce</span>
+</li>
+<li class="flex items-start">
+<div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-check-line"></i>
+</div>
+<span class="ml-2 text-gray-700">CMS & Maintenance</span>
+</li>
+</ul>
+<a href="#" class="inline-flex items-center text-primary font-medium hover:underline">
+Pelajari Lebih Lanjut
+<i class="ri-arrow-right-line ml-1"></i>
+</a>
+</div>
+<!-- Service 2 -->
+<div class="bg-white p-8 rounded-lg shadow-sm service-card transition duration-300 hover:shadow-md">
+<div class="w-16 h-16 flex items-center justify-center bg-primary bg-opacity-10 rounded-full mb-6">
+<i class="ri-palette-line ri-xl text-primary"></i>
+</div>
+<h3 class="text-xl font-semibold mb-3">Desain Grafis</h3>
+<p class="text-gray-600 mb-4">Kami menciptakan desain visual yang menarik dan efektif untuk berbagai kebutuhan promosi dan branding bisnis Anda.</p>
+<ul class="mb-6 space-y-2">
+<li class="flex items-start">
+<div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-check-line"></i>
+</div>
+<span class="ml-2 text-gray-700">Desain Media Sosial</span>
+</li>
+<li class="flex items-start">
+<div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-check-line"></i>
+</div>
+<span class="ml-2 text-gray-700">Brosur & Flyer</span>
+</li>
+<li class="flex items-start">
+<div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-check-line"></i>
+</div>
+<span class="ml-2 text-gray-700">Banner & Poster</span>
+</li>
+</ul>
+<a href="#" class="inline-flex items-center text-primary font-medium hover:underline">
+Pelajari Lebih Lanjut
+<i class="ri-arrow-right-line ml-1"></i>
+</a>
+</div>
+<!-- Service 3 -->
+<div class="bg-white p-8 rounded-lg shadow-sm service-card transition duration-300 hover:shadow-md">
+<div class="w-16 h-16 flex items-center justify-center bg-primary bg-opacity-10 rounded-full mb-6">
+<i class="ri-award-line ri-xl text-primary"></i>
+</div>
+<h3 class="text-xl font-semibold mb-3">Logo & Branding</h3>
+<p class="text-gray-600 mb-4">Kami membantu membangun identitas merek yang kuat dan konsisten melalui desain logo dan strategi branding yang tepat.</p>
+<ul class="mb-6 space-y-2">
+<li class="flex items-start">
+<div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-check-line"></i>
+</div>
+<span class="ml-2 text-gray-700">Desain Logo</span>
+</li>
+<li class="flex items-start">
+<div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-check-line"></i>
+</div>
+<span class="ml-2 text-gray-700">Brand Guidelines</span>
+</li>
+<li class="flex items-start">
+<div class="w-5 h-5 flex items-center justify-center text-primary mt-0.5">
+<i class="ri-check-line"></i>
+</div>
+<span class="ml-2 text-gray-700">Stationery Design</span>
+</li>
+</ul>
+<a href="#" class="inline-flex items-center text-primary font-medium hover:underline">
+Pelajari Lebih Lanjut
+<i class="ri-arrow-right-line ml-1"></i>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- About Us Section -->
+<section id="tentang" class="py-16 md:py-24">
+<div class="container mx-auto px-4">
+<div class="flex flex-col md:flex-row items-center">
+<div class="w-full md:w-1/2 mb-10 md:mb-0">
+<img src="https://readdy.ai/api/search-image?query=modern%20creative%20team%20working%20in%20a%20digital%20studio%20in%20Indonesia%2C%20diverse%20team%20of%20designers%20and%20developers%20collaborating%20on%20projects%2C%20professional%20office%20environment%20with%20purple%20and%20blue%20accents%2C%20warm%20and%20welcoming%20atmosphere&width=600&height=600&seq=2&orientation=squarish" alt="Tim Zanxa" class="rounded-lg shadow-md w-full h-auto object-cover">
+</div>
+<div class="w-full md:w-1/2 md:pl-12">
+<h2 class="text-3xl md:text-4xl font-bold mb-6">Tentang Kami</h2>
+<p class="text-gray-700 mb-6">Zanxa adalah studio kreatif digital yang berbasis di Indonesia, didirikan pada tahun 2020 dengan visi untuk membantu bisnis lokal dan internasional membangun kehadiran digital yang kuat dan menarik.</p>
+<p class="text-gray-700 mb-6">Tim kami terdiri dari para profesional kreatif yang berpengalaman dalam bidang desain, pengembangan web, dan strategi branding. Kami percaya bahwa setiap bisnis memiliki cerita unik yang perlu disampaikan, dan kami di sini untuk membantu Anda menceritakannya melalui solusi digital yang efektif.</p>
+<div class="grid grid-cols-2 gap-6 mb-8">
+<div>
+<div class="text-3xl font-bold text-primary mb-2">100+</div>
+<p class="text-gray-600">Proyek Selesai</p>
+</div>
+<div>
+<div class="text-3xl font-bold text-primary mb-2">50+</div>
+<p class="text-gray-600">Klien Puas</p>
+</div>
+<div>
+<div class="text-3xl font-bold text-primary mb-2">5+</div>
+<p class="text-gray-600">Tahun Pengalaman</p>
+</div>
+<div>
+<div class="text-3xl font-bold text-primary mb-2">15+</div>
+<p class="text-gray-600">Tim Profesional</p>
+</div>
+</div>
+<a href="#kontak" class="inline-block bg-primary text-white px-6 py-3 !rounded-button font-medium hover:bg-opacity-90 transition whitespace-nowrap">Hubungi Kami</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Portfolio Section -->
+<section id="portofolio" class="py-16 md:py-24 bg-gray-50">
+<div class="container mx-auto px-4">
+<div class="text-center mb-12">
+<h2 class="text-3xl md:text-4xl font-bold mb-4">Portofolio Kami</h2>
+<p class="text-gray-600 max-w-2xl mx-auto">Lihat beberapa proyek terbaik yang telah kami kerjakan untuk klien-klien kami.</p>
+</div>
+<!-- Portfolio Filter -->
+<div class="flex flex-wrap justify-center mb-10">
+<div class="bg-white inline-flex p-1 rounded-full shadow-sm">
+<button class="portfolio-filter tab-button active px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap" data-filter="all">Semua</button>
+<button class="portfolio-filter tab-button px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap" data-filter="website">Website</button>
+<button class="portfolio-filter tab-button px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap" data-filter="desain">Desain Grafis</button>
+<button class="portfolio-filter tab-button px-6 py-2 rounded-full text-sm font-medium whitespace-nowrap" data-filter="logo">Logo</button>
+</div>
+</div>
+<!-- Portfolio Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Portfolio Item 1 -->
+<div class="portfolio-item group relative rounded-lg overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md" data-category="website">
+<img src="https://readdy.ai/api/search-image?query=modern%20e-commerce%20website%20design%20for%20an%20Indonesian%20fashion%20brand%2C%20clean%20and%20professional%20layout%20with%20product%20showcase%2C%20purple%20and%20blue%20color%20accents%2C%20responsive%20design%20mockup%20on%20desktop%20screen&width=600&height=450&seq=3&orientation=landscape" alt="E-commerce Website" class="w-full h-64 object-cover object-top">
+<div class="portfolio-overlay absolute inset-0 bg-primary bg-opacity-90 flex items-center justify-center opacity-0 transition-opacity duration-300">
+<div class="text-center p-4">
+<h3 class="text-white text-xl font-semibold mb-2">Fashionista Indonesia</h3>
+<p class="text-white text-sm mb-4">Website E-commerce</p>
+<a href="#" class="inline-block bg-white text-primary px-4 py-2 !rounded-button text-sm font-medium hover:bg-gray-100 transition whitespace-nowrap">Lihat Detail</a>
+</div>
+</div>
+</div>
+<!-- Portfolio Item 2 -->
+<div class="portfolio-item group relative rounded-lg overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md" data-category="desain">
+<img src="https://readdy.ai/api/search-image?query=modern%20social%20media%20campaign%20design%20for%20Indonesian%20coffee%20brand%2C%20Instagram%20post%20layout%20with%20beautiful%20coffee%20product%20photography%2C%20stylish%20typography%2C%20purple%20and%20blue%20color%20accents&width=600&height=450&seq=4&orientation=landscape" alt="Social Media Design" class="w-full h-64 object-cover object-top">
+<div class="portfolio-overlay absolute inset-0 bg-primary bg-opacity-90 flex items-center justify-center opacity-0 transition-opacity duration-300">
+<div class="text-center p-4">
+<h3 class="text-white text-xl font-semibold mb-2">Kopi Nusantara</h3>
+<p class="text-white text-sm mb-4">Desain Media Sosial</p>
+<a href="#" class="inline-block bg-white text-primary px-4 py-2 !rounded-button text-sm font-medium hover:bg-gray-100 transition whitespace-nowrap">Lihat Detail</a>
+</div>
+</div>
+</div>
+<!-- Portfolio Item 3 -->
+<div class="portfolio-item group relative rounded-lg overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md" data-category="logo">
+<img src="https://readdy.ai/api/search-image?query=modern%20minimalist%20logo%20design%20for%20Indonesian%20tech%20startup%2C%20abstract%20geometric%20logo%20with%20purple%20and%20blue%20gradient%2C%20clean%20professional%20branding%20on%20mockup%20materials&width=600&height=450&seq=5&orientation=landscape" alt="Logo Design" class="w-full h-64 object-cover object-top">
+<div class="portfolio-overlay absolute inset-0 bg-primary bg-opacity-90 flex items-center justify-center opacity-0 transition-opacity duration-300">
+<div class="text-center p-4">
+<h3 class="text-white text-xl font-semibold mb-2">TechNusa</h3>
+<p class="text-white text-sm mb-4">Desain Logo</p>
+<a href="#" class="inline-block bg-white text-primary px-4 py-2 !rounded-button text-sm font-medium hover:bg-gray-100 transition whitespace-nowrap">Lihat Detail</a>
+</div>
+</div>
+</div>
+<!-- Portfolio Item 4 -->
+<div class="portfolio-item group relative rounded-lg overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md" data-category="website">
+<img src="https://readdy.ai/api/search-image?query=modern%20corporate%20website%20design%20for%20Indonesian%20real%20estate%20company%2C%20professional%20layout%20with%20property%20showcase%2C%20clean%20design%20with%20purple%20and%20blue%20accents%2C%20responsive%20design%20on%20laptop%20screen&width=600&height=450&seq=6&orientation=landscape" alt="Corporate Website" class="w-full h-64 object-cover object-top">
+<div class="portfolio-overlay absolute inset-0 bg-primary bg-opacity-90 flex items-center justify-center opacity-0 transition-opacity duration-300">
+<div class="text-center p-4">
+<h3 class="text-white text-xl font-semibold mb-2">Properti Jaya</h3>
+<p class="text-white text-sm mb-4">Website Korporat</p>
+<a href="#" class="inline-block bg-white text-primary px-4 py-2 !rounded-button text-sm font-medium hover:bg-gray-100 transition whitespace-nowrap">Lihat Detail</a>
+</div>
+</div>
+</div>
+<!-- Portfolio Item 5 -->
+<div class="portfolio-item group relative rounded-lg overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md" data-category="desain">
+<img src="https://readdy.ai/api/search-image?query=modern%20brochure%20design%20for%20Indonesian%20tourism%20company%2C%20tri-fold%20brochure%20with%20beautiful%20destination%20photography%2C%20clean%20layout%20with%20purple%20and%20blue%20color%20scheme%2C%20professional%20print%20material&width=600&height=450&seq=7&orientation=landscape" alt="Brochure Design" class="w-full h-64 object-cover object-top">
+<div class="portfolio-overlay absolute inset-0 bg-primary bg-opacity-90 flex items-center justify-center opacity-0 transition-opacity duration-300">
+<div class="text-center p-4">
+<h3 class="text-white text-xl font-semibold mb-2">Pesona Indonesia</h3>
+<p class="text-white text-sm mb-4">Desain Brosur</p>
+<a href="#" class="inline-block bg-white text-primary px-4 py-2 !rounded-button text-sm font-medium hover:bg-gray-100 transition whitespace-nowrap">Lihat Detail</a>
+</div>
+</div>
+</div>
+<!-- Portfolio Item 6 -->
+<div class="portfolio-item group relative rounded-lg overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md" data-category="logo">
+<img src="https://readdy.ai/api/search-image?query=modern%20logo%20design%20for%20Indonesian%20organic%20food%20brand%2C%20natural%20and%20fresh%20logo%20concept%20with%20leaf%20elements%2C%20purple%20and%20blue%20color%20palette%2C%20logo%20mockup%20on%20packaging%20and%20business%20cards&width=600&height=450&seq=8&orientation=landscape" alt="Food Brand Logo" class="w-full h-64 object-cover object-top">
+<div class="portfolio-overlay absolute inset-0 bg-primary bg-opacity-90 flex items-center justify-center opacity-0 transition-opacity duration-300">
+<div class="text-center p-4">
+<h3 class="text-white text-xl font-semibold mb-2">Organik Sejahtera</h3>
+<p class="text-white text-sm mb-4">Desain Logo</p>
+<a href="#" class="inline-block bg-white text-primary px-4 py-2 !rounded-button text-sm font-medium hover:bg-gray-100 transition whitespace-nowrap">Lihat Detail</a>
+</div>
+</div>
+</div>
+</div>
+<div class="text-center mt-12">
+<a href="#" class="inline-block bg-white text-primary border border-primary px-6 py-3 !rounded-button font-medium hover:bg-gray-50 transition whitespace-nowrap">Lihat Semua Proyek</a>
+</div>
+</div>
+</section>
+<!-- Testimonials Section -->
+<section class="py-16 md:py-24">
+<div class="container mx-auto px-4">
+<div class="text-center mb-16">
+<h2 class="text-3xl md:text-4xl font-bold mb-4">Apa Kata Klien Kami</h2>
+<p class="text-gray-600 max-w-2xl mx-auto">Dengarkan pengalaman mereka bekerja sama dengan tim Zanxa.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Testimonial 1 -->
+<div class="bg-white p-8 rounded-lg shadow-sm">
+<div class="flex items-center mb-4">
+<div class="text-primary">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+</div>
+</div>
+<p class="text-gray-700 mb-6">"Zanxa membantu kami membangun website e-commerce yang sangat profesional dan user-friendly. Tim mereka sangat responsif dan memahami kebutuhan bisnis kami dengan baik. Sangat merekomendasikan!"</p>
+<div class="flex items-center">
+<div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden mr-4">
+<img src="https://readdy.ai/api/search-image?query=professional%20headshot%20of%20Indonesian%20business%20woman%2C%2035%20years%20old%2C%20confident%20smile%2C%20business%20attire&width=100&height=100&seq=9&orientation=squarish" alt="Testimonial" class="w-full h-full object-cover">
+</div>
+<div>
+<h4 class="font-semibold">Dewi Anggraini</h4>
+<p class="text-gray-600 text-sm">CEO, Fashionista Indonesia</p>
+</div>
+</div>
+</div>
+<!-- Testimonial 2 -->
+<div class="bg-white p-8 rounded-lg shadow-sm">
+<div class="flex items-center mb-4">
+<div class="text-primary">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+</div>
+</div>
+<p class="text-gray-700 mb-6">"Desain logo yang dibuat oleh Zanxa benar-benar mencerminkan identitas brand kami. Proses kerja mereka sangat profesional dan mereka memberikan banyak opsi yang sesuai dengan visi kami."</p>
+<div class="flex items-center">
+<div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden mr-4">
+<img src="https://readdy.ai/api/search-image?query=professional%20headshot%20of%20Indonesian%20business%20man%2C%2040%20years%20old%2C%20confident%20smile%2C%20casual%20business%20attire&width=100&height=100&seq=10&orientation=squarish" alt="Testimonial" class="w-full h-full object-cover">
+</div>
+<div>
+<h4 class="font-semibold">Budi Santoso</h4>
+<p class="text-gray-600 text-sm">Founder, Kopi Nusantara</p>
+</div>
+</div>
+</div>
+<!-- Testimonial 3 -->
+<div class="bg-white p-8 rounded-lg shadow-sm">
+<div class="flex items-center mb-4">
+<div class="text-primary">
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-fill"></i>
+<i class="ri-star-half-fill"></i>
+</div>
+</div>
+<p class="text-gray-700 mb-6">"Kampanye media sosial yang dirancang oleh Zanxa berhasil meningkatkan engagement dan penjualan produk kami secara signifikan. Tim kreatif mereka luar biasa dan selalu memberikan ide-ide segar."</p>
+<div class="flex items-center">
+<div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden mr-4">
+<img src="https://readdy.ai/api/search-image?query=professional%20headshot%20of%20young%20Indonesian%20business%20woman%2C%2028%20years%20old%2C%20confident%20smile%2C%20modern%20business%20casual%20attire&width=100&height=100&seq=11&orientation=squarish" alt="Testimonial" class="w-full h-full object-cover">
+</div>
+<div>
+<h4 class="font-semibold">Rina Wijaya</h4>
+<p class="text-gray-600 text-sm">Marketing Manager, TechNusa</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-16 md:py-24 bg-primary bg-opacity-5">
+<div class="container mx-auto px-4">
+<div class="flex flex-col md:flex-row items-center justify-between">
+<div class="w-full md:w-2/3 mb-8 md:mb-0">
+<h2 class="text-3xl md:text-4xl font-bold mb-4">Siap Memulai Proyek Bersama Kami?</h2>
+<p class="text-gray-700 max-w-xl">Hubungi kami sekarang untuk konsultasi gratis dan diskusikan bagaimana kami dapat membantu bisnis Anda tumbuh melalui solusi digital yang efektif.</p>
+</div>
+<div>
+<a href="#kontak" class="inline-block bg-primary text-white px-8 py-4 !rounded-button font-medium hover:bg-opacity-90 transition whitespace-nowrap">Hubungi Kami</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Contact Section -->
+<section id="kontak" class="py-16 md:py-24">
+<div class="container mx-auto px-4">
+<div class="text-center mb-16">
+<h2 class="text-3xl md:text-4xl font-bold mb-4">Hubungi Kami</h2>
+<p class="text-gray-600 max-w-2xl mx-auto">Kami siap membantu Anda. Silakan hubungi kami melalui form di bawah ini atau melalui kontak yang tersedia.</p>
+</div>
+<div class="flex flex-col md:flex-row">
+<div class="w-full md:w-1/2 mb-10 md:mb-0 md:pr-8">
+<form id="contact-form">
+<div class="mb-6">
+<label for="name" class="block text-gray-700 font-medium mb-2">Nama Lengkap</label>
+<input type="text" id="name" class="w-full px-4 py-3 border-none bg-gray-50 rounded focus:ring-2 focus:ring-primary focus:outline-none custom-input" placeholder="Masukkan nama lengkap Anda">
+</div>
+<div class="mb-6">
+<label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
+<input type="email" id="email" class="w-full px-4 py-3 border-none bg-gray-50 rounded focus:ring-2 focus:ring-primary focus:outline-none custom-input" placeholder="Masukkan alamat email Anda">
+</div>
+<div class="mb-6">
+<label for="phone" class="block text-gray-700 font-medium mb-2">Nomor Telepon</label>
+<input type="tel" id="phone" class="w-full px-4 py-3 border-none bg-gray-50 rounded focus:ring-2 focus:ring-primary focus:outline-none custom-input" placeholder="Masukkan nomor telepon Anda">
+</div>
+<div class="mb-6">
+<label for="service" class="block text-gray-700 font-medium mb-2">Layanan yang Dibutuhkan</label>
+<div class="relative">
+<select id="service" class="w-full px-4 py-3 border-none bg-gray-50 rounded focus:ring-2 focus:ring-primary focus:outline-none appearance-none pr-8 custom-input">
+<option value="" disabled selected>Pilih layanan</option>
+<option value="website">Pengembangan Website</option>
+<option value="design">Desain Grafis</option>
+<option value="logo">Logo & Branding</option>
+<option value="other">Lainnya</option>
+</select>
+<div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+<i class="ri-arrow-down-s-line text-gray-400"></i>
+</div>
+</div>
+</div>
+<div class="mb-6">
+<label for="message" class="block text-gray-700 font-medium mb-2">Pesan</label>
+<textarea id="message" rows="5" class="w-full px-4 py-3 border-none bg-gray-50 rounded focus:ring-2 focus:ring-primary focus:outline-none custom-input" placeholder="Ceritakan tentang proyek Anda"></textarea>
+</div>
+<div class="mb-6">
+<label class="flex items-center">
+<div class="custom-checkbox">
+<input type="checkbox" id="agreement">
+<span class="checkmark"></span>
+</div>
+<span class="text-gray-700">Saya setuju dengan <a href="#" class="text-primary hover:underline">Kebijakan Privasi</a> Zanxa</span>
+</label>
+</div>
+<button type="submit" class="w-full bg-primary text-white px-6 py-3 !rounded-button font-medium hover:bg-opacity-90 transition whitespace-nowrap">Kirim Pesan</button>
+</form>
+</div>
+<div class="w-full md:w-1/2 md:pl-8">
+<div class="bg-gray-50 p-8 rounded-lg mb-8">
+<h3 class="text-xl font-semibold mb-6">Informasi Kontak</h3>
+<div class="space-y-4">
+<div class="flex items-start">
+<div class="w-10 h-10 flex items-center justify-center bg-primary bg-opacity-10 rounded-full mr-4 mt-1">
+<i class="ri-map-pin-line text-primary"></i>
+</div>
+<div>
+<h4 class="font-medium mb-1">Alamat</h4>
+<p class="text-gray-600">Jl. Gatot Subroto No. 123, Jakarta Selatan, DKI Jakarta 12930</p>
+</div>
+</div>
+<div class="flex items-start">
+<div class="w-10 h-10 flex items-center justify-center bg-primary bg-opacity-10 rounded-full mr-4 mt-1">
+<i class="ri-phone-line text-primary"></i>
+</div>
+<div>
+<h4 class="font-medium mb-1">Telepon</h4>
+<p class="text-gray-600">+62 21 1234 5678</p>
+</div>
+</div>
+<div class="flex items-start">
+<div class="w-10 h-10 flex items-center justify-center bg-primary bg-opacity-10 rounded-full mr-4 mt-1">
+<i class="ri-mail-line text-primary"></i>
+</div>
+<div>
+<h4 class="font-medium mb-1">Email</h4>
+<p class="text-gray-600">hello@zanxa.id</p>
+</div>
+</div>
+<div class="flex items-start">
+<div class="w-10 h-10 flex items-center justify-center bg-primary bg-opacity-10 rounded-full mr-4 mt-1">
+<i class="ri-time-line text-primary"></i>
+</div>
+<div>
+<h4 class="font-medium mb-1">Jam Kerja</h4>
+<p class="text-gray-600">Senin - Jumat: 09:00 - 17:00 WIB</p>
+</div>
+</div>
+</div>
+<div class="mt-8">
+<h4 class="font-medium mb-4">Ikuti Kami</h4>
+<div class="flex space-x-4">
+<a href="#" class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-sm hover:shadow-md transition">
+<i class="ri-instagram-line text-gray-700"></i>
+</a>
+<a href="#" class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-sm hover:shadow-md transition">
+<i class="ri-facebook-line text-gray-700"></i>
+</a>
+<a href="#" class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-sm hover:shadow-md transition">
+<i class="ri-twitter-x-line text-gray-700"></i>
+</a>
+<a href="#" class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-sm hover:shadow-md transition">
+<i class="ri-linkedin-line text-gray-700"></i>
+</a>
+</div>
+</div>
+</div>
+<div class="rounded-lg overflow-hidden h-64 shadow-sm">
+<div class="w-full h-full" style="background-image: url('https://public.readdy.ai/gen_page/map_placeholder_1280x720.png'); background-size: cover; background-position: center;"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Payment Section -->
+<section id="pembayaran" class="py-16 md:py-24 bg-gray-50">
+<div class="container mx-auto px-4">
+<div class="text-center mb-16">
+<h2 class="text-3xl md:text-4xl font-bold mb-4">Metode Pembayaran</h2>
+<p class="text-gray-600 max-w-2xl mx-auto">Kami menyediakan berbagai metode pembayaran yang aman dan nyaman untuk Anda.</p>
+</div>
+<div class="bg-white rounded-lg shadow-sm p-8 max-w-4xl mx-auto">
+<div class="mb-10">
+<h3 class="text-xl font-semibold mb-6">Pilihan Pembayaran</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- QRIS -->
+<div class="border border-gray-200 rounded-lg p-6 text-center hover:shadow-sm transition">
+<div class="w-16 h-16 flex items-center justify-center bg-primary bg-opacity-10 rounded-full mx-auto mb-4">
+<i class="ri-qr-code-line ri-xl text-primary"></i>
+</div>
+<h4 class="font-medium mb-2">QRIS</h4>
+<p class="text-gray-600 text-sm">Scan QR code untuk pembayaran instan</p>
+</div>
+<!-- Bank Transfer -->
+<div class="border border-gray-200 rounded-lg p-6 text-center hover:shadow-sm transition">
+<div class="w-16 h-16 flex items-center justify-center bg-primary bg-opacity-10 rounded-full mx-auto mb-4">
+<i class="ri-bank-line ri-xl text-primary"></i>
+</div>
+<h4 class="font-medium mb-2">Transfer Bank</h4>
+<p class="text-gray-600 text-sm">BCA, Mandiri, BNI, BRI</p>
+</div>
+<!-- E-Wallet -->
+<div class="border border-gray-200 rounded-lg p-6 text-center hover:shadow-sm transition">
+<div class="w-16 h-16 flex items-center justify-center bg-primary bg-opacity-10 rounded-full mx-auto mb-4">
+<i class="ri-wallet-3-line ri-xl text-primary"></i>
+</div>
+<h4 class="font-medium mb-2">E-Wallet</h4>
+<p class="text-gray-600 text-sm">GoPay, OVO, DANA, LinkAja</p>
+</div>
+</div>
+</div>
+<div class="mb-10">
+<h3 class="text-xl font-semibold mb-6">Cara Pembayaran</h3>
+<div class="space-y-4">
+<div class="flex items-start">
+<div class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full mr-4 flex-shrink-0">
+1
+</div>
+<div>
+<h4 class="font-medium mb-1">Pilih Metode Pembayaran</h4>
+<p class="text-gray-600">Pilih metode pembayaran yang paling nyaman untuk Anda.</p>
+</div>
+</div>
+<div class="flex items-start">
+<div class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full mr-4 flex-shrink-0">
+2
+</div>
+<div>
+<h4 class="font-medium mb-1">Lakukan Pembayaran</h4>
+<p class="text-gray-600">Ikuti instruksi pembayaran sesuai dengan metode yang Anda pilih.</p>
+</div>
+</div>
+<div class="flex items-start">
+<div class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full mr-4 flex-shrink-0">
+3
+</div>
+<div>
+<h4 class="font-medium mb-1">Konfirmasi Pembayaran</h4>
+<p class="text-gray-600">Kirimkan bukti pembayaran melalui WhatsApp atau email kami.</p>
+</div>
+</div>
+<div class="flex items-start">
+<div class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded-full mr-4 flex-shrink-0">
+4
+</div>
+<div>
+<h4 class="font-medium mb-1">Verifikasi Pembayaran</h4>
+<p class="text-gray-600">Tim kami akan memverifikasi pembayaran Anda dalam 1x24 jam kerja.</p>
+</div>
+</div>
+</div>
+</div>
+<div>
+<h3 class="text-xl font-semibold mb-6">Konfirmasi Pembayaran</h3>
+<div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+<a href="https://wa.me/6281234567890" class="flex items-center justify-center bg-[#25D366] text-white px-6 py-3 !rounded-button font-medium hover:bg-opacity-90 transition whitespace-nowrap w-full">
+<i class="ri-whatsapp-fill mr-2"></i>
+WhatsApp
+</a>
+<a href="mailto:payment@zanxa.id" class="flex items-center justify-center bg-primary text-white px-6 py-3 !rounded-button font-medium hover:bg-opacity-90 transition whitespace-nowrap w-full">
+<i class="ri-mail-fill mr-2"></i>
+Email
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-gray-900 text-white pt-16 pb-8">
+<div class="container mx-auto px-4">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+<div>
+<a href="#" class="text-2xl font-['Pacifico'] text-white mb-6 inline-block">Zanxa</a>
+<p class="text-gray-400 mb-6">Studio kreatif digital yang membantu bisnis Anda tumbuh melalui solusi digital yang efektif dan menarik.</p>
+<div class="flex space-x-4">
+<a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-800 rounded-full hover:bg-primary transition">
+<i class="ri-instagram-line"></i>
+</a>
+<a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-800 rounded-full hover:bg-primary transition">
+<i class="ri-facebook-line"></i>
+</a>
+<a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-800 rounded-full hover:bg-primary transition">
+<i class="ri-twitter-x-line"></i>
+</a>
+<a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-800 rounded-full hover:bg-primary transition">
+<i class="ri-linkedin-line"></i>
+</a>
+</div>
+</div>
+<div>
+<h3 class="text-lg font-semibold mb-6">Halaman</h3>
+<ul class="space-y-3">
+<li><a href="#beranda" class="text-gray-400 hover:text-white transition">Beranda</a></li>
+<li><a href="#tentang" class="text-gray-400 hover:text-white transition">Tentang Kami</a></li>
+<li><a href="#layanan" class="text-gray-400 hover:text-white transition">Layanan</a></li>
+<li><a href="#portofolio" class="text-gray-400 hover:text-white transition">Portofolio</a></li>
+<li><a href="#kontak" class="text-gray-400 hover:text-white transition">Kontak</a></li>
+<li><a href="#pembayaran" class="text-gray-400 hover:text-white transition">Pembayaran</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-lg font-semibold mb-6">Layanan</h3>
+<ul class="space-y-3">
+<li><a href="#" class="text-gray-400 hover:text-white transition">Pengembangan Website</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition">Desain Grafis</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition">Logo & Branding</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition">UI/UX Design</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition">Digital Marketing</a></li>
+<li><a href="#" class="text-gray-400 hover:text-white transition">Konsultasi Digital</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-lg font-semibold mb-6">Berlangganan</h3>
+<p class="text-gray-400 mb-4">Dapatkan update terbaru dan tips digital marketing dari kami.</p>
+<form>
+<div class="flex">
+<input type="email" placeholder="Email Anda" class="w-full px-4 py-2 bg-gray-800 border-none rounded-l focus:outline-none focus:ring-2 focus:ring-primary text-gray-200 text-sm">
+<button type="submit" class="bg-primary text-white px-4 py-2 rounded-r hover:bg-opacity-90 transition whitespace-nowrap">Subscribe</button>
+</div>
+</form>
+<div class="mt-6">
+<h4 class="font-medium mb-4">Metode Pembayaran</h4>
+<div class="flex flex-wrap gap-2">
+<div class="w-10 h-6 flex items-center justify-center bg-white rounded">
+<i class="ri-bank-card-fill text-gray-800"></i>
+</div>
+<div class="w-10 h-6 flex items-center justify-center bg-white rounded">
+<i class="ri-visa-fill text-gray-800"></i>
+</div>
+<div class="w-10 h-6 flex items-center justify-center bg-white rounded">
+<i class="ri-mastercard-fill text-gray-800"></i>
+</div>
+<div class="w-10 h-6 flex items-center justify-center bg-white rounded">
+<i class="ri-paypal-fill text-gray-800"></i>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="border-t border-gray-800 pt-8">
+<div class="flex flex-col md:flex-row justify-between items-center">
+<p class="text-gray-400 text-sm mb-4 md:mb-0">&copy; 2025 Zanxa. Hak Cipta Dilindungi.</p>
+<div class="flex space-x-6">
+<a href="#" class="text-gray-400 hover:text-white text-sm transition">Syarat & Ketentuan</a>
+<a href="#" class="text-gray-400 hover:text-white text-sm transition">Kebijakan Privasi</a>
+<a href="#" class="text-gray-400 hover:text-white text-sm transition">FAQ</a>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<!-- WhatsApp Floating Button -->
+<a href="https://wa.me/6281234567890" class="fixed bottom-6 right-6 w-14 h-14 flex items-center justify-center bg-[#25D366] rounded-full shadow-lg hover:bg-opacity-90 transition z-50">
+<i class="ri-whatsapp-fill ri-xl text-white"></i>
+</a>
+<script id="mobile-menu-script">
+document.addEventListener('DOMContentLoaded', function() {
+const mobileMenuButton = document.getElementById('mobile-menu-button');
+const mobileMenu = document.getElementById('mobile-menu');
+mobileMenuButton.addEventListener('click', function() {
+mobileMenu.classList.toggle('hidden');
+if (mobileMenu.classList.contains('hidden')) {
+mobileMenuButton.innerHTML = '<i class="ri-menu-line ri-lg"></i>';
+} else {
+mobileMenuButton.innerHTML = '<i class="ri-close-line ri-lg"></i>';
+}
+});
+// Close mobile menu when clicking on a link
+const mobileLinks = mobileMenu.querySelectorAll('a');
+mobileLinks.forEach(link => {
+link.addEventListener('click', function() {
+mobileMenu.classList.add('hidden');
+mobileMenuButton.innerHTML = '<i class="ri-menu-line ri-lg"></i>';
+});
+});
+});
+</script>
+<script id="portfolio-filter-script">
+document.addEventListener('DOMContentLoaded', function() {
+const filterButtons = document.querySelectorAll('.portfolio-filter');
+const portfolioItems = document.querySelectorAll('.portfolio-item');
+filterButtons.forEach(button => {
+button.addEventListener('click', function() {
+// Remove active class from all buttons
+filterButtons.forEach(btn => btn.classList.remove('active'));
+// Add active class to clicked button
+this.classList.add('active');
+const filter = this.getAttribute('data-filter');
+portfolioItems.forEach(item => {
+if (filter === 'all' || item.getAttribute('data-category') === filter) {
+item.style.display = 'block';
+} else {
+item.style.display = 'none';
+}
+});
+});
+});
+});
+</script>
+<script id="smooth-scroll-script">
+document.addEventListener('DOMContentLoaded', function() {
+const links = document.querySelectorAll('a[href^="#"]');
+links.forEach(link => {
+link.addEventListener('click', function(e) {
+e.preventDefault();
+const targetId = this.getAttribute('href');
+if (targetId === '#') return;
+const targetElement = document.querySelector(targetId);
+if (targetElement) {
+const navHeight = document.querySelector('nav').offsetHeight;
+const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navHeight;
+window.scrollTo({
+top: targetPosition,
+behavior: 'smooth'
+});
+}
+});
+});
+});
+</script>
+<script id="contact-form-script">
+document.addEventListener('DOMContentLoaded', function() {
+const contactForm = document.getElementById('contact-form');
+if (contactForm) {
+contactForm.addEventListener('submit', function(e) {
+e.preventDefault();
+// Get form values
+const name = document.getElementById('name').value;
+const email = document.getElementById('email').value;
+const phone = document.getElementById('phone').value;
+const service = document.getElementById('service').value;
+const message = document.getElementById('message').value;
+const agreement = document.getElementById('agreement').checked;
+// Validate form
+if (!name || !email || !phone || !service || !message) {
+alert('Silakan lengkapi semua field yang diperlukan.');
+return;
+}
+if (!agreement) {
+alert('Anda harus menyetujui Kebijakan Privasi kami.');
+return;
+}
+// Form is valid, you would normally send the data to a server here
+alert('Terima kasih! Pesan Anda telah terkirim. Tim kami akan menghubungi Anda segera.');
+contactForm.reset();
+});
+}
+});
+</script>
+</body>
+</html>

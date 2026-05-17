@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Dokumentasi AutoLux – Galeri showroom, serah terima unit, event, dan pameran otomotif." />
+  <title>Dokumentasi – AutoLux</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --white: #FFFFFF;
+      --blue-light: #A7D8FF;
+      --blue-glow: #DFF1FF;
+      --blue-mid: #5BB8F5;
+      --blue-deep: #1A6FA8;
+      --dark: #1E1E1E;
+      --gray: #6B7280;
+      --gray-light: #F4F8FC;
+      --shadow-sm: 0 2px 12px rgba(91, 184, 245, 0.10);
+      --shadow-md: 0 8px 32px rgba(91, 184, 245, 0.16);
+      --font-head: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--white);
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      padding: 0 5%;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 2px 24px rgba(91, 184, 245, 0.12);
+    }
+
+    .nav-logo {
+      font-family: var(--font-head);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--dark);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-logo span {
+      color: var(--blue-mid);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .nav-links>li {
+      position: relative;
+    }
+
+    .nav-links>li>a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--dark);
+      padding: 8px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .nav-links>li>a:hover,
+    .nav-links>li>a.active {
+      background: var(--blue-glow);
+      color: var(--blue-deep);
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      background: var(--white);
+      border-radius: var(--radius-sm);
+      min-width: 160px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--blue-glow);
+      overflow: hidden;
+      z-index: 200;
+    }
+
+    .nav-links>li:hover .dropdown {
+      display: block;
+      animation: dropIn 0.2s ease;
+    }
+
+    @keyframes dropIn {
+      from {
+        opacity: 0;
+        transform: translateY(-8px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .dropdown a {
+      display: block;
+      padding: 10px 18px;
+      font-size: 0.875rem;
+      color: var(--dark);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .dropdown a:hover {
+      background: var(--blue-glow);
+      color: var(--blue-deep);
+      padding-left: 24px;
+    }
+
+    .nav-cta {
+      background: var(--blue-mid);
+      color: var(--white) !important;
+      border-radius: 100px !important;
+      padding: 8px 20px !important;
+      font-weight: 600 !important;
+    }
+
+    .hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--dark);
+      border-radius: 2px;
+    }
+
+    .page-header {
+      padding: 140px 5% 80px;
+      background: linear-gradient(135deg, #0F2744 0%, #1A6FA8 60%, #5BB8F5 100%);
+      text-align: center;
+    }
+
+    .page-header h1 {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 800;
+      color: var(--white);
+    }
+
+    .page-header p {
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 1rem;
+      margin-top: 10px;
+      font-weight: 300;
+    }
+
+    .gallery-section {
+      padding: 80px 5%;
+    }
+
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--blue-mid);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 14px;
+    }
+
+    .section-label::before {
+      content: '';
+      width: 20px;
+      height: 2px;
+      background: var(--blue-mid);
+      border-radius: 2px;
+    }
+
+    .section-title {
+      font-family: var(--font-head);
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 40px;
+    }
+
+    .gallery-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 36px;
+      flex-wrap: wrap;
+    }
+
+    .gallery-tab {
+      padding: 9px 20px;
+      border-radius: 100px;
+      border: 1.5px solid var(--blue-glow);
+      background: var(--white);
+      color: var(--gray);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .gallery-tab:hover {
+      border-color: var(--blue-light);
+      color: var(--blue-deep);
+      background: var(--blue-glow);
+    }
+
+    .gallery-tab.active {
+      background: var(--blue-mid);
+      color: var(--white);
+      border-color: var(--blue-mid);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      max-width: 900px;
+    }
+
+    .gallery-item {
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid var(--blue-glow);
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      position: relative;
+    }
+
+    .gallery-item:hover {
+      transform: scale(1.02);
+      box-shadow: var(--shadow-md);
+    }
+
+    .gallery-img {
+      height: 220px;
+      background: var(--gray-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      transition: var(--transition);
+    }
+
+    .gallery-item:hover .gallery-img {
+      background: var(--blue-glow);
+    }
+
+    .gallery-caption {
+      padding: 14px 16px;
+      background: var(--white);
+    }
+
+    .gallery-caption h4 {
+      font-family: var(--font-head);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 4px;
+    }
+
+    .gallery-caption p {
+      font-size: 0.78rem;
+      color: var(--gray);
+    }
+
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(26, 111, 168, 0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .gallery-item:hover .gallery-overlay {
+      background: rgba(26, 111, 168, 0.12);
+    }
+
+    .gallery-overlay i {
+      color: var(--white);
+      font-size: 2rem;
+      opacity: 0;
+      transition: var(--transition);
+    }
+
+    .gallery-item:hover .gallery-overlay i {
+      opacity: 1;
+    }
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .lightbox.open {
+      display: flex;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0
+      }
+
+      to {
+        opacity: 1
+      }
+    }
+
+    .lightbox-inner {
+      background: var(--white);
+      border-radius: var(--radius);
+      max-width: 600px;
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .lightbox-img {
+      height: 320px;
+      background: var(--gray-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 6rem;
+    }
+
+    .lightbox-body {
+      padding: 24px;
+    }
+
+    .lightbox-body h3 {
+      font-family: var(--font-head);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+
+    .lightbox-body p {
+      color: var(--gray);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: rgba(0, 0, 0, 0.5);
+      color: var(--white);
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    footer {
+      background: var(--dark);
+      color: rgba(255, 255, 255, 0.6);
+      padding: 60px 5% 30px;
+      margin-top: 40px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-brand .nav-logo {
+      color: var(--white);
+    }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      margin-top: 14px;
+      line-height: 1.7;
+      max-width: 240px;
+    }
+
+    .footer-col h5 {
+      font-family: var(--font-head);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    .footer-col ul li a {
+      font-size: 0.84rem;
+      color: rgba(255, 255, 255, 0.5);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-col ul li a:hover {
+      color: var(--blue-light);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-bottom p {
+      font-size: 0.82rem;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 12px;
+    }
+
+    .footer-socials a {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .footer-socials a:hover {
+      background: var(--blue-mid);
+      color: var(--white);
+    }
+
+    .wa-float {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #25D366;
+      color: var(--white);
+      padding: 12px 20px;
+      border-radius: 100px;
+      box-shadow: 0 8px 32px rgba(37, 211, 102, 0.4);
+      text-decoration: none;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.88rem;
+      animation: floatWA 3s ease-in-out infinite;
+    }
+
+    .wa-float:hover {
+      background: #1ebe5a;
+    }
+
+    .wa-float i {
+      font-size: 1.2rem;
+    }
+
+    @keyframes floatWA {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(-5px)
+      }
+    }
+
+    @media (max-width:768px) {
+      nav {
+        padding: 0 20px;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 72px;
+        left: 0;
+        width: 100%;
+        background: var(--white);
+        flex-direction: column;
+        gap: 0;
+        padding: 16px 0;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-links>li>a {
+        padding: 12px 24px;
+        border-radius: 0;
+      }
+
+      .dropdown {
+        position: static;
+        box-shadow: none;
+        border: none;
+        background: var(--gray-light);
+        border-radius: 0;
+      }
+
+      .hamburger {
+        display: flex;
+      }
+
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .wa-float .wa-text {
+        display: none;
+      }
+
+      .wa-float {
+        padding: 14px;
+        border-radius: 50%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo"><i class="fa-solid fa-car-side"></i>Auto<span>Lux</span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="tentang.html">Tentang Kami</a></li>
+      <li>
+        <a href="produk.html">Produk <i class="fa-solid fa-chevron-down" style="font-size:0.65rem"></i></a>
+        <div class="dropdown">
+          <a href="produk.html?tipe=sedan"><i class="fa-solid fa-car"></i> Sedan</a>
+          <a href="produk.html?tipe=suv"><i class="fa-solid fa-truck-pickup"></i> SUV</a>
+          <a href="produk.html?tipe=hatchback"><i class="fa-solid fa-car-side"></i> Hatchback</a>
+          <a href="produk.html?tipe=mpv"><i class="fa-solid fa-van-shuttle"></i> MPV</a>
+          <a href="produk.html?tipe=electric"><i class="fa-solid fa-bolt"></i> Electric</a>
+        </div>
+      </li>
+      <li><a href="dokumentasi.html" class="active">Dokumentasi</a></li>
+      <li><a href="kontak.html">Kontak</a></li>
+      <li><a href="https://wa.me/6281234567890" class="nav-cta"><i class="fa-brands fa-whatsapp"></i> Konsultasi</a>
+      </li>
+    </ul>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+
+  <div class="page-header">
+    <h1>Dokumentasi</h1>
+    <p>Galeri foto showroom, serah terima unit, event, dan pameran otomotif AutoLux</p>
+  </div>
+
+  <div class="gallery-section">
+    <span class="section-label">Galeri</span>
+    <h2 class="section-title">Momen Terbaik AutoLux</h2>
+
+    <div class="gallery-tabs">
+      <button class="gallery-tab active" data-filter="semua">Semua</button>
+      <button class="gallery-tab" data-filter="showroom">Showroom</button>
+      <button class="gallery-tab" data-filter="serah-terima">Serah Terima</button>
+      <button class="gallery-tab" data-filter="event">Event</button>
+      <button class="gallery-tab" data-filter="pameran">Pameran</button>
+    </div>
+
+    <div class="gallery-grid">
+      <div class="gallery-item" data-cat="showroom" data-title="Showroom Utama Jakarta"
+        data-desc="Fasilitas showroom modern seluas 2.000 m² di jantung Jakarta Pusat dengan display 30+ unit.">
+        <div class="gallery-img">🏢</div>
+        <div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div>
+        <div class="gallery-caption">
+          <h4>Showroom Utama Jakarta</h4>
+          <p>Showroom · Maret 2024</p>
+        </div>
+      </div>
+      <div class="gallery-item" data-cat="serah-terima" data-title="Serah Terima Toyota Fortuner"
+        data-desc="Momen bahagia penyerahan unit Toyota Fortuner GR Sport kepada Bapak Budi Santoso.">
+        <div class="gallery-img">🤝</div>
+        <div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div>
+        <div class="gallery-caption">
+          <h4>Serah Terima Toyota Fortuner</h4>
+          <p>Serah Terima · Februari 2024</p>
+        </div>
+      </div>
+      <div class="gallery-item" data-cat="event" data-title="AutoLux Anniversary Event 2024"
+        data-desc="Perayaan ulang tahun ke-6 AutoLux dengan berbagai penawaran spesial dan hiburan menarik.">
+        <div class="gallery-img">🎉</div>
+        <div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div>
+        <div class="gallery-caption">
+          <h4>Anniversary Event 2024</h4>
+          <p>Event · Januari 2024</p>
+        </div>
+      </div>
+      <div class="gallery-item" data-cat="pameran" data-title="GIIAS 2023 – Gaikindo"
+        data-desc="Partisipasi AutoLux di pameran otomotif terbesar Indonesia, GIIAS 2023 di ICE BSD.">
+        <div class="gallery-img">🏆</div>
+        <div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div>
+        <div class="gallery-caption">
+          <h4>GIIAS 2023</h4>
+          <p>Pameran · Agustus 2023</p>
+        </div>
+      </div>
+      <div class="gallery-item" data-cat="serah-terima" data-title="Serah Terima BMW 3 Series"
+        data-desc="Penghantaran unit BMW 320i kepada pelanggan setia AutoLux dengan layanan door-to-door.">
+        <div class="gallery-img">🚗</div>
+        <div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div>
+        <div class="gallery-caption">
+          <h4>Serah Terima BMW 3 Series</h4>
+          <p>Serah Terima · Desember 2023</p>
+        </div>
+      </div>
+      <div class="gallery-item" data-cat="showroom" data-title="Showroom Bandung"
+        data-desc="Pembukaan cabang ke-3 AutoLux di Bandung dengan konsep green showroom modern.">
+        <div class="gallery-img">🌿</div>
+        <div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div>
+        <div class="gallery-caption">
+          <h4>Showroom Bandung</h4>
+          <p>Showroom · November 2023</p>
+        </div>
+      </div>
+      <div class="gallery-item" data-cat="event" data-title="Test Drive Hyundai Ioniq 5"
+        data-desc="Event test drive eksklusif Hyundai Ioniq 5 yang dihadiri lebih dari 200 peserta antusias.">
+        <div class="gallery-img">⚡</div>
+        <div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div>
+        <div class="gallery-caption">
+          <h4>Test Drive Ioniq 5</h4>
+          <p>Event · Oktober 2023</p>
+        </div>
+      </div>
+      <div class="gallery-item" data-cat="pameran" data-title="Indonesia Auto Show 2023"
+        data-desc="Stand AutoLux di Indonesia Auto Show dengan pameran 15 unit pilihan terbaik.">
+        <div class="gallery-img">🎪</div>
+        <div class="gallery-overlay"><i class="fa-solid fa-expand"></i></div>
+        <div class="gallery-caption">
+          <h4>Indonesia Auto Show 2023</h4>
+          <p>Pameran · September 2023</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-inner">
+      <button class="lightbox-close" id="lightboxClose"><i class="fa-solid fa-xmark"></i></button>
+      <div class="lightbox-img" id="lightboxImg">🚗</div>
+      <div class="lightbox-body">
+        <h3 id="lightboxTitle"></h3>
+        <p id="lightboxDesc"></p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand"><a href="index.html" class="nav-logo"><i
+            class="fa-solid fa-car-side"></i>Auto<span>Lux</span></a>
+        <p>Dealer mobil premium terpercaya dengan pengalaman lebih dari 5 tahun.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Navigasi</h5>
+        <ul>
+          <li><a href="tentang.html">Tentang Kami</a></li>
+          <li><a href="produk.html">Produk</a></li>
+          <li><a href="dokumentasi.html">Dokumentasi</a></li>
+          <li><a href="kontak.html">Kontak</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Kategori</h5>
+        <ul>
+          <li><a href="produk.html?tipe=sedan">Sedan</a></li>
+          <li><a href="produk.html?tipe=suv">SUV</a></li>
+          <li><a href="produk.html?tipe=hatchback">Hatchback</a></li>
+          <li><a href="produk.html?tipe=mpv">MPV</a></li>
+          <li><a href="produk.html?tipe=electric">Electric</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Kontak</h5>
+        <ul>
+          <li><a href="tel:+622156789012"><i class="fa-solid fa-phone"></i> (021) 5678-9012</a></li>
+          <li><a href="https://wa.me/6281234567890"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a></li>
+          <li><a href="mailto:info@autolux.id"><i class="fa-solid fa-envelope"></i> info@autolux.id</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2024 AutoLux. All rights reserved.</p>
+      <div class="footer-socials"><a href="#"><i class="fa-brands fa-instagram"></i></a><a href="#"><i
+            class="fa-brands fa-facebook"></i></a><a href="#"><i class="fa-brands fa-tiktok"></i></a></div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/6281234567890" class="wa-float" target="_blank">
+    <i class="fa-brands fa-whatsapp"></i>
+    <!-- <span class="wa-text">Konsultasi Gratis</span> -->
+  </a>
+
+  <script>
+    document.getElementById('hamburger').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('open');
+    });
+
+    // Gallery filter
+    const tabs = document.querySelectorAll('.gallery-tab');
+    const items = document.querySelectorAll('.gallery-item');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const f = tab.dataset.filter;
+        items.forEach(item => {
+          item.style.display = (f === 'semua' || item.dataset.cat === f) ? '' : 'none';
+        });
+      });
+    });
+
+    // Lightbox
+    const lb = document.getElementById('lightbox');
+    items.forEach(item => {
+      item.addEventListener('click', () => {
+        document.getElementById('lightboxImg').textContent = item.querySelector('.gallery-img').textContent;
+        document.getElementById('lightboxTitle').textContent = item.dataset.title;
+        document.getElementById('lightboxDesc').textContent = item.dataset.desc;
+        lb.classList.add('open');
+      });
+    });
+    document.getElementById('lightboxClose').addEventListener('click', () => lb.classList.remove('open'));
+    lb.addEventListener('click', e => { if (e.target === lb) lb.classList.remove('open'); });
+  </script>
+</body>
+
+</html>

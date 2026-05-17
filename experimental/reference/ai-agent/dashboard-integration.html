@@ -1,0 +1,2310 @@
+<!doctype html>
+<html lang="en">
+  
+<!-- Mirrored from ai-agent.preview.uideck.com/dashboard-integration by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 21 Apr 2026 05:04:54 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="assets/images/favicon.png" />
+    <title>Integration | AI Agent - AI UI Kit</title>
+    <link href="assets/css/output.css" rel="stylesheet" />
+  </head>
+  <body
+    class="dark:bg-dark-secondary bg-gray-50"
+    x-data="{ 
+  sidebarOpen: false,
+  productsDropdown: false,
+  pagesDropdown: false,
+   rightSidebarOpen: false,
+activeDropdown: null,
+    toggleDropdown(name) {
+      this.activeDropdown = this.activeDropdown === name ? null : name;
+    },
+  accountDropdown: false,
+    editProfileModal: false,
+    twoFactorEnabled: true,
+      changePasswordModal: false,
+       darkMode: localStorage.getItem('darkMode') === 'true',
+  toggleDarkMode() {
+          this.darkMode = !this.darkMode;
+          localStorage.setItem('darkMode', this.darkMode);
+          
+          if (this.darkMode) {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+          } else {
+            document.documentElement.classList.add('light');
+            document.documentElement.classList.remove('dark');
+          }
+        },
+           closeDropdowns() {
+          this.activeDropdown = null;
+        },
+      init() {
+          // Apply dark mode on page load if saved in localStorage
+          const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+          
+          if (savedDarkMode) {
+            this.darkMode = true;
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+          } else {
+            this.darkMode = false;
+            document.documentElement.classList.add('light');
+            document.documentElement.classList.remove('dark');
+          }
+          
+          // Close dropdowns when clicking outside
+          document.addEventListener('click', (e) => {
+            if (!e.target.closest('.nav-item') && !e.target.closest('.dropdown-menu') && !e.target.closest('.mobile-dropdown-toggle')) {
+              this.closeDropdowns();
+            }
+          });
+          
+          // Reset activeDropdown when resizing to desktop
+          window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+              this.activeDropdown = null;
+              this.mobileMenuOpen = false;
+            }
+          });
+        }
+}"
+  >
+    <!-- Top Navigation Bar -->
+    <header
+      class="bg-white dark:bg-dark-primary border-b dark:border-gray-800 border-gray-100 sticky top-0 z-50 py-2 lg:py-0"
+    >
+      <div class="px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between">
+          <!-- Logo and Mobile Menu Button -->
+          <div class="flex">
+            <div class="flex-shrink-0 flex items-center">
+              <!-- Mobile menu button -->
+              <button
+                @click="sidebarOpen = !sidebarOpen"
+                type="button"
+                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 lg:hidden"
+              >
+                <svg
+                  class="h-6 w-6"
+                  x-show="!sidebarOpen"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+                <svg
+                  class="h-6 w-6"
+                  x-show="sidebarOpen"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+              <!-- Logo -->
+              <div class="flex items-center">
+                <a href="#">
+                  <img
+                    src="assets/images/logo-black.svg"
+                    class="block dark:hidden"
+                    alt=""
+                  />
+                  <img
+                    src="assets/images/logo-white.svg"
+                    class="hidden dark:block"
+                    alt=""
+                  />
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Desktop Navigation -->
+          <nav class="hidden lg:flex lg:items-center">
+            <a
+              href="index.html"
+              class="text-gray-500 dark:text-gray-400 text-sm px-4 py-6 hover:text-primary-500 font-medium"
+              >Home</a
+            >
+
+            <!-- Products Dropdown (Desktop) -->
+            <div class="relative nav-item">
+              <button
+                class="text-gray-500 dark:text-gray-400 hover:text-primary-500 group text-sm inline-flex items-center px-4 py-6 font-medium rounded-full"
+              >
+                Products
+                <svg
+                  class="dropdown-arrow ml-1 h-4 w-4 transition-transform duration-200"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="17"
+                  height="16"
+                  viewBox="0 0 17 16"
+                  fill="none"
+                >
+                  <path
+                    d="M4.33301 5.91666L8.49967 10.0833L12.6663 5.91666"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+
+              <!-- Products dropdown menu -->
+              <div
+                class="dropdown-menu absolute dark:bg-dark-secondary dark:border-gray-800 left-0 w-[266px] bg-white rounded-2xl shadow-theme-lg border border-gray-100 p-3 z-50 hidden"
+              >
+                <div class="space-y-1">
+                  <a
+                    href="text-generator.html"
+                    class="flex items-center px-2 py-2 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                  >
+                    <svg
+                      width="36"
+                      height="36"
+                      viewBox="0 0 36 36"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <g filter="url(#filter0_d_9289_13240)">
+                        <g filter="url(#filter1_i_9289_13240)">
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M8.73781 24.3018L8.73897 24.3004L8.74798 24.2896C8.7565 24.2794 8.76992 24.2632 8.78764 24.2413C8.8231 24.1974 8.87562 24.1311 8.94036 24.0452C9.07012 23.8731 9.24739 23.6245 9.43411 23.3229C9.76981 22.7807 10.1141 22.1021 10.2869 21.4087C9.20858 19.876 8.5752 18.0067 8.5752 15.9912C8.5752 10.7859 12.7949 6.56616 18.0002 6.56616C23.2055 6.56616 27.4252 10.7859 27.4252 15.9912C27.4252 21.1964 23.2055 25.4162 18.0002 25.4162C16.821 25.4162 15.691 25.1993 14.649 24.8028C13.5928 25.1989 12.2807 25.3471 11.2519 25.4026C10.6812 25.4334 10.1746 25.4366 9.81031 25.4322C9.62792 25.43 9.48055 25.4258 9.37793 25.4222C9.32661 25.4203 9.28643 25.4186 9.2586 25.4174L9.22626 25.4158L9.21731 25.4154L9.21385 25.4152L9.2502 24.7412C9.21332 25.4152 9.21385 25.4152 9.21385 25.4152C8.95726 25.4012 8.73037 25.2426 8.62944 25.0063C8.5286 24.7702 8.57089 24.4968 8.73781 24.3018ZM13.6251 14.8663C13.0038 14.8663 12.5001 15.37 12.5001 15.9913C12.5001 16.6127 13.0038 17.1163 13.6251 17.1163H13.6351C14.2564 17.1163 14.7601 16.6127 14.7601 15.9913C14.7601 15.37 14.2564 14.8663 13.6351 14.8663H13.6251ZM18.0001 14.8663C17.3788 14.8663 16.8751 15.37 16.8751 15.9913C16.8751 16.6127 17.3788 17.1163 18.0001 17.1163H18.0101C18.6314 17.1163 19.1351 16.6127 19.1351 15.9913C19.1351 15.37 18.6314 14.8663 18.0101 14.8663H18.0001ZM22.3751 14.8663C21.7538 14.8663 21.2501 15.37 21.2501 15.9913C21.2501 16.6127 21.7538 17.1163 22.3751 17.1163H22.3851C23.0064 17.1163 23.5101 16.6127 23.5101 15.9913C23.5101 15.37 23.0064 14.8663 22.3851 14.8663H22.3751Z"
+                            fill="url(#paint0_radial_9289_13240)"
+                          />
+                        </g>
+                      </g>
+                      <defs>
+                        <filter
+                          id="filter0_d_9289_13240"
+                          x="-2"
+                          y="-2"
+                          width="40"
+                          height="40"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dy="2" />
+                          <feGaussianBlur stdDeviation="4" />
+                          <feComposite in2="hardAlpha" operator="out" />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 0.498039 0 0 0 0 0.407843 0 0 0 0 1 0 0 0 0.25 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="BackgroundImageFix"
+                            result="effect1_dropShadow_9289_13240"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="effect1_dropShadow_9289_13240"
+                            result="shape"
+                          />
+                        </filter>
+                        <filter
+                          id="filter1_i_9289_13240"
+                          x="8.5752"
+                          y="6.56616"
+                          width="20.3734"
+                          height="20.3915"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="BackgroundImageFix"
+                            result="shape"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dx="1.52381" dy="1.52381" />
+                          <feGaussianBlur stdDeviation="1.14286" />
+                          <feComposite
+                            in2="hardAlpha"
+                            operator="arithmetic"
+                            k2="-1"
+                            k3="1"
+                          />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="shape"
+                            result="effect1_innerShadow_9289_13240"
+                          />
+                        </filter>
+                        <radialGradient
+                          id="paint0_radial_9289_13240"
+                          cx="0"
+                          cy="0"
+                          r="1"
+                          gradientUnits="userSpaceOnUse"
+                          gradientTransform="translate(18.8131 22.0965) rotate(-60.1772) scale(18.6241 18.6153)"
+                        >
+                          <stop stop-color="#7F68FF" />
+                          <stop offset="1" stop-color="#BEB2FF" />
+                        </radialGradient>
+                      </defs>
+                    </svg>
+                    <span>Text Generator</span>
+                  </a>
+                  <a
+                    href="image-generator.html"
+                    class="flex items-center px-2 py-2 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="34"
+                      height="34"
+                      viewBox="0 0 34 34"
+                      fill="none"
+                    >
+                      <g filter="url(#filter0_d_9289_13232)">
+                        <g filter="url(#filter1_i_9289_13232)">
+                          <path
+                            d="M13.6522 10.124C12.8594 10.124 12.2166 10.7667 12.2166 11.5596C12.2166 12.3524 12.8594 12.9951 13.6522 12.9951C14.445 12.9951 15.0877 12.3524 15.0877 11.5596C15.0877 10.7667 14.445 10.124 13.6522 10.124Z"
+                            fill="url(#paint0_radial_9289_13232)"
+                          />
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M12 6.4375C10.0325 6.4375 8.4375 8.03249 8.4375 10V20C8.4375 21.9675 10.0325 23.5625 12 23.5625H22C23.9675 23.5625 25.5625 21.9675 25.5625 20V10C25.5625 8.03249 23.9675 6.4375 22 6.4375H12ZM9.5625 10C9.5625 8.65381 10.6538 7.5625 12 7.5625H22C23.3462 7.5625 24.4375 8.65381 24.4375 10V12.5688C23.8719 12.4375 23.2829 12.3681 22.6783 12.3681C19.4925 12.3681 16.7568 14.29 15.5652 17.0367C14.629 16.121 13.3471 15.5556 11.933 15.5556C11.0795 15.5556 10.2733 15.7619 9.5625 16.127V10Z"
+                            fill="url(#paint1_radial_9289_13232)"
+                          />
+                        </g>
+                      </g>
+                      <defs>
+                        <filter
+                          id="filter0_d_9289_13232"
+                          x="-3"
+                          y="-3"
+                          width="40"
+                          height="40"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dy="2" />
+                          <feGaussianBlur stdDeviation="4" />
+                          <feComposite in2="hardAlpha" operator="out" />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 1 0 0 0 0 0.435294 0 0 0 0 0.345098 0 0 0 0.25 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="BackgroundImageFix"
+                            result="effect1_dropShadow_9289_13232"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="effect1_dropShadow_9289_13232"
+                            result="shape"
+                          />
+                        </filter>
+                        <filter
+                          id="filter1_i_9289_13232"
+                          x="8.4375"
+                          y="6.4375"
+                          width="18.6488"
+                          height="18.6488"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="BackgroundImageFix"
+                            result="shape"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dx="1.52381" dy="1.52381" />
+                          <feGaussianBlur stdDeviation="1.14286" />
+                          <feComposite
+                            in2="hardAlpha"
+                            operator="arithmetic"
+                            k2="-1"
+                            k3="1"
+                          />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="shape"
+                            result="effect1_innerShadow_9289_13232"
+                          />
+                        </filter>
+                        <radialGradient
+                          id="paint0_radial_9289_13232"
+                          cx="0"
+                          cy="0"
+                          r="1"
+                          gradientUnits="userSpaceOnUse"
+                          gradientTransform="translate(13.9454 22.1904) rotate(-58.7716) scale(25.6788 25.6788)"
+                        >
+                          <stop stop-color="#FF6F58" />
+                          <stop offset="1" stop-color="#FFA293" />
+                        </radialGradient>
+                        <radialGradient
+                          id="paint1_radial_9289_13232"
+                          cx="0"
+                          cy="0"
+                          r="1"
+                          gradientUnits="userSpaceOnUse"
+                          gradientTransform="translate(13.9454 22.1904) rotate(-58.7716) scale(25.6788 25.6788)"
+                        >
+                          <stop stop-color="#FF6F58" />
+                          <stop offset="1" stop-color="#FFA293" />
+                        </radialGradient>
+                      </defs>
+                    </svg>
+                    Image Generator
+                  </a>
+                  <a
+                    href="code-generator.html"
+                    class="flex items-center px-2 py-2 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="34"
+                      height="34"
+                      viewBox="0 0 34 34"
+                      fill="none"
+                    >
+                      <g filter="url(#filter0_d_9289_13238)">
+                        <g filter="url(#filter1_i_9289_13238)">
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M8.4375 10C8.4375 8.03249 10.0325 6.4375 12 6.4375H22C23.9675 6.4375 25.5625 8.03249 25.5625 10V20C25.5625 21.9675 23.9675 23.5625 22 23.5625H12C10.0325 23.5625 8.4375 21.9675 8.4375 20V10ZM18.4373 11.123C18.5047 10.8197 18.3134 10.5193 18.0102 10.4519C17.7069 10.3845 17.4064 10.5757 17.3391 10.879L15.5618 18.8766C15.4944 19.1798 15.6856 19.4803 15.9889 19.5477C16.2922 19.6151 16.5926 19.4239 16.66 19.1206L18.4373 11.123ZM20.2665 12.8471C20.0469 12.6275 19.6907 12.6274 19.471 12.8471C19.2513 13.0668 19.2513 13.4229 19.471 13.6426L20.8282 14.9999L19.471 16.357C19.2513 16.5767 19.2513 16.9329 19.471 17.1525C19.6907 17.3722 20.0468 17.3722 20.2665 17.1525L22.0214 15.3977C22.241 15.178 22.241 14.8219 22.0214 14.6022L20.2665 12.8471ZM14.5224 13.6494C14.742 13.4297 14.742 13.0736 14.5223 12.8539C14.3027 12.6343 13.9465 12.6343 13.7268 12.854L11.9788 14.6022C11.7591 14.8218 11.7591 15.178 11.9788 15.3977L13.7269 17.1457C13.9465 17.3654 14.3027 17.3654 14.5224 17.1457C14.742 16.926 14.742 16.5699 14.5224 16.3502L13.172 14.9999L14.5224 13.6494Z"
+                            fill="url(#paint0_radial_9289_13238)"
+                          />
+                        </g>
+                      </g>
+                      <defs>
+                        <filter
+                          id="filter0_d_9289_13238"
+                          x="-3"
+                          y="-3"
+                          width="40"
+                          height="40"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dy="2" />
+                          <feGaussianBlur stdDeviation="4" />
+                          <feComposite in2="hardAlpha" operator="out" />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 0.0901961 0 0 0 0 0.654902 0 0 0 0 1 0 0 0 0.25 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="BackgroundImageFix"
+                            result="effect1_dropShadow_9289_13238"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="effect1_dropShadow_9289_13238"
+                            result="shape"
+                          />
+                        </filter>
+                        <filter
+                          id="filter1_i_9289_13238"
+                          x="8.4375"
+                          y="6.4375"
+                          width="18.125"
+                          height="18.125"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="BackgroundImageFix"
+                            result="shape"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dx="1" dy="1" />
+                          <feGaussianBlur stdDeviation="1" />
+                          <feComposite
+                            in2="hardAlpha"
+                            operator="arithmetic"
+                            k2="-1"
+                            k3="1"
+                          />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="shape"
+                            result="effect1_innerShadow_9289_13238"
+                          />
+                        </filter>
+                        <radialGradient
+                          id="paint0_radial_9289_13238"
+                          cx="0"
+                          cy="0"
+                          r="1"
+                          gradientUnits="userSpaceOnUse"
+                          gradientTransform="translate(17.7385 20.5335) rotate(-60.1541) scale(16.9079 16.9079)"
+                        >
+                          <stop stop-color="#17A7FF" />
+                          <stop offset="1" stop-color="#84D0FF" />
+                        </radialGradient>
+                      </defs>
+                    </svg>
+                    Code Generator
+                  </a>
+                  <a
+                    href="video-generator.html"
+                    class="flex items-center px-2 py-2 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="38"
+                      height="32"
+                      viewBox="0 0 38 32"
+                      fill="none"
+                    >
+                      <g filter="url(#filter0_d_9289_13236)">
+                        <g filter="url(#filter1_i_9289_13236)">
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M8.875 10.1306C8.875 8.1004 10.5208 6.45462 12.551 6.45462H25.449C27.4792 6.45462 29.125 8.1004 29.125 10.1306V17.8694C29.125 19.8996 27.4792 21.5454 25.449 21.5454H12.551C10.5208 21.5454 8.875 19.8996 8.875 17.8694V10.1306ZM21.8102 13.429C22.227 13.6955 22.227 14.3043 21.8102 14.5708L18.0934 16.9471C17.6424 17.2355 17.0509 16.9116 17.0509 16.3763V11.6236C17.0509 11.0883 17.6424 10.7643 18.0934 11.0527L21.8102 13.429Z"
+                            fill="url(#paint0_radial_9289_13236)"
+                          />
+                        </g>
+                      </g>
+                      <defs>
+                        <filter
+                          id="filter0_d_9289_13236"
+                          x="-1"
+                          y="-4"
+                          width="40"
+                          height="40"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dy="2" />
+                          <feGaussianBlur stdDeviation="4" />
+                          <feComposite in2="hardAlpha" operator="out" />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 1 0 0 0 0 0.67451 0 0 0 0 0.0980392 0 0 0 0.25 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="BackgroundImageFix"
+                            result="effect1_dropShadow_9289_13236"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="effect1_dropShadow_9289_13236"
+                            result="shape"
+                          />
+                        </filter>
+                        <filter
+                          id="filter1_i_9289_13236"
+                          x="8.875"
+                          y="6.45462"
+                          width="21.7738"
+                          height="16.6146"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="BackgroundImageFix"
+                            result="shape"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dx="1.52381" dy="1.52381" />
+                          <feGaussianBlur stdDeviation="1.14286" />
+                          <feComposite
+                            in2="hardAlpha"
+                            operator="arithmetic"
+                            k2="-1"
+                            k3="1"
+                          />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="shape"
+                            result="effect1_innerShadow_9289_13236"
+                          />
+                        </filter>
+                        <radialGradient
+                          id="paint0_radial_9289_13236"
+                          cx="0"
+                          cy="0"
+                          r="1"
+                          gradientUnits="userSpaceOnUse"
+                          gradientTransform="translate(19.8733 18.8762) rotate(-52.4062) scale(16.3099 18.2642)"
+                        >
+                          <stop stop-color="#FFAC19" />
+                          <stop offset="1" stop-color="#FFCE78" />
+                        </radialGradient>
+                      </defs>
+                    </svg>
+                    Video Generator
+                  </a>
+                  <a
+                    href="email-generator.html"
+                    class="flex items-center px-2 py-2 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="38"
+                      height="32"
+                      viewBox="0 0 38 32"
+                      fill="none"
+                    >
+                      <g filter="url(#filter0_d_9289_13234)">
+                        <g filter="url(#filter1_i_9289_13234)">
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M8.875 10.1306C8.875 8.1004 10.5208 6.45462 12.551 6.45462H25.449C27.4792 6.45462 29.125 8.1004 29.125 10.1306V17.8694C29.125 19.8996 27.4792 21.5454 25.449 21.5454H12.551C10.5208 21.5454 8.875 19.8996 8.875 17.8694V10.1306ZM13.3072 10.5611C13.0443 10.3777 12.6825 10.4422 12.4991 10.7052C12.3158 10.9681 12.3803 11.3299 12.6432 11.5132L17.7831 15.0974C18.5145 15.6074 19.4863 15.6074 20.2177 15.0974L25.3575 11.5132C25.6204 11.3299 25.6849 10.9681 25.5016 10.7052C25.3182 10.4422 24.9564 10.3777 24.6935 10.5611L19.5537 14.1452C19.2212 14.377 18.7795 14.377 18.447 14.1452L13.3072 10.5611Z"
+                            fill="url(#paint0_radial_9289_13234)"
+                          />
+                        </g>
+                      </g>
+                      <defs>
+                        <filter
+                          id="filter0_d_9289_13234"
+                          x="-1"
+                          y="-4"
+                          width="40"
+                          height="40"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dy="2" />
+                          <feGaussianBlur stdDeviation="4" />
+                          <feComposite in2="hardAlpha" operator="out" />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 0.168627 0 0 0 0 0.811765 0 0 0 0 1 0 0 0 0.25 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="BackgroundImageFix"
+                            result="effect1_dropShadow_9289_13234"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="effect1_dropShadow_9289_13234"
+                            result="shape"
+                          />
+                        </filter>
+                        <filter
+                          id="filter1_i_9289_13234"
+                          x="8.875"
+                          y="6.45462"
+                          width="21.7738"
+                          height="16.6146"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="BackgroundImageFix"
+                            result="shape"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dx="1.52381" dy="1.52381" />
+                          <feGaussianBlur stdDeviation="1.14286" />
+                          <feComposite
+                            in2="hardAlpha"
+                            operator="arithmetic"
+                            k2="-1"
+                            k3="1"
+                          />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="shape"
+                            result="effect1_innerShadow_9289_13234"
+                          />
+                        </filter>
+                        <radialGradient
+                          id="paint0_radial_9289_13234"
+                          cx="0"
+                          cy="0"
+                          r="1"
+                          gradientUnits="userSpaceOnUse"
+                          gradientTransform="translate(19.8733 18.8762) rotate(-52.4062) scale(16.3099 18.2642)"
+                        >
+                          <stop stop-color="#2BCFFF" />
+                          <stop offset="1" stop-color="#8EE5FF" />
+                        </radialGradient>
+                      </defs>
+                    </svg>
+                    Email Generator
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pages Dropdown (Desktop) -->
+            <div class="relative nav-item">
+              <button
+                class="text-gray-500 group dark:text-gray-400 hover:text-primary-400 text-sm inline-flex items-center px-4 py-6 font-medium rounded-full"
+              >
+                Pages
+                <svg
+                  class="dropdown-arrow ml-1 h-4 w-4 transition-transform duration-200"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="17"
+                  height="16"
+                  viewBox="0 0 17 16"
+                  fill="none"
+                >
+                  <path
+                    d="M4.33301 5.91666L8.49967 10.0833L12.6663 5.91666"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+
+              <!-- Pages dropdown menu -->
+              <div
+                class="dropdown-menu absolute left-0 w-[266px] bg-white dark:bg-dark-secondary dark:border-gray-800 rounded-2xl shadow-theme-lg border border-gray-100 p-3 z-50 hidden"
+              >
+                <div class="space-y-1">
+                  <a
+                    href="dashboard.html"
+                    class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                  >
+                    Dashboard
+                  </a>
+                  <a
+                    href="pricing.html"
+                    class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                  >
+                    Pricing
+                  </a>
+                  <a
+                    href="blog-grid.html"
+                    class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                  >
+                    Blog Grid
+                  </a>
+                  <a
+                    href="blog-details.html"
+                    class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                  >
+                    Blog Details
+                  </a>
+                  <a
+                    href="signin.html"
+                    class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                  >
+                    Sign In
+                  </a>
+                  <a
+                    href="signup.html"
+                    class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                  >
+                    Sign Up
+                  </a>
+                  <a
+                    href="forgot-password.html"
+                    class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                  >
+                    Reset Password
+                  </a>
+                  <a
+                    href="privacy.html"
+                    class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                  >
+                    Privacy Policy
+                  </a>
+                  <a
+                    href="404.html"
+                    class="flex items-center px-4 py-3 hover:text-gray-800 dark:hover:text-white/90 text-sm font-medium rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5"
+                  >
+                    404 Error
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <a
+              href="contact.html"
+              class="text-gray-500 dark:text-gray-400 text-sm px-4 py-6 hover:text-primary-500 font-medium"
+              >Contact</a
+            >
+          </nav>
+
+          <!-- Right side buttons -->
+          <div class="flex items-center">
+            <!-- Dark Mode Toggle Start -->
+            <button
+              @click="toggleDarkMode()"
+              class="inline-flex items-center dark:hover:bg-white/5 dark:hover:text-white/90 hover:bg-gray-100 hover:text-gray-800 text-gray-500 dark:text-gray-400 justify-center border border-gray-200 dark:border-gray-700 rounded-full size-11"
+            >
+              <svg
+                x-show="!darkMode"
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+              >
+                <path
+                  d="M6.24683 7.08492C6.24683 10.7677 9.23232 13.7532 12.9151 13.7532C14.6687 13.7532 16.2641 13.0764 17.4545 11.9697C16.584 15.2727 13.5765 17.7083 10.0001 17.7083C5.74289 17.7083 2.29175 14.2572 2.29175 9.99996C2.29175 6.42356 4.72736 3.41602 8.03036 2.54558C6.92367 3.73594 6.24683 5.33139 6.24683 7.08492Z"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <svg
+                x-show="darkMode"
+                class="h-5 w-5"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+                />
+              </svg>
+            </button>
+            <!-- Dark Mode Toggle End -->
+
+            <!-- Account dropdown -->
+            <div class="ml-4 relative flex-shrink-0" x-data="{ open: false }">
+              <div>
+                <button
+                  @click="open = !open"
+                  class="rounded-full text-sm font-medium focus:outline-none"
+                >
+                  <img
+                    src="assets/images/users/user-1.png"
+                    class="w-11 h-11 rounded-full"
+                    alt=""
+                  />
+                </button>
+              </div>
+              <div
+                x-show="open"
+                @click.away="open = false"
+                class="origin-top-right absolute right-0 mt-2 w-[260px] shadow-lg dark:bg-dark-secondary dark:border-gray-800 py-4 px-3 bg-white border border-gray-200 rounded-2xl"
+              >
+                <div class="mb-4 px-3">
+                  <span
+                    class="text-gray-700 text-sm font-medium dark:text-gray-400"
+                    >musharof</span
+                  >
+                  <p class="text-gray-500 text-sm dark:text-gray-400">
+                    <a href="cdn-cgi/l/email-protection.html" class="__cf_email__" data-cfemail="87f5e6e9e3e8eac7f7eeeaede8a9e4e8ea">[email&#160;protected]</a>
+                  </p>
+                </div>
+                <div class="space-y-1">
+                  <a
+                    href="#"
+                    class="px-3 py-2 flex gap-3 dark:hover:bg-white/[0.05] dark:text-gray-400 font-medium items-center text-sm text-gray-700 hover:text-gray-800 transition hover:bg-gray-100 rounded-lg dark:hover:text-white/90"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="22"
+                      height="22"
+                      viewBox="0 0 22 22"
+                      fill="none"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M8.75211 6.7963C8.75211 5.3555 9.92011 4.1875 11.3609 4.1875C12.8017 4.1875 13.9697 5.3555 13.9697 6.7963C13.9697 8.2371 12.8017 9.4051 11.3609 9.4051C9.92011 9.4051 8.75211 8.2371 8.75211 6.7963ZM11.3609 2.6875C9.09168 2.6875 7.25211 4.52707 7.25211 6.7963C7.25211 9.06553 9.09168 10.9051 11.3609 10.9051C13.6301 10.9051 15.4697 9.06553 15.4697 6.7963C15.4697 4.52707 13.6301 2.6875 11.3609 2.6875ZM9.81431 12.208C6.38418 12.208 3.60352 14.9887 3.60352 18.4188V18.7367C3.60352 19.1509 3.9393 19.4867 4.35352 19.4867C4.76773 19.4867 5.10352 19.1509 5.10352 18.7367V18.4188C5.10352 15.8171 7.21261 13.708 9.81431 13.708H12.9088C15.5105 13.708 17.6196 15.8171 17.6196 18.4188V18.7367C17.6196 19.1509 17.9554 19.4867 18.3696 19.4867C18.7838 19.4867 19.1196 19.1509 19.1196 18.7367V18.4188C19.1196 14.9887 16.3389 12.208 12.9088 12.208H9.81431Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    Edit profile
+                  </a>
+                  <a
+                    href="#"
+                    class="px-3 py-2 flex gap-3 dark:hover:bg-white/[0.05] dark:text-gray-400 font-medium items-center text-sm text-gray-700 hover:text-gray-800 transition hover:bg-gray-100 rounded-lg dark:hover:text-white/90"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="22"
+                      height="22"
+                      viewBox="0 0 22 22"
+                      fill="none"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M9.61304 3.27092L12.3927 3.27092C12.7295 3.27092 13.0027 3.54406 13.0027 3.88104C13.0027 5.50501 14.7607 6.52057 16.1675 5.7084C16.4591 5.54 16.8321 5.63994 17.0005 5.93161L18.3905 8.33918C18.559 8.63101 18.459 9.00417 18.1672 9.17266C16.7604 9.98485 16.7604 12.0153 18.1672 12.8275C18.459 12.996 18.559 13.3692 18.3905 13.661L17.0005 16.0686C16.8321 16.3603 16.4591 16.4602 16.1674 16.2918C14.7607 15.4796 13.0027 16.4952 13.0027 18.1192C13.0027 18.4561 12.7295 18.7293 12.3927 18.7293H9.61303C9.27596 18.7293 9.00271 18.456 9.00271 18.1189C9.00271 16.4942 7.2438 15.4793 5.83708 16.2915C5.54502 16.4601 5.17158 16.36 5.00304 16.0681L3.61337 13.6611C3.44488 13.3692 3.54487 12.9961 3.83671 12.8276C5.2435 12.0154 5.24347 9.98484 3.8367 9.17264C3.54485 9.00414 3.44486 8.63095 3.61335 8.33911L5.00301 5.93215C5.17156 5.64022 5.545 5.54012 5.83706 5.70875C7.24379 6.52092 9.00271 5.50595 9.00271 3.88125C9.00271 3.54417 9.27597 3.27092 9.61304 3.27092ZM12.3927 1.77092L9.61304 1.77092C8.44754 1.77092 7.50271 2.71575 7.50271 3.88125C7.50271 4.3509 6.9941 4.64471 6.58706 4.40971C5.57769 3.82695 4.28681 4.17265 3.70397 5.18215L2.31431 7.58911C1.7316 8.5984 2.07742 9.88897 3.0867 10.4717C3.49349 10.7065 3.49348 11.2937 3.08671 11.5285C2.07743 12.1112 1.73162 13.4018 2.31433 14.4111L3.704 16.8181C4.28684 17.8276 5.57772 18.1732 6.58708 17.5905C6.99411 17.3555 7.50271 17.6493 7.50271 18.1189C7.50271 19.2844 8.44753 20.2293 9.61303 20.2293H12.3927C13.5581 20.2293 14.5027 19.2844 14.5027 18.1192C14.5027 17.6495 15.0111 17.3562 15.4174 17.5908C16.4266 18.1735 17.7169 17.8277 18.2995 16.8186L19.6895 14.411C20.2722 13.4017 19.9264 12.1112 18.9172 11.5285C18.5104 11.2937 18.5104 10.7066 18.9172 10.4717C19.9264 9.889 20.2723 8.59845 19.6896 7.58918L18.2995 5.18161C17.7169 4.1725 16.4266 3.82675 15.4175 4.40936C15.0111 4.644 14.5027 4.35067 14.5027 3.88104C14.5027 2.71579 13.5581 1.77092 12.3927 1.77092ZM8.92395 11C8.92395 9.85242 9.85427 8.9221 11.0019 8.9221C12.1495 8.9221 13.0798 9.85242 13.0798 11C13.0798 12.1476 12.1495 13.0779 11.0019 13.0779C9.85427 13.0779 8.92395 12.1476 8.92395 11ZM11.0019 7.4221C9.02584 7.4221 7.42395 9.02399 7.42395 11C7.42395 12.976 9.02584 14.5779 11.0019 14.5779C12.9779 14.5779 14.5798 12.976 14.5798 11C14.5798 9.02399 12.9779 7.4221 11.0019 7.4221Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    Account settings
+                  </a>
+                  <a
+                    href="#"
+                    class="px-3 py-2 flex gap-3 dark:hover:bg-white/[0.05] dark:text-gray-400 font-medium items-center text-sm text-gray-700 hover:text-gray-800 transition hover:bg-gray-100 rounded-lg dark:hover:text-white/90"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="22"
+                      height="22"
+                      viewBox="0 0 22 22"
+                      fill="none"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M3.27148 11C3.27148 6.7313 6.73195 3.27083 11.0007 3.27083C15.2694 3.27083 18.7298 6.7313 18.7298 11C18.7298 15.2687 15.2694 18.7292 11.0007 18.7292C6.73195 18.7292 3.27148 15.2687 3.27148 11ZM11.0007 1.77083C5.90352 1.77083 1.77148 5.90287 1.77148 11C1.77148 16.0971 5.90352 20.2292 11.0007 20.2292C16.0978 20.2292 20.2298 16.0971 20.2298 11C20.2298 5.90287 16.0978 1.77083 11.0007 1.77083ZM10 7.94734C10 8.49962 10.4478 8.94734 11 8.94734H11.0008C11.5531 8.94734 12.0008 8.49962 12.0008 7.94734C12.0008 7.39505 11.5531 6.94734 11.0008 6.94734H11C10.4478 6.94734 10 7.39505 10 7.94734ZM11 15.3214C10.5858 15.3214 10.25 14.9856 10.25 14.5714L10.25 10.699C10.25 10.2848 10.5858 9.94902 11 9.94902C11.4143 9.94902 11.75 10.2848 11.75 10.699L11.75 14.5714C11.75 14.9856 11.4143 15.3214 11 15.3214Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    Support
+                  </a>
+                  <div class="my-3 h-px bg-gray-200 dark:bg-gray-800"></div>
+                  <a
+                    href="#"
+                    class="px-3 py-2 flex gap-3 dark:hover:bg-white/[0.05] dark:text-gray-400 font-medium items-center text-sm text-gray-700 hover:text-gray-800 transition hover:bg-gray-100 rounded-lg dark:hover:text-white/90"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="22"
+                      height="22"
+                      viewBox="0 0 22 22"
+                      fill="none"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M13.9679 17.5805C13.5537 17.5805 13.2179 17.2448 13.2179 16.8305L13.2179 13.2454L11.7179 13.2454L11.7179 16.8305C11.7179 18.0732 12.7253 19.0805 13.9679 19.0805H16.8346C18.0773 19.0805 19.0846 18.0732 19.0846 16.8305V5.16309C19.0846 3.92045 18.0773 2.91309 16.8346 2.91309L13.9679 2.91309C12.7253 2.91309 11.7179 3.92045 11.7179 5.16309V8.74543L13.2179 8.74542V5.16309C13.2179 4.74887 13.5537 4.41309 13.9679 4.41309L16.8346 4.41309C17.2488 4.41309 17.5846 4.74887 17.5846 5.16309V16.8305C17.5846 17.2448 17.2488 17.5805 16.8346 17.5805H13.9679ZM2.91797 10.9986C2.91797 11.2142 3.00896 11.4086 3.15464 11.5454L7.37668 15.7701C7.66948 16.0631 8.14436 16.0632 8.43734 15.7704C8.73033 15.4776 8.73048 15.0028 8.43768 14.7098L5.47835 11.7486H14.668C15.0822 11.7486 15.418 11.4128 15.418 10.9986C15.418 10.5844 15.0822 10.2486 14.668 10.2486L5.48212 10.2486L8.4377 7.29092C8.73049 6.99793 8.73032 6.52306 8.43733 6.23026C8.14433 5.93747 7.66946 5.93764 7.37667 6.23064L3.18798 10.4223C3.02297 10.5598 2.91797 10.7669 2.91797 10.9986Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                    Logout
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Mobile right sidebar button -->
+            <button
+              @click="rightSidebarOpen = !rightSidebarOpen"
+              type="button"
+              class="inline-flex ml-4 lg:hidden items-center dark:hover:bg-white/5 dark:hover:text-white/90 hover:bg-gray-100 hover:text-gray-800 text-gray-500 dark:text-gray-400 justify-center border border-gray-200 dark:border-gray-700 rounded-full size-11"
+            >
+              <span class="sr-only">Open right sidebar</span>
+              <svg
+                class="size-7"
+                width="32"
+                height="32"
+                viewBox="0 0 25 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                transform="rotate(0 0 0)"
+              >
+                <path
+                  d="M6.3125 13.7558C5.346 13.7559 4.5625 12.9723 4.5625 12.0059V11.9959C4.5625 11.0294 5.346 10.2458 6.3125 10.2458C7.279 10.2458 8.0625 11.0294 8.0625 11.9958V12.0058C8.0625 12.9723 7.279 13.7558 6.3125 13.7558Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M18.3125 13.7558C17.346 13.7558 16.5625 12.9723 16.5625 12.0058V11.9958C16.5625 11.0294 17.346 10.2458 18.3125 10.2458C19.279 10.2458 20.0625 11.0294 20.0625 11.9958V12.0058C20.0625 12.9723 19.279 13.7558 18.3125 13.7558Z"
+                  fill="currentColor"
+                />
+                <path
+                  d="M10.5625 12.0058C10.5625 12.9723 11.346 13.7558 12.3125 13.7558C13.279 13.7558 14.0625 12.9723 14.0625 12.0058V11.9958C14.0625 11.0294 13.279 10.2458 12.3125 10.2458C11.346 10.2458 10.5625 11.0294 10.5625 11.9958V12.0058Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-900">
+      <!-- Sidebar -->
+      <aside
+        :class="{'translate-x-0': sidebarOpen, '-translate-x-full': !sidebarOpen}"
+        class="fixed inset-y-0 left-0 z-20 w-[288px] h-screen bg-white dark:bg-dark-primary border-r dark:border-gray-800 border-gray-100 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0"
+      >
+        <div class="h-full flex flex-col">
+          <div
+            class="h-16 flex items-center px-6 border-b border-gray-200 lg:hidden"
+          >
+            <div class="flex items-center">
+              <svg
+                class="h-8 w-8 text-primary"
+                viewBox="0 0 40 40"
+                fill="currentColor"
+              >
+                <circle cx="20" cy="20" r="18" fill="#8B5CF6" />
+                <path
+                  d="M15 15 L25 25 M25 15 L15 25"
+                  stroke="white"
+                  stroke-width="3"
+                />
+              </svg>
+              <span class="ml-2 text-xl font-bold text-gray-900">AI Agent</span>
+            </div>
+          </div>
+          <div class="flex-1 overflow-y-auto">
+            <div class="px-10 mb-4 pt-10 text-xs font-normal text-gray-500">
+              Main Menu
+            </div>
+            <nav class="space-y-1">
+              <a
+                href="dashboard.html"
+                class="group flex dark:hover:bg-primary-500/10 gap-2.5 hover:bg-primary-50 border-l-3 border-transparent hover:border-l-3 hover:border-primary-500 items-center px-10 py-3 text-sm font-medium text-gray-700 dark:text-gray-400"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 22 22"
+                  fill="none"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M8.7526 6.7963C8.7526 5.3555 9.9206 4.1875 11.3614 4.1875C12.8022 4.1875 13.9702 5.3555 13.9702 6.7963C13.9702 8.2371 12.8022 9.4051 11.3614 9.4051C9.9206 9.4051 8.7526 8.2371 8.7526 6.7963ZM11.3614 2.6875C9.09217 2.6875 7.2526 4.52707 7.2526 6.7963C7.2526 9.06553 9.09217 10.9051 11.3614 10.9051C13.6306 10.9051 15.4702 9.06553 15.4702 6.7963C15.4702 4.52707 13.6306 2.6875 11.3614 2.6875ZM9.8148 12.208C6.38467 12.208 3.604 14.9887 3.604 18.4188V18.7367C3.604 19.1509 3.93979 19.4867 4.354 19.4867C4.76822 19.4867 5.104 19.1509 5.104 18.7367V18.4188C5.104 15.8171 7.2131 13.708 9.8148 13.708H12.9092C15.511 13.708 17.6201 15.8171 17.6201 18.4188V18.7367C17.6201 19.1509 17.9558 19.4867 18.3701 19.4867C18.7843 19.4867 19.1201 19.1509 19.1201 18.7367V18.4188C19.1201 14.9887 16.3394 12.208 12.9092 12.208H9.8148Z"
+                    fill="currentColor"
+                  />
+                </svg>
+                Profile and security
+              </a>
+              <a
+                href="dashboard-billing.html"
+                class="group flex dark:hover:bg-primary-500/10 gap-2.5 hover:bg-primary-50 border-l-3 border-transparent hover:border-l-3 hover:border-primary-500 items-center px-10 py-3 text-sm font-medium text-gray-700 dark:text-gray-400"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 22 22"
+                  fill="none"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M5.1665 2.91666C3.92386 2.91666 2.9165 3.92402 2.9165 5.16666V7.33333V16.8333C2.9165 18.076 3.92387 19.0833 5.16651 19.0833H16.8332C18.0758 19.0833 19.0832 18.076 19.0832 16.8333V14.6667V11V8.83333C19.0832 7.59069 18.0758 6.58333 16.8332 6.58333H16.7915V5.16666C16.7915 3.92402 15.7841 2.91666 14.5415 2.91666H5.1665ZM16.0415 8.08333H4.4165V16.8333C4.4165 17.2475 4.75229 17.5833 5.16651 17.5833H16.8332C17.2474 17.5833 17.5832 17.2475 17.5832 16.8333V15.4167H15.479C14.2364 15.4167 13.229 14.4093 13.229 13.1667V12.5C13.229 11.2574 14.2364 10.25 15.479 10.25H17.5832V8.83333C17.5832 8.41912 17.2474 8.08333 16.8332 8.08333H16.0415ZM15.2915 6.58333V5.16666C15.2915 4.75245 14.9557 4.41666 14.5415 4.41666H5.1665C4.75229 4.41666 4.4165 4.75245 4.4165 5.16666V6.58333H15.2915ZM17.5832 11.75V13.9167H15.479C15.0648 13.9167 14.729 13.5809 14.729 13.1667V12.5C14.729 12.0858 15.0648 11.75 15.479 11.75H17.5832Z"
+                    fill="currentColor"
+                  />
+                </svg>
+                Billing & Plans
+              </a>
+              <a
+                href="dashboard-integration.html"
+                class="group dark:bg-primary-500/10 flex gap-2.5 border-l-3 border-primary-500 hover:bg-primary-50 items-center px-10 py-3 text-sm font-medium text-primary-500 dark:hover:bg-primary-500/10"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 22 22"
+                  fill="none"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    clip-rule="evenodd"
+                    d="M10.7207 3.49909C10.8967 3.41112 11.1038 3.41112 11.2797 3.49909L17.0757 6.39701L11.3356 9.26698C11.1245 9.37255 10.876 9.37255 10.6648 9.26698L4.92473 6.39701L10.7207 3.49909ZM3.99756 7.61048L9.99403 10.6086C10.0775 10.6504 10.163 10.6866 10.2498 10.7174L10.2498 18.2657L4.34306 15.3124C4.13131 15.2066 3.99756 14.9901 3.99756 14.7534V7.61048ZM11.7498 18.2661L17.6574 15.3124C17.8692 15.2066 18.0029 14.9901 18.0029 14.7534V7.61048L12.0064 10.6086C11.9227 10.6505 11.837 10.6868 11.7498 10.7176V18.2661ZM3.95531 5.91232L3.67225 5.34619C2.95232 5.70614 2.49756 6.44196 2.49756 7.24686V14.7534C2.49756 15.5583 2.95232 16.2941 3.67225 16.6541L10.0499 19.8428C10.6482 20.1419 11.3523 20.1419 11.9505 19.8428L18.3282 16.6541C19.0481 16.2941 19.5029 15.5583 19.5029 14.7534V7.24686C19.5029 6.44196 19.0481 5.70614 18.3282 5.34619L11.9505 2.15744L11.6151 2.82827L11.9505 2.15744C11.3523 1.85834 10.6482 1.85834 10.0499 2.15744L3.67225 5.34619L3.95531 5.91232Z"
+                    fill="currentColor"
+                  />
+                </svg>
+                Integrations
+              </a>
+            </nav>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <div class="flex-1 overflow-y-auto">
+        <main class="py-6 px-4 sm:px-6 lg:px-8">
+          <div
+            class="mb-8 p-6 rounded-2xl bg-white dark:bg-dark-primary border border-gray-100 dark:border-gray-800"
+          >
+            <div class="mb-6">
+              <h2
+                class="text-xl font-bold text-gray-800 dark:text-white/90 mb-1"
+              >
+                Integrations and connected apps
+              </h2>
+              <p class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                Supercharge your workflow and connect the tool you use every
+                day.
+              </p>
+            </div>
+            <div
+              class="divide-y divide-gray-200 dark:divide-gray-800 dark:border-gray-800 border border-gray-200 px-7 py-2 rounded-xl"
+            >
+              <!-- Midjourney -->
+              <div
+                class="flex flex-col gap-5 md:flex-row md:items-center justify-between py-5"
+              >
+                <div class="flex items-center">
+                  <div
+                    class="w-10 h-10 dark:text-white/90 dark:bg-white/5 dark:border-white/5 bg-gray-100 border border-gray-200 rounded-md flex items-center justify-center mr-3"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="42"
+                      height="42"
+                      viewBox="0 0 42 42"
+                      fill="none"
+                    >
+                      <path
+                        d="M7.13672 32.5664C7.95703 32.5664 9.1875 30.8438 10.623 30.5977C11.4434 30.5977 12.0586 32.3203 14.1094 32.5664C15.5449 32.5664 16.1602 30.8438 17.5957 30.8438C19.0312 30.8438 19.6465 32.5664 21.082 32.5664C22.5176 32.5664 23.1328 30.8438 24.5684 30.8438C26.0039 30.8438 26.6191 32.5664 28.0547 32.5664C29.4902 32.5664 30.1055 30.8438 31.541 30.8438C32.9766 30.8438 33.5918 32.5664 35.0273 32.5664"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M9.94219 30.852L9.00293 29.0555L33.2021 27.4969C31.299 29.2277 28.8545 30.6305 26.3813 31.7789"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M18.6377 12.3211C22.7557 13.5803 28.5143 19.6629 30.4748 26.2008C29.4002 25.7783 28.5963 25.3477 27.0869 25.7332C25.6268 20.4217 23.0141 15.348 18.6377 12.3211Z"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M10.9803 9.41309C16.2549 11.6689 23.49 17.9484 24.8189 26.3115C18.7363 23.8588 14.1057 25.1672 10.8818 27.1564C15.7996 20.9057 13.593 13.7977 10.9803 9.41309Z"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3
+                      class="text-sm font-medium text-gray-800 dark:text-white/90 mb-1"
+                    >
+                      Midjourney
+                    </h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                      Imaginative powers of the human species.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button
+                    class="px-5 dark:hover:bg-white/5 py-3 gap-2 dark:text-gray-400 text-sm text-gray-600 font-medium rounded-full hover:bg-gray-100 transition flex items-center"
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M6.54093 3.79167C6.54093 2.54903 7.54829 1.54167 8.79093 1.54167H11.2076C12.4502 1.54167 13.4576 2.54903 13.4576 3.79167V4.04167H15.6247H16.6655C17.0797 4.04167 17.4155 4.37745 17.4155 4.79167C17.4155 5.20588 17.0797 5.54167 16.6655 5.54167H16.3747V8.24654V13.2465V16.2083C16.3747 17.451 15.3673 18.4583 14.1247 18.4583H5.87467C4.63203 18.4583 3.62467 17.451 3.62467 16.2083V13.2465V8.24654V5.54167H3.33301C2.91879 5.54167 2.58301 5.20588 2.58301 4.79167C2.58301 4.37745 2.91879 4.04167 3.33301 4.04167H4.37467H6.54093V3.79167ZM14.8747 13.2465V8.24654V5.54167H13.4576H12.7076H7.29093H6.54093H5.12467V8.24654V13.2465V16.2083C5.12467 16.6225 5.46046 16.9583 5.87467 16.9583H14.1247C14.5389 16.9583 14.8747 16.6225 14.8747 16.2083V13.2465ZM8.04093 4.04167H11.9576V3.79167C11.9576 3.37745 11.6218 3.04167 11.2076 3.04167H8.79093C8.37672 3.04167 8.04093 3.37745 8.04093 3.79167V4.04167ZM8.33301 8C8.74722 8 9.08301 8.33579 9.08301 8.75V13.75C9.08301 14.1642 8.74722 14.5 8.33301 14.5C7.91879 14.5 7.58301 14.1642 7.58301 13.75V8.75C7.58301 8.33579 7.91879 8 8.33301 8ZM12.4163 8.75C12.4163 8.33579 12.0806 8 11.6663 8C11.2521 8 10.9163 8.33579 10.9163 8.75V13.75C10.9163 14.1642 11.2521 14.5 11.6663 14.5C12.0806 14.5 12.4163 14.1642 12.4163 13.75V8.75Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+
+                    Remove
+                  </button>
+                  <button
+                    class="px-5 py-3 gap-2 text-sm dark:bg-white/5 text-white font-medium bg-gray-700 transition rounded-full hover:bg-gray-800 flex items-center"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                    >
+                      <path
+                        d="M16.7522 5.45L7.65222 14.55L3.24805 10.1459"
+                        stroke="white"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    Connected
+                  </button>
+                </div>
+              </div>
+
+              <!-- ChatGPT -->
+              <div
+                class="flex flex-col gap-5 md:flex-row md:items-center justify-between py-5"
+              >
+                <div class="flex items-center">
+                  <div
+                    class="w-10 h-10 dark:text-white/90 dark:bg-white/5 dark:border-white/5 bg-gray-100 border border-gray-200 rounded-md flex items-center justify-center mr-3"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="30"
+                      height="30"
+                      viewBox="0 0 30 30"
+                      fill="none"
+                    >
+                      <path
+                        d="M27.4632 12.3444C27.7913 11.3591 27.9051 10.3152 27.797 9.28236C27.6889 8.24956 27.3615 7.25178 26.8366 6.35577C26.0585 5.00052 24.8699 3.92751 23.4424 3.29158C22.0149 2.65566 20.4223 2.4897 18.8942 2.81764C18.205 2.04095 17.3579 1.42043 16.4095 0.997616C15.4611 0.57481 14.4333 0.359464 13.3949 0.365997C11.8328 0.362226 10.3097 0.854655 9.04539 1.7723C7.78107 2.68993 6.84085 3.98536 6.36024 5.47182C5.34255 5.68014 4.38109 6.10346 3.54024 6.71345C2.69939 7.32344 1.99856 8.106 1.48465 9.00878C0.700313 10.3603 0.365514 11.926 0.528533 13.4801C0.691553 15.0342 1.34396 16.4963 2.39168 17.6556C2.06363 18.6409 1.94983 19.6848 2.05789 20.7176C2.16596 21.7504 2.4934 22.7482 3.01829 23.6442C3.79649 24.9994 4.98507 26.0723 6.41257 26.7083C7.84005 27.3442 9.43268 27.5102 10.9606 27.1823C11.6498 27.9591 12.497 28.5795 13.4454 29.0024C14.3938 29.4252 15.4216 29.6405 16.4599 29.634C18.0229 29.6381 19.5468 29.1454 20.8115 28.2272C22.0764 27.309 23.0168 26.0126 23.497 24.5253C24.5146 24.317 25.4761 23.8937 26.317 23.2837C27.1578 22.6737 27.8586 21.8911 28.3726 20.9883C29.1559 19.6369 29.4899 18.0716 29.3265 16.5181C29.1631 14.9647 28.5106 13.5032 27.4632 12.3444ZM16.4623 27.7207C15.1792 27.7225 13.9365 27.2731 12.9512 26.4513C12.9957 26.4271 13.0736 26.3843 13.1244 26.3532L18.952 22.987C19.0982 22.9038 19.2197 22.7832 19.3039 22.6374C19.3881 22.4917 19.4319 22.3261 19.4309 22.1579V13.9421L21.8941 15.3644C21.907 15.3708 21.9181 15.3803 21.9265 15.3921C21.9349 15.4039 21.9401 15.4176 21.9419 15.4319V22.2358C21.9401 23.689 21.3624 25.0823 20.3353 26.1103C19.3082 27.1384 17.9154 27.7175 16.4623 27.7207ZM4.67773 22.6876C4.03507 21.5772 3.80345 20.2761 4.02342 19.0121C4.06669 19.0381 4.14228 19.0842 4.19652 19.1154L10.0241 22.4816C10.1694 22.5664 10.3346 22.6112 10.5028 22.6112C10.6709 22.6112 10.8362 22.5664 10.9814 22.4816L18.0963 18.3734V21.218C18.0971 21.2325 18.0943 21.247 18.0882 21.2602C18.082 21.2734 18.0728 21.2849 18.0611 21.2936L12.17 24.6949C10.9099 25.4207 9.41336 25.6169 8.00878 25.2405C6.60416 24.8642 5.40621 23.9461 4.67773 22.6876ZM3.14466 9.96541C3.78453 8.85351 4.79519 8.00224 5.99962 7.56051C5.99962 7.61071 5.99674 7.69961 5.99674 7.76129V14.4937C5.99571 14.6618 6.03949 14.8272 6.12356 14.9729C6.20762 15.1185 6.32895 15.239 6.47507 15.3222L13.5899 19.4299L11.1268 20.8521C11.1147 20.8602 11.1007 20.865 11.0862 20.8663C11.0717 20.8676 11.0571 20.8654 11.0437 20.8597L5.15202 17.4554C3.89413 16.7269 2.97643 15.5294 2.60014 14.1253C2.22384 12.7213 2.41966 11.2253 3.14466 9.96541ZM23.3822 14.6748L16.2672 10.5667L18.7304 9.14495C18.7426 9.13698 18.7565 9.13207 18.771 9.13076C18.7855 9.12944 18.8001 9.13178 18.8135 9.13749L24.7052 12.5388C25.6078 13.0602 26.3432 13.828 26.8253 14.7522C27.3073 15.6764 27.5161 16.7188 27.4272 17.7574C27.3383 18.796 26.9552 19.7877 26.3231 20.6165C25.6909 21.4453 24.8357 22.0769 23.8576 22.4371C23.8576 22.3864 23.8576 22.2975 23.8576 22.2358V15.5034C23.8589 15.3356 23.8156 15.1703 23.7321 15.0247C23.6485 14.8791 23.5278 14.7584 23.3822 14.6748ZM25.8338 10.985C25.7905 10.9584 25.7149 10.9128 25.6607 10.8817L19.833 7.51551C19.6878 7.43078 19.5226 7.38607 19.3544 7.38607C19.1863 7.38607 19.021 7.43078 18.8758 7.51551L11.7609 11.6238V8.77917C11.7601 8.76461 11.7629 8.75012 11.769 8.73695C11.7752 8.72378 11.7845 8.71229 11.7961 8.70359L17.6872 5.30506C18.5897 4.78466 19.6218 4.53202 20.6626 4.5767C21.7035 4.62138 22.71 4.96154 23.5647 5.55737C24.4192 6.15321 25.0865 6.98008 25.4883 7.94129C25.8902 8.90246 26.01 9.95817 25.8338 10.985ZM10.4217 16.055L7.95792 14.6328C7.94505 14.6263 7.93385 14.6168 7.92551 14.605C7.91717 14.5932 7.91183 14.5796 7.91007 14.5652V7.76129C7.91073 6.71923 8.20824 5.69889 8.7677 4.81973C9.32724 3.94056 10.1256 3.23897 11.0694 2.79705C12.0131 2.35514 13.0632 2.1912 14.0967 2.32441C15.1303 2.45763 16.1045 2.88249 16.9054 3.54927C16.861 3.5735 16.7836 3.61621 16.7323 3.64736L10.9047 7.01354C10.7584 7.09667 10.637 7.21724 10.5528 7.36288C10.4686 7.50849 10.4248 7.67393 10.4258 7.84207L10.4217 16.055ZM11.7597 13.1701L14.9286 11.3399L18.0974 13.1689V16.8282L14.9286 18.6573L11.7597 16.8282V13.1701Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3
+                      class="text-sm font-medium text-gray-800 dark:text-white/90 mb-1"
+                    >
+                      ChatGPT
+                    </h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                      Imaginative powers of the human species.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <button
+                    class="px-5 dark:text-gray-400 dark:hover:bg-white/5 py-3 gap-2 text-sm text-gray-600 font-medium rounded-full hover:bg-gray-100 transition flex items-center"
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M6.54093 3.79167C6.54093 2.54903 7.54829 1.54167 8.79093 1.54167H11.2076C12.4502 1.54167 13.4576 2.54903 13.4576 3.79167V4.04167H15.6247H16.6655C17.0797 4.04167 17.4155 4.37745 17.4155 4.79167C17.4155 5.20588 17.0797 5.54167 16.6655 5.54167H16.3747V8.24654V13.2465V16.2083C16.3747 17.451 15.3673 18.4583 14.1247 18.4583H5.87467C4.63203 18.4583 3.62467 17.451 3.62467 16.2083V13.2465V8.24654V5.54167H3.33301C2.91879 5.54167 2.58301 5.20588 2.58301 4.79167C2.58301 4.37745 2.91879 4.04167 3.33301 4.04167H4.37467H6.54093V3.79167ZM14.8747 13.2465V8.24654V5.54167H13.4576H12.7076H7.29093H6.54093H5.12467V8.24654V13.2465V16.2083C5.12467 16.6225 5.46046 16.9583 5.87467 16.9583H14.1247C14.5389 16.9583 14.8747 16.6225 14.8747 16.2083V13.2465ZM8.04093 4.04167H11.9576V3.79167C11.9576 3.37745 11.6218 3.04167 11.2076 3.04167H8.79093C8.37672 3.04167 8.04093 3.37745 8.04093 3.79167V4.04167ZM8.33301 8C8.74722 8 9.08301 8.33579 9.08301 8.75V13.75C9.08301 14.1642 8.74722 14.5 8.33301 14.5C7.91879 14.5 7.58301 14.1642 7.58301 13.75V8.75C7.58301 8.33579 7.91879 8 8.33301 8ZM12.4163 8.75C12.4163 8.33579 12.0806 8 11.6663 8C11.2521 8 10.9163 8.33579 10.9163 8.75V13.75C10.9163 14.1642 11.2521 14.5 11.6663 14.5C12.0806 14.5 12.4163 14.1642 12.4163 13.75V8.75Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+
+                    Remove
+                  </button>
+                  <button
+                    class="px-5 py-3 gap-2 text-sm dark:bg-white/5 text-white font-medium bg-gray-700 transition rounded-full hover:bg-gray-800 flex items-center"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      viewBox="0 0 20 20"
+                      fill="none"
+                    >
+                      <path
+                        d="M16.7522 5.45L7.65222 14.55L3.24805 10.1459"
+                        stroke="white"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    Connected
+                  </button>
+                </div>
+              </div>
+
+              <!-- Figma -->
+              <div
+                class="flex flex-col gap-5 md:flex-row md:items-center justify-between py-5"
+              >
+                <div class="flex items-center">
+                  <div
+                    class="w-10 h-10 dark:text-white/90 dark:bg-white/5 dark:border-white/5 bg-gray-100 border border-gray-200 rounded-md flex items-center justify-center mr-3"
+                  >
+                    <svg
+                      class="w-6 h-6"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M8 24C10.2091 24 12 22.2091 12 20V16H8C5.79086 16 4 17.7909 4 20C4 22.2091 5.79086 24 8 24Z"
+                        fill="#0ACF83"
+                      />
+                      <path
+                        d="M4 12C4 9.79086 5.79086 8 8 8H12V16H8C5.79086 16 4 14.2091 4 12Z"
+                        fill="#A259FF"
+                      />
+                      <path
+                        d="M4 4C4 1.79086 5.79086 0 8 0H12V8H8C5.79086 8 4 6.20914 4 4Z"
+                        fill="#F24E1E"
+                      />
+                      <path
+                        d="M12 0H16C18.2091 0 20 1.79086 20 4C20 6.20914 18.2091 8 16 8H12V0Z"
+                        fill="#FF7262"
+                      />
+                      <path
+                        d="M20 12C20 14.2091 18.2091 16 16 16C13.7909 16 12 14.2091 12 12C12 9.79086 13.7909 8 16 8C18.2091 8 20 9.79086 20 12Z"
+                        fill="#1ABCFE"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3
+                      class="text-sm font-medium text-gray-800 dark:text-white/90 mb-1"
+                    >
+                      Figma
+                    </h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                      Imaginative powers of the human species.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                  <a
+                    href="#"
+                    class="text-sm text-gray-500 dark:text-gray-400 dark:hover:text-white font-medium hover:text-gray-900"
+                    >Learn more</a
+                  >
+                  <button
+                    class="px-5 py-3 gap-2 text-sm text-gray-600 dark:text-gray-400 dark:hover:bg-gray-900 dark:hover:text-gray-200 dark:bg-gray-800 dark:border-gray-700 font-medium border border-gray-200 rounded-full hover:bg-gray-100 transition flex items-center"
+                  >
+                    Connect
+                  </button>
+                </div>
+              </div>
+
+              <!-- Photoshop -->
+              <div
+                class="flex flex-col gap-5 md:flex-row md:items-center justify-between py-5"
+              >
+                <div class="flex items-center">
+                  <div
+                    class="w-10 h-10 bg-[#001E36] rounded-md flex items-center justify-center mr-3"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="46"
+                      height="46"
+                      viewBox="0 0 46 46"
+                      fill="none"
+                    >
+                      <g clip-path="url(#clip0_9261_4715)">
+                        <path
+                          d="M8.14583 0.574997H37.8542C42.3583 0.574997 46 4.21666 46 8.72083V37.2792C46 41.7833 42.3583 45.425 37.8542 45.425H8.14583C3.64167 45.425 0 41.7833 0 37.2792V8.72083C0 4.21666 3.64167 0.574997 8.14583 0.574997Z"
+                          fill="#001E36"
+                        />
+                        <path
+                          d="M10.3496 32.0275V12.305C10.3496 12.1708 10.4071 12.0942 10.5413 12.0942C10.8671 12.0942 11.1738 12.0942 11.6146 12.075C12.0746 12.0558 12.5538 12.0558 13.0713 12.0367C13.5888 12.0175 14.1446 12.0175 14.7388 11.9983C15.3329 11.9792 15.9079 11.9792 16.4829 11.9792C18.0546 11.9792 19.3579 12.1708 20.4313 12.5733C21.3896 12.8992 22.2713 13.4358 22.9996 14.145C23.6129 14.7583 24.0921 15.5058 24.3988 16.33C24.6863 17.135 24.8396 17.9592 24.8396 18.8217C24.8396 20.47 24.4563 21.8308 23.6896 22.9042C22.9229 23.9775 21.8496 24.7825 20.6038 25.2425C19.3004 25.7217 17.8629 25.8942 16.2913 25.8942C15.8313 25.8942 15.5246 25.8942 15.3329 25.875C15.1413 25.8558 14.8729 25.8558 14.5088 25.8558V32.0083C14.5279 32.1425 14.4321 32.2575 14.2979 32.2767C14.2788 32.2767 14.2596 32.2767 14.2213 32.2767H10.5796C10.4263 32.2767 10.3496 32.2 10.3496 32.0275ZM14.5279 15.7933V22.2333C14.7963 22.2525 15.0454 22.2717 15.2754 22.2717H16.2913C17.0388 22.2717 17.7863 22.1567 18.4954 21.9267C19.1088 21.7542 19.6454 21.39 20.0671 20.9108C20.4696 20.4317 20.6613 19.78 20.6613 18.9367C20.6804 18.3425 20.5271 17.7483 20.2204 17.2308C19.8946 16.7325 19.4346 16.3492 18.8788 16.1383C18.1696 15.8508 17.4029 15.7358 16.6171 15.755C16.1188 15.755 15.6779 15.755 15.3138 15.7742C14.9304 15.755 14.6621 15.7742 14.5279 15.7933Z"
+                          fill="#31A8FF"
+                        />
+                        <path
+                          d="M36.7993 21.0642C36.2243 20.7575 35.611 20.5467 34.9593 20.4125C34.2501 20.2592 33.541 20.1633 32.8126 20.1633C32.4293 20.1442 32.0268 20.2017 31.6626 20.2975C31.4135 20.355 31.2026 20.4892 31.0685 20.6808C30.9726 20.8342 30.9151 21.0258 30.9151 21.1983C30.9151 21.3708 30.9918 21.5433 31.1068 21.6967C31.2793 21.9075 31.5093 22.08 31.7585 22.2142C32.1993 22.4442 32.6593 22.655 33.1193 22.8467C34.1543 23.1917 35.151 23.6708 36.071 24.2458C36.7035 24.6483 37.221 25.185 37.5851 25.8367C37.8918 26.45 38.0451 27.1208 38.026 27.8109C38.0451 28.7117 37.7768 29.6125 37.2785 30.36C36.7418 31.1267 35.9943 31.7208 35.1318 32.0659C34.1926 32.4684 33.0426 32.6792 31.6626 32.6792C30.781 32.6792 29.9185 32.6025 29.056 32.43C28.3851 32.315 27.7143 32.1042 27.101 31.8167C26.9668 31.74 26.871 31.6059 26.8901 31.4525V28.1175C26.8901 28.06 26.9093 27.9833 26.9668 27.945C27.0243 27.9067 27.0818 27.9258 27.1393 27.9642C27.8868 28.405 28.6726 28.7117 29.516 28.9033C30.2443 29.095 31.011 29.1908 31.7776 29.1908C32.506 29.1908 33.0235 29.095 33.3685 28.9225C33.6751 28.7883 33.886 28.4625 33.886 28.1175C33.886 27.8492 33.7326 27.6 33.426 27.3508C33.1193 27.1017 32.4868 26.8142 31.5476 26.45C30.5701 26.105 29.6693 25.645 28.826 25.07C28.2318 24.6483 27.7335 24.0925 27.3693 23.4408C27.0626 22.8275 26.9093 22.1567 26.9285 21.4858C26.9285 20.6617 27.1585 19.8758 27.5801 19.1667C28.0593 18.4 28.7685 17.7867 29.5926 17.4033C30.4935 16.9433 31.6243 16.7325 32.9851 16.7325C33.771 16.7325 34.576 16.79 35.3618 16.905C35.9368 16.9817 36.4926 17.135 37.0101 17.3458C37.0868 17.365 37.1635 17.4417 37.2018 17.5183C37.221 17.595 37.2401 17.6717 37.2401 17.7483V20.8725C37.2401 20.9492 37.2018 21.0258 37.1443 21.0642C36.9718 21.1025 36.876 21.1025 36.7993 21.0642Z"
+                          fill="#31A8FF"
+                        />
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_9261_4715">
+                          <rect
+                            width="46"
+                            height="44.85"
+                            fill="white"
+                            transform="translate(0 0.574997)"
+                          />
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3
+                      class="text-sm font-medium text-gray-800 dark:text-white/90 mb-1"
+                    >
+                      Photoshop
+                    </h3>
+                    <p class="text-sm dark:tex-gray-400 text-gray-500">
+                      Imaginative powers of the human species.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                  <a
+                    href="#"
+                    class="text-sm text-gray-500 dark:text-gray-400 font-medium dark:hover:text-white hover:text-gray-900"
+                    >Learn more</a
+                  >
+                  <button
+                    class="px-5 py-3 gap-2 text-sm text-gray-600 dark:text-gray-400 dark:hover:bg-gray-900 dark:hover:text-gray-200 dark:bg-gray-800 dark:border-gray-700 font-medium border border-gray-200 rounded-full hover:bg-gray-100 transition flex items-center"
+                  >
+                    Connect
+                  </button>
+                </div>
+              </div>
+
+              <!-- VKontakte -->
+              <div
+                class="flex flex-col gap-5 md:flex-row md:items-center justify-between py-5"
+              >
+                <div class="flex items-center">
+                  <div
+                    class="w-10 h-10 bg-[#0077FF] rounded-md flex items-center justify-center mr-3"
+                  >
+                    <svg
+                      class="w-6 h-6 text-white"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12.785 16.241C12.785 16.241 13.065 16.211 13.21 16.061C13.343 15.923 13.338 15.662 13.338 15.662C13.338 15.662 13.32 14.421 13.903 14.241C14.477 14.064 15.2 15.448 15.971 15.969C16.551 16.364 16.992 16.276 16.992 16.276L19.147 16.241C19.147 16.241 20.261 16.173 19.747 15.354C19.704 15.287 19.446 14.727 18.184 13.561C16.862 12.338 17.036 12.532 18.622 10.467C19.607 9.156 19.985 8.321 19.863 7.957C19.747 7.609 19.054 7.693 19.054 7.693L16.622 7.708C16.622 7.708 16.447 7.684 16.317 7.764C16.19 7.842 16.109 8.018 16.109 8.018C16.109 8.018 15.744 9.115 15.255 10.061C14.225 12.054 13.813 12.148 13.64 12.033C13.228 11.762 13.327 10.933 13.327 10.359C13.327 8.429 13.589 7.583 12.817 7.391C12.566 7.329 12.379 7.288 11.741 7.282C10.92 7.273 10.219 7.284 9.825 7.482C9.561 7.613 9.36 7.904 9.487 7.921C9.642 7.942 9.983 8.019 10.17 8.286C10.41 8.628 10.402 9.415 10.402 9.415C10.402 9.415 10.54 11.778 10.086 12.043C9.779 12.227 9.355 11.888 8.445 10.04C7.975 9.111 7.621 8.083 7.621 8.083C7.621 8.083 7.552 7.913 7.428 7.821C7.277 7.71 7.067 7.675 7.067 7.675L4.753 7.69C4.753 7.69 4.384 7.699 4.262 7.844C4.152 7.973 4.253 8.239 4.253 8.239C4.253 8.239 6.224 12.448 8.452 14.566C10.491 16.486 12.785 16.241 12.785 16.241Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3
+                      class="text-sm font-medium text-gray-800 dark:text-white/90 mb-1"
+                    >
+                      VKontakte
+                    </h3>
+                    <p class="text-sm dark:text-gray-400 text-gray-500">
+                      Imaginative powers of the human species.
+                    </p>
+                  </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                  <a
+                    href="#"
+                    class="text-sm text-gray-500 dark:text-gray-400 font-medium dark:hover:text-white hover:text-gray-900"
+                    >Learn more</a
+                  >
+                  <button
+                    class="px-5 py-3 gap-2 text-sm text-gray-600 dark:hover:bg-gray-900 dark:hover:text-gray-200 dark:text-gray-400 dark:bg-gray-800 dark:border-gray-700 font-medium border border-gray-200 rounded-full hover:bg-gray-100 transition flex items-center"
+                  >
+                    Connect
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+
+      <!-- Right Sidebar -->
+      <aside
+        class="fixed inset-y-0 top-0 right-0 z-40 w-[288px] bg-white dark:bg-dark-primary border-l border-gray-100 dark:border-gray-800 transform transition-transform duration-300 ease-in-out translate-x-0 lg:hidden lg:static lg:h-auto"
+        :class="{'translate-x-0': rightSidebarOpen, 'translate-x-full': !rightSidebarOpen}"
+      >
+        <div class="h-full flex flex-col">
+          <!-- Mobile Navigation - Always visible on small screens -->
+
+          <div class="lg:hidden mobile-menu">
+            <span
+              class="px-10 mb-4 pt-10 block text-xs font-normal text-gray-500 dark:text-gray-400"
+            >
+              Top Menu
+            </span>
+            <div class="pt-2 pb-3 space-y-1 px-4 sm:px-6">
+              <a
+                href="#"
+                class="block px-3 py-2 rounded-md text-sm font-medium text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                Home
+              </a>
+
+              <!-- Products Dropdown (Mobile) -->
+              <div>
+                <button
+                  @click.stop="toggleDropdown('products')"
+                  class="flex justify-between items-center w-full px-3 py-2 rounded-md text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <span>Products</span>
+                  <svg
+                    class="h-4 w-4 transition-transform duration-200"
+                    :class="{'transform rotate-180': activeDropdown === 'products'}"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+
+                <div
+                  x-show="activeDropdown === 'products'"
+                  x-cloak
+                  class="mt-2 space-y-1 pl-4"
+                >
+                  <a
+                    href="text-generator.html"
+                    class="flex items-center px-2 py-2 gap-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <svg
+                      class="size-7"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="42"
+                      height="42"
+                      viewBox="0 0 42 42"
+                      fill="none"
+                    >
+                      <g filter="url(#filter0_d_11446_459)">
+                        <g filter="url(#filter1_i_11446_459)">
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M8.65016 30.069L8.65172 30.0672L8.66373 30.0529C8.67509 30.0393 8.69298 30.0176 8.71661 29.9884C8.76388 29.9299 8.83392 29.8415 8.92024 29.727C9.09325 29.4974 9.32961 29.166 9.57857 28.7639C10.0262 28.041 10.4852 27.1362 10.7156 26.2116C9.27786 24.168 8.43335 21.6756 8.43335 18.9882C8.43335 12.0479 14.0596 6.42157 21 6.42157C27.9404 6.42157 33.5667 12.0479 33.5667 18.9882C33.5667 25.9286 27.9404 31.5549 21 31.5549C19.4278 31.5549 17.9211 31.2657 16.5317 30.737C15.1235 31.2652 13.374 31.4628 12.0023 31.5368C11.2414 31.5779 10.5659 31.5822 10.0802 31.5763C9.83698 31.5733 9.6405 31.5678 9.50367 31.5629C9.43523 31.5605 9.38166 31.5582 9.34455 31.5565L9.30143 31.5545L9.2895 31.5539L9.28489 31.5536L9.33335 30.6549C9.28419 31.5536 9.28489 31.5536 9.28489 31.5536C8.94277 31.5349 8.64025 31.3235 8.50567 31.0084C8.37122 30.6936 8.42761 30.3291 8.65016 30.069ZM15.1666 17.4885C14.3381 17.4885 13.6666 18.16 13.6666 18.9885C13.6666 19.8169 14.3381 20.4885 15.1666 20.4885H15.1799C16.0083 20.4885 16.6799 19.8169 16.6799 18.9885C16.6799 18.16 16.0083 17.4885 15.1799 17.4885H15.1666ZM20.9999 17.4885C20.1715 17.4885 19.4999 18.16 19.4999 18.9885C19.4999 19.8169 20.1715 20.4885 20.9999 20.4885H21.0132C21.8417 20.4885 22.5132 19.8169 22.5132 18.9885C22.5132 18.16 21.8417 17.4885 21.0132 17.4885H20.9999ZM26.8332 17.4885C26.0048 17.4885 25.3332 18.16 25.3332 18.9885C25.3332 19.8169 26.0048 20.4885 26.8332 20.4885H26.8466C27.675 20.4885 28.3466 19.8169 28.3466 18.9885C28.3466 18.16 27.675 17.4885 26.8466 17.4885H26.8332Z"
+                            fill="url(#paint0_radial_11446_459)"
+                          />
+                        </g>
+                      </g>
+                      <defs>
+                        <filter
+                          id="filter0_d_11446_459"
+                          x="-3"
+                          y="-3"
+                          width="48"
+                          height="48"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dy="2" />
+                          <feGaussianBlur stdDeviation="4" />
+                          <feComposite in2="hardAlpha" operator="out" />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 0.498039 0 0 0 0 0.407843 0 0 0 0 1 0 0 0 0.25 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="BackgroundImageFix"
+                            result="effect1_dropShadow_11446_459"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="effect1_dropShadow_11446_459"
+                            result="shape"
+                          />
+                        </filter>
+                        <filter
+                          id="filter1_i_11446_459"
+                          x="8.43335"
+                          y="6.42157"
+                          width="26.6571"
+                          height="26.6807"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="BackgroundImageFix"
+                            result="shape"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dx="1.52381" dy="1.52381" />
+                          <feGaussianBlur stdDeviation="1.14286" />
+                          <feComposite
+                            in2="hardAlpha"
+                            operator="arithmetic"
+                            k2="-1"
+                            k3="1"
+                          />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="shape"
+                            result="effect1_innerShadow_11446_459"
+                          />
+                        </filter>
+                        <radialGradient
+                          id="paint0_radial_11446_459"
+                          cx="0"
+                          cy="0"
+                          r="1"
+                          gradientUnits="userSpaceOnUse"
+                          gradientTransform="translate(22.0839 27.1287) rotate(-60.1772) scale(24.8321 24.8204)"
+                        >
+                          <stop stop-color="#7F68FF" />
+                          <stop offset="1" stop-color="#BEB2FF" />
+                        </radialGradient>
+                      </defs>
+                    </svg>
+                    <span>Text Generator</span>
+                  </a>
+                  <a
+                    href="image-generator.html"
+                    class="flex items-center gap-2 px-2 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <svg
+                      class="size-7"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="40"
+                      height="40"
+                      viewBox="0 0 40 40"
+                      fill="none"
+                    >
+                      <g filter="url(#filter0_d_11446_463)">
+                        <g filter="url(#filter1_i_11446_463)">
+                          <path
+                            d="M15.5363 11.4987C14.4792 11.4987 13.6222 12.3556 13.6222 13.4127C13.6222 14.4698 14.4792 15.3268 15.5363 15.3268C16.5934 15.3268 17.4504 14.4698 17.4504 13.4127C17.4504 12.3556 16.5934 11.4987 15.5363 11.4987Z"
+                            fill="url(#paint0_radial_11446_463)"
+                          />
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M13.3334 6.58331C10.71 6.58331 8.58337 8.70996 8.58337 11.3333V24.6666C8.58337 27.29 10.71 29.4166 13.3334 29.4166H26.6667C29.2901 29.4166 31.4167 27.29 31.4167 24.6666V11.3333C31.4167 8.70996 29.2901 6.58331 26.6667 6.58331H13.3334ZM10.0834 11.3333C10.0834 9.53839 11.5384 8.08331 13.3334 8.08331H26.6667C28.4616 8.08331 29.9167 9.53839 29.9167 11.3333V14.7584C29.1626 14.5833 28.3773 14.4908 27.5711 14.4908C23.3234 14.4908 19.6758 17.0533 18.087 20.7156C16.8387 19.4946 15.1295 18.7408 13.2441 18.7408C12.106 18.7408 11.0312 19.0158 10.0834 19.5027V11.3333Z"
+                            fill="url(#paint1_radial_11446_463)"
+                          />
+                        </g>
+                      </g>
+                      <defs>
+                        <filter
+                          id="filter0_d_11446_463"
+                          x="-4"
+                          y="-4"
+                          width="48"
+                          height="48"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dy="2" />
+                          <feGaussianBlur stdDeviation="4" />
+                          <feComposite in2="hardAlpha" operator="out" />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 1 0 0 0 0 0.435294 0 0 0 0 0.345098 0 0 0 0.25 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="BackgroundImageFix"
+                            result="effect1_dropShadow_11446_463"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="effect1_dropShadow_11446_463"
+                            result="shape"
+                          />
+                        </filter>
+                        <filter
+                          id="filter1_i_11446_463"
+                          x="8.58337"
+                          y="6.58331"
+                          width="24.3572"
+                          height="24.3571"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="BackgroundImageFix"
+                            result="shape"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dx="1.52381" dy="1.52381" />
+                          <feGaussianBlur stdDeviation="1.14286" />
+                          <feComposite
+                            in2="hardAlpha"
+                            operator="arithmetic"
+                            k2="-1"
+                            k3="1"
+                          />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="shape"
+                            result="effect1_innerShadow_11446_463"
+                          />
+                        </filter>
+                        <radialGradient
+                          id="paint0_radial_11446_463"
+                          cx="0"
+                          cy="0"
+                          r="1"
+                          gradientUnits="userSpaceOnUse"
+                          gradientTransform="translate(15.9273 27.5872) rotate(-58.7716) scale(34.2383 34.2383)"
+                        >
+                          <stop stop-color="#FF6F58" />
+                          <stop offset="1" stop-color="#FFA293" />
+                        </radialGradient>
+                        <radialGradient
+                          id="paint1_radial_11446_463"
+                          cx="0"
+                          cy="0"
+                          r="1"
+                          gradientUnits="userSpaceOnUse"
+                          gradientTransform="translate(15.9273 27.5872) rotate(-58.7716) scale(34.2383 34.2383)"
+                        >
+                          <stop stop-color="#FF6F58" />
+                          <stop offset="1" stop-color="#FFA293" />
+                        </radialGradient>
+                      </defs>
+                    </svg>
+                    <span>Image Generator</span>
+                  </a>
+                  <a
+                    href="code-generator.html"
+                    class="flex gap-2 items-center px-2 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <svg
+                      class="size-7"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="40"
+                      height="40"
+                      viewBox="0 0 40 40"
+                      fill="none"
+                    >
+                      <g filter="url(#filter0_d_11446_467)">
+                        <g filter="url(#filter1_i_11446_467)">
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M8.58337 11.3333C8.58337 8.70996 10.71 6.58331 13.3334 6.58331H26.6667C29.2901 6.58331 31.4167 8.70996 31.4167 11.3333V24.6666C31.4167 27.29 29.2901 29.4166 26.6667 29.4166H13.3334C10.71 29.4166 8.58337 27.29 8.58337 24.6666V11.3333ZM21.9164 12.8306C22.0063 12.4263 21.7513 12.0257 21.347 11.9358C20.9426 11.846 20.542 12.1009 20.4521 12.5052L18.0824 23.1687C17.9926 23.5731 18.2475 23.9737 18.6519 24.0636C19.0562 24.1534 19.4569 23.8985 19.5467 23.4941L21.9164 12.8306ZM24.3554 15.1295C24.0625 14.8366 23.5876 14.8366 23.2947 15.1294C23.0018 15.4223 23.0018 15.8972 23.2947 16.1901L25.1042 17.9998L23.2947 19.8094C23.0018 20.1023 23.0018 20.5771 23.2947 20.87C23.5876 21.1629 24.0625 21.1629 24.3554 20.87L26.6952 18.5302C26.9881 18.2373 26.9881 17.7624 26.6952 17.4695L24.3554 15.1295ZM16.6965 16.1992C16.9894 15.9063 16.9894 15.4314 16.6965 15.1386C16.4036 14.8457 15.9287 14.8457 15.6358 15.1386L13.3051 17.4695C13.0122 17.7624 13.0122 18.2373 13.3051 18.5302L15.6358 20.8609C15.9287 21.1538 16.4036 21.1538 16.6965 20.8609C16.9894 20.568 16.9894 20.0931 16.6965 19.8003L14.8961 17.9998L16.6965 16.1992Z"
+                            fill="url(#paint0_radial_11446_467)"
+                          />
+                        </g>
+                      </g>
+                      <defs>
+                        <filter
+                          id="filter0_d_11446_467"
+                          x="-4"
+                          y="-4"
+                          width="48"
+                          height="48"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dy="2" />
+                          <feGaussianBlur stdDeviation="4" />
+                          <feComposite in2="hardAlpha" operator="out" />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 0.0901961 0 0 0 0 0.654902 0 0 0 0 1 0 0 0 0.25 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="BackgroundImageFix"
+                            result="effect1_dropShadow_11446_467"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="effect1_dropShadow_11446_467"
+                            result="shape"
+                          />
+                        </filter>
+                        <filter
+                          id="filter1_i_11446_467"
+                          x="8.58337"
+                          y="6.58331"
+                          width="23.8334"
+                          height="23.8333"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="BackgroundImageFix"
+                            result="shape"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dx="1" dy="1" />
+                          <feGaussianBlur stdDeviation="1" />
+                          <feComposite
+                            in2="hardAlpha"
+                            operator="arithmetic"
+                            k2="-1"
+                            k3="1"
+                          />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="shape"
+                            result="effect1_innerShadow_11446_467"
+                          />
+                        </filter>
+                        <radialGradient
+                          id="paint0_radial_11446_467"
+                          cx="0"
+                          cy="0"
+                          r="1"
+                          gradientUnits="userSpaceOnUse"
+                          gradientTransform="translate(20.9847 25.3779) rotate(-60.1541) scale(22.5438 22.5438)"
+                        >
+                          <stop stop-color="#17A7FF" />
+                          <stop offset="1" stop-color="#84D0FF" />
+                        </radialGradient>
+                      </defs>
+                    </svg>
+                    <span>Code Generator</span>
+                  </a>
+                  <a
+                    href="video-generator.html"
+                    class="flex gap-2 items-center px-2 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <svg
+                      class="size-7"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="44"
+                      height="38"
+                      viewBox="0 0 44 38"
+                      fill="none"
+                    >
+                      <g filter="url(#filter0_d_11446_471)">
+                        <g filter="url(#filter1_i_11446_471)">
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M8.5 11.8408C8.5 9.13389 10.6944 6.93951 13.4013 6.93951H30.5987C33.3056 6.93951 35.5 9.13389 35.5 11.8408V22.1593C35.5 24.8662 33.3056 27.0605 30.5987 27.0605H13.4013C10.6944 27.0605 8.5 24.8662 8.5 22.1593V11.8408ZM25.7469 16.2387C26.3027 16.594 26.3027 17.4058 25.7469 17.7611L20.7913 20.9295C20.1899 21.314 19.4012 20.8821 19.4012 20.1684V13.8315C19.4012 13.1177 20.1899 12.6858 20.7913 13.0703L25.7469 16.2387Z"
+                            fill="url(#paint0_radial_11446_471)"
+                          />
+                        </g>
+                      </g>
+                      <defs>
+                        <filter
+                          id="filter0_d_11446_471"
+                          x="-2"
+                          y="-5"
+                          width="48"
+                          height="48"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dy="2" />
+                          <feGaussianBlur stdDeviation="4" />
+                          <feComposite in2="hardAlpha" operator="out" />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 1 0 0 0 0 0.67451 0 0 0 0 0.0980392 0 0 0 0.25 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="BackgroundImageFix"
+                            result="effect1_dropShadow_11446_471"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="effect1_dropShadow_11446_471"
+                            result="shape"
+                          />
+                        </filter>
+                        <filter
+                          id="filter1_i_11446_471"
+                          x="8.5"
+                          y="6.93951"
+                          width="28.5238"
+                          height="21.6448"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="BackgroundImageFix"
+                            result="shape"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dx="1.52381" dy="1.52381" />
+                          <feGaussianBlur stdDeviation="1.14286" />
+                          <feComposite
+                            in2="hardAlpha"
+                            operator="arithmetic"
+                            k2="-1"
+                            k3="1"
+                          />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="shape"
+                            result="effect1_innerShadow_11446_471"
+                          />
+                        </filter>
+                        <radialGradient
+                          id="paint0_radial_11446_471"
+                          cx="0"
+                          cy="0"
+                          r="1"
+                          gradientUnits="userSpaceOnUse"
+                          gradientTransform="translate(23.1644 23.5016) rotate(-52.4062) scale(21.7466 24.3522)"
+                        >
+                          <stop stop-color="#FFAC19" />
+                          <stop offset="1" stop-color="#FFCE78" />
+                        </radialGradient>
+                      </defs>
+                    </svg>
+                    <span>Video Generator</span>
+                  </a>
+                  <a
+                    href="email-generator.html"
+                    class="flex items-center gap-2 px-2 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    <svg
+                      class="size-7"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="44"
+                      height="38"
+                      viewBox="0 0 44 38"
+                      fill="none"
+                    >
+                      <g filter="url(#filter0_d_11446_475)">
+                        <g filter="url(#filter1_i_11446_475)">
+                          <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M8.5 11.8408C8.5 9.13389 10.6944 6.93951 13.4013 6.93951H30.5987C33.3056 6.93951 35.5 9.13389 35.5 11.8408V22.1593C35.5 24.8662 33.3056 27.0605 30.5987 27.0605H13.4013C10.6944 27.0605 8.5 24.8662 8.5 22.1593V11.8408ZM14.4096 12.4148C14.059 12.1703 13.5766 12.2563 13.3322 12.6069C13.0877 12.9575 13.1737 13.4399 13.5243 13.6843L20.3774 18.4632C21.3526 19.1432 22.6483 19.1432 23.6235 18.4632L30.4767 13.6843C30.8272 13.4399 30.9133 12.9575 30.6688 12.6069C30.4243 12.2563 29.9419 12.1703 29.5913 12.4148L22.7382 17.1936C22.295 17.5027 21.706 17.5027 21.2627 17.1936L14.4096 12.4148Z"
+                            fill="url(#paint0_radial_11446_475)"
+                          />
+                        </g>
+                      </g>
+                      <defs>
+                        <filter
+                          id="filter0_d_11446_475"
+                          x="-2"
+                          y="-5"
+                          width="48"
+                          height="48"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dy="2" />
+                          <feGaussianBlur stdDeviation="4" />
+                          <feComposite in2="hardAlpha" operator="out" />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 0.168627 0 0 0 0 0.811765 0 0 0 0 1 0 0 0 0.25 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="BackgroundImageFix"
+                            result="effect1_dropShadow_11446_475"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="effect1_dropShadow_11446_475"
+                            result="shape"
+                          />
+                        </filter>
+                        <filter
+                          id="filter1_i_11446_475"
+                          x="8.5"
+                          y="6.93951"
+                          width="28.5238"
+                          height="21.6448"
+                          filterUnits="userSpaceOnUse"
+                          color-interpolation-filters="sRGB"
+                        >
+                          <feFlood
+                            flood-opacity="0"
+                            result="BackgroundImageFix"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in="SourceGraphic"
+                            in2="BackgroundImageFix"
+                            result="shape"
+                          />
+                          <feColorMatrix
+                            in="SourceAlpha"
+                            type="matrix"
+                            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+                            result="hardAlpha"
+                          />
+                          <feOffset dx="1.52381" dy="1.52381" />
+                          <feGaussianBlur stdDeviation="1.14286" />
+                          <feComposite
+                            in2="hardAlpha"
+                            operator="arithmetic"
+                            k2="-1"
+                            k3="1"
+                          />
+                          <feColorMatrix
+                            type="matrix"
+                            values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"
+                          />
+                          <feBlend
+                            mode="normal"
+                            in2="shape"
+                            result="effect1_innerShadow_11446_475"
+                          />
+                        </filter>
+                        <radialGradient
+                          id="paint0_radial_11446_475"
+                          cx="0"
+                          cy="0"
+                          r="1"
+                          gradientUnits="userSpaceOnUse"
+                          gradientTransform="translate(23.1644 23.5016) rotate(-52.4062) scale(21.7466 24.3522)"
+                        >
+                          <stop stop-color="#2BCFFF" />
+                          <stop offset="1" stop-color="#8EE5FF" />
+                        </radialGradient>
+                      </defs>
+                    </svg>
+                    <span>Email Generator</span>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Pages Dropdown (Mobile) -->
+              <div>
+                <button
+                  @click.stop="toggleDropdown('pages')"
+                  class="flex justify-between items-center w-full px-3 py-2 rounded-md text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <span>Pages</span>
+                  <svg
+                    class="h-4 w-4 transition-transform duration-200"
+                    :class="{'transform rotate-180': activeDropdown === 'pages'}"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+
+                <div
+                  x-show="activeDropdown === 'pages'"
+                  x-cloak
+                  class="mt-2 space-y-1 pl-4"
+                >
+                  <a
+                    href="#"
+                    class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Dashboard
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Pricing
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Blog Grid
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Blog Details
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Sign In
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Sign Up
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Reset Password
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    Privacy Policy
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-3 py-2 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  >
+                    404 Error
+                  </a>
+                </div>
+              </div>
+
+              <a
+                href="#"
+                class="block px-3 py-2 rounded-md text-sm font-medium text-gray-500 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              >
+                Contact
+              </a>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Mobile sidebar backdrop -->
+
+    <div
+      @click="sidebarOpen = false; rightSidebarOpen = false"
+      class="fixed inset-0 z-10 bg-gray-900/50 transition-opacity lg:hidden"
+      :class="{'opacity-100': sidebarOpen || rightSidebarOpen, 'opacity-0 pointer-events-none': !sidebarOpen && !rightSidebarOpen}"
+    ></div>
+
+    <script data-cfasync="false" src="cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script defer src="assets/js/alpine.min.js"></script>
+    <script defer src="assets/js/glightbox.min.js"></script>
+    <script defer src="assets/js/app.js"></script>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"9a6015d415bb4773a0bff22543062d3b","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ef9d95b7a27819e',t:'MTc3Njc0Nzg3Nw=='};var a=document.createElement('script');a.src='cdn-cgi/challenge-platform/h/b/scripts/jsd/0b8fb825cb67/maind41d.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+
+<!-- Mirrored from ai-agent.preview.uideck.com/dashboard-integration by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 21 Apr 2026 05:04:55 GMT -->
+</html>

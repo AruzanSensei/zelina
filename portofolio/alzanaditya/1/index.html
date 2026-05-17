@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Portofolio Alzan Adytia dengan nuansa galaxy, dark, dan stars untuk web development, design, dan content creation.">
+  <title>Alzan Adytia | Galaxy Portfolio</title>
+  <meta name="theme-color" content="#050816">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/portfolio/base.css">
+  <link rel="stylesheet" href="assets/css/portfolio/layout.css">
+  <link rel="stylesheet" href="assets/css/portfolio/sections.css">
+  <link rel="stylesheet" href="assets/css/portfolio/responsive.css">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="/favicon.png">
+</head>
+
+<body>
+  <div class="site-noise" aria-hidden="true"></div>
+  <div class="site-stars stars-small" aria-hidden="true"></div>
+  <div class="site-stars stars-large" aria-hidden="true"></div>
+
+  <header class="site-header" id="navbar">
+    <div class="container nav-wrap">
+      <a class="brand" href="#home" aria-label="Kembali ke hero section">
+        <span class="brand-main">Alzan</span><span class="brand-muted">Adytia</span>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Navigasi utama">
+        <a href="#about">aboutme</a>
+        <a href="#projects">portofolio</a>
+        <a href="#testimonials">testimoni</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a class="nav-contact-btn" href="#contact">Kontak</a>
+        <button class="nav-toggle" type="button" aria-label="Buka menu" aria-expanded="false"
+          aria-controls="mobileMenu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#about">aboutme</a>
+      <a href="#projects">portofolio</a>
+      <a href="#testimonials">testimoni</a>
+      <a href="#contact">kontak</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero-section section-shell" id="home">
+      <div class="section-glow hero-glow" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy" data-reveal>
+          <span class="eyebrow">
+            <i class="fa-solid fa-star"></i>
+            Galaxy themed portfolio
+          </span>
+          <h1 class="hero-title">
+            i'm <span class="text-gradient">Alzan</span><br>
+            i'm a <span class="typing-wrap"><span id="typedText"></span><span class="typing-cursor"></span></span>
+          </h1>
+          <p class="hero-description">
+            Saya merancang website yang tampil elegan, pengalaman visual yang kuat, dan konten yang terasa hidup di
+            setiap layar.
+          </p>
+          <p class="hero-description soft">
+            Fokus saya ada di kombinasi strategi, estetika, dan eksekusi supaya brand terasa lebih premium, lebih jelas,
+            dan lebih mudah diingat.
+          </p>
+
+          <div class="metric-row" aria-label="Ringkasan pengalaman">
+            <div class="metric-card">
+              <span>pengalaman 1 tahun</span>
+            </div>
+            <div class="metric-card">
+              <span>20+ project</span>
+            </div>
+            <div class="metric-card">
+              <span>14 client</span>
+            </div>
+          </div>
+
+          <div class="hero-actions">
+            <a class="button button-primary" href="#projects">Portofolio</a>
+            <a class="button button-secondary" href="#contact">Kontak</a>
+          </div>
+        </div>
+
+        <div class="hero-visual" data-reveal>
+          <div class="portrait-panel">
+            <div class="portrait-backdrop" aria-hidden="true"></div>
+            <div class="portrait-ring portrait-ring-a" aria-hidden="true"></div>
+            <div class="portrait-ring portrait-ring-b" aria-hidden="true"></div>
+            <img src="assets/img/hero-placeholder.png" alt="Placeholder profesional untuk foto profil Alzan"
+              class="portrait-image">
+
+            <div class="orbit-badge orbit-code">
+              <i class="fa-solid fa-code"></i>
+              <span>Web Dev</span>
+            </div>
+            <div class="orbit-badge orbit-design">
+              <i class="fa-solid fa-palette"></i>
+              <span>Designer</span>
+            </div>
+            <div class="orbit-badge orbit-creator">
+              <i class="fa-solid fa-user-plus"></i>
+              <span>Creator</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-section section-shell" id="about">
+      <div class="section-glow about-glow" aria-hidden="true"></div>
+      <div class="container section-grid">
+        <div class="section-heading" data-reveal>
+          <span class="eyebrow">
+            <i class="fa-solid fa-star"></i>
+            About me
+          </span>
+          <h2>Perjalanan yang saya bangun dari rasa penasaran, visual, dan eksekusi.</h2>
+          <p>
+            Bagian ini saya susun seperti panel cerita. Satu panel terbuka dalam satu waktu supaya isi tetap fokus dan
+            gampang dibaca.
+          </p>
+        </div>
+
+        <div class="accordion-group" id="aboutAccordion" data-accordion-group data-reveal>
+          <article class="accordion-item is-open">
+            <button class="accordion-trigger" type="button" aria-expanded="true">
+              <span class="accordion-title-wrap">
+                <span class="accordion-icon"><i class="fa-solid fa-star"></i></span>
+                <span class="accordion-title">Tentang ku</span>
+              </span>
+              <span class="accordion-state">01</span>
+            </button>
+            <div class="accordion-panel">
+              <p>Saya suka membuat pengalaman digital yang terasa modern, rapi, dan punya karakter. Buat saya, website
+                bukan cuma tempat menaruh informasi, tapi ruang untuk membangun rasa percaya.</p>
+            </div>
+          </article>
+
+          <article class="accordion-item">
+            <button class="accordion-trigger" type="button" aria-expanded="false">
+              <span class="accordion-title-wrap">
+                <span class="accordion-icon"><i class="fa-solid fa-star"></i></span>
+                <span class="accordion-title">karirku</span>
+              </span>
+              <span class="accordion-state">02</span>
+            </button>
+            <div class="accordion-panel">
+              <p>Saya berkembang lewat proyek web, kebutuhan desain promosi, dan produksi konten. Alur kerja saya selalu
+                dimulai dari memahami tujuan brand, lalu menerjemahkannya ke tampilan dan pesan yang terasa konsisten.
+              </p>
+            </div>
+          </article>
+
+          <article class="accordion-item">
+            <button class="accordion-trigger" type="button" aria-expanded="false">
+              <span class="accordion-title-wrap">
+                <span class="accordion-icon"><i class="fa-solid fa-star"></i></span>
+                <span class="accordion-title">Pendidikan</span>
+              </span>
+              <span class="accordion-state">03</span>
+            </button>
+            <div class="accordion-panel">
+              <p>Saya belajar lewat kombinasi pendidikan formal, eksplorasi mandiri, praktik langsung, dan eksperimen
+                yang terus saya ulang. Pendekatan itu bikin saya cepat adaptif saat menangani project dengan kebutuhan
+                visual maupun teknis.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="projects-section section-shell" id="projects">
+      <div class="section-glow projects-glow" aria-hidden="true"></div>
+      <div class="container">
+        <div class="section-heading centered" data-reveal>
+          <span class="eyebrow">
+            <i class="fa-solid fa-star"></i>
+            Projects gallery
+          </span>
+          <h2>Galeri project yang mewakili coding, design, dan content creation.</h2>
+          <p>Setiap kategori punya warna glow berbeda agar karakter tiap disiplin langsung terasa.</p>
+        </div>
+
+        <div class="project-filters" data-reveal>
+          <button class="filter-btn is-active" type="button" data-filter="all">ALL</button>
+          <button class="filter-btn" type="button" data-filter="web">Web</button>
+          <button class="filter-btn" type="button" data-filter="design">Design</button>
+          <button class="filter-btn" type="button" data-filter="content">Content</button>
+        </div>
+
+        <div class="project-grid">
+          <article class="project-card category-web" data-category="web" data-reveal>
+            <div class="project-preview">
+              <span class="project-badge"><i class="fa-solid fa-code"></i> Web</span>
+              <div class="project-window">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+            <h3>Nova Landing Page</h3>
+            <p>Landing page dark modern untuk personal brand dengan struktur cepat, clean, dan fokus konversi.</p>
+          </article>
+
+          <article class="project-card category-design" data-category="design" data-reveal>
+            <div class="project-preview">
+              <span class="project-badge"><i class="fa-solid fa-pen-ruler"></i> Design</span>
+              <div class="project-shape project-shape-grid"></div>
+            </div>
+            <h3>Brand Canvas Kit</h3>
+            <p>Eksplorasi visual identity, layout promosi, dan sistem warna yang tetap rapi di banyak media.</p>
+          </article>
+
+          <article class="project-card category-content" data-category="content" data-reveal>
+            <div class="project-preview">
+              <span class="project-badge"><i class="fa-solid fa-user-plus"></i> Content</span>
+              <div class="project-growth">
+                <strong>+218%</strong>
+                <span>audience growth</span>
+              </div>
+            </div>
+            <h3>Creator Growth Campaign</h3>
+            <p>Strategi konten singkat untuk membangun awareness, ritme posting, dan interaksi audiens.</p>
+          </article>
+
+          <article class="project-card category-web" data-category="web" data-reveal>
+            <div class="project-preview">
+              <span class="project-badge"><i class="fa-solid fa-laptop-code"></i> Web</span>
+              <div class="project-bars">
+                <span style="height: 46%"></span>
+                <span style="height: 72%"></span>
+                <span style="height: 58%"></span>
+                <span style="height: 88%"></span>
+              </div>
+            </div>
+            <h3>Studio Dashboard</h3>
+            <p>UI dashboard bertema neon untuk memantau progress, task, dan status produksi tim kreatif.</p>
+          </article>
+
+          <article class="project-card category-design" data-category="design" data-reveal>
+            <div class="project-preview">
+              <span class="project-badge"><i class="fa-solid fa-compass-drafting"></i> Design</span>
+              <div class="project-stack">
+                <span>Poster</span>
+                <span>Feed</span>
+                <span>Banner</span>
+              </div>
+            </div>
+            <h3>Social Promo Pack</h3>
+            <p>Set desain promosi untuk event dan brand lokal dengan ritme visual yang tetap konsisten.</p>
+          </article>
+
+          <article class="project-card category-content" data-category="content" data-reveal>
+            <div class="project-preview">
+              <span class="project-badge"><i class="fa-solid fa-video"></i> Content</span>
+              <div class="project-timeline">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+            <h3>Reels Content Sprint</h3>
+            <p>Konsep konten serial dengan hook cepat, visual padat, dan angle yang lebih gampang diingat.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="testimonials-section section-shell" id="testimonials">
+      <div class="section-glow testimonials-glow" aria-hidden="true"></div>
+      <div class="container">
+        <div class="section-heading centered" data-reveal>
+          <span class="eyebrow">
+            <i class="fa-solid fa-star"></i>
+            Testimonials
+          </span>
+          <h2>Feedback yang terus bergerak seperti orbit, lalu berhenti saat disentuh.</h2>
+          <p>Hover untuk desktop, tap atau click untuk mobile agar carousel pause kapan pun kamu mau.</p>
+        </div>
+
+        <div class="testimonial-marquees" data-reveal>
+          <div class="testimonial-row" data-carousel>
+            <div class="testimonial-track">
+              <article class="testimonial-card">
+                <p>"Hasil websitenya terasa premium dan enak dilihat, bukan template yang biasa."</p>
+                <strong>Raka</strong>
+                <span>Owner brand lokal</span>
+              </article>
+              <article class="testimonial-card">
+                <p>"Desain promonya cepat, rapi, dan ngerti arah visual yang saya mau."</p>
+                <strong>Nadia</strong>
+                <span>Event organizer</span>
+              </article>
+              <article class="testimonial-card">
+                <p>"Kontennya lebih terstruktur, reach naik, dan komunikasi brand jadi lebih jelas."</p>
+                <strong>Fahri</strong>
+                <span>Content creator</span>
+              </article>
+              <article class="testimonial-card">
+                <p>"Kolaborasinya enak, revisi juga jelas, jadi prosesnya nggak bikin capek."</p>
+                <strong>Vina</strong>
+                <span>UMKM fashion</span>
+              </article>
+            </div>
+            <div class="testimonial-track" aria-hidden="true">
+              <article class="testimonial-card">
+                <p>"Hasil websitenya terasa premium dan enak dilihat, bukan template yang biasa."</p>
+                <strong>Raka</strong>
+                <span>Owner brand lokal</span>
+              </article>
+              <article class="testimonial-card">
+                <p>"Desain promonya cepat, rapi, dan ngerti arah visual yang saya mau."</p>
+                <strong>Nadia</strong>
+                <span>Event organizer</span>
+              </article>
+              <article class="testimonial-card">
+                <p>"Kontennya lebih terstruktur, reach naik, dan komunikasi brand jadi lebih jelas."</p>
+                <strong>Fahri</strong>
+                <span>Content creator</span>
+              </article>
+              <article class="testimonial-card">
+                <p>"Kolaborasinya enak, revisi juga jelas, jadi prosesnya nggak bikin capek."</p>
+                <strong>Vina</strong>
+                <span>UMKM fashion</span>
+              </article>
+            </div>
+          </div>
+
+          <div class="testimonial-row reverse" data-carousel>
+            <div class="testimonial-track">
+              <article class="testimonial-card">
+                <p>"Project web dan desainnya terasa satu bahasa, jadi brand saya lebih kuat."</p>
+                <strong>Alif</strong>
+                <span>Founder startup</span>
+              </article>
+              <article class="testimonial-card">
+                <p>"Saya suka detail animasinya, hal kecil tapi bikin tampilan jauh lebih hidup."</p>
+                <strong>Dinda</strong>
+                <span>Personal brand coach</span>
+              </article>
+              <article class="testimonial-card">
+                <p>"Respons cepat dan ide visualnya relevan dengan target audiens saya."</p>
+                <strong>Bagas</strong>
+                <span>Freelance videographer</span>
+              </article>
+              <article class="testimonial-card">
+                <p>"Carousel yang dirancang untuk konten saya bikin feed terasa lebih konsisten."</p>
+                <strong>Sinta</strong>
+                <span>Beauty creator</span>
+              </article>
+            </div>
+            <div class="testimonial-track" aria-hidden="true">
+              <article class="testimonial-card">
+                <p>"Project web dan desainnya terasa satu bahasa, jadi brand saya lebih kuat."</p>
+                <strong>Alif</strong>
+                <span>Founder startup</span>
+              </article>
+              <article class="testimonial-card">
+                <p>"Saya suka detail animasinya, hal kecil tapi bikin tampilan jauh lebih hidup."</p>
+                <strong>Dinda</strong>
+                <span>Personal brand coach</span>
+              </article>
+              <article class="testimonial-card">
+                <p>"Respons cepat dan ide visualnya relevan dengan target audiens saya."</p>
+                <strong>Bagas</strong>
+                <span>Freelance videographer</span>
+              </article>
+              <article class="testimonial-card">
+                <p>"Carousel yang dirancang untuk konten saya bikin feed terasa lebih konsisten."</p>
+                <strong>Sinta</strong>
+                <span>Beauty creator</span>
+              </article>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact-section section-shell" id="contact">
+      <div class="section-glow contact-glow" aria-hidden="true"></div>
+      <div class="container contact-grid">
+        <div class="contact-copy" data-reveal>
+          <span class="eyebrow">
+            <i class="fa-solid fa-star"></i>
+            Contact
+          </span>
+          <h2>Kalau kamu butuh website, visual brand, atau konten, ayo ngobrol.</h2>
+          <p>Saya siapkan beberapa jalur kontak cepat plus form yang langsung membuka Gmail compose agar proses kirim
+            pesan terasa ringan.</p>
+
+          <div class="social-grid">
+            <a class="social-card" href="https://wa.me/6281234567890" target="_blank" rel="noopener">
+              <i class="fa-brands fa-whatsapp"></i>
+              <span>WhatsApp</span>
+            </a>
+            <a class="social-card" href="https://www.linkedin.com/in/alzanadytia/" target="_blank" rel="noopener">
+              <i class="fa-brands fa-linkedin-in"></i>
+              <span>LinkedIn</span>
+            </a>
+            <a class="social-card" href="https://www.instagram.com/alzanadytia/" target="_blank" rel="noopener">
+              <i class="fa-brands fa-instagram"></i>
+              <span>Instagram</span>
+            </a>
+            <a class="social-card" href="https://www.tiktok.com/@alzanadytia" target="_blank" rel="noopener">
+              <i class="fa-brands fa-tiktok"></i>
+              <span>TikTok</span>
+            </a>
+          </div>
+        </div>
+
+        <form class="contact-form" id="contactForm" data-reveal>
+          <label>
+            Nama
+            <input type="text" id="contactName" name="name" placeholder="Nama kamu" required>
+          </label>
+          <label>
+            Email
+            <input type="email" id="contactEmail" name="email" placeholder="emailkamu@gmail.com" required>
+          </label>
+          <label>
+            Subjek
+            <input type="text" id="contactSubject" name="subject" placeholder="Kebutuhan project" required>
+          </label>
+          <label>
+            Pesan
+            <textarea id="contactMessage" name="message" rows="5" placeholder="Ceritakan project yang ingin kamu buat"
+              required></textarea>
+          </label>
+          <button class="button button-primary" type="submit">Kirim via Gmail</button>
+          <p class="form-note">Email tujuan saat ini diset ke <strong>alzanadytia@gmail.com</strong>.</p>
+        </form>
+      </div>
+    </section>
+
+    <section class="faq-section section-shell" id="faq">
+      <div class="section-glow faq-glow" aria-hidden="true"></div>
+      <div class="container faq-grid">
+        <div class="faq-media" data-reveal>
+          <div class="faq-photo-card">
+            <img src="assets/img/hero-placeholder.png" alt="Visual pendamping section FAQ">
+            <div class="faq-photo-badge">
+              <i class="fa-solid fa-star"></i>
+              <span>Fast response & clear workflow</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-content" data-reveal>
+          <span class="eyebrow">
+            <i class="fa-solid fa-star"></i>
+            FAQ
+          </span>
+          <h2>Pertanyaan yang biasanya muncul sebelum project dimulai.</h2>
+
+          <div class="accordion-group faq-accordion" id="faqAccordion" data-accordion-group>
+            <article class="accordion-item is-open">
+              <button class="accordion-trigger" type="button" aria-expanded="true">
+                <span class="accordion-title-wrap">
+                  <span class="accordion-icon"><i class="fa-solid fa-star"></i></span>
+                  <span class="accordion-title">Bisa mulai dari brief sederhana?</span>
+                </span>
+                <span class="accordion-state">01</span>
+              </button>
+              <div class="accordion-panel">
+                <p>Bisa. Cukup kirim tujuan project, referensi yang kamu suka, dan kebutuhan utamanya. Nanti saya bantu
+                  rapikan jadi arah visual dan struktur kerja yang jelas.</p>
+              </div>
+            </article>
+
+            <article class="accordion-item">
+              <button class="accordion-trigger" type="button" aria-expanded="false">
+                <span class="accordion-title-wrap">
+                  <span class="accordion-icon"><i class="fa-solid fa-star"></i></span>
+                  <span class="accordion-title">Apakah bisa revisi?</span>
+                </span>
+                <span class="accordion-state">02</span>
+              </button>
+              <div class="accordion-panel">
+                <p>Tentu. Revisi saya pakai alur yang terarah supaya perubahan tetap efisien dan hasil akhirnya tidak
+                  kehilangan karakter awal yang sudah disepakati.</p>
+              </div>
+            </article>
+
+            <article class="accordion-item">
+              <button class="accordion-trigger" type="button" aria-expanded="false">
+                <span class="accordion-title-wrap">
+                  <span class="accordion-icon"><i class="fa-solid fa-star"></i></span>
+                  <span class="accordion-title">Layanan apa yang bisa digabung?</span>
+                </span>
+                <span class="accordion-state">03</span>
+              </button>
+              <div class="accordion-panel">
+                <p>Web development, desain visual, dan content creation bisa digabung jadi satu paket agar brand kamu
+                  terasa lebih solid dari tampilan sampai pesannya.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-wrap">
+      <p>Crafted for a dark galaxy mood by Alzan Adytia.</p>
+      <a href="#home">Back to top</a>
+    </div>
+  </footer>
+
+  <script defer src="assets/js/portfolio/navigation.js"></script>
+  <script defer src="assets/js/portfolio/typing.js"></script>
+  <script defer src="assets/js/portfolio/accordion.js"></script>
+  <script defer src="assets/js/portfolio/filters.js"></script>
+  <script defer src="assets/js/portfolio/testimonials.js"></script>
+  <script defer src="assets/js/portfolio/contact.js"></script>
+  <script defer src="assets/js/portfolio/reveal.js"></script>
+</body>
+
+</html>

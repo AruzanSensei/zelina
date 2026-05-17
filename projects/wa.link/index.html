@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WA Link Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+  <style>
+    /* ══════════════════════════════════════════
+       THEME TOKENS
+    ══════════════════════════════════════════ */
+    :root {
+      /* shared */
+      --accent:        #25D366;
+      --accent-dark:   #1aaa52;
+      --wa-teal:       #075E54;
+      --wa-bubble-out: #dcf8c6;
+      --wa-bubble-in:  #ffffff;
+      --wa-chat-bg:    #e5ddd5;
+      --radius:        18px;
+      --radius-sm:     11px;
+      --transition:    0.28s ease;
+    }
+
+    /* ── BASE THEME ── */
+    :root {
+      --bg:       #0d0f14;
+      --surface:  #151820;
+      --surface2: #1c2030;
+      --border:   rgba(255,255,255,0.07);
+      --text:     #f0f2f5;
+      --text2:    #c9cdd6;
+      --muted:    #6b7280;
+      --shadow:   rgba(0,0,0,0.45);
+      --orb1:     rgba(37,211,102,0.11);
+      --orb2:     rgba(108,99,255,0.10);
+      --orb3:     rgba(18,140,126,0.07);
+      --phone-shell: #12121a;
+    }
+
+
+    /* ══════════════════════════════════════════
+       RESET & BASE
+    ══════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 2rem 1rem 3rem;
+      overflow-x: hidden;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    /* Noise overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0;
+    }
+
+    /* Ambient orbs */
+    .orb { position:fixed; border-radius:50%; filter:blur(110px); pointer-events:none; z-index:0; transition: background var(--transition); }
+    .o1 { width:500px;height:500px; background:var(--orb1); top:-180px; left:-180px; }
+    .o2 { width:420px;height:420px; background:var(--orb2); bottom:-130px; right:-130px; }
+    .o3 { width:260px;height:260px; background:var(--orb3); top:50%; left:55%; }
+
+
+    /* ══════════════════════════════════════════
+       LAYOUT
+    ══════════════════════════════════════════ */
+    .wrapper {
+      position: relative; z-index: 1;
+      width: 100%; max-width: 1080px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+    .form-card    { align-self: start; }
+    .preview-card { align-self: start; position: static; }
+    /* Mobile: single column, form always on top */
+    @media (max-width: 800px) {
+      .wrapper { grid-template-columns: 1fr; max-width: 480px; }
+      .headline     { order: 0; }
+      .form-card    { order: 1; }
+      .preview-card { order: 2; }
+      .footer-note  { order: 3; }
+    }
+
+    /* ══════════════════════════════════════════
+       HEADLINE
+    ══════════════════════════════════════════ */
+    .headline {
+      grid-column: 1 / -1;
+      text-align: center;
+      margin-bottom: 0.25rem;
+    }
+    .headline h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(1.8rem, 4.5vw, 3rem);
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      color: var(--text);
+      transition: color var(--transition);
+    }
+    .headline h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, #25D366 0%, #6fcf97 60%, #a8e6cf 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .headline p { margin-top: 0.6rem; color: var(--muted); font-size: 1rem; font-weight: 300; }
+
+    /* ══════════════════════════════════════════
+       CARD
+    ══════════════════════════════════════════ */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      box-shadow: 0 8px 40px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.04);
+      transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+    }
+    .card-title {
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem;
+      color: var(--text); margin-bottom: 1.4rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .dot { width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent); }
+
+    /* ══════════════════════════════════════════
+       FORM
+    ══════════════════════════════════════════ */
+    .field { margin-bottom: 1.15rem; }
+    label {
+      display: block;
+      font-size: 0.73rem; font-weight: 500;
+      letter-spacing: 0.07em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.4rem;
+    }
+
+    /* Phone row: flag selector + number input */
+    .phone-row { display: flex; gap: 0; border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); transition: border-color 0.2s, box-shadow 0.2s; }
+    .phone-row:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,211,102,0.1); }
+
+    /* Country dropdown trigger */
+    .country-btn {
+      display: flex; align-items: center; gap: 5px;
+      padding: 0.8rem 0.75rem;
+      background: var(--surface2);
+      border: none; border-right: 1px solid var(--border);
+      cursor: pointer; white-space: nowrap;
+      color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+      transition: background 0.2s;
+      flex-shrink: 0;
+      outline: none;
+    }
+    .country-btn:hover { background: var(--surface); }
+    .country-btn .flag { font-size: 1.2rem; line-height: 1; }
+    .country-btn .dial { font-size: 0.82rem; color: var(--muted); }
+    .country-btn .chevron { font-size: 0.6rem; color: var(--muted); margin-left: 1px; }
+
+    /* Phone number input (no outer border, sits inside phone-row) */
+    .phone-input {
+      flex: 1; min-width: 0;
+      background: var(--surface2);
+      border: none; outline: none;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+      padding: 0.8rem 1rem;
+      transition: background var(--transition);
+    }
+    .phone-input::placeholder { color: var(--muted); }
+
+    /* Country dropdown list */
+    .country-dropdown {
+      position: absolute; z-index: 999;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      box-shadow: 0 12px 40px var(--shadow);
+      width: 280px;
+      max-height: 280px;
+      overflow-y: auto;
+      display: none;
+      margin-top: 4px;
+    }
+    .country-dropdown.open { display: block; }
+    .dropdown-search {
+      width: 100%; padding: 0.65rem 0.9rem;
+      border: none; border-bottom: 1px solid var(--border);
+      background: var(--surface2); color: var(--text);
+      font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+      outline: none;
+    }
+    .dropdown-search::placeholder { color: var(--muted); }
+    .country-option {
+      display: flex; align-items: center; gap: 10px;
+      padding: 0.6rem 0.9rem;
+      cursor: pointer; font-size: 0.88rem; color: var(--text);
+      transition: background 0.15s;
+    }
+    .country-option:hover, .country-option.selected { background: rgba(37,211,102,0.08); }
+    .country-option .opt-flag { font-size: 1.1rem; }
+    .country-option .opt-name { flex: 1; }
+    .country-option .opt-dial { color: var(--muted); font-size: 0.8rem; }
+
+    /* Textarea + regular input */
+    textarea {
+      width: 100%;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: var(--text); font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem; padding: 0.8rem 1rem;
+      outline: none; resize: none; min-height: 120px; line-height: 1.6;
+      transition: border-color 0.2s, box-shadow 0.2s, background var(--transition);
+    }
+    textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,211,102,0.1); }
+    textarea::placeholder { color: var(--muted); }
+
+    .char-count { text-align:right;font-size:0.72rem;color:var(--muted);margin-top:0.28rem;transition:color 0.2s; }
+    .char-count.warn { color:#f59e0b; }
+    .error-msg { color:#f87171;font-size:0.75rem;margin-top:0.32rem;display:none; }
+
+    /* ══════════════════════════════════════════
+       BUTTONS
+    ══════════════════════════════════════════ */
+    .btn-gen {
+      width: 100%; padding: 0.9rem 1.5rem; border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(135deg, #25D366 0%, #1aaa52 100%);
+      color: #000; box-shadow: 0 4px 20px rgba(37,211,102,0.3);
+      display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      transition: transform 0.18s, box-shadow 0.18s;
+      letter-spacing: 0.01em;
+    }
+    .btn-gen:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,211,102,0.45); }
+    .btn-gen:active { transform: translateY(0); }
+
+    /* Result box */
+    /* Result box — height collapses when hidden so card doesn't leave dead space */
+    .result-box {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      margin-top: 0;
+      transition: max-height 0.45s ease, opacity 0.35s ease, margin-top 0.35s ease;
+    }
+    .result-box.show {
+      max-height: 500px;
+      opacity: 1;
+      pointer-events: auto;
+      margin-top: 1.2rem;
+    }
+    .result-box-inner {
+      background: var(--surface2);
+      border: 1px solid rgba(37,211,102,0.15);
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+    }
+    .result-label { font-size:0.7rem;text-transform:uppercase;letter-spacing:0.09em;color:var(--accent);font-weight:600;margin-bottom:0.4rem; }
+    .result-url { font-size:0.83rem;color:var(--muted);word-break:break-all;line-height:1.55;margin-bottom:0.7rem; }
+
+    .btn-copy {
+      width:100%;padding:0.6rem 1rem;border-radius:8px;
+      border:1px solid rgba(37,211,102,0.25);
+      background:rgba(37,211,102,0.08);color:var(--accent);
+      font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:600;
+      cursor:pointer;transition:all 0.2s;margin-bottom:0.45rem;
+    }
+    .btn-copy:hover { background:rgba(37,211,102,0.18);transform:scale(1.015); }
+    .btn-copy.copied { background:var(--accent);color:#000;border-color:var(--accent);box-shadow:0 0 18px rgba(37,211,102,0.4);transform:scale(1.03); }
+
+    .btn-wa {
+      width:100%;padding:0.6rem 1rem;border-radius:8px;
+      border:1px solid var(--border);background:transparent;color:var(--muted);
+      font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:600;
+      cursor:pointer;text-decoration:none;display:block;text-align:center;
+      transition:all 0.2s;
+    }
+    .btn-wa:hover { color:var(--text);border-color:rgba(255,255,255,0.2); }
+
+    /* ══════════════════════════════════════════
+       PHONE PREVIEW
+    ══════════════════════════════════════════ */
+    .phone-outer { max-width:285px;margin:0 auto;position:relative; }
+
+    .preview-pill {
+      position:absolute;top:-13px;left:50%;transform:translateX(-50%);
+      background:linear-gradient(135deg,var(--accent),#6fcf97);
+      color:#000;font-family:'Syne',sans-serif;
+      font-size:0.65rem;font-weight:800;letter-spacing:0.1em;
+      padding:3px 14px;border-radius:30px;white-space:nowrap;z-index:2;
+    }
+
+    .phone-body {
+      background: var(--phone-shell);
+      border-radius:36px;padding:9px;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.07), 0 25px 70px var(--shadow), 0 0 50px rgba(37,211,102,0.05);
+      transition: background var(--transition), box-shadow var(--transition);
+    }
+
+    .phone-screen { border-radius:28px;overflow:hidden;background:var(--wa-chat-bg); }
+
+    .status-bar { background:var(--wa-teal);padding:7px 16px 0;display:flex;justify-content:space-between;align-items:center; }
+    .sb-time { font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;color:#fff; }
+    .sb-icons { display:flex;gap:5px;align-items:center; }
+    .sb-icons svg { width:13px;height:13px;fill:#fff; }
+
+    .wa-bar { background:var(--wa-teal);padding:8px 12px 12px;display:flex;align-items:center;gap:9px; }
+    .wa-chevron { font-size:20px;color:rgba(255,255,255,0.85);line-height:1; }
+    .wa-avi { width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#25D366 0%,#075E54 100%);display:grid;place-items:center;flex-shrink:0; }
+    .wa-avi svg { width:18px;height:18px;fill:#fff; }
+    .wa-meta { flex:1;min-width:0; }
+    .wa-name-txt { font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+    .wa-sub-txt { font-family:'DM Sans',sans-serif;font-size:11px;color:rgba(255,255,255,0.65);transition:all 0.3s; }
+    .wa-top-icons { display:flex;gap:13px; }
+    .wa-top-icons svg { width:18px;height:18px;stroke:rgba(255,255,255,0.85);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round; }
+
+    .chat-body {
+      min-height:220px;max-height:255px;overflow-y:auto;
+      padding:10px 8px;display:flex;flex-direction:column;gap:4px;
+      background-color:var(--wa-chat-bg);
+      background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='0.8' fill='%23b0a090' opacity='0.28'/%3E%3C/svg%3E");
+      background-size:30px 30px;scrollbar-width:none;
+    }
+    .chat-body::-webkit-scrollbar { display:none; }
+
+    .chat-date-chip { text-align:center;font-family:'DM Sans',sans-serif;font-size:10.5px;color:#5a6a6a;background:rgba(255,255,255,0.65);border-radius:7px;padding:2px 10px;width:fit-content;margin:2px auto 4px; }
+
+    .msg-row { display:flex; }
+    .msg-row.out { justify-content:flex-end; }
+    .msg-row.in  { justify-content:flex-start; }
+
+    .bubble { max-width:88%;padding:6px 9px 5px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;line-height:1.45;word-break:break-word;position:relative; }
+    .bubble.out { background:var(--wa-bubble-out);color:#111;border-bottom-right-radius:2px;box-shadow:0 1px 2px rgba(0,0,0,0.12); }
+    .bubble.in  { background:var(--wa-bubble-in);color:#111;border-bottom-left-radius:2px;box-shadow:0 1px 2px rgba(0,0,0,0.12); }
+
+    .bbl-time { font-size:9.5px;color:rgba(0,0,0,0.4);text-align:right;margin-top:1px;display:flex;align-items:center;justify-content:flex-end;gap:1px; }
+    .bbl-time svg { width:13px;height:13px; }
+
+    .chat-placeholder { font-family:'DM Sans',sans-serif;font-size:11.5px;color:rgba(0,0,0,0.35);text-align:center;margin:auto;font-style:italic;line-height:1.6;padding:20px 0; }
+
+    .wa-bottom { background:#f0f2f5;padding:6px 8px;display:flex;align-items:center;gap:7px; }
+    .wa-msgfield { flex:1;background:#fff;border-radius:22px;padding:7px 12px;font-family:'DM Sans',sans-serif;font-size:12px;color:#aaa; }
+    .wa-mic-btn { width:34px;height:34px;background:var(--wa-teal);border-radius:50%;display:grid;place-items:center;flex-shrink:0; }
+    .wa-mic-btn svg { width:16px;height:16px;fill:#fff; }
+
+    @keyframes bbl-in {
+      from { opacity:0;transform:scale(0.88) translateY(6px); }
+      to   { opacity:1;transform:scale(1) translateY(0); }
+    }
+    .bubble-new { animation: bbl-in 0.28s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+
+    /* ══════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════ */
+    .footer-note { grid-column:1/-1;text-align:center;color:var(--muted);font-size:0.73rem;margin-top:0.25rem; }
+
+    /* ══════════════════════════════════════════
+       SCROLLBAR
+    ══════════════════════════════════════════ */
+    ::-webkit-scrollbar { width:5px; }
+    ::-webkit-scrollbar-track { background:var(--surface); }
+    ::-webkit-scrollbar-thumb { background:var(--surface2);border-radius:3px; }
+
+    /* ══════════════════════════════════════════
+       DROPDOWN SCROLLBAR
+    ══════════════════════════════════════════ */
+    .country-dropdown::-webkit-scrollbar { width:4px; }
+    .country-dropdown::-webkit-scrollbar-thumb { background:var(--border);border-radius:2px; }
+
+    /* relative wrapper for dropdown positioning */
+    .phone-field-wrap { position: relative; }
+  </style>
+</head>
+<body>
+
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="orb o3"></div>
+
+
+  <div class="wrapper">
+
+    <!-- HEADLINE -->
+    <div class="headline">
+      <h1>WhatsApp <em>Link</em> Generator</h1>
+      <p>Buat link WA dengan pesan otomatis — satu klik, langsung kirim.</p>
+    </div>
+
+    <!-- ══ FORM CARD ══════════════════════════════════ -->
+    <div class="card form-card">
+      <div class="card-title"><span class="dot"></span>Buat Link-mu</div>
+
+      <!-- Phone field -->
+      <div class="field">
+        <label>Nomor WhatsApp</label>
+        <div class="phone-field-wrap">
+          <div class="phone-row" id="phone-row">
+            <!-- Country button -->
+            <button class="country-btn" id="country-btn" type="button" onclick="toggleDropdown()">
+              <span class="flag" id="sel-flag">🇮🇩</span>
+              <span class="dial" id="sel-dial">+62</span>
+              <span class="chevron">▼</span>
+            </button>
+            <!-- Number input -->
+            <input
+              class="phone-input"
+              id="phone"
+              type="tel"
+              inputmode="numeric"
+              placeholder="81234567890"
+              maxlength="15"
+            />
+          </div>
+          <!-- Dropdown -->
+          <div class="country-dropdown" id="country-dropdown">
+            <input class="dropdown-search" id="dropdown-search" type="text" placeholder="Cari negara..." oninput="filterCountries()"/>
+            <div id="country-list"></div>
+          </div>
+        </div>
+        <div class="error-msg" id="phone-err"></div>
+      </div>
+
+      <!-- Message field -->
+      <div class="field">
+        <label>Pesan custom</label>
+        <textarea id="message" placeholder="Halo! Saya tertarik dengan produkmu..." maxlength="4096"></textarea>
+        <div class="char-count" id="char-count">0 / 4096</div>
+      </div>
+
+      <button class="btn-gen" id="btn-gen" onclick="generate()">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Buat WhatsApp Link
+      </button>
+
+      <!-- Result -->
+      <div class="result-box" id="result-box">
+        <div class="result-box-inner">
+          <div class="result-label">✦ Link siap dipakai</div>
+          <div class="result-url" id="result-url"></div>
+          <button class="btn-copy" id="btn-copy" onclick="copyLink()">📋 &nbsp;Salin Link</button>
+          <a class="btn-wa" id="btn-wa" target="_blank" rel="noopener noreferrer">↗ &nbsp;Buka di WhatsApp</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PREVIEW CARD ════════════════════════════════ -->
+    <div class="card preview-card">
+      <div class="card-title"><span class="dot"></span>Preview Chat</div>
+
+      <div class="phone-outer">
+        <div class="preview-pill">LIVE PREVIEW</div>
+        <div class="phone-body">
+          <div class="phone-screen">
+
+            <!-- Status bar -->
+            <div class="status-bar">
+              <span class="sb-time" id="sb-time">9:41</span>
+              <div class="sb-icons">
+                <svg viewBox="0 0 20 14"><rect x="0" y="9" width="3" height="5" rx="0.5"/><rect x="4.5" y="5.5" width="3" height="8.5" rx="0.5"/><rect x="9" y="2.5" width="3" height="11.5" rx="0.5"/><rect x="13.5" y="0" width="3" height="14" rx="0.5" opacity="0.35"/></svg>
+                <svg viewBox="0 0 20 14" stroke="#fff" fill="none" stroke-width="1.8" stroke-linecap="round"><path d="M1 4.5a12.5 12.5 0 0 1 18 0"/><path d="M3.5 7.5a8 8 0 0 1 13 0"/><path d="M6.5 10.5a4 4 0 0 1 7 0"/><circle cx="10" cy="13" r="1" fill="#fff"/></svg>
+                <svg viewBox="0 0 22 12"><rect x="0" y="1" width="18" height="10" rx="2" stroke="#fff" fill="none" stroke-width="1.4"/><path d="M18 4.5v3" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/><rect x="2" y="3" width="12" height="6" rx="1" fill="#fff"/></svg>
+              </div>
+            </div>
+
+            <!-- WA bar -->
+            <div class="wa-bar">
+              <span class="wa-chevron">‹</span>
+              <div class="wa-avi"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="13" rx="2"/><path d="M16 3H8a2 2 0 0 0-2 2v2h12V5a2 2 0 0 0-2-2z" opacity="0.6"/></svg></div>
+              <div class="wa-meta">
+                <div class="wa-name-txt">Bisnismu</div>
+                <div class="wa-sub-txt" id="preview-sub">Masukkan nomor WA</div>
+              </div>
+              <div class="wa-top-icons">
+                <svg viewBox="0 0 24 24"><path d="M15 10l4.553-2.069A1 1 0 0 1 21 8.82v6.36a1 1 0 0 1-1.447.89L15 14M3 8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8z"/></svg>
+                <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              </div>
+            </div>
+
+            <!-- Chat -->
+            <div class="chat-body" id="chat-body">
+              <div class="chat-date-chip">Hari ini</div>
+              <div class="chat-placeholder" id="chat-placeholder">Tulis pesan &amp; klik<br>"Buat Link" untuk preview 💬</div>
+            </div>
+
+            <!-- Bottom bar -->
+            <div class="wa-bottom">
+              <div class="wa-msgfield">Ketik pesan...</div>
+              <div class="wa-mic-btn">
+                <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2" stroke="#fff" fill="none" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="19" x2="12" y2="23" stroke="#fff" stroke-width="2" stroke-linecap="round"/><line x1="8" y1="23" x2="16" y2="23" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-note">wa.me/&lt;nomor&gt;?text=&lt;pesan&gt; &nbsp;·&nbsp; Pure Vanilla JS</div>
+  </div>
+
+<script>
+/* ══════════════════════════════════════════
+   COUNTRY DATA
+══════════════════════════════════════════ */
+const COUNTRIES = [
+  { code:'ID', flag:'🇮🇩', name:'Indonesia',         dial:'62'  },
+  { code:'US', flag:'🇺🇸', name:'United States',     dial:'1'   },
+  { code:'GB', flag:'🇬🇧', name:'United Kingdom',    dial:'44'  },
+  { code:'AU', flag:'🇦🇺', name:'Australia',         dial:'61'  },
+  { code:'SG', flag:'🇸🇬', name:'Singapore',         dial:'65'  },
+  { code:'MY', flag:'🇲🇾', name:'Malaysia',          dial:'60'  },
+  { code:'TH', flag:'🇹🇭', name:'Thailand',          dial:'66'  },
+  { code:'PH', flag:'🇵🇭', name:'Philippines',       dial:'63'  },
+  { code:'VN', flag:'🇻🇳', name:'Vietnam',           dial:'84'  },
+  { code:'IN', flag:'🇮🇳', name:'India',             dial:'91'  },
+  { code:'PK', flag:'🇵🇰', name:'Pakistan',          dial:'92'  },
+  { code:'BD', flag:'🇧🇩', name:'Bangladesh',        dial:'880' },
+  { code:'CN', flag:'🇨🇳', name:'China',             dial:'86'  },
+  { code:'JP', flag:'🇯🇵', name:'Japan',             dial:'81'  },
+  { code:'KR', flag:'🇰🇷', name:'South Korea',       dial:'82'  },
+  { code:'SA', flag:'🇸🇦', name:'Saudi Arabia',      dial:'966' },
+  { code:'AE', flag:'🇦🇪', name:'UAE',               dial:'971' },
+  { code:'QA', flag:'🇶🇦', name:'Qatar',             dial:'974' },
+  { code:'TR', flag:'🇹🇷', name:'Turkey',            dial:'90'  },
+  { code:'EG', flag:'🇪🇬', name:'Egypt',             dial:'20'  },
+  { code:'NG', flag:'🇳🇬', name:'Nigeria',           dial:'234' },
+  { code:'ZA', flag:'🇿🇦', name:'South Africa',      dial:'27'  },
+  { code:'KE', flag:'🇰🇪', name:'Kenya',             dial:'254' },
+  { code:'GH', flag:'🇬🇭', name:'Ghana',             dial:'233' },
+  { code:'BR', flag:'🇧🇷', name:'Brazil',            dial:'55'  },
+  { code:'MX', flag:'🇲🇽', name:'Mexico',            dial:'52'  },
+  { code:'AR', flag:'🇦🇷', name:'Argentina',         dial:'54'  },
+  { code:'CO', flag:'🇨🇴', name:'Colombia',          dial:'57'  },
+  { code:'DE', flag:'🇩🇪', name:'Germany',           dial:'49'  },
+  { code:'FR', flag:'🇫🇷', name:'France',            dial:'33'  },
+  { code:'IT', flag:'🇮🇹', name:'Italy',             dial:'39'  },
+  { code:'ES', flag:'🇪🇸', name:'Spain',             dial:'34'  },
+  { code:'NL', flag:'🇳🇱', name:'Netherlands',       dial:'31'  },
+  { code:'RU', flag:'🇷🇺', name:'Russia',            dial:'7'   },
+  { code:'CA', flag:'🇨🇦', name:'Canada',            dial:'1'   },
+  { code:'NZ', flag:'🇳🇿', name:'New Zealand',       dial:'64'  },
+  { code:'MM', flag:'🇲🇲', name:'Myanmar',           dial:'95'  },
+  { code:'KH', flag:'🇰🇭', name:'Cambodia',          dial:'855' },
+  { code:'LA', flag:'🇱🇦', name:'Laos',              dial:'856' },
+  { code:'HK', flag:'🇭🇰', name:'Hong Kong',         dial:'852' },
+  { code:'TW', flag:'🇹🇼', name:'Taiwan',            dial:'886' },
+];
+
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+let selectedCountry = COUNTRIES[0]; // default Indonesia
+let currentLink     = '';
+let dropdownOpen    = false;
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  renderCountryList(COUNTRIES);
+  updateSBTime();
+  setInterval(updateSBTime, 10000);
+  detectUserCountry();
+
+  // close dropdown on outside click
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.phone-field-wrap')) closeDropdown();
+  });
+});
+
+/* ── Status bar clock ── */
+function updateSBTime() {
+  const n = new Date();
+  document.getElementById('sb-time').textContent =
+    String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0');
+}
+
+/* ══════════════════════════════════════════
+   GEO DETECTION
+══════════════════════════════════════════ */
+async function detectUserCountry() {
+  try {
+    const r = await fetch('https://ipapi.co/json/');
+    const d = await r.json();
+    const cc = d.country_code; // e.g. "ID"
+    const found = COUNTRIES.find(c => c.code === cc);
+    if (found) selectCountry(found, false);
+  } catch (_) { /* silently fall back to Indonesia */ }
+}
+
+/* ══════════════════════════════════════════
+   COUNTRY DROPDOWN
+══════════════════════════════════════════ */
+function renderCountryList(list) {
+  const container = document.getElementById('country-list');
+  container.innerHTML = list.map(c => `
+    <div class="country-option ${c.code === selectedCountry.code ? 'selected' : ''}"
+         onclick="selectCountry(COUNTRIES.find(x=>x.code==='${c.code}'), true)">
+      <span class="opt-flag">${c.flag}</span>
+      <span class="opt-name">${c.name}</span>
+      <span class="opt-dial">+${c.dial}</span>
+    </div>
+  `).join('');
+}
+
+function filterCountries() {
+  const q = document.getElementById('dropdown-search').value.toLowerCase();
+  const filtered = COUNTRIES.filter(c =>
+    c.name.toLowerCase().includes(q) || c.dial.includes(q)
+  );
+  renderCountryList(filtered);
+}
+
+function toggleDropdown() {
+  dropdownOpen ? closeDropdown() : openDropdown();
+}
+
+function openDropdown() {
+  dropdownOpen = true;
+  document.getElementById('country-dropdown').classList.add('open');
+  setTimeout(() => document.getElementById('dropdown-search').focus(), 50);
+}
+
+function closeDropdown() {
+  dropdownOpen = false;
+  document.getElementById('country-dropdown').classList.remove('open');
+  document.getElementById('dropdown-search').value = '';
+  renderCountryList(COUNTRIES);
+}
+
+function selectCountry(country, close=true) {
+  if (!country) return;
+  selectedCountry = country;
+  document.getElementById('sel-flag').textContent = country.flag;
+  document.getElementById('sel-dial').textContent = '+' + country.dial;
+  if (close) closeDropdown();
+  updatePreviewSub();
+  renderCountryList(COUNTRIES); // refresh selected state
+}
+
+/* ══════════════════════════════════════════
+   PREVIEW HELPERS
+══════════════════════════════════════════ */
+function updatePreviewSub() {
+  const num = document.getElementById('phone').value.replace(/\D/g,'');
+  const full = num ? selectedCountry.dial + num : '';
+  document.getElementById('preview-sub').textContent =
+    full ? '+' + full : 'Masukkan nomor WA';
+}
+
+function clearBubbles() {
+  document.querySelectorAll('.msg-row').forEach(e => e.remove());
+  document.getElementById('chat-placeholder').style.display = 'block';
+}
+
+function renderBubbles(text, animated) {
+  const chat = document.getElementById('chat-body');
+  document.getElementById('chat-placeholder').style.display = 'none';
+  document.querySelectorAll('.msg-row').forEach(e => e.remove());
+
+  const n    = new Date();
+  const time = String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0');
+
+  const row = document.createElement('div');
+  row.className = 'msg-row out';
+  const bbl = document.createElement('div');
+  bbl.className = 'bubble out' + (animated ? ' bubble-new' : '');
+  const safe = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  bbl.innerHTML = safe;
+
+  const tm = document.createElement('div');
+  tm.className = 'bbl-time';
+  tm.innerHTML = `${time}<svg viewBox="0 0 16 11" fill="none"><path d="M1 5.5l4 4L15 1" stroke="#4fc3f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 5.5l4 4" stroke="#4fc3f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  bbl.appendChild(tm);
+  row.appendChild(bbl);
+  chat.appendChild(row);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+/* ══════════════════════════════════════════
+   LIVE PREVIEW EVENTS
+══════════════════════════════════════════ */
+const msgEl   = document.getElementById('message');
+const countEl = document.getElementById('char-count');
+
+msgEl.addEventListener('input', () => {
+  const n = msgEl.value.length;
+  countEl.textContent = `${n} / 4096`;
+  countEl.className   = 'char-count' + (n > 3800 ? ' warn' : '');
+  const msg = msgEl.value.trim();
+  msg ? renderBubbles(msg, false) : clearBubbles();
+});
+
+document.getElementById('phone').addEventListener('input', updatePreviewSub);
+
+/* ══════════════════════════════════════════
+   GENERATE
+══════════════════════════════════════════ */
+function generate() {
+  const raw = document.getElementById('phone').value.replace(/\D/g,'');
+  const msg = document.getElementById('message').value;
+  const err = document.getElementById('phone-err');
+
+  if (!raw) { showErr(err, 'Nomor tidak boleh kosong.'); return; }
+  if (raw.length < 4 || raw.length > 15) { showErr(err, 'Masukkan nomor yang valid.'); return; }
+  err.style.display = 'none';
+
+  // full number = dial code + local number
+  const fullNum = selectedCountry.dial + raw;
+  currentLink = `https://wa.me/${fullNum}` + (msg ? `?text=${encodeURIComponent(msg)}` : '');
+
+  document.getElementById('result-url').textContent = currentLink;
+  document.getElementById('result-box').classList.add('show');
+  document.getElementById('btn-wa').href = currentLink;
+
+  // update preview
+  document.getElementById('preview-sub').textContent = '+' + fullNum;
+  renderBubbles(msg || '(pesan kosong)', true);
+
+  // button feedback
+  const btn = document.getElementById('btn-gen');
+  const orig = btn.innerHTML;
+  btn.innerHTML = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> Link dibuat!`;
+  setTimeout(() => btn.innerHTML = orig, 2000);
+}
+
+/* ══════════════════════════════════════════
+   COPY
+══════════════════════════════════════════ */
+function copyLink() {
+  if (!currentLink) return;
+  const btn = document.getElementById('btn-copy');
+  const ok = () => {
+    btn.textContent = '✓  Berhasil disalin!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 \u00a0Salin Link'; btn.classList.remove('copied'); }, 2200);
+  };
+  if (navigator.clipboard?.writeText) {
+    navigator.clipboard.writeText(currentLink).then(ok).catch(() => fbCopy(ok));
+  } else { fbCopy(ok); }
+}
+function fbCopy(cb) {
+  const el = document.createElement('textarea');
+  el.value = currentLink; el.style.cssText='position:fixed;opacity:0;';
+  document.body.appendChild(el); el.select();
+  try { document.execCommand('copy'); cb(); } catch(e){}
+  document.body.removeChild(el);
+}
+
+
+/* ══════════════════════════════════════════
+   HELPERS
+══════════════════════════════════════════ */
+function showErr(el, msg) {
+  el.textContent = msg; el.style.display = 'block';
+  const row = document.getElementById('phone-row');
+  row.style.borderColor = '#f87171';
+  row.style.boxShadow   = '0 0 0 3px rgba(248,113,113,0.15)';
+  setTimeout(() => { row.style.borderColor=''; row.style.boxShadow=''; }, 1800);
+}
+
+document.getElementById('phone').addEventListener('keydown', e => {
+  if (e.key === 'Enter') generate();
+});
+</script>
+</body>
+</html>

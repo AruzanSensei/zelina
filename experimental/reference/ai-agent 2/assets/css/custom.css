@@ -1,0 +1,10 @@
+/* Custom Styles for AI Agent */
+
+[x-cloak] {
+  display: none !important;
+}
+
+/* Any other non-Tailwind styles can go here */
+.gradient-btn {
+  @apply bg-gradient-to-r from-primary-500 to-primary-600;
+}

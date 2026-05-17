@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Media — ETS Admin</title>
+  <link rel="stylesheet" href="../styles/base.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <link rel="stylesheet" href="../styles/admin.css">
+</head>
+
+<body>
+  <div class="admin-layout">
+    <aside id="sidebar"></aside>
+    <div class="admin-main">
+      <header class="topbar" style="justify-content: flex-start; gap: 10px;">
+        <button class="topbar__ham" id="ham-btn" aria-label="Toggle sidebar"></button>
+        <div style="flex: 1;"></div>
+      </header>
+      <main class="page-content">
+        <div class="page-header">
+          <h1>Media Manager</h1>
+          <p>Upload dan kelola foto setiap produk.</p>
+        </div>
+        <div class="toolbar">
+          <div class="search-bar" style="flex:1;min-width:200px;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="7" cy="7" r="5" />
+              <path d="M11 11l3 3" stroke-linecap="round" />
+            </svg>
+            <input type="text" id="media-search" placeholder="Cari produk...">
+          </div>
+        </div>
+        <div id="media-grid" class="media-grid"></div>
+        <div id="media-empty" class="empty-state hidden">
+          <div class="empty-state__title">Belum ada produk</div>
+          <div class="empty-state__sub">Tambah produk terlebih dahulu di halaman Products.</div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <div id="toast-container"></div>
+  <script src="../config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="../services/auth.js"></script>
+  <script src="../services/api.js"></script>
+  <script src="../services/storage.js"></script>
+  <script src="../components/sidebar.js"></script>
+  <script src="../components/toast.js"></script>
+  <script src="../components/modal.js"></script>
+  <script src="../scripts/admin/media.js"></script>
+</body>
+
+</html>

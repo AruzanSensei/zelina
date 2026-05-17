@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduExam — Sistem Ujian Sekolah</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     LANDING — Pilih Role
+══════════════════════════════════════════════════ -->
+<div id="landing">
+  <div class="landing-box">
+    <span class="landing-logo">📖</span>
+    <h1>EduExam</h1>
+    <p>Sistem ujian sekolah berbasis browser.<br>Pilih peran untuk melanjutkan.</p>
+    <div class="role-cards">
+      <div class="role-card" id="btn-guru">
+        <span class="rc-icon">🎓</span>
+        <strong>Guru</strong>
+        <span>Kelola ujian & nilai</span>
+      </div>
+      <div class="role-card" id="btn-murid">
+        <span class="rc-icon">📚</span>
+        <strong>Murid</strong>
+        <span>Kerjakan ujian</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     APP SHELL
+══════════════════════════════════════════════════ -->
+<div id="app">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-logo">📖</span>
+      <span class="brand-name">EduExam</span>
+      <span class="brand-sub">Sistem Ujian Sekolah</span>
+    </div>
+    <div class="role-chip">
+      <span id="role-icon">🎓</span>
+      <span id="role-label">Mode Guru</span>
+    </div>
+    <ul id="sidebar-nav"></ul>
+    <div class="sidebar-footer">
+      <button class="btn-switch" id="btn-switch-role">⇄ Ganti Peran</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div id="main-wrap">
+    <header id="header">
+      <h1 id="page-title">Dashboard</h1>
+    </header>
+    <main id="main-content"></main>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     MODAL
+══════════════════════════════════════════════════ -->
+<div id="modal-overlay">
+  <div id="modal-body"></div>
+</div>
+
+<script src="storage.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

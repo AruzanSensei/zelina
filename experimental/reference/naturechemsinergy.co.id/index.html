@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <base href="/reference/naturechemsinergy.co.id/">
+  <title>Redirecting...</title>
+
+  <script>
+    const basePath = "/reference/naturechemsinergy.co.id";
+    const homePath = "home"; // Relative to base
+
+    // normalisasi path (hapus trailing slash)
+    const currentPath = window.location.pathname.replace(/\/$/, "");
+
+    // redirect jika user di base path atau root (jika base path diset)
+    if (currentPath === basePath || currentPath === "" || currentPath === "/") {
+      window.location.replace(homePath);
+    }
+  </script>
+
+  <noscript>
+    <meta http-equiv="refresh" content="0; url=home">
+  </noscript>
+</head>
+
+<body>
+  <p>Mengalihkan ke halaman utama...</p>
+</body>
+
+</html>

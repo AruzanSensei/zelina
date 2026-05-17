@@ -1,0 +1,72 @@
+/**
+ * variables.css — CSS Custom Properties
+ * Token system: colors, spacing, shadows, radius.
+ * For dark mode overrides, see theme.css.
+ * For SaaS client theming: override this file per-tenant.
+ */
+
+:root {
+    /* Brand Colors */
+    --primary: #4A90E2;
+    --primary-dark: #357ABD;
+    --secondary: #9B51E0;
+    --tertiary: #F5A623;
+    --muted: #bebebe;
+
+    /* Backgrounds */
+    --bg-body: #F4F7F6;
+    --bg-transparent: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --bg-input: #FFFFFF;
+
+    /* Text */
+    --text-main: #2C3E50;
+    --text-muted: #7F8C8D;
+
+    /* Borders */
+    --border-color: #E0E4E8;
+
+    /* Feature-specific backgrounds */
+    --invoice-bg: #E3F2FD;
+    --letter-bg: #F3E5F5;
+
+    /* Dynamic Glow Basis (will be updated by active tab) */
+    --active-tab-glow: var(--primary);
+
+    /* Glows (Colored SaaS-style 2-layer shadows) */
+    --glow-xs: 0 1px 2px color-mix(in srgb, var(--active-tab-glow) 10%, transparent), 0 1px 4px color-mix(in srgb, var(--active-tab-glow) 20%, transparent);
+    --glow-sm: 0 1px 2px color-mix(in srgb, var(--active-tab-glow) 8%, transparent), 0 6px 16px color-mix(in srgb, var(--active-tab-glow) 16%, transparent);
+    --glow-md: 0 4px 6px color-mix(in srgb, var(--active-tab-glow) 4%, transparent), 0 12px 24px color-mix(in srgb, var(--active-tab-glow) 12%, transparent);
+
+    /* Shadows (Standard neutral shadows for floating effect) */
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05), 0 8px 16px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05), 0 12px 24px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.05), 0 20px 40px rgba(0, 0, 0, 0.1);
+
+    /* Spacing Scale */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+
+    /* Finance Module */
+    --finance-green: #27ae60;
+    --finance-yellow: #f39c12;
+
+    /* Active Shadow (Mapped to theme) */
+    --app-shadow-xs: var(--shadow-xs);
+    --app-shadow-sm: var(--shadow-sm);
+    --app-shadow-md: var(--shadow-md);
+
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+}
+
+/* Dark Mode Shadow Override: Use Glows */
+[data-theme="dark"] {
+    --app-shadow-xs: var(--glow-xs);
+    --app-shadow-sm: var(--glow-sm);
+    --app-shadow-md: var(--glow-md);
+}

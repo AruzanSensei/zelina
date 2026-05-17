@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Artikel Hukum – Kumpulan artikel informatif dan edukatif tentang hukum di Indonesia dari Kantor Hukum kami." />
+  <title>Artikel – Kantor Hukum</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar scrolled" id="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <div class="navbar-logo"><i class="fas fa-balance-scale"></i></div>
+        <div class="navbar-name">
+          <span>Kantor Hukum</span>
+          <span>Profesional & Terpercaya</span>
+        </div>
+      </a>
+      <ul class="navbar-menu">
+        <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
+        <li class="nav-item">
+          <a href="tentang.html" class="nav-link">Tentang <i class="fas fa-chevron-down" style="font-size:9px"></i></a>
+          <div class="dropdown-menu">
+            <a href="tentang.html" class="dropdown-item">Tentang Web Ini</a>
+            <a href="kabinet.html" class="dropdown-item">Kabinet</a>
+          </div>
+        </li>
+        <li class="nav-item"><a href="artikel.html" class="nav-link active">Artikel</a></li>
+        <li class="nav-item"><a href="kontak.html" class="nav-link">Kontak</a></li>
+      </ul>
+      <button class="hamburger" aria-label="Buka menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+  <div class="mobile-nav">
+    <a href="index.html" class="mobile-nav-link">Home</a>
+    <a href="tentang.html" class="mobile-nav-link">Tentang</a>
+    <a href="tentang.html" class="mobile-nav-sub">— Tentang Web Ini</a>
+    <a href="kabinet.html" class="mobile-nav-sub">— Kabinet</a>
+    <a href="artikel.html" class="mobile-nav-link">Artikel</a>
+    <a href="kontak.html" class="mobile-nav-link">Kontak</a>
+  </div>
+
+  <!-- ===== PAGE HEADER ===== -->
+  <header class="page-header">
+    <div class="page-header-deco"></div>
+    <div class="container">
+      <span class="section-label">Wawasan Hukum</span>
+      <h1>Artikel</h1>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="index.html">Home</a>
+        <span>/</span>
+        <span class="current">Artikel</span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== ARTIKEL LIST ===== -->
+  <section style="padding: var(--section-padding); background: var(--off-white);">
+    <div class="container">
+      
+      <!-- Filter / Category bar -->
+      <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:44px; align-items:center;">
+        <span style="font-family:var(--font-body); font-size:0.78rem; color:var(--text-secondary); letter-spacing:0.1em; text-transform:uppercase; margin-right:6px;">Kategori:</span>
+        <button style="background:var(--navy); color:var(--white); border:none; padding:7px 18px; font-family:var(--font-body); font-size:0.8rem; letter-spacing:0.08em; cursor:pointer;">Semua</button>
+        <button style="background:transparent; color:var(--text-secondary); border:1px solid var(--gray-200); padding:7px 18px; font-family:var(--font-body); font-size:0.8rem; letter-spacing:0.08em; cursor:pointer; transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'; this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-200)'; this.style.color='var(--text-secondary)'">Hukum Perdata</button>
+        <button style="background:transparent; color:var(--text-secondary); border:1px solid var(--gray-200); padding:7px 18px; font-family:var(--font-body); font-size:0.8rem; letter-spacing:0.08em; cursor:pointer; transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'; this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-200)'; this.style.color='var(--text-secondary)'">Hukum Pidana</button>
+        <button style="background:transparent; color:var(--text-secondary); border:1px solid var(--gray-200); padding:7px 18px; font-family:var(--font-body); font-size:0.8rem; letter-spacing:0.08em; cursor:pointer; transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'; this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-200)'; this.style.color='var(--text-secondary)'">Hukum Bisnis</button>
+        <button style="background:transparent; color:var(--text-secondary); border:1px solid var(--gray-200); padding:7px 18px; font-family:var(--font-body); font-size:0.8rem; letter-spacing:0.08em; cursor:pointer; transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'; this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-200)'; this.style.color='var(--text-secondary)'">Umum</button>
+      </div>
+
+      <div class="artikel-grid">
+
+        <!-- Article 1 -->
+        <article class="artikel-list-card" data-animate>
+          <div class="artikel-list-thumb">
+            <div class="artikel-list-thumb-placeholder"><i class="fas fa-file-lines"></i></div>
+          </div>
+          <div class="artikel-list-body">
+            <span class="artikel-cat">Hukum Perdata</span>
+            <h3>Memahami Hak Konsumen dalam Hukum Perlindungan Konsumen Indonesia</h3>
+            <p>Hukum perlindungan konsumen memberikan landasan hukum yang kuat bagi setiap warga negara dalam berinteraksi dengan pelaku usaha di era modern ini.</p>
+            <div class="artikel-meta">
+              <span><i class="far fa-calendar"></i> 20 Desember 2024</span>
+              <a href="artikel-detail.html" class="btn-text">Baca Selengkapnya</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Article 2 -->
+        <article class="artikel-list-card" data-animate data-delay="100">
+          <div class="artikel-list-thumb">
+            <div class="artikel-list-thumb-placeholder"><i class="fas fa-gavel"></i></div>
+          </div>
+          <div class="artikel-list-body">
+            <span class="artikel-cat">Hukum Pidana</span>
+            <h3>Prosedur Pengajuan Gugatan Perdata di Pengadilan Negeri</h3>
+            <p>Mengenal tahapan dan prosedur lengkap dalam pengajuan gugatan perdata, mulai dari pembuatan surat gugatan hingga putusan akhir pengadilan.</p>
+            <div class="artikel-meta">
+              <span><i class="far fa-calendar"></i> 15 Desember 2024</span>
+              <a href="artikel-detail.html" class="btn-text">Baca Selengkapnya</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Article 3 -->
+        <article class="artikel-list-card" data-animate data-delay="200">
+          <div class="artikel-list-thumb">
+            <div class="artikel-list-thumb-placeholder"><i class="fas fa-building"></i></div>
+          </div>
+          <div class="artikel-list-body">
+            <span class="artikel-cat">Hukum Bisnis</span>
+            <h3>Aspek Hukum dalam Pendirian Perseroan Terbatas (PT) di Indonesia</h3>
+            <p>Panduan lengkap tentang persyaratan, prosedur, dan dokumen yang diperlukan dalam proses pendirian Perseroan Terbatas sesuai regulasi terkini.</p>
+            <div class="artikel-meta">
+              <span><i class="far fa-calendar"></i> 10 Desember 2024</span>
+              <a href="artikel-detail.html" class="btn-text">Baca Selengkapnya</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Article 4 -->
+        <article class="artikel-list-card" data-animate>
+          <div class="artikel-list-thumb">
+            <div class="artikel-list-thumb-placeholder"><i class="fas fa-house"></i></div>
+          </div>
+          <div class="artikel-list-body">
+            <span class="artikel-cat">Hukum Perdata</span>
+            <h3>Sengketa Tanah: Hak, Prosedur, dan Penyelesaian yang Efektif</h3>
+            <p>Sengketa tanah masih menjadi salah satu permasalahan hukum yang paling sering terjadi di Indonesia. Berikut panduan komprehensif penyelesaiannya.</p>
+            <div class="artikel-meta">
+              <span><i class="far fa-calendar"></i> 5 Desember 2024</span>
+              <a href="artikel-detail.html" class="btn-text">Baca Selengkapnya</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Article 5 -->
+        <article class="artikel-list-card" data-animate data-delay="100">
+          <div class="artikel-list-thumb">
+            <div class="artikel-list-thumb-placeholder"><i class="fas fa-handshake"></i></div>
+          </div>
+          <div class="artikel-list-body">
+            <span class="artikel-cat">Umum</span>
+            <h3>Mengenal Proses Mediasi sebagai Alternatif Penyelesaian Sengketa</h3>
+            <p>Mediasi sebagai alternatif penyelesaian sengketa semakin populer karena lebih cepat, murah, dan menjaga hubungan para pihak yang bersengketa.</p>
+            <div class="artikel-meta">
+              <span><i class="far fa-calendar"></i> 1 Desember 2024</span>
+              <a href="artikel-detail.html" class="btn-text">Baca Selengkapnya</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Article 6 -->
+        <article class="artikel-list-card" data-animate data-delay="200">
+          <div class="artikel-list-thumb">
+            <div class="artikel-list-thumb-placeholder"><i class="fas fa-laptop-code"></i></div>
+          </div>
+          <div class="artikel-list-body">
+            <span class="artikel-cat">Hukum Bisnis</span>
+            <h3>Kerangka Hukum Transaksi Elektronik dan Perlindungan Data Pribadi</h3>
+            <p>Di era digital, memahami kerangka hukum transaksi elektronik dan perlindungan data pribadi menjadi semakin krusial bagi pelaku bisnis dan konsumen.</p>
+            <div class="artikel-meta">
+              <span><i class="far fa-calendar"></i> 25 November 2024</span>
+              <a href="artikel-detail.html" class="btn-text">Baca Selengkapnya</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- Pagination -->
+      <div style="display:flex; justify-content:center; gap:8px; margin-top:56px; flex-wrap:wrap;">
+        <a href="#" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; background:var(--navy); color:var(--white); font-family:var(--font-body); font-size:0.88rem; transition:var(--transition);">1</a>
+        <a href="#" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; border:1px solid var(--gray-200); color:var(--text-secondary); font-family:var(--font-body); font-size:0.88rem; transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'; this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-200)'; this.style.color='var(--text-secondary)'">2</a>
+        <a href="#" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; border:1px solid var(--gray-200); color:var(--text-secondary); font-family:var(--font-body); font-size:0.88rem; transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'; this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-200)'; this.style.color='var(--text-secondary)'">3</a>
+        <a href="#" style="width:40px; height:40px; display:flex; align-items:center; justify-content:center; border:1px solid var(--gray-200); color:var(--text-secondary); font-family:var(--font-body); font-size:0.88rem; transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)'; this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-200)'; this.style.color='var(--text-secondary)'"><i class="fas fa-chevron-right" style="font-size:11px"></i></a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== FLOATING WHATSAPP ===== -->
+  <div class="wa-float">
+    <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" aria-label="Konsultasi Gratis via WhatsApp">
+      <i class="fab fa-whatsapp"></i>
+      Konsultasi Gratis
+    </a>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <div class="footer-logo-icon"><i class="fas fa-balance-scale"></i></div>
+            <div class="footer-logo-text">
+              <span>Kantor Hukum</span>
+              <span>Profesional & Terpercaya</span>
+            </div>
+          </div>
+          <p>Memberikan layanan hukum yang profesional, berintegritas, dan berpihak pada kebenaran untuk mewujudkan keadilan bagi semua lapisan masyarakat.</p>
+          <div class="footer-socials">
+            <a href="#" class="footer-social-link" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="footer-social-link" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="footer-social-link" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+            <a href="#" class="footer-social-link" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Navigasi</h5>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="tentang.html">Tentang Web Ini</a></li>
+            <li><a href="kabinet.html">Kabinet</a></li>
+            <li><a href="artikel.html">Artikel</a></li>
+            <li><a href="kontak.html">Kontak</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Layanan</h5>
+          <ul>
+            <li><a href="#">Hukum Perdata</a></li>
+            <li><a href="#">Hukum Pidana</a></li>
+            <li><a href="#">Hukum Bisnis</a></li>
+            <li><a href="#">Konsultasi Hukum</a></li>
+            <li><a href="#">Mediasi</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Kontak</h5>
+          <div class="footer-contact-item"><i class="fas fa-map-marker-alt"></i><span>Jl. Contoh No. 123, Kota, Indonesia</span></div>
+          <div class="footer-contact-item"><i class="fas fa-phone"></i><span>+62 812-3456-7890</span></div>
+          <div class="footer-contact-item"><i class="fas fa-envelope"></i><span>info@kantorhukum.id</span></div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 Kantor Hukum. Seluruh hak cipta dilindungi undang-undang.</p>
+        <p>Didesain dengan <i class="fas fa-heart" style="color:var(--gold); font-size:11px"></i> untuk keadilan</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

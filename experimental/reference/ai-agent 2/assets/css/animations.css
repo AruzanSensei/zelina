@@ -1,0 +1,25 @@
+/* ==========================================================================
+   animations.css — keyframes, floating shapes
+   ========================================================================== */
+
+@keyframes float1 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-12px) rotate(2deg); }
+}
+@keyframes float2 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-18px) rotate(-2deg); }
+}
+@keyframes float3 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-10px) rotate(1deg); }
+}
+@keyframes float4 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-14px) rotate(-1deg); }
+}
+
+.floating-1 { animation: float1 4s ease-in-out infinite; }
+.floating-2 { animation: float2 5s ease-in-out infinite; }
+.floating-3 { animation: float3 3.5s ease-in-out infinite; }
+.floating-4 { animation: float4 6s ease-in-out infinite; }

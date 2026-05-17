@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiUjian — Sistem Ujian Sekolah</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-logo">Si<span>Ujian</span></div>
+      <div class="role-toggle">
+        <button id="role-guru" class="role-btn active" onclick="setRole('guru')">🧑‍🏫 Guru</button>
+        <button id="role-murid" class="role-btn" onclick="setRole('murid')">🧑‍🎓 Murid</button>
+      </div>
+      <div class="header-spacer"></div>
+      <div class="student-badge">
+        <span style="font-size:18px">👤</span>
+        <span id="student-name-display">Murid Demo</span>
+      </div>
+    </header>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <nav id="sidebar-nav"></nav>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main" id="main-content">
+      <!-- Rendered by JS -->
+    </main>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modal"></div>
+
+  <!-- SCRIPTS -->
+  <script src="modules/storage.js"></script>
+  <script src="modules/exams.js"></script>
+  <script src="modules/questions.js"></script>
+  <script src="modules/quiz.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

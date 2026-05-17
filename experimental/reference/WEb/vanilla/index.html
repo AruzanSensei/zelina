@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIwork — AI Agent & Automation SaaS Template</title>
+    <meta name="description" content="AIwork is a modern SaaS website template for AI automation platforms, agencies and startups.">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <!-- Dependencies -->
+    <script defer src="https://unpkg.com/lucide@latest"></script>
+    <script defer src="https://unpkg.com/@alpinejs/collapse@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body x-data="siteApp" class="antialiased">
+
+    <!-- Header Navigation -->
+    <header class="navbar" :class="scrolled ? 'nav-scrolled' : ''">
+        <div class="container nav-wrapper">
+            <a href="#" class="logo">
+                <span class="logo-icon"><i data-lucide="brain-circuit"></i></span>
+                <span class="logo-text">AIwork</span>
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="desktop-nav">
+                <template x-for="link in navLinks" :key="link.name">
+                    <a :href="link.href" class="nav-link" x-text="link.name"></a>
+                </template>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="#" class="btn btn-secondary nav-btn-hide">Login</a>
+                <a href="#" class="btn btn-primary">Try Free</a>
+                
+                <!-- Mobile Toggle -->
+                <button class="menu-toggle" @click="mobileMenuOpen = !mobileMenuOpen">
+                    <i :data-lucide="mobileMenuOpen ? 'x' : 'menu'"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" x-show="mobileMenuOpen" x-transition x-cloak>
+            <nav class="mobile-nav">
+                <template x-for="link in navLinks" :key="link.name">
+                    <a :href="link.href" class="mobile-nav-link" @click="mobileMenuOpen = false" x-text="link.name"></a>
+                </template>
+                <div class="mobile-nav-actions">
+                    <a href="#" class="btn btn-secondary">Login</a>
+                    <a href="#" class="btn btn-primary">Try Free</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section section">
+            <div class="hero-bg-glow"></div>
+            <div class="container hero-container">
+                <div class="hero-badge" x-transition>
+                    <span class="pulse"></span>
+                    Now with GPT-4 Magic
+                </div>
+                <h1 class="hero-title">
+                    Deploy AI Agents <br>
+                    <span class="gradient-text">That Work For You</span>
+                </h1>
+                <p class="hero-subtitle">
+                    AIwork is the all-in-one platform to design, deploy, and scale your AI automation workflows. 
+                    Streamline your business operations in minutes.
+                </p>
+                <div class="hero-actions">
+                    <a href="#" class="btn btn-primary btn-lg">Start Free Trial</a>
+                    <a href="#" class="btn btn-secondary btn-lg">
+                        <i data-lucide="play-circle" class="btn-icon"></i>
+                        Watch Demo
+                    </a>
+                </div>
+                
+                <!-- Hero Visual Placeholder -->
+                <div class="hero-visual glass">
+                    <div class="visual-header">
+                        <div class="dots"><span></span><span></span><span></span></div>
+                        <div class="address-bar">aiwork.site/dashboard</div>
+                    </div>
+                    <div class="visual-content">
+                        <img src="assets/images/dashboard.png" alt="AIwork Dashboard" class="dashboard-img">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Logo Cloud / Integrations -->
+        <section class="logo-cloud">
+            <div class="container text-center">
+                <p class="logo-cloud-title">Trusted by 500+ innovative companies</p>
+                <div class="logo-grid">
+                    <!-- Placeholders for logos -->
+                    <div class="logo-item grayscale">COMPANY A</div>
+                    <div class="logo-item grayscale">COMPANY B</div>
+                    <div class="logo-item grayscale">COMPANY C</div>
+                    <div class="logo-item grayscale">COMPANY D</div>
+                    <div class="logo-item grayscale">COMPANY E</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="section">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="section-title">Everything you need to <br> <span class="gradient-text">scale your business</span></h2>
+                    <p class="section-subtitle">Powerful features designed to help you build, deploy, and manage AI workflows at any scale.</p>
+                </div>
+                <div class="features-grid">
+                    <template x-for="feature in features" :key="feature.title">
+                        <div class="feature-card glass">
+                            <div class="feature-icon"><i :data-lucide="feature.icon"></i></div>
+                            <h3 class="feature-title" x-text="feature.title"></h3>
+                            <p class="feature-desc" x-text="feature.desc"></p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
+
+        <!-- Workflow Section -->
+        <section id="workflows" class="section">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="section-title">How it <span class="gradient-text">works</span></h2>
+                    <p class="section-subtitle">A simple three-step process to get your AI automation up and running.</p>
+                </div>
+                <div class="workflow-grid">
+                    <template x-for="wf in workflows" :key="wf.step">
+                        <div class="workflow-item">
+                            <div class="workflow-step" x-text="wf.step"></div>
+                            <h3 class="workflow-title" x-text="wf.title"></h3>
+                            <p class="workflow-desc" x-text="wf.desc"></p>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section id="testimonials" class="section">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="section-title">Loved by <span class="gradient-text">thousands of builders</span></h2>
+                    <p class="section-subtitle">Hear from the teams that are transforming their businesses with AIwork.</p>
+                </div>
+                <div class="testimonials-grid">
+                    <template x-for="tm in testimonials" :key="tm.name">
+                        <div class="testimonial-card glass">
+                            <p class="tm-text" x-text="`&ldquo;${tm.text}&rdquo;`"></p>
+                            <div class="tm-author">
+                                <div class="tm-avatar"><i data-lucide="user"></i></div>
+                                <div class="tm-info">
+                                    <h4 class="tm-name" x-text="tm.name"></h4>
+                                    <p class="tm-role" x-text="tm.role"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section id="faqs" class="section">
+            <div class="container">
+                <div class="faq-wrapper glass">
+                    <div class="section-header text-center">
+                        <h2 class="section-title">Frequently asked <span class="gradient-text">questions</span></h2>
+                    </div>
+                    <div class="faq-list">
+                        <template x-for="(faq, index) in faqs" :key="index">
+                            <div class="faq-item" :class="activeFaq === index ? 'active' : ''">
+                                <button class="faq-question" @click="activeFaq = (activeFaq === index ? null : index)">
+                                    <span x-text="faq.q"></span>
+                                    <i data-lucide="chevron-down" class="faq-icon"></i>
+                                </button>
+                                <div class="faq-answer" x-show="activeFaq === index" x-collapse x-cloak>
+                                    <p x-text="faq.a"></p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="section bg-alt">
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="section-title">Simple, transparent <span class="gradient-text">pricing</span></h2>
+                    <p class="section-subtitle">Choose the plan that's right for you and your team.</p>
+                </div>
+                <div class="pricing-grid">
+                    <!-- Starter Plan -->
+                    <div class="pricing-card glass">
+                        <div class="pricing-header">
+                            <h3 class="plan-name">Starter</h3>
+                            <p class="plan-desc">For individuals and side projects.</p>
+                        </div>
+                        <div class="plan-price">$0<span>/mo</span></div>
+                        <ul class="plan-features">
+                            <li><i data-lucide="check" class="check-icon"></i> 5 AI Agents</li>
+                            <li><i data-lucide="check" class="check-icon"></i> 1,000 Messages/mo</li>
+                            <li><i data-lucide="check" class="check-icon"></i> Basic analytics</li>
+                            <li><i data-lucide="check" class="check-icon"></i> Community support</li>
+                        </ul>
+                        <a href="#" class="btn btn-secondary w-full">Get Started</a>
+                    </div>
+
+                    <!-- Pro Plan -->
+                    <div class="pricing-card glass featured">
+                        <div class="plan-badge">Most Popular</div>
+                        <div class="pricing-header">
+                            <h3 class="plan-name">Pro</h3>
+                            <p class="plan-desc">For growing teams and startups.</p>
+                        </div>
+                        <div class="plan-price">$49<span>/mo</span></div>
+                        <ul class="plan-features">
+                            <li><i data-lucide="check" class="check-icon"></i> Unlimited AI Agents</li>
+                            <li><i data-lucide="check" class="check-icon"></i> 50,000 Messages/mo</li>
+                            <li><i data-lucide="check" class="check-icon"></i> Advanced analytics</li>
+                            <li><i data-lucide="check" class="check-icon"></i> Priority support</li>
+                            <li><i data-lucide="check" class="check-icon"></i> Custom integrations</li>
+                        </ul>
+                        <a href="#" class="btn btn-primary w-full">Start Free Trial</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="section">
+            <div class="container">
+                <div class="cta-box glass text-center">
+                    <h2 class="section-title">Ready to automate your <br> <span class="gradient-text">business?</span></h2>
+                    <p class="section-subtitle">Join thousands of teams using AIwork to scale their operations.</p>
+                    <div class="hero-actions" style="margin-bottom: 0; margin-top: 40px; justify-content: center;">
+                        <a href="#" class="btn btn-primary btn-lg">Get Started Now</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="footer-logo">
+                        <span class="logo-icon"><i data-lucide="brain-circuit"></i></span>
+                        <span class="logo-text">AIwork</span>
+                    </a>
+                    <p class="footer-desc">
+                        The ultimate AI automation platform for modern teams and startups.
+                    </p>
+                </div>
+                
+                <template x-for="group in footerLinks" :key="group.title">
+                    <div class="footer-column">
+                        <h4 class="footer-title" x-text="group.title"></h4>
+                        <ul class="footer-links">
+                            <template x-for="link in group.links" :key="link.name">
+                                <li><a :href="link.href" class="footer-link" x-text="link.name"></a></li>
+                            </template>
+                        </ul>
+                    </div>
+                </template>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; <span x-text="new Date().getFullYear()"></span> AIwork. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS -->
+    <script src="assets/js/app.js"></script>
+</body>
+</html>

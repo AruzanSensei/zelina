@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice - Waru Farm Land</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1a4a35;
+            --secondary-color: #2d6e50;
+            --accent-color: #e87722;
+            --text-dark: #1D1D1D;
+            --text-light: #1D1D1D;
+        }
+
+        @font-face {
+            font-family: "Montserrat ExtraBold";
+            src: url("data:application/octet-stream;base64,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");
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @page {
+            size: A4;
+            margin: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f0f0f0;
+            color: var(--text-dark);
+            line-height: 1.4;
+        }
+
+        .page-container {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            background: white;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .page-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .page-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 2;
+            padding: 22mm 20mm;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 24px;
+        }
+
+        .header-box {
+            text-align: right;
+        }
+
+        .logo {
+            width: 85px;
+            margin-bottom: 5px;
+        }
+
+        .doc-title {
+            font-size: 5.089418em;
+            font-family: "Montserrat ExtraBold", sans-serif;
+            font-weight: 900;
+            color: #1D1D1D;
+            line-height: 1;
+            letter-spacing: -0.0251em;
+        }
+
+        .doc-date {
+            font-size: 1.000377em;
+            font-family: "Montserrat ExtraBold", sans-serif;
+            font-weight: 800;
+            color: #1D1D1D;
+            margin-top: 5px;
+            letter-spacing: 0.025em;
+        }
+
+        .customer-section {
+            margin-bottom: 24px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 6px 20px;
+            border-radius: 3px;
+            letter-spacing: 2px;
+            margin-bottom: 14px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 160px 10px 1fr;
+            gap: 3px 10px;
+            font-size: 13px;
+            color: #1D1D1D;
+        }
+
+        .info-label { font-weight: 700; }
+
+        .table-container {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead tr {
+            border-bottom: 2px solid #333;
+        }
+
+        th {
+            padding: 10px 8px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 700;
+            color: #1D1D1D;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 10px 8px;
+            font-size: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #333;
+        }
+
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+
+        .summary-section {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .summary-box {
+            width: 250px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 12px;
+            font-weight: 700;
+            color: #1D1D1D;
+        }
+
+        .summary-row.grand-total {
+            border-bottom: 2px solid #333;
+            font-size: 13px;
+        }
+
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 180px;
+            gap: 20px;
+            align-items: start;
+            margin-top: 18px;
+        }
+
+        .note-box {
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #1D1D1D;
+            line-height: 1.7;
+        }
+
+        .payment-box {
+            margin-bottom: 15px;
+        }
+
+        .payment-title {
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1D1D1D;
+        }
+
+        .payment-opt {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #1D1D1D;
+        }
+
+        .radio {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-color);
+            background: white;
+        }
+
+        .radio.checked { background: var(--accent-color); }
+
+        .bank-card {
+            background: var(--secondary-color);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-block;
+            line-height: 1.7;
+        }
+
+        .signature-box {
+            text-align: center;
+        }
+
+        .sig-image {
+            width: 110px;
+            margin-bottom: 0;
+        }
+
+        .sig-line {
+            height: 1.5px;
+            background: #1D1D1D;
+            margin-bottom: 4px;
+        }
+
+        .sig-name { font-weight: 700; font-size: 12px; color: #1D1D1D; }
+        .sig-company { font-weight: 800; font-size: 12px; color: var(--primary-color); letter-spacing: 0.5px; }
+
+        .footer-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 3;
+        }
+
+        .social-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 18mm;
+            margin-bottom: 40px;
+        }
+
+        .social-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .address-bar {
+            background: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 9.5px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .page-container { box-shadow: none; margin: 0; min-height: 297mm; height: 297mm; }
+            * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- Background Wrapper -->
+        <div class="page-bg">
+            <img src="background pdf.png" alt="">
+        </div>
+
+        <div class="content-wrapper">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-box">
+                    <img src="LOGO WFL.png" alt="WFL Logo" class="logo">
+                    <h1 class="doc-title">INVOICE</h1>
+                    <div class="doc-date"><strong>Date:</strong> 05 Februari 2026</div>
+                </div>
+            </header>
+
+            <!-- Customer -->
+            <section class="customer-section">
+                <span class="badge">CUSTOMER</span>
+                <div class="info-grid">
+                    <span class="info-label">MR/MS</span><span>:</span><span>Bu Lina Marlina</span>
+                    <span class="info-label">PHONE</span><span>:</span><span>+62 81514555182</span>
+                    <span class="info-label">Periode Kunjungan</span><span>:</span><span>11 Februari 2026</span>
+                </div>
+            </section>
+
+            <!-- Table -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="40">NO</th>
+                            <th>UNSUR BIAYA</th>
+                            <th width="100" class="text-right">HARGA</th>
+                            <th width="90" class="text-center">JUMLAH</th>
+                            <th width="120" class="text-right">TOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Melukis Caping Anak</td>
+                            <td class="text-right">Rp. 30.000</td>
+                            <td class="text-center">75 Anak</td>
+                            <td class="text-right">Rp. 2.250.000</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Berkuda</td>
+                            <td class="text-right">Rp. 15.000</td>
+                            <td class="text-center">75 Anak</td>
+                            <td class="text-right">Rp. 1.125.000</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Edukasi Pertanian</td>
+                            <td class="text-right">Rp. 15.000</td>
+                            <td class="text-center">75 Anak</td>
+                            <td class="text-right">Rp. 1.125.000</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Menangkap Ikan</td>
+                            <td class="text-right">Rp. 10.000</td>
+                            <td class="text-center">75 Anak</td>
+                            <td class="text-right">Rp. 750.000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Summary -->
+            <section class="summary-section">
+                <div class="summary-box">
+                    <div class="summary-row">
+                        <span>Total</span>
+                        <span>Rp. 5.250.000</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Diskon/Cashback</span>
+                        <span>Rp 0</span>
+                    </div>
+                    <div class="summary-row grand-total">
+                        <span>Sisa Pembayaran</span>
+                        <span>Rp. 5.250.000</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bottom Information -->
+            <div class="bottom-grid">
+                <div class="bottom-left">
+                    <div class="note-box">
+                        Note: 78 Peserta<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;78 - 3 Anak Yatim Free<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= 75 Peserta bayar full
+                    </div>
+
+                    <div class="payment-box">
+                        <div class="payment-title">Payment method:</div>
+                        <div class="payment-opt">
+                            <div class="radio checked"></div>
+                            <span>CASH</span>
+                        </div>
+                        <div class="payment-opt">
+                            <div class="radio"></div>
+                            <span>TRANSFER</span>
+                        </div>
+                    </div>
+
+                    <div class="bank-card">
+                        BANK MANDIRI<br>
+                        133-00154220-74<br>
+                        Mitra Buana Asri Sentosa
+                    </div>
+                </div>
+
+                <div class="signature-box">
+                    <img src="Tanda tangan Andini Nurannisa.png" alt="Signature" class="sig-image">
+                    <div class="sig-line"></div>
+                    <div class="sig-name">Andini Nurannisa</div>
+                    <div class="sig-company">WARU FARM LAND</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer-info">
+            <div class="social-row">
+                <div class="social-item">@warufarmland</div>
+                <div class="social-item">Agrowisata Waru Farm Land Bogor</div>
+                <div class="social-item">+62 811-1137-007</div>
+            </div>
+            <div class="address-bar">
+                Jl. Baru Manunggal 51 No. 39 Kec. Ciampea, Bogor, Jawa Barat 16620
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

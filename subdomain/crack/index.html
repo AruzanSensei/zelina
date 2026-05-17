@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kumpulan Proyek Random</title>
+  <link rel="stylesheet" href="../assets/css/global.css">
+  <style>    
+    .header {
+      text-align: center;
+      margin-bottom: 1rem;
+      padding: 1rem 0;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    
+    .subtitle {
+      font-size: 1.1rem;
+      color: #64748b;
+      margin-bottom: 0rem;
+    }
+
+    .sub-subtitle {
+      font-size: 0.9rem;
+      color: #3366ad;
+      margin-bottom: 0.7rem;
+    }
+    
+    .simple-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      padding: 0;
+      list-style: none;
+    }
+    
+    .card {
+      background: var(--card-bg);
+      border-radius: 1rem;
+      box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      overflow: hidden;
+    }
+    
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    }
+    
+    .card a {
+      display: block;
+      padding: 1rem;
+      text-decoration: none;
+      color: var(--text);
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.1rem;
+      font-weight: 500;
+    }
+
+    .card-title::before {
+      content: "📂";
+      font-size: 1.2rem;
+    }
+
+    .card-description {
+      font-size: 0.9rem;
+      color: var(--gray-400);
+      margin-left: 0.5rem;
+    }
+    
+    @media (max-width: 640px) {
+      body {
+        padding: 0.75rem;
+      }
+
+      .breadcrumb {
+        margin-bottom: 0.5rem;
+      }
+      
+      .header {
+        margin-bottom: 1.5rem;
+        padding: 0.8rem;
+      }
+      
+      h1 {
+        font-size: 1.75rem;
+        margin-bottom: 0rem;
+      }
+
+      .subtitle {
+        font-size: 0.9rem;
+        margin-bottom: 0rem;
+      }
+
+      .sub-subtitle {
+        font-size: 0.7rem;
+        margin-bottom: 0.5rem;
+      }
+      
+      .simple-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+
+      .card {
+        border-radius: 0.75rem;
+      }
+
+      .card a {
+        padding: 0.5rem 1rem 0.8rem 1rem;
+      }
+
+      .card-title {
+        font-size: 1rem;
+      }
+
+      .card-description {
+        font-size: 0.8rem;
+        margin-left: 0.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="dots-background"></div>
+  <nav class="breadcrumb">
+    <a href="../"><img src="../assets/icon/zanxa-mini.ico" alt="Home" class="breadcrumb-icon"></a>
+    <span>/</span>
+    <span>crack</span>
+  </nav>
+  <header class="header">
+    <h1>Software Crack - Shortcut</h1>
+    <p class="subtitle">cara mudah download software crack ga pake lama</p>
+    <p class="sub-subtitle">Source: yasir252.com</p>
+  </header>
+  <ul class="simple-grid">
+    <li class="card">
+      <a href="https://pixeldrain.com/u/vwx4GHv1">
+        <div class="card-title">Adobe Illustrator CS6</div>
+        <div class="card-description">Software desain grafis vektor</div>
+      </a>
+    </li>
+    <li class="card">
+      <a href="https://drive.google.com/file/d/1Qv-doiJIobH5329l5mnJgNkKzweovDnj/view?usp=drive_link">
+        <div class="card-title">Adobe Illustrator 2022</div>
+        <div class="card-description">Software SIAP PAKAI (cari 'Illustrator.exe' di root "Support Files\Contents\Windows\Illustrator.exe")</div>
+      </a>
+    </li>
+    <li class="card">
+      <a href="https://pixeldrain.com/u/eeMHYiyb">
+        <div class="card-title">Adobe Photoshop CS6</div>
+        <div class="card-description">software editing foto</div>
+      </a>
+    </li>
+    <li class="card">
+      <a href="https://pixeldrain.com/u/XnUsoVTD">
+        <div class="card-title">Corel Draw X7</div>
+        <div class="card-description">entahlah, gw udah ga pake ini lagi</div>
+      </a>
+    </li>
+    <li class="card">
+      <a href="https://www.win-rar.com/fileadmin/winrar-versions/winrar/winrar-x64-713.exe">
+        <div class="card-title">Winrar 7.13 (Ori)</div>
+        <div class="card-description">Software pengarsipan dan kompresi file</div>
+        <div class="card-description">(langsung dari situs winrar nya)</div>
+      </a>
+    </li>
+  </ul>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Katalog Produk PowerCo - Battery Industri, Genset, Panel Listrik, dan Aksesoris Kelistrikan terlengkap.">
+  <title>Produk – PowerCo</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<nav class="navbar page-nav" id="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon"><i class="fa-solid fa-bolt"></i></div>
+      <div>
+        <span class="logo-text">POWERCO</span>
+        <span class="logo-sub">Industrial Power Solutions</span>
+      </div>
+    </a>
+    <ul class="nav-menu">
+      <li><a href="index.html" class="nav-link">Home</a></li>
+      <li><a href="tentang.html" class="nav-link">Tentang</a></li>
+      <li><a href="product.html" class="nav-link active">Produk</a></li>
+      <li><a href="artikel.html" class="nav-link">Artikel</a></li>
+      <li><a href="kontak.html" class="nav-link">Kontak</a></li>
+    </ul>
+    <a href="kontak.html" class="btn btn-primary btn-sm nav-cta"><i class="fa-solid fa-headset"></i> Konsultasi</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-nav" id="mobileNav">
+  <a href="index.html" class="nav-link">Home</a>
+  <a href="tentang.html" class="nav-link">Tentang</a>
+  <a href="product.html" class="nav-link">Produk</a>
+  <a href="artikel.html" class="nav-link">Artikel</a>
+  <a href="kontak.html" class="nav-link">Kontak</a>
+  <a href="kontak.html" class="btn btn-primary" style="margin-top:24px">Konsultasi</a>
+</div>
+
+<section class="page-hero">
+  <div class="container page-hero-content">
+    <div class="breadcrumb"><a href="index.html">Home</a><i class="fa-solid fa-chevron-right"></i><span>Produk</span></div>
+    <h1>Katalog Produk</h1>
+    <p>Temukan solusi energi terbaik untuk kebutuhan industri Anda dari koleksi produk kami yang lengkap dan tersertifikasi.</p>
+  </div>
+</section>
+
+<!-- MOBILE FILTER TRIGGER -->
+<div class="container" style="padding-top:24px;">
+  <button class="sidebar-mobile-trigger" id="filterTrigger">
+    <span><i class="fa-solid fa-sliders" style="margin-right:8px;"></i>Filter Produk</span>
+    <i class="fa-solid fa-arrow-right"></i>
+  </button>
+</div>
+
+<!-- FILTER DRAWER OVERLAY -->
+<div class="filter-overlay" id="filterOverlay"></div>
+
+<!-- FILTER DRAWER (MOBILE) -->
+<div class="filter-drawer" id="filterDrawer">
+  <div class="drawer-close">
+    <h3>Filter</h3>
+    <button class="drawer-close-btn btn btn-sm btn-outline-dark"><i class="fa-solid fa-times"></i></button>
+  </div>
+  <!-- same filter content injected here by JS or duplicated -->
+  <div class="filter-section">
+    <div class="filter-title">Kategori</div>
+    <div class="filter-body">
+      <label class="filter-option"><input type="checkbox" checked> <label>Battery Industri <span class="filter-count">24</span></label></label>
+      <label class="filter-option"><input type="checkbox"> <label>Genset <span class="filter-count">18</span></label></label>
+      <label class="filter-option"><input type="checkbox"> <label>Panel Listrik <span class="filter-count">12</span></label></label>
+      <label class="filter-option"><input type="checkbox"> <label>Aksesoris <span class="filter-count">30</span></label></label>
+    </div>
+  </div>
+  <div class="filter-section">
+    <div class="filter-title">Kapasitas</div>
+    <div class="filter-body">
+      <label class="filter-option"><input type="checkbox"> <label>&lt; 100 Ah / kVA</label></label>
+      <label class="filter-option"><input type="checkbox"> <label>100 – 500 Ah / kVA</label></label>
+      <label class="filter-option"><input type="checkbox"> <label>&gt; 500 Ah / kVA</label></label>
+    </div>
+  </div>
+  <button class="btn btn-primary" style="width:100%; margin-top:16px; justify-content:center;">Terapkan Filter</button>
+</div>
+
+<!-- CATALOG LAYOUT -->
+<div class="container">
+  <div class="catalog-layout">
+
+    <!-- SIDEBAR DESKTOP -->
+    <aside class="sidebar">
+      <div class="filter-section">
+        <div class="filter-title" data-toggle="cat">Kategori <i class="fa-solid fa-chevron-down"></i></div>
+        <div class="filter-body">
+          <label class="filter-option"><input type="checkbox" checked> <label>Battery Industri <span class="filter-count">24</span></label></label>
+          <label class="filter-option"><input type="checkbox"> <label>Genset <span class="filter-count">18</span></label></label>
+          <label class="filter-option"><input type="checkbox"> <label>Panel Listrik <span class="filter-count">12</span></label></label>
+          <label class="filter-option"><input type="checkbox"> <label>Aksesoris <span class="filter-count">30</span></label></label>
+          <label class="filter-option"><input type="checkbox"> <label>UPS System <span class="filter-count">8</span></label></label>
+        </div>
+      </div>
+      <div class="filter-section">
+        <div class="filter-title" data-toggle="kap">Kapasitas <i class="fa-solid fa-chevron-down"></i></div>
+        <div class="filter-body">
+          <label class="filter-option"><input type="checkbox"> <label>&lt; 100 Ah / kVA</label></label>
+          <label class="filter-option"><input type="checkbox"> <label>100 – 500 Ah / kVA</label></label>
+          <label class="filter-option"><input type="checkbox"> <label>500 – 1000 Ah / kVA</label></label>
+          <label class="filter-option"><input type="checkbox"> <label>&gt; 1000 Ah / kVA</label></label>
+        </div>
+      </div>
+      <div class="filter-section">
+        <div class="filter-title" data-toggle="teg">Tegangan <i class="fa-solid fa-chevron-down"></i></div>
+        <div class="filter-body">
+          <label class="filter-option"><input type="checkbox"> <label>12V</label></label>
+          <label class="filter-option"><input type="checkbox"> <label>24V</label></label>
+          <label class="filter-option"><input type="checkbox"> <label>48V</label></label>
+          <label class="filter-option"><input type="checkbox"> <label>110V / 220V</label></label>
+          <label class="filter-option"><input type="checkbox"> <label>380V (3 Phase)</label></label>
+        </div>
+      </div>
+      <div class="filter-section">
+        <div class="filter-title" data-toggle="brand">Brand <i class="fa-solid fa-chevron-down"></i></div>
+        <div class="filter-body">
+          <label class="filter-option"><input type="checkbox"> <label>Yuasa</label></label>
+          <label class="filter-option"><input type="checkbox"> <label>Cummins</label></label>
+          <label class="filter-option"><input type="checkbox"> <label>Caterpillar</label></label>
+          <label class="filter-option"><input type="checkbox"> <label>Schneider</label></label>
+          <label class="filter-option"><input type="checkbox"> <label>ABB</label></label>
+          <label class="filter-option"><input type="checkbox"> <label>GS Battery</label></label>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CATALOG MAIN -->
+    <div class="catalog-main">
+      <div class="catalog-toolbar">
+        <div class="catalog-count">Menampilkan <strong>1–9</strong> dari <strong>84</strong> produk</div>
+        <select class="sort-select">
+          <option>Terbaru</option>
+          <option>Paling Populer</option>
+          <option>Nama A-Z</option>
+          <option>Nama Z-A</option>
+        </select>
+      </div>
+
+      <div class="product-grid">
+        <!-- Products 1-9 -->
+        <div class="product-card" data-reveal>
+          <div class="product-img"><div class="product-placeholder"><i class="fa-solid fa-battery-full"></i></div><span class="product-label label-bestseller">Best Seller</span></div>
+          <div class="product-info">
+            <div class="product-category">Battery Industri</div>
+            <h4 class="product-name">VRLA Battery 200Ah 12V</h4>
+            <p class="product-spec">Maintenance-free • 5 Tahun Garansi • 500 Cycle</p>
+            <div class="product-footer"><span class="product-price inquiry">Hubungi untuk harga</span><a href="product-detail.html" class="btn btn-primary btn-sm">Detail</a></div>
+          </div>
+        </div>
+        <div class="product-card" data-reveal data-reveal-delay="1">
+          <div class="product-img"><div class="product-placeholder"><i class="fa-solid fa-plug-circle-bolt"></i></div><span class="product-label label-new">New</span></div>
+          <div class="product-info">
+            <div class="product-category">Genset</div>
+            <h4 class="product-name">Diesel Genset 50 kVA Silenced</h4>
+            <p class="product-spec">Single Phase • Auto Start • 68dB</p>
+            <div class="product-footer"><span class="product-price inquiry">Hubungi untuk harga</span><a href="product-detail.html" class="btn btn-primary btn-sm">Detail</a></div>
+          </div>
+        </div>
+        <div class="product-card" data-reveal data-reveal-delay="2">
+          <div class="product-img"><div class="product-placeholder"><i class="fa-solid fa-solar-panel"></i></div><span class="product-label label-ready">Ready Stock</span></div>
+          <div class="product-info">
+            <div class="product-category">Panel Listrik</div>
+            <h4 class="product-name">MCC Panel 630A 3 Phase</h4>
+            <p class="product-spec">IP54 • SS304 Enclosure • Custom</p>
+            <div class="product-footer"><span class="product-price inquiry">Hubungi untuk harga</span><a href="product-detail.html" class="btn btn-primary btn-sm">Detail</a></div>
+          </div>
+        </div>
+        <div class="product-card" data-reveal>
+          <div class="product-img"><div class="product-placeholder"><i class="fa-solid fa-microchip"></i></div><span class="product-label label-industrial">Industrial</span></div>
+          <div class="product-info">
+            <div class="product-category">Aksesoris</div>
+            <h4 class="product-name">Smart BMS 48V 100A</h4>
+            <p class="product-spec">Li-Ion Compatible • Bluetooth • OVP</p>
+            <div class="product-footer"><span class="product-price inquiry">Hubungi untuk harga</span><a href="product-detail.html" class="btn btn-primary btn-sm">Detail</a></div>
+          </div>
+        </div>
+        <div class="product-card" data-reveal data-reveal-delay="1">
+          <div class="product-img"><div class="product-placeholder"><i class="fa-solid fa-battery-three-quarters"></i></div><span class="product-label label-new">New</span></div>
+          <div class="product-info">
+            <div class="product-category">Battery Industri</div>
+            <h4 class="product-name">Lithium Iron 100Ah 48V</h4>
+            <p class="product-spec">LiFePO4 • 3000+ Cycle • BMS Built-in</p>
+            <div class="product-footer"><span class="product-price inquiry">Hubungi untuk harga</span><a href="product-detail.html" class="btn btn-primary btn-sm">Detail</a></div>
+          </div>
+        </div>
+        <div class="product-card" data-reveal data-reveal-delay="2">
+          <div class="product-img"><div class="product-placeholder"><i class="fa-solid fa-tower-broadcast"></i></div><span class="product-label label-bestseller">Popular</span></div>
+          <div class="product-info">
+            <div class="product-category">UPS System</div>
+            <h4 class="product-name">Online UPS 10 kVA Rackmount</h4>
+            <p class="product-spec">Double Conversion • SNMP Card • LCD</p>
+            <div class="product-footer"><span class="product-price inquiry">Hubungi untuk harga</span><a href="product-detail.html" class="btn btn-primary btn-sm">Detail</a></div>
+          </div>
+        </div>
+        <div class="product-card" data-reveal>
+          <div class="product-img"><div class="product-placeholder"><i class="fa-solid fa-gear"></i></div><span class="product-label label-ready">Ready</span></div>
+          <div class="product-info">
+            <div class="product-category">Genset</div>
+            <h4 class="product-name">Gasoline Genset 7.5 kVA</h4>
+            <p class="product-spec">AVR • Electric Start • 4 Stroke</p>
+            <div class="product-footer"><span class="product-price inquiry">Hubungi untuk harga</span><a href="product-detail.html" class="btn btn-primary btn-sm">Detail</a></div>
+          </div>
+        </div>
+        <div class="product-card" data-reveal data-reveal-delay="1">
+          <div class="product-img"><div class="product-placeholder"><i class="fa-solid fa-bolt"></i></div><span class="product-label label-industrial">Industrial</span></div>
+          <div class="product-info">
+            <div class="product-category">Panel Listrik</div>
+            <h4 class="product-name">LVDP Panel 1600A</h4>
+            <p class="product-spec">ACB Main • Busbar 150x10mm • IP42</p>
+            <div class="product-footer"><span class="product-price inquiry">Hubungi untuk harga</span><a href="product-detail.html" class="btn btn-primary btn-sm">Detail</a></div>
+          </div>
+        </div>
+        <div class="product-card" data-reveal data-reveal-delay="2">
+          <div class="product-img"><div class="product-placeholder"><i class="fa-solid fa-plug"></i></div><span class="product-label label-new">New</span></div>
+          <div class="product-info">
+            <div class="product-category">Aksesoris</div>
+            <h4 class="product-name">Battery Charger 24V 30A</h4>
+            <p class="product-spec">Auto Float • Short Circuit Protection</p>
+            <div class="product-footer"><span class="product-price inquiry">Hubungi untuk harga</span><a href="product-detail.html" class="btn btn-primary btn-sm">Detail</a></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGINATION -->
+      <div class="pagination">
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">...</button>
+        <button class="page-btn">10</button>
+        <button class="page-btn"><i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer" style="margin-top:80px;">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>POWERCO</h3>
+        <p>Distributor terpercaya battery industri, genset, dan sistem kelistrikan untuk kebutuhan bisnis skala besar di seluruh Indonesia.</p>
+        <div class="footer-socials">
+          <a href="#" class="social-btn"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#" class="social-btn"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="#" class="social-btn"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" class="social-btn"><i class="fa-brands fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Navigasi</h4>
+        <ul class="footer-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="tentang.html">Tentang Kami</a></li>
+          <li><a href="product.html">Produk</a></li>
+          <li><a href="artikel.html">Artikel</a></li>
+          <li><a href="kontak.html">Kontak</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Produk</h4>
+        <ul class="footer-links">
+          <li><a href="product.html">Battery Industri</a></li>
+          <li><a href="product.html">Genset & UPS</a></li>
+          <li><a href="product.html">Panel Listrik</a></li>
+          <li><a href="product.html">Aksesoris</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Kontak</h4>
+        <div class="footer-contact-item"><i class="fa-solid fa-location-dot"></i> Jl. Industri Raya No. 88, Cibitung, Bekasi 17520</div>
+        <div class="footer-contact-item"><i class="fa-solid fa-phone"></i> +62 21 5555 0000</div>
+        <div class="footer-contact-item"><i class="fa-solid fa-envelope"></i> sales@powerco.id</div>
+        <div class="footer-contact-item"><i class="fa-solid fa-clock"></i> Senin–Sabtu, 08.00–17.00</div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 PowerCo. All rights reserved.</span>
+      <span>Designed for Industrial Excellence</span>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/6281234567890" class="wa-float visible" id="waFloat" target="_blank" rel="noopener">
+  <i class="fa-brands fa-whatsapp"></i><span class="wa-text">Free Consultation</span>
+</a>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

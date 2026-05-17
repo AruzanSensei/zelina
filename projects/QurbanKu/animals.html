@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hewan Qurban - QurbanKu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2 data-id="brand">QurbanKu</h2>
+            </div>
+            
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link" data-id="nav-home">Beranda</a>
+                </li>
+                <li class="nav-item">
+                    <a href="animals.html" class="nav-link active" data-id="nav-animals">Hewan Qurban</a>
+                </li>
+                <li class="nav-item">
+                    <a href="gallery.html" class="nav-link" data-id="nav-gallery">Galeri</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link" data-id="nav-contact">Kontak</a>
+                </li>
+            </ul>
+
+            <div class="nav-actions">
+                <div class="language-toggle">
+                    <button id="lang-toggle" class="lang-btn">
+                        <span id="current-flag">🇮🇩</span>
+                        <span id="current-lang">ID</span>
+                    </button>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 data-id="animals-title">Pilih Hewan Qurban</h1>
+            <p data-id="animals-subtitle">Hewan berkualitas tinggi untuk ibadah qurban Anda</p>
+        </div>
+    </section>
+
+    <!-- Animals Grid -->
+    <section class="animals-section">
+        <div class="container">
+            <div class="filter-tabs">
+                <button class="filter-btn active" data-filter="all" data-id="filter-all">Semua</button>
+                <button class="filter-btn" data-filter="sapi" data-id="filter-cow">Sapi</button>
+                <button class="filter-btn" data-filter="kambing" data-id="filter-goat">Kambing</button>
+            </div>
+
+            <div class="animals-grid" id="animals-grid">
+                <!-- Sapi Cards -->
+                <div class="animal-card" data-category="sapi">
+                    <div class="animal-image">
+                        <img src="https://images.unsplash.com/photo-1493962853295-0fd70327578a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Sapi Premium">
+                        <div class="animal-badge" data-id="badge-premium">Premium</div>
+                    </div>
+                    <div class="animal-info">
+                        <h3 class="animal-name" data-id="cow1-name">Sapi Limosin Premium</h3>
+                        <div class="animal-details">
+                            <span class="detail-item">
+                                <strong data-id="weight-label">Berat:</strong> 450kg
+                            </span>
+                            <span class="detail-item">
+                                <strong data-id="type-label">Jenis:</strong> <span data-id="cow1-type">Sapi</span>
+                            </span>
+                        </div>
+                        <div class="animal-price">Rp 28.000.000</div>
+                        <button class="btn btn-primary order-btn" data-animal="Sapi Limosin Premium" data-price="28000000" data-id="order-btn">Pesan Sekarang</button>
+                    </div>
+                </div>
+
+                <div class="animal-card" data-category="sapi">
+                    <div class="animal-image">
+                        <img src="https://images.unsplash.com/photo-1465379944081-7f47de8d74ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Sapi Brahman">
+                    </div>
+                    <div class="animal-info">
+                        <h3 class="animal-name" data-id="cow2-name">Sapi Brahman</h3>
+                        <div class="animal-details">
+                            <span class="detail-item">
+                                <strong data-id="weight-label">Berat:</strong> 400kg
+                            </span>
+                            <span class="detail-item">
+                                <strong data-id="type-label">Jenis:</strong> <span data-id="cow2-type">Sapi</span>
+                            </span>
+                        </div>
+                        <div class="animal-price">Rp 24.000.000</div>
+                        <button class="btn btn-primary order-btn" data-animal="Sapi Brahman" data-price="24000000" data-id="order-btn">Pesan Sekarang</button>
+                    </div>
+                </div>
+
+                <div class="animal-card" data-category="sapi">
+                    <div class="animal-image">
+                        <img src="https://images.unsplash.com/photo-1472396961693-142e6e269027?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Sapi Simental">
+                    </div>
+                    <div class="animal-info">
+                        <h3 class="animal-name" data-id="cow3-name">Sapi Simental</h3>
+                        <div class="animal-details">
+                            <span class="detail-item">
+                                <strong data-id="weight-label">Berat:</strong> 380kg
+                            </span>
+                            <span class="detail-item">
+                                <strong data-id="type-label">Jenis:</strong> <span data-id="cow3-type">Sapi</span>
+                            </span>
+                        </div>
+                        <div class="animal-price">Rp 22.000.000</div>
+                        <button class="btn btn-primary order-btn" data-animal="Sapi Simental" data-price="22000000" data-id="order-btn">Pesan Sekarang</button>
+                    </div>
+                </div>
+
+                <!-- Kambing Cards -->
+                <div class="animal-card" data-category="kambing">
+                    <div class="animal-image">
+                        <img src="https://images.unsplash.com/photo-1485833077593-4278bba3f11f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Kambing Etawa">
+                        <div class="animal-badge" data-id="badge-popular">Populer</div>
+                    </div>
+                    <div class="animal-info">
+                        <h3 class="animal-name" data-id="goat1-name">Kambing Etawa</h3>
+                        <div class="animal-details">
+                            <span class="detail-item">
+                                <strong data-id="weight-label">Berat:</strong> 45kg
+                            </span>
+                            <span class="detail-item">
+                                <strong data-id="type-label">Jenis:</strong> <span data-id="goat1-type">Kambing</span>
+                            </span>
+                        </div>
+                        <div class="animal-price">Rp 4.500.000</div>
+                        <button class="btn btn-primary order-btn" data-animal="Kambing Etawa" data-price="4500000" data-id="order-btn">Pesan Sekarang</button>
+                    </div>
+                </div>
+
+                <div class="animal-card" data-category="kambing">
+                    <div class="animal-image">
+                        <img src="https://images.unsplash.com/photo-1466721591366-2d5fba72006d?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Kambing Gibas">
+                    </div>
+                    <div class="animal-info">
+                        <h3 class="animal-name" data-id="goat2-name">Kambing Gibas</h3>
+                        <div class="animal-details">
+                            <span class="detail-item">
+                                <strong data-id="weight-label">Berat:</strong> 40kg
+                            </span>
+                            <span class="detail-item">
+                                <strong data-id="type-label">Jenis:</strong> <span data-id="goat2-type">Kambing</span>
+                            </span>
+                        </div>
+                        <div class="animal-price">Rp 3.800.000</div>
+                        <button class="btn btn-primary order-btn" data-animal="Kambing Gibas" data-price="3800000" data-id="order-btn">Pesan Sekarang</button>
+                    </div>
+                </div>
+
+                <div class="animal-card" data-category="kambing">
+                    <div class="animal-image">
+                        <img src="https://images.unsplash.com/photo-1452378174528-3090a4bba7b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Kambing Lokal">
+                    </div>
+                    <div class="animal-info">
+                        <h3 class="animal-name" data-id="goat3-name">Kambing Lokal</h3>
+                        <div class="animal-details">
+                            <span class="detail-item">
+                                <strong data-id="weight-label">Berat:</strong> 35kg
+                            </span>
+                            <span class="detail-item">
+                                <strong data-id="type-label">Jenis:</strong> <span data-id="goat3-type">Kambing</span>
+                            </span>
+                        </div>
+                        <div class="animal-price">Rp 3.200.000</div>
+                        <button class="btn btn-primary order-btn" data-animal="Kambing Lokal" data-price="3200000" data-id="order-btn">Pesan Sekarang</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 data-id="brand">QurbanKu</h3>
+                    <p data-id="footer-desc">Melayani kebutuhan qurban umat dengan penuh amanah dan profesional.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-id="footer-links">Tautan</h4>
+                    <ul>
+                        <li><a href="index.html" data-id="nav-home">Beranda</a></li>
+                        <li><a href="animals.html" data-id="nav-animals">Hewan Qurban</a></li>
+                        <li><a href="gallery.html" data-id="nav-gallery">Galeri</a></li>
+                        <li><a href="contact.html" data-id="nav-contact">Kontak</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4 data-id="footer-contact">Kontak</h4>
+                    <p>📞 +62 812-3456-7890</p>
+                    <p>📧 info@qurbanku.com</p>
+                    <p>📍 Jakarta, Indonesia</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 QurbanKu. <span data-id="footer-rights">Semua hak dilindungi.</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

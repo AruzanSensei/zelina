@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portofolio – Zanxa Studio</title>
+
+  <!-- Font Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --primary: #4A90E2;
+      --primary-dark: #357ABD;
+      --bg-body: #F5F7FA;
+      --bg-card: #FFFFFF;
+      --text-main: #333333;
+      --text-muted: #888888;
+      --border-color: #E1E4E8;
+      --radius-sm: 10px;
+      --radius-md: 16px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 32px;
+      --shadow-sm: 0 10px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top left, #E0ECFF, #F5F7FA);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    /* Layout */
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 20px 16px 40px;
+    }
+
+    /* Header / Nav */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.10);
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .nav-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #4A90E2, #7BB5FF);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      box-shadow: 0 10px 25px rgba(74, 144, 226, 0.5);
+    }
+
+    .nav-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-title h1 {
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+    }
+
+    .nav-title span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 12px;
+      font-size: 0.85rem;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-muted);
+      padding: 6px 10px;
+      border-radius: 999px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary-dark);
+      background: rgba(74, 144, 226, 0.1);
+    }
+
+    /* Hero */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 32px;
+      align-items: center;
+      padding: 36px 0 40px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(74, 144, 226, 0.08);
+      color: var(--primary-dark);
+      font-size: 0.75rem;
+      font-weight: 500;
+      border: 1px solid rgba(74, 144, 226, 0.25);
+      margin-bottom: 12px;
+    }
+
+    .hero-title {
+      font-size: clamp(2rem, 3vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .hero-title span {
+      color: var(--primary-dark);
+    }
+
+    .hero-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 480px;
+      margin-bottom: 20px;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 16px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .hero-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #27AE60;
+      box-shadow: 0 0 8px rgba(39, 174, 96, 0.7);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4A90E2, #357ABD);
+      color: white;
+      box-shadow: 0 10px 30px rgba(74, 144, 226, 0.5);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 35px rgba(74, 144, 226, 0.55);
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.8);
+      color: var(--primary-dark);
+      border: 1px solid rgba(74, 144, 226, 0.3);
+    }
+
+    .btn-outline:hover {
+      background: white;
+    }
+
+    .hero-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 24px;
+      padding: 20px 20px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.15);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .hero-card-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .hero-pill {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #E8F3FF;
+      color: var(--primary-dark);
+      border: 1px solid rgba(74, 144, 226, 0.3);
+    }
+
+    .hero-card-main {
+      border-radius: 18px;
+      background: linear-gradient(145deg, #1F2933, #111827);
+      color: #F9FAFB;
+      padding: 16px 16px 14px;
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card-main::after {
+      content: "";
+      position: absolute;
+      inset: -80px;
+      background:
+        radial-gradient(circle at top left, rgba(150, 207, 255, 0.4), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(94, 234, 212, 0.35), transparent 55%);
+      mix-blend-mode: screen;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .hero-card-main-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .badge-small {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      margin-bottom: 8px;
+      color: #E5E7EB;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #22C55E, #4ADE80);
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.8);
+    }
+
+    .hero-card-main h2 {
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+
+    .hero-card-main p {
+      font-size: 0.78rem;
+      color: #CBD5F5;
+      max-width: 260px;
+    }
+
+    .hero-card-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .hero-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .hero-stat span:first-child {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #A0AEC0;
+    }
+
+    .hero-stat strong {
+      font-size: 0.9rem;
+      color: var(--primary-dark);
+    }
+
+    /* Sections */
+    .section {
+      margin-top: 24px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 14px;
+    }
+
+    .section-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .section-subtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      padding: 16px 16px 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .info-list {
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      font-size: 0.8rem;
+    }
+
+    .info-list li {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .info-bullet {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      margin-top: 4px;
+      background: linear-gradient(135deg, #4A90E2, #9B51E0);
+    }
+
+    /* Projects */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 14px;
+    }
+
+    .project-card {
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 16px;
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      padding: 12px 12px 10px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .project-tag {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+    }
+
+    .project-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .project-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .project-pill {
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #F3F4FF;
+      color: #4F46E5;
+    }
+
+    /* Contact */
+    .contact-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+    }
+
+    .contact-info {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .contact-list {
+      list-style: none;
+      font-size: 0.85rem;
+      display: grid;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .contact-list span.label {
+      font-weight: 500;
+      color: var(--text-main);
+      margin-right: 6px;
+    }
+
+    .contact-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .contact-chip {
+      font-size: 0.8rem;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(74, 144, 226, 0.08);
+      color: var(--primary-dark);
+      border: 1px dashed rgba(74, 144, 226, 0.4);
+    }
+
+    .contact-form {
+      display: grid;
+      gap: 10px;
+    }
+
+    .form-field label {
+      display: block;
+      font-size: 0.78rem;
+      margin-bottom: 4px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .form-field input,
+    .form-field textarea {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(209, 213, 219, 0.9);
+      font-size: 0.85rem;
+      outline: none;
+      background: rgba(248, 250, 252, 0.9);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .form-field input:focus,
+    .form-field textarea:focus {
+      border-color: rgba(74, 144, 226, 0.9);
+      box-shadow: 0 0 0 1px rgba(74, 144, 226, 0.35);
+      background: #ffffff;
+    }
+
+    .form-field textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 24px;
+      padding: 16px 0 4px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .footer strong {
+      color: var(--primary-dark);
+    }
+
+    @media (max-width: 840px) {
+      .hero,
+      .about-grid,
+      .contact-card {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .hero {
+        padding-top: 24px;
+      }
+
+      .nav {
+        border-radius: 18px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- NAV -->
+    <header class="nav">
+      <div class="nav-left">
+        <div class="nav-logo">Z</div>
+        <div class="nav-title">
+          <h1>ZANXA STUDIO</h1>
+          <span>Product, Web & Brand Design</span>
+        </div>
+      </div>
+      <nav class="nav-links">
+        <a href="#about" class="active">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div>
+        <div class="hero-badge">
+          <span>Portofolio 2026 · Web & Brand Design</span>
+        </div>
+        <h2 class="hero-title">
+          Membangun produk digital &amp; brand yang terlihat <span>profesional</span>.
+        </h2>
+        <p class="hero-subtitle">
+          Saya membantu bisnis dan kreator membuat website, sistem internal, dan identitas visual yang rapi,
+          cepat, dan mudah dipakai.
+        </p>
+
+        <div class="hero-meta">
+          <span><span class="dot"></span> +3 tahun pengalaman produk &amp; web</span>
+          <span>Fokus: UMKM, kreator, dan usaha lokal</span>
+          <span>Berbasis di Indonesia</span>
+        </div>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary">Lihat Proyek Unggulan</button>
+          <button class="btn btn-outline">Hubungi untuk Kolaborasi</button>
+        </div>
+      </div>
+
+      <aside class="hero-card">
+        <div class="hero-card-header">
+          <div>
+            <div class="hero-card-title">PROJECT SNAPSHOT</div>
+          </div>
+          <span class="hero-pill">Internal Tool</span>
+        </div>
+
+        <div class="hero-card-main">
+          <div class="hero-card-main-inner">
+            <div class="badge-small">
+              <span class="badge-dot"></span>
+              Live internal tool
+            </div>
+            <h2>Invoice &amp; Surat Jalan Generator</h2>
+            <p>
+              Aplikasi web ringan untuk membuat invoice &amp; surat jalan hanya dari HP,
+              otomatis menghitung total dan menyimpan riwayat transaksi.
+            </p>
+          </div>
+        </div>
+
+        <div class="hero-card-footer">
+          <div class="hero-stat">
+            <span>CLIENT</span>
+            <strong>Berkah Maju Elektrik</strong>
+          </div>
+          <div class="hero-stat">
+            <span>ROLE</span>
+            <strong>Product &amp; Web Design</strong>
+          </div>
+          <div class="hero-stat">
+            <span>YEAR</span>
+            <strong>2026</strong>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section">
+      <div class="section-header">
+        <h3 class="section-title">Tentang Saya</h3>
+        <p class="section-subtitle">Desain yang simple, fungsional, dan siap dipakai bisnis.</p>
+      </div>
+
+      <div class="about-grid">
+        <article class="card">
+          <p>
+            Saya adalah desainer &amp; developer di Zanxa Studio yang fokus membantu bisnis kecil dan menengah
+            punya tampilan online yang rapi. Mulai dari landing page sederhana, internal tool seperti generator
+            invoice, sampai identitas visual yang konsisten di semua channel.
+          </p>
+        </article>
+
+        <aside class="card">
+          <ul class="info-list">
+            <li>
+              <span class="info-bullet"></span>
+              <div>Desain UI/UX untuk website &amp; web app.</div>
+            </li>
+            <li>
+              <span class="info-bullet"></span>
+              <div>Implementasi front‑end (HTML, CSS, JS / framework).</div>
+            </li>
+            <li>
+              <span class="info-bullet"></span>
+              <div>Pembuatan internal tool ringan untuk operasional bisnis.</div>
+            </li>
+            <li>
+              <span class="info-bullet"></span>
+              <div>Branding dasar: logo, warna, dan guideline sederhana.</div>
+            </li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="projects" class="section">
+      <div class="section-header">
+        <h3 class="section-title">Proyek Terpilih</h3>
+        <p class="section-subtitle">Beberapa contoh pekerjaan teknis &amp; digital.</p>
+      </div>
+
+      <div class="projects-grid">
+        <article class="project-card">
+          <div class="project-tag">Web Tool</div>
+          <div class="project-name">Invoice &amp; Surat Jalan Generator</div>
+          <div class="project-meta">
+            <span>Role: UX, UI, Frontend</span>
+            <span class="project-pill">Internal Tool</span>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-tag">Website</div>
+          <div class="project-name">Landing Page Zanxa Studio</div>
+          <div class="project-meta">
+            <span>Stack: HTML, CSS, JS</span>
+            <span class="project-pill">Personal Brand</span>
+          </div>
+        </article>
+
+        <article class="project-card">
+          <div class="project-tag">Client Project</div>
+          <div class="project-name">Website UMKM / Toko Elektrik</div>
+          <div class="project-meta">
+            <span>Role: Design &amp; Build</span>
+            <span class="project-pill">Client Work</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section">
+      <div class="section-header">
+        <h3 class="section-title">Kontak &amp; Kerja Sama</h3>
+        <p class="section-subtitle">Ceritakan kebutuhanmu, saya bantu cari solusinya.</p>
+      </div>
+
+      <div class="card contact-card">
+        <div>
+          <p class="contact-info">
+            Ingin membuat website, internal tool sederhana, atau memperbaiki tampilan brand?
+            Kirim pesan singkat, saya akan bantu jelaskan pilihan terbaik yang sesuai budget kamu.
+          </p>
+          <ul class="contact-list">
+            <li>
+              <span class="label">Email:</span> halo@zanxa.site
+            </li>
+            <li>
+              <span class="label">WhatsApp:</span> +62 812-3456-7890
+            </li>
+            <li>
+              <span class="label">Lokasi:</span> Bekasi, Indonesia
+            </li>
+          </ul>
+
+          <div class="contact-chip-row">
+            <span class="contact-chip">Tersedia untuk proyek 2026</span>
+            <span class="contact-chip">Bisa remote &amp; on-site</span>
+          </div>
+        </div>
+
+        <form class="contact-form">
+          <div class="form-field">
+            <label>Nama</label>
+            <input type="text" placeholder="Nama lengkap kamu" />
+          </div>
+          <div class="form-field">
+            <label>Email / WhatsApp</label>
+            <input type="text" placeholder="Email atau nomor WhatsApp" />
+          </div>
+          <div class="form-field">
+            <label>Pesan singkat</label>
+            <textarea placeholder="Ceritakan singkat kebutuhan proyek kamu..."></textarea>
+          </div>
+          <button type="button" class="btn btn-primary">Kirim Pesan (Mockup)</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      © 2026 <strong>Zanxa Studio</strong> · Portofolio Sederhana
+    </footer>
+  </div>
+</body>
+</html>
+

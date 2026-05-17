@@ -1,0 +1,16 @@
+name = "polaroid-auth"
+main = "worker.js"
+compatibility_date = "2024-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+[vars]
+# Ganti dengan URL frontend kamu (tanpa trailing slash)
+# Bisa juga set via: wrangler secret put APP_ORIGIN
+APP_ORIGIN = "http://localhost:8080"
+
+# Secrets — set via wrangler CLI, JANGAN simpan di sini:
+#   wrangler secret put GOOGLE_CLIENT_ID
+#   wrangler secret put GOOGLE_CLIENT_SECRET
+#   wrangler secret put SUPABASE_URL
+#   wrangler secret put SUPABASE_SERVICE_KEY
+#   wrangler secret put JWT_SECRET

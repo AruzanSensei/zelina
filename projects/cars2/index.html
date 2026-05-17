@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoPrime – Dealer Mobil Terpercaya</title>
+  <meta name="description" content="AutoPrime dealer mobil resmi terpercaya. Temukan mobil impian Anda – Sedan, SUV, MPV, Hatchback, Pickup, dan Electric Vehicle." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;0,900;1,300&family=Barlow+Condensed:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<header class="navbar" id="navbar">
+  <div class="container nav-inner">
+    <a href="index.html" class="logo" aria-label="AutoPrime Home">
+      <span class="logo-mark">AP</span>
+      <span class="logo-text">AUTO<strong>PRIME</strong></span>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#tentang" class="nav-link">Tentang Kami</a>
+      <div class="nav-dropdown">
+        <a href="#produk" class="nav-link dropdown-trigger">Produk <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg></a>
+        <div class="dropdown-menu">
+          <div class="dropdown-grid">
+            <a href="#produk" class="dd-item" data-cat="sedan">
+              <span class="dd-icon">🚗</span>
+              <div><strong>Sedan</strong><small>Premium & Elegan</small></div>
+            </a>
+            <a href="#produk" class="dd-item" data-cat="suv">
+              <span class="dd-icon">🚙</span>
+              <div><strong>SUV</strong><small>Tangguh & Luas</small></div>
+            </a>
+            <a href="#produk" class="dd-item" data-cat="mpv">
+              <span class="dd-icon">🚐</span>
+              <div><strong>MPV</strong><small>Keluarga Nyaman</small></div>
+            </a>
+            <a href="#produk" class="dd-item" data-cat="hatchback">
+              <span class="dd-icon">🚘</span>
+              <div><strong>Hatchback</strong><small>Lincah & Efisien</small></div>
+            </a>
+            <a href="#produk" class="dd-item" data-cat="pickup">
+              <span class="dd-icon">🛻</span>
+              <div><strong>Pickup</strong><small>Niaga & Kuat</small></div>
+            </a>
+            <a href="#produk" class="dd-item" data-cat="ev">
+              <span class="dd-icon">⚡</span>
+              <div><strong>Electric Vehicle</strong><small>Masa Depan Kini</small></div>
+            </a>
+          </div>
+        </div>
+      </div>
+      <a href="#dokumentasi" class="nav-link">Dokumentasi</a>
+      <a href="#kontak" class="nav-link">Kontak</a>
+    </nav>
+    <a href="https://wa.me/6281234567890" target="_blank" class="nav-cta">Konsultasi WA</a>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="home">
+  <div class="hero-slides">
+    <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1555215695-3004980ad54e?w=1600&auto=format&fit=crop')"></div>
+    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=1600&auto=format&fit=crop')"></div>
+    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=1600&auto=format&fit=crop')"></div>
+    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1606016159991-dfe4f2746ad5?w=1600&auto=format&fit=crop')"></div>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="container hero-content">
+    <div class="hero-badge">DEALER RESMI TERPERCAYA</div>
+    <h1 class="hero-title">Temukan Mobil<br>Impian Anda</h1>
+    <p class="hero-sub">Koleksi terlengkap, harga terbaik, layanan prima.<br>Lebih dari 100 unit siap test drive.</p>
+    <div class="hero-btns">
+      <a href="#produk" class="btn btn-primary">Lihat Produk</a>
+      <a href="#kontak" class="btn btn-outline">Hubungi Kami</a>
+    </div>
+  </div>
+  <div class="hero-dots">
+    <span class="dot active" data-slide="0"></span>
+    <span class="dot" data-slide="1"></span>
+    <span class="dot" data-slide="2"></span>
+    <span class="dot" data-slide="3"></span>
+  </div>
+</section>
+
+<!-- ===== STATS ===== -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">🏆</div>
+        <div class="stat-num">5<span>+</span></div>
+        <div class="stat-label">Tahun Pengalaman</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🚗</div>
+        <div class="stat-num">100<span>+</span></div>
+        <div class="stat-label">Unit Terjual</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📍</div>
+        <div class="stat-num">4</div>
+        <div class="stat-label">Cabang Showroom</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">😊</div>
+        <div class="stat-num">300<span>+</span></div>
+        <div class="stat-label">Customer Puas</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRODUK UNGGULAN ===== -->
+<section class="section" id="produk">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-label">KATALOG</div>
+      <h2 class="section-title">Produk Unggulan</h2>
+      <p class="section-sub">Pilihan terbaik kami untuk Anda</p>
+    </div>
+
+    <!-- Accordion Kategori -->
+    <div class="accordion-list" id="accordionList">
+
+      <!-- SEDAN -->
+      <div class="accordion-item" data-cat="sedan">
+        <button class="accordion-header">
+          <span class="acc-cat-icon">🚗</span>
+          <span class="acc-cat-name">Sedan</span>
+          <span class="acc-count">3 Mobil</span>
+          <svg class="acc-arrow" width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 6l5 5 5-5" stroke="currentColor" stroke-width="2"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="car-grid">
+            <div class="car-card">
+              <div class="car-img-wrap">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1617469767783-1de9ecddb20e?w=600&auto=format&fit=crop" alt="Toyota Camry" class="car-img"/>
+                <div class="car-badge">Best Seller</div>
+              </div>
+              <div class="car-info">
+                <div class="car-brand">TOYOTA</div>
+                <h3 class="car-name">Camry 2.5 V</h3>
+                <div class="car-specs">
+                  <span>AT</span><span>2.500 cc</span>
+                </div>
+                <div class="car-price">Mulai <strong>Rp 573 Juta</strong></div>
+                <button class="btn btn-detail" onclick="openModal('camry')">Detail</button>
+              </div>
+            </div>
+            <div class="car-card">
+              <div class="car-img-wrap">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1606152421802-db97b9c7a11b?w=600&auto=format&fit=crop" alt="Honda Accord" class="car-img"/>
+              </div>
+              <div class="car-info">
+                <div class="car-brand">HONDA</div>
+                <h3 class="car-name">Accord 1.5 Turbo</h3>
+                <div class="car-specs">
+                  <span>CVT</span><span>1.500 cc</span>
+                </div>
+                <div class="car-price">Mulai <strong>Rp 698 Juta</strong></div>
+                <button class="btn btn-detail" onclick="openModal('accord')">Detail</button>
+              </div>
+            </div>
+            <div class="car-card">
+              <div class="car-img-wrap">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1612825173281-9a193378527e?w=600&auto=format&fit=crop" alt="Hyundai Elantra" class="car-img"/>
+              </div>
+              <div class="car-info">
+                <div class="car-brand">HYUNDAI</div>
+                <h3 class="car-name">Elantra 1.6</h3>
+                <div class="car-specs">
+                  <span>DCT</span><span>1.600 cc</span>
+                </div>
+                <div class="car-price">Mulai <strong>Rp 389 Juta</strong></div>
+                <button class="btn btn-detail" onclick="openModal('elantra')">Detail</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUV -->
+      <div class="accordion-item" data-cat="suv">
+        <button class="accordion-header">
+          <span class="acc-cat-icon">🚙</span>
+          <span class="acc-cat-name">SUV</span>
+          <span class="acc-count">4 Mobil</span>
+          <svg class="acc-arrow" width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 6l5 5 5-5" stroke="currentColor" stroke-width="2"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="car-grid">
+            <div class="car-card">
+              <div class="car-img-wrap">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1526726538690-5cbf956ae2fd?w=600&auto=format&fit=crop" alt="Toyota RAV4" class="car-img"/>
+                <div class="car-badge">New</div>
+              </div>
+              <div class="car-info">
+                <div class="car-brand">TOYOTA</div>
+                <h3 class="car-name">RAV4 2.0</h3>
+                <div class="car-specs">
+                  <span>AT</span><span>2.000 cc</span>
+                </div>
+                <div class="car-price">Mulai <strong>Rp 498 Juta</strong></div>
+                <button class="btn btn-detail" onclick="openModal('rav4')">Detail</button>
+              </div>
+            </div>
+            <div class="car-card">
+              <div class="car-img-wrap">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=600&auto=format&fit=crop" alt="Honda CR-V" class="car-img"/>
+              </div>
+              <div class="car-info">
+                <div class="car-brand">HONDA</div>
+                <h3 class="car-name">CR-V 1.5 Turbo</h3>
+                <div class="car-specs">
+                  <span>CVT</span><span>1.500 cc</span>
+                </div>
+                <div class="car-price">Mulai <strong>Rp 539 Juta</strong></div>
+                <button class="btn btn-detail" onclick="openModal('crv')">Detail</button>
+              </div>
+            </div>
+            <div class="car-card">
+              <div class="car-img-wrap">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=600&auto=format&fit=crop" alt="Mitsubishi Outlander" class="car-img"/>
+              </div>
+              <div class="car-info">
+                <div class="car-brand">MITSUBISHI</div>
+                <h3 class="car-name">Outlander 2.4</h3>
+                <div class="car-specs">
+                  <span>CVT</span><span>2.400 cc</span>
+                </div>
+                <div class="car-price">Mulai <strong>Rp 575 Juta</strong></div>
+                <button class="btn btn-detail" onclick="openModal('outlander')">Detail</button>
+              </div>
+            </div>
+            <div class="car-card">
+              <div class="car-img-wrap">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&auto=format&fit=crop" alt="Hyundai Tucson" class="car-img"/>
+              </div>
+              <div class="car-info">
+                <div class="car-brand">HYUNDAI</div>
+                <h3 class="car-name">Tucson 1.6 Turbo</h3>
+                <div class="car-specs">
+                  <span>DCT</span><span>1.600 cc</span>
+                </div>
+                <div class="car-price">Mulai <strong>Rp 529 Juta</strong></div>
+                <button class="btn btn-detail" onclick="openModal('tucson')">Detail</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MPV -->
+      <div class="accordion-item" data-cat="mpv">
+        <button class="accordion-header">
+          <span class="acc-cat-icon">🚐</span>
+          <span class="acc-cat-name">MPV</span>
+          <span class="acc-count">3 Mobil</span>
+          <svg class="acc-arrow" width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 6l5 5 5-5" stroke="currentColor" stroke-width="2"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="car-grid">
+            <div class="car-card">
+              <div class="car-img-wrap">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=600&auto=format&fit=crop" alt="Toyota Innova" class="car-img"/>
+                <div class="car-badge">Populer</div>
+              </div>
+              <div class="car-info">
+                <div class="car-brand">TOYOTA</div>
+                <h3 class="car-name">Innova Zenix 2.0</h3>
+                <div class="car-specs">
+                  <span>CVT</span><span>2.000 cc</span>
+                </div>
+                <div class="car-price">Mulai <strong>Rp 389 Juta</strong></div>
+                <button class="btn btn-detail" onclick="openModal('innova')">Detail</button>
+              </div>
+            </div>
+            <div class="car-card">
+              <div class="car-img-wrap">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&auto=format&fit=crop" alt="Honda BR-V" class="car-img"/>
+              </div>
+              <div class="car-info">
+                <div class="car-brand">HONDA</div>
+                <h3 class="car-name">BR-V 1.5</h3>
+                <div class="car-specs">
+                  <span>CVT</span><span>1.500 cc</span>
+                </div>
+                <div class="car-price">Mulai <strong>Rp 299 Juta</strong></div>
+                <button class="btn btn-detail" onclick="openModal('brv')">Detail</button>
+              </div>
+            </div>
+            <div class="car-card">
+              <div class="car-img-wrap">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1619682817481-e994891cd1f5?w=600&auto=format&fit=crop" alt="Suzuki Ertiga" class="car-img"/>
+              </div>
+              <div class="car-info">
+                <div class="car-brand">SUZUKI</div>
+                <h3 class="car-name">Ertiga Hybrid</h3>
+                <div class="car-specs">
+                  <span>AT</span><span>1.500 cc</span>
+                </div>
+                <div class="car-price">Mulai <strong>Rp 249 Juta</strong></div>
+                <button class="btn btn-detail" onclick="openModal('ertiga')">Detail</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HATCHBACK -->
+      <div class="accordion-item" data-cat="hatchback">
+        <button class="accordion-header">
+          <span class="acc-cat-icon">🚘</span>
+          <span class="acc-cat-name">Hatchback</span>
+          <span class="acc-count">2 Mobil</span>
+          <svg class="acc-arrow" width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 6l5 5 5-5" stroke="currentColor" stroke-width="2"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="car-grid">
+            <div class="car-card">
+              <div class="car-img-wrap">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600&auto=format&fit=crop" alt="Toyota Yaris" class="car-img"/>
+              </div>
+              <div class="car-info">
+                <div class="car-brand">TOYOTA</div>
+                <h3 class="car-name">Yaris GR Sport</h3>
+                <div class="car-specs">
+                  <span>CVT</span><span>1.500 cc</span>
+                </div>
+                <div class="car-price">Mulai <strong>Rp 289 Juta</strong></div>
+                <button class="btn btn-detail" onclick="openModal('yaris')">Detail</button>
+              </div>
+            </div>
+            <div class="car-card">
+              <div class="car-img-wrap">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1576220258822-cf53c34e28be?w=600&auto=format&fit=crop" alt="Honda Jazz" class="car-img"/>
+              </div>
+              <div class="car-info">
+                <div class="car-brand">HONDA</div>
+                <h3 class="car-name">Jazz RS 1.5</h3>
+                <div class="car-specs">
+                  <span>CVT</span><span>1.500 cc</span>
+                </div>
+                <div class="car-price">Mulai <strong>Rp 279 Juta</strong></div>
+                <button class="btn btn-detail" onclick="openModal('jazz')">Detail</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PICKUP -->
+      <div class="accordion-item" data-cat="pickup">
+        <button class="accordion-header">
+          <span class="acc-cat-icon">🛻</span>
+          <span class="acc-cat-name">Pickup</span>
+          <span class="acc-count">2 Mobil</span>
+          <svg class="acc-arrow" width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 6l5 5 5-5" stroke="currentColor" stroke-width="2"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="car-grid">
+            <div class="car-card">
+              <div class="car-img-wrap">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format&fit=crop" alt="Mitsubishi Triton" class="car-img"/>
+              </div>
+              <div class="car-info">
+                <div class="car-brand">MITSUBISHI</div>
+                <h3 class="car-name">Triton 4x4 AT</h3>
+                <div class="car-specs">
+                  <span>AT</span><span>2.400 cc</span>
+                </div>
+                <div class="car-price">Mulai <strong>Rp 399 Juta</strong></div>
+                <button class="btn btn-detail" onclick="openModal('triton')">Detail</button>
+              </div>
+            </div>
+            <div class="car-card">
+              <div class="car-img-wrap">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=600&auto=format&fit=crop" alt="Nissan Navara" class="car-img"/>
+              </div>
+              <div class="car-info">
+                <div class="car-brand">NISSAN</div>
+                <h3 class="car-name">Navara Pro-4X</h3>
+                <div class="car-specs">
+                  <span>AT</span><span>2.500 cc</span>
+                </div>
+                <div class="car-price">Mulai <strong>Rp 449 Juta</strong></div>
+                <button class="btn btn-detail" onclick="openModal('navara')">Detail</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EV -->
+      <div class="accordion-item" data-cat="ev">
+        <button class="accordion-header">
+          <span class="acc-cat-icon">⚡</span>
+          <span class="acc-cat-name">Electric Vehicle</span>
+          <span class="acc-count">3 Mobil</span>
+          <svg class="acc-arrow" width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M4 6l5 5 5-5" stroke="currentColor" stroke-width="2"/></svg>
+        </button>
+        <div class="accordion-body">
+          <div class="car-grid">
+            <div class="car-card">
+              <div class="car-img-wrap">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1651231523755-b5a6e6a3e1e2?w=600&auto=format&fit=crop" alt="Hyundai Ioniq 6" class="car-img"/>
+                <div class="car-badge ev-badge">EV</div>
+              </div>
+              <div class="car-info">
+                <div class="car-brand">HYUNDAI</div>
+                <h3 class="car-name">IONIQ 6</h3>
+                <div class="car-specs">
+                  <span>1-Speed</span><span>614 km range</span>
+                </div>
+                <div class="car-price">Mulai <strong>Rp 749 Juta</strong></div>
+                <button class="btn btn-detail" onclick="openModal('ioniq6')">Detail</button>
+              </div>
+            </div>
+            <div class="car-card">
+              <div class="car-img-wrap">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=600&auto=format&fit=crop" alt="Wuling Air EV" class="car-img"/>
+                <div class="car-badge ev-badge">EV</div>
+              </div>
+              <div class="car-info">
+                <div class="car-brand">WULING</div>
+                <h3 class="car-name">Air EV Long Range</h3>
+                <div class="car-specs">
+                  <span>1-Speed</span><span>460 km range</span>
+                </div>
+                <div class="car-price">Mulai <strong>Rp 299 Juta</strong></div>
+                <button class="btn btn-detail" onclick="openModal('airev')">Detail</button>
+              </div>
+            </div>
+            <div class="car-card">
+              <div class="car-img-wrap">
+                <img loading="lazy" src="https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=600&auto=format&fit=crop" alt="Nissan Leaf" class="car-img"/>
+                <div class="car-badge ev-badge">EV</div>
+              </div>
+              <div class="car-info">
+                <div class="car-brand">NISSAN</div>
+                <h3 class="car-name">Leaf 40 kWh</h3>
+                <div class="car-specs">
+                  <span>1-Speed</span><span>385 km range</span>
+                </div>
+                <div class="car-price">Mulai <strong>Rp 599 Juta</strong></div>
+                <button class="btn btn-detail" onclick="openModal('leaf')">Detail</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end accordion-list -->
+  </div>
+</section>
+
+<!-- ===== BRAND MARQUEE ===== -->
+<section class="brand-section">
+  <div class="section-head" style="padding-bottom:2rem">
+    <div class="section-label">BRAND</div>
+    <h2 class="section-title" style="font-size:1.6rem">Merek Kami</h2>
+  </div>
+  <div class="marquee-wrap">
+    <div class="marquee-track" id="marqueeTrack">
+      <div class="brand-logo">TOYOTA</div>
+      <div class="brand-logo">HONDA</div>
+      <div class="brand-logo">MITSUBISHI</div>
+      <div class="brand-logo">HYUNDAI</div>
+      <div class="brand-logo">SUZUKI</div>
+      <div class="brand-logo">NISSAN</div>
+      <div class="brand-logo">WULING</div>
+      <div class="brand-logo">DAIHATSU</div>
+      <!-- Duplicate for infinite -->
+      <div class="brand-logo">TOYOTA</div>
+      <div class="brand-logo">HONDA</div>
+      <div class="brand-logo">MITSUBISHI</div>
+      <div class="brand-logo">HYUNDAI</div>
+      <div class="brand-logo">SUZUKI</div>
+      <div class="brand-logo">NISSAN</div>
+      <div class="brand-logo">WULING</div>
+      <div class="brand-logo">DAIHATSU</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TENTANG KAMI ===== -->
+<section class="section about-section" id="tentang">
+  <div class="container">
+    <div class="about-layout">
+      <div class="about-text">
+        <div class="section-label">TENTANG KAMI</div>
+        <h2 class="section-title">AutoPrime – Dealer Mobil Pilihan</h2>
+        <p>Sejak 2019, AutoPrime telah menjadi mitra terpercaya ribuan keluarga dan pengusaha dalam memilih kendaraan terbaik. Kami hadir dengan komitmen memberikan pengalaman berbelanja mobil yang transparan, nyaman, dan berkesan.</p>
+        <p>Dengan tim sales profesional dan fasilitas showroom modern, kami siap membantu Anda menemukan mobil impian sesuai kebutuhan dan anggaran.</p>
+        <div class="about-features">
+          <div class="about-feat"><span class="feat-dot"></span>Proses pembelian transparan & mudah</div>
+          <div class="about-feat"><span class="feat-dot"></span>Layanan purna jual terpercaya</div>
+          <div class="about-feat"><span class="feat-dot"></span>Fasilitas test drive tersedia</div>
+          <div class="about-feat"><span class="feat-dot"></span>KPR & leasing dibantu hingga ACC</div>
+        </div>
+      </div>
+      <div class="about-branches">
+        <h3 class="branches-title">Cabang Showroom</h3>
+        <div class="branch-grid">
+          <div class="branch-card">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&auto=format&fit=crop" alt="Cabang Pusat"/>
+            <div class="branch-info">
+              <strong>Cabang Pusat – Jakarta Selatan</strong>
+              <span>Jl. Sudirman No. 88, Jaksel</span>
+            </div>
+          </div>
+          <div class="branch-card">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&auto=format&fit=crop" alt="Cabang Bekasi"/>
+            <div class="branch-info">
+              <strong>Cabang Bekasi</strong>
+              <span>Jl. Ahmad Yani No. 12, Bekasi</span>
+            </div>
+          </div>
+          <div class="branch-card">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1526726538690-5cbf956ae2fd?w=400&auto=format&fit=crop" alt="Cabang Tangerang"/>
+            <div class="branch-info">
+              <strong>Cabang Tangerang</strong>
+              <span>Jl. Gatot Subroto No. 45, Tangerang</span>
+            </div>
+          </div>
+          <div class="branch-card">
+            <img loading="lazy" src="https://images.unsplash.com/photo-1606016159991-dfe4f2746ad5?w=400&auto=format&fit=crop" alt="Cabang Depok"/>
+            <div class="branch-info">
+              <strong>Cabang Depok</strong>
+              <span>Jl. Margonda Raya No. 200, Depok</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONI ===== -->
+<section class="section testi-section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-label">TESTIMONI</div>
+      <h2 class="section-title">Kata Mereka</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Pelayanannya luar biasa! Sales sangat membantu dan proses KPR cepat diurus. Mobilnya sudah saya pakai 2 tahun dan masih memuaskan."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">BR</div>
+          <div>
+            <strong>Budi Raharjo</strong>
+            <span>Jakarta</span>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Harga sangat kompetitif dibanding dealer lain. Test drive langsung bisa dan tidak ada biaya tersembunyi. Rekomen banget!"</p>
+        <div class="testi-author">
+          <div class="testi-avatar">SR</div>
+          <div>
+            <strong>Siti Rahayu</strong>
+            <span>Bekasi</span>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Sudah 3 kali beli mobil di AutoPrime. Konsistennya mereka memberikan layanan terbaik membuat saya selalu kembali ke sini."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">AP</div>
+          <div>
+            <strong>Ahmad Pratama</strong>
+            <span>Tangerang</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== DOKUMENTASI ===== -->
+<section class="section" id="dokumentasi">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-label">GALERI</div>
+      <h2 class="section-title">Dokumentasi</h2>
+    </div>
+    <div class="doc-grid">
+      <div class="doc-item" onclick="openLightbox(this)">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?w=600&auto=format&fit=crop" alt="Serah Terima" />
+        <div class="doc-overlay"><span>Serah Terima</span></div>
+      </div>
+      <div class="doc-item" onclick="openLightbox(this)">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1607860108855-64acf2078ed9?w=600&auto=format&fit=crop" alt="Test Drive" />
+        <div class="doc-overlay"><span>Test Drive</span></div>
+      </div>
+      <div class="doc-item" onclick="openLightbox(this)">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1619682817481-e994891cd1f5?w=600&auto=format&fit=crop" alt="Event Promo" />
+        <div class="doc-overlay"><span>Event Promo</span></div>
+      </div>
+      <div class="doc-item" onclick="openLightbox(this)">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1612825173281-9a193378527e?w=600&auto=format&fit=crop" alt="Pameran" />
+        <div class="doc-overlay"><span>Pameran</span></div>
+      </div>
+      <div class="doc-item" onclick="openLightbox(this)">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=600&auto=format&fit=crop" alt="Showroom" />
+        <div class="doc-overlay"><span>Showroom</span></div>
+      </div>
+      <div class="doc-item" onclick="openLightbox(this)">
+        <img loading="lazy" src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&auto=format&fit=crop" alt="Customer" />
+        <div class="doc-overlay"><span>Customer Gathering</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== KONTAK ===== -->
+<section class="section kontak-section" id="kontak">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-label">KONTAK</div>
+      <h2 class="section-title">Hubungi Kami</h2>
+    </div>
+    <div class="kontak-layout">
+      <div class="kontak-info">
+        <div class="kontak-block">
+          <div class="kontak-icon">📍</div>
+          <div>
+            <strong>Alamat Showroom Pusat</strong>
+            <span>Jl. Sudirman No. 88, Jakarta Selatan, 12190</span>
+          </div>
+        </div>
+        <div class="kontak-block">
+          <div class="kontak-icon">📞</div>
+          <div>
+            <strong>Telepon</strong>
+            <span>(021) 5555-8888</span>
+          </div>
+        </div>
+        <div class="kontak-block">
+          <div class="kontak-icon">💬</div>
+          <div>
+            <strong>WhatsApp</strong>
+            <span>+62 812-3456-7890</span>
+          </div>
+        </div>
+        <div class="kontak-block">
+          <div class="kontak-icon">✉️</div>
+          <div>
+            <strong>Email</strong>
+            <span>info@autoprime.id</span>
+          </div>
+        </div>
+        <div class="kontak-block">
+          <div class="kontak-icon">⏰</div>
+          <div>
+            <strong>Jam Operasional</strong>
+            <span>Senin – Sabtu: 08.00 – 17.00 WIB<br/>Minggu: 09.00 – 15.00 WIB</span>
+          </div>
+        </div>
+        <div class="kontak-form-wrap">
+          <h3>Kirim Pesan</h3>
+          <form class="kontak-form" onsubmit="submitForm(event)">
+            <input type="text" placeholder="Nama Anda" required />
+            <input type="tel" placeholder="Nomor HP" required />
+            <textarea placeholder="Pesan Anda..." rows="4" required></textarea>
+            <button type="submit" class="btn btn-primary">Kirim Pesan</button>
+          </form>
+        </div>
+      </div>
+      <div class="kontak-map">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.195906703455!2d106.82226827586977!3d-6.208572961049117!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e4eddcebf3%3A0xd609fd8c0a7c2aec!2sJl.%20Jend.%20Sudirman%2C%20Jakarta!5e0!3m2!1sid!2sid!4v1700000000000!5m2!1sid!2sid"
+          width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade" title="Lokasi AutoPrime">
+        </iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">AP</span>
+        <span class="logo-text">AUTO<strong>PRIME</strong></span>
+      </a>
+      <p>Dealer mobil terpercaya untuk keluarga, pengusaha, dan perusahaan fleet.</p>
+    </div>
+    <div class="footer-links">
+      <strong>Navigasi</strong>
+      <a href="#tentang">Tentang Kami</a>
+      <a href="#produk">Produk</a>
+      <a href="#dokumentasi">Dokumentasi</a>
+      <a href="#kontak">Kontak</a>
+    </div>
+    <div class="footer-links">
+      <strong>Kategori</strong>
+      <a href="#produk">Sedan</a>
+      <a href="#produk">SUV</a>
+      <a href="#produk">MPV</a>
+      <a href="#produk">Electric Vehicle</a>
+    </div>
+    <div class="footer-links">
+      <strong>Kontak</strong>
+      <a href="tel:02155558888">(021) 5555-8888</a>
+      <a href="https://wa.me/6281234567890" target="_blank">WhatsApp</a>
+      <a href="mailto:info@autoprime.id">info@autoprime.id</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container">
+      <span>© 2025 AutoPrime. All rights reserved.</span>
+      <span>Dealer Mobil Terpercaya</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== FLOATING WA ===== -->
+<a href="https://wa.me/6281234567890" target="_blank" class="wa-float" aria-label="Konsultasi WhatsApp">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+  <span>Konsultasi</span>
+</a>
+
+<!-- ===== MODAL DETAIL ===== -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-content" id="modalContent"></div>
+  </div>
+</div>
+
+<!-- ===== LIGHTBOX ===== -->
+<div class="lightbox-overlay" id="lightboxOverlay" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lightboxImg" src="" alt="Dokumentasi" />
+</div>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast">Pesan berhasil dikirim! Kami akan menghubungi Anda segera.</div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

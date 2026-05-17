@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project | Rizky Portfolio</title>
+  <meta name="description" content="Semua project yang pernah Rizky kerjain — web development, design, dan tugas akademik." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --off-white: #FAFAF7; --cream: #F4F2EC; --dark: #1A1A1A; --muted: #888880; --border: #E5E3DC;
+      --purple: #7C5CFF; --purple-light: #EDE9FF; --purple-soft: #F5F2FF;
+      --green: #4CAF50; --green-light: #E8F5E9;
+      --orange: #FF8C42; --orange-light: #FFF0E6;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.06); --shadow-md: 0 8px 32px rgba(0,0,0,0.09); --shadow-note: 3px 4px 0px rgba(0,0,0,0.08);
+      --font-hand: 'Caveat', cursive; --font-body: 'DM Sans', sans-serif; --font-serif: 'Instrument Serif', serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--off-white); color: var(--dark); line-height: 1.6; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+
+    /* NAV */
+    #navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; transition: all 0.3s; padding: 20px 0; }
+    #navbar.scrolled { background: rgba(250,250,247,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 12px 0; box-shadow: var(--shadow-sm); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-family: var(--font-hand); font-size: 1.6rem; font-weight: 700; }
+    .nav-logo span { color: var(--purple); }
+    .nav-links { display: flex; align-items: center; gap: 36px; }
+    .nav-links a { font-size: 0.9rem; font-weight: 500; color: var(--muted); position: relative; transition: color 0.2s; }
+    .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: var(--purple); border-radius: 2px; transition: width 0.25s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--dark); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+    .nav-cta { font-size: 0.85rem !important; background: var(--dark); color: white !important; padding: 8px 18px; border-radius: 999px; }
+    .nav-cta:hover { background: var(--purple) !important; }
+    .nav-cta::after { display: none !important; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--dark); border-radius: 2px; transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: var(--off-white); border-bottom: 1px solid var(--border); padding: 24px; z-index: 999; flex-direction: column; gap: 20px; opacity: 0; transform: translateY(-20px); transition: all 0.3s; }
+    .mobile-menu.open { display: flex; opacity: 1; transform: translateY(0); }
+    .mobile-menu a { font-size: 1.1rem; font-weight: 500; color: var(--dark); padding: 8px 0; border-bottom: 1px solid var(--border); }
+
+    /* PAGE HERO */
+    .page-hero { padding: 140px 0 72px; background: var(--cream); border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+    .page-hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 320px; height: 320px; border-radius: 50%; background: var(--purple-light); opacity: 0.5; }
+    .page-hero-inner { position: relative; z-index: 1; }
+    .page-label { font-family: var(--font-hand); font-size: 1.1rem; color: var(--muted); margin-bottom: 12px; }
+    .page-title { font-family: var(--font-serif); font-size: clamp(2.4rem, 5vw, 3.2rem); font-weight: 400; }
+    .page-title em { font-style: italic; color: var(--purple); }
+
+    /* FILTER */
+    .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; padding: 40px 0 0; }
+    .filter-btn {
+      padding: 8px 20px; border-radius: 999px; font-size: 0.85rem; font-weight: 500;
+      border: 1.5px solid var(--border); background: white; color: var(--muted);
+      cursor: pointer; transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active { background: var(--dark); color: white; border-color: var(--dark); }
+    .filter-btn.active-purple { background: var(--purple); color: white; border-color: var(--purple); }
+    .filter-btn.active-green { background: var(--green); color: white; border-color: var(--green); }
+    .filter-btn.active-orange { background: var(--orange); color: white; border-color: var(--orange); }
+
+    /* PROJECT GRID */
+    .projects-section { padding: 60px 0 96px; }
+    .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+    .project-card {
+      background: white; border-radius: 20px; overflow: hidden;
+      border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+    }
+    .project-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+    .project-card[data-hidden="true"] { display: none; }
+
+    .project-thumb { height: 200px; position: relative; overflow: hidden; }
+    .thumb-purple { background: linear-gradient(135deg, #d8d0ff, var(--purple-light)); }
+    .thumb-green { background: linear-gradient(135deg, #c8efc9, var(--green-light)); }
+    .thumb-orange { background: linear-gradient(135deg, #ffd9be, var(--orange-light)); }
+
+    .thumb-icon { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 4rem; opacity: 0.45; }
+
+    .project-body { padding: 22px; }
+    .project-cat { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 0.75rem; font-weight: 600; margin-bottom: 12px; }
+    .cat-purple { background: var(--purple-light); color: var(--purple); }
+    .cat-green { background: var(--green-light); color: #2e7d32; }
+    .cat-orange { background: var(--orange-light); color: #c05c00; }
+    .project-body h3 { font-size: 1rem; margin-bottom: 8px; }
+    .project-role { font-size: 0.78rem; color: var(--muted); margin-bottom: 10px; }
+    .project-desc { color: var(--muted); font-size: 0.84rem; line-height: 1.6; margin-bottom: 16px; }
+    .project-link { font-size: 0.84rem; font-weight: 600; color: var(--purple); display: inline-flex; align-items: center; gap: 4px; transition: gap 0.2s; }
+    .project-link:hover { gap: 8px; }
+
+    .fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 48px 0 32px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+    .footer-logo { font-family: var(--font-hand); font-size: 1.4rem; font-weight: 700; }
+    .footer-logo span { color: var(--purple); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 0.88rem; color: var(--muted); transition: color 0.2s; }
+    .footer-links a:hover { color: var(--dark); }
+    .footer-copy { width: 100%; text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.82rem; color: var(--muted); }
+
+    .float-wa { position: fixed; bottom: 28px; right: 28px; z-index: 999; display: flex; align-items: center; gap: 10px; background: #25D366; color: white; padding: 12px 22px; border-radius: 999px; font-size: 0.9rem; font-weight: 600; box-shadow: 0 8px 32px rgba(37,211,102,0.4); opacity: 0; transform: translateY(16px); transition: all 0.4s; pointer-events: none; }
+    .float-wa.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+    .float-wa:hover { background: #20c05c; transform: translateY(-3px); }
+
+    @media (max-width: 992px) { .projects-grid { grid-template-columns: 1fr 1fr; } .nav-links { display: none; } .hamburger { display: flex; } }
+    @media (max-width: 640px) { .projects-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { .footer-inner { flex-direction: column; text-align: center; } .footer-links { flex-wrap: wrap; justify-content: center; } }
+  </style>
+</head>
+<body>
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo">rz<span>.</span></a>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="tentang.html">Tentang</a></li>
+          <li><a href="project.html" class="active">Project</a></li>
+          <li><a href="layanan.html">Layanan</a></li>
+          <li><a href="dokumentasi.html">Dokumentasi</a></li>
+          <li><a href="kontak.html" class="nav-cta">Kontak</a></li>
+        </ul>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a><a href="tentang.html">Tentang</a><a href="project.html">Project</a>
+    <a href="layanan.html">Layanan</a><a href="dokumentasi.html">Dokumentasi</a><a href="kontak.html">Kontak</a>
+  </div>
+
+  <div class="page-hero">
+    <div class="container page-hero-inner">
+      <div class="page-label">🚀 Portfolio karya gue</div>
+      <h1 class="page-title">Semua <em>Project</em><br />yang Pernah Gue Kerjain</h1>
+      <div class="filter-bar" id="filterBar">
+        <button class="filter-btn active" data-filter="all">Semua</button>
+        <button class="filter-btn" data-filter="coding">💜 Web Dev</button>
+        <button class="filter-btn" data-filter="design">🧡 Design</button>
+        <button class="filter-btn" data-filter="tugas">💚 Tugas</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="projects-section">
+    <div class="container">
+      <div class="projects-grid" id="projectsGrid">
+
+        <div class="project-card fade-up" data-cat="coding">
+          <div class="project-thumb thumb-purple"><div class="thumb-icon">🛒</div></div>
+          <div class="project-body">
+            <span class="project-cat cat-purple">Web Development</span>
+            <h3>Toko Online UMKM Batik</h3>
+            <div class="project-role">Role: Frontend Developer · Laravel</div>
+            <p class="project-desc">E-commerce sederhana untuk UMKM batik lokal dengan fitur katalog produk dan integrasi WhatsApp.</p>
+            <a href="project-detail.html" class="project-link">Lihat Detail <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <div class="project-card fade-up" data-cat="design">
+          <div class="project-thumb thumb-orange"><div class="thumb-icon">☕</div></div>
+          <div class="project-body">
+            <span class="project-cat cat-orange">Design</span>
+            <h3>Branding Kafe "Seruput"</h3>
+            <div class="project-role">Role: Brand Designer · Illustrator + Figma</div>
+            <p class="project-desc">Paket branding lengkap: logo, palet warna, tipografi, dan template feed Instagram.</p>
+            <a href="project-detail.html" class="project-link">Lihat Detail <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <div class="project-card fade-up" data-cat="tugas">
+          <div class="project-thumb thumb-green"><div class="thumb-icon">📊</div></div>
+          <div class="project-body">
+            <span class="project-cat cat-green">Joki Tugas</span>
+            <h3>Laporan PKL Sistem Informasi</h3>
+            <div class="project-role">Role: Technical Writer</div>
+            <p class="project-desc">Penulisan laporan PKL dengan analisis sistem, diagram alir, dan dokumentasi teknis lengkap.</p>
+            <a href="project-detail.html" class="project-link">Lihat Detail <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <div class="project-card fade-up" data-cat="coding">
+          <div class="project-thumb thumb-purple"><div class="thumb-icon">🏢</div></div>
+          <div class="project-body">
+            <span class="project-cat cat-purple">Web Development</span>
+            <h3>Company Profile Kontraktor</h3>
+            <div class="project-role">Role: Fullstack Developer · Next.js</div>
+            <p class="project-desc">Website company profile modern dengan animasi scroll, portfolio, dan contact form terintegrasi.</p>
+            <a href="project-detail.html" class="project-link">Lihat Detail <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <div class="project-card fade-up" data-cat="design">
+          <div class="project-thumb thumb-orange"><div class="thumb-icon">📱</div></div>
+          <div class="project-body">
+            <span class="project-cat cat-orange">Design</span>
+            <h3>UI Design App Fitness</h3>
+            <div class="project-role">Role: UI/UX Designer · Figma</div>
+            <p class="project-desc">Desain antarmuka aplikasi fitness mobile dengan 20+ screen, komponen sistem desain lengkap.</p>
+            <a href="project-detail.html" class="project-link">Lihat Detail <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <div class="project-card fade-up" data-cat="tugas">
+          <div class="project-thumb thumb-green"><div class="thumb-icon">💻</div></div>
+          <div class="project-body">
+            <span class="project-cat cat-green">Joki Tugas</span>
+            <h3>Coding Assignment Python DS</h3>
+            <div class="project-role">Role: Programmer · Python · Pandas</div>
+            <p class="project-desc">Tugas data science: eksplorasi data, visualisasi, dan pembuatan model prediksi sederhana.</p>
+            <a href="project-detail.html" class="project-link">Lihat Detail <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <div class="project-card fade-up" data-cat="coding">
+          <div class="project-thumb thumb-purple"><div class="thumb-icon">📚</div></div>
+          <div class="project-body">
+            <span class="project-cat cat-purple">Web Development</span>
+            <h3>Sistem Perpustakaan Sekolah</h3>
+            <div class="project-role">Role: Fullstack Developer · PHP · MySQL</div>
+            <p class="project-desc">Sistem manajemen perpustakaan dengan fitur peminjaman, pengembalian, dan laporan admin.</p>
+            <a href="project-detail.html" class="project-link">Lihat Detail <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <div class="project-card fade-up" data-cat="design">
+          <div class="project-thumb thumb-orange"><div class="thumb-icon">🎬</div></div>
+          <div class="project-body">
+            <span class="project-cat cat-orange">Design</span>
+            <h3>Poster Event Kampus</h3>
+            <div class="project-role">Role: Graphic Designer · Canva Pro</div>
+            <p class="project-desc">Set poster dan banner digital untuk serangkaian event kampus dengan tema konsisten.</p>
+            <a href="project-detail.html" class="project-link">Lihat Detail <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <div class="project-card fade-up" data-cat="tugas">
+          <div class="project-thumb thumb-green"><div class="thumb-icon">📝</div></div>
+          <div class="project-body">
+            <span class="project-cat cat-green">Joki Tugas</span>
+            <h3>Proposal Skripsi Sistem Pakar</h3>
+            <div class="project-role">Role: Academic Writer</div>
+            <p class="project-desc">Penulisan proposal skripsi lengkap dengan latar belakang, tinjauan pustaka, dan metodologi.</p>
+            <a href="project-detail.html" class="project-link">Lihat Detail <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">rz<span>.</span></div>
+        <ul class="footer-links">
+          <li><a href="tentang.html">Tentang</a></li>
+          <li><a href="project.html">Project</a></li>
+          <li><a href="layanan.html">Layanan</a></li>
+          <li><a href="kontak.html">Kontak</a></li>
+        </ul>
+      </div>
+      <div class="footer-copy">Made with ☕ & 💜 oleh <strong>Rizky Pratama</strong> · 2025</div>
+    </div>
+  </footer>
+
+  <a href="https://wa.me/6281234567890" target="_blank" class="float-wa" id="floatWa">
+    <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> Chat Sekarang
+  </a>
+
+  <script>
+    const navbar = document.getElementById('navbar');
+    const floatWa = document.getElementById('floatWa');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) navbar.classList.add('scrolled'); else navbar.classList.remove('scrolled');
+      if (window.scrollY > 300) floatWa.classList.add('visible'); else floatWa.classList.remove('visible');
+    });
+    document.getElementById('hamburger').addEventListener('click', function() {
+      this.classList.toggle('open');
+      document.getElementById('mobileMenu').classList.toggle('open');
+    });
+
+    // Filter
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const projectCards = document.querySelectorAll('.project-card');
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        projectCards.forEach(card => {
+          if (filter === 'all' || card.dataset.cat === filter) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Fade-up
+    document.querySelectorAll('.fade-up').forEach(el => {
+      new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+      }, { threshold: 0.1 }).observe(el);
+    });
+  </script>
+</body>
+</html>

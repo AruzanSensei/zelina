@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products Registry</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <header class="app-header">
+        <div class="brand">
+            <div class="brand-badge">PM</div>
+            <div class="brand-copy">
+                <h1>Products Registry</h1>
+                <p>Machine label management</p>
+            </div>
+        </div>
+        <button id="theme-toggle" class="icon-btn" type="button" aria-label="Toggle theme">Theme</button>
+    </header>
+
+    <nav class="tab-nav" aria-label="Main navigation">
+        <button class="tab-btn active" data-tab="entry" type="button">Input</button>
+        <button class="tab-btn" data-tab="catalog" type="button">Products</button>
+        <button class="tab-btn" data-tab="detail" type="button">Detail</button>
+    </nav>
+
+    <main id="app-content">
+        <section id="entry-view" class="view active">
+            <div class="page-shell">
+                <article class="panel panel-form">
+                    <div class="panel-head">
+                        <div>
+                            <span class="eyebrow">Create Product</span>
+                            <h2>Input Data Produk</h2>
+                        </div>
+                        <p>Isi field utama, lalu sistem akan generate nama produk, serial number, dan product number secara otomatis.</p>
+                    </div>
+
+                    <form id="product-form" class="product-form">
+                        <div class="form-grid">
+                            <label class="field">
+                                <span>Capacity</span>
+                                <input id="capacity" name="capacity" type="text" placeholder="5000" autocomplete="off" required>
+                            </label>
+                            <label class="field">
+                                <span>Voltage</span>
+                                <input id="voltage" name="voltage" type="text" placeholder="220V" autocomplete="off" required>
+                            </label>
+                            <label class="field">
+                                <span>Frequency</span>
+                                <input id="frequency" name="frequency" type="text" placeholder="50Hz" autocomplete="off" required>
+                            </label>
+                            <label class="field">
+                                <span>Model</span>
+                                <input id="model" name="model" type="text" placeholder="AIZ" autocomplete="off" required>
+                            </label>
+                            <label class="field field-full">
+                                <span>Password</span>
+                                <input id="password" name="password" type="text" placeholder="Machine password" autocomplete="off" required>
+                            </label>
+                        </div>
+
+                        <div class="generated-block">
+                            <div class="generated-item">
+                                <small>Generated Product Name</small>
+                                <strong id="preview-product-name">ETS-0000.MODEL</strong>
+                            </div>
+                            <div class="generated-item">
+                                <small>Generated Serial Number</small>
+                                <strong id="preview-serial-number">XSI-XX000-X-0000-1-0001</strong>
+                            </div>
+                            <div class="generated-item">
+                                <small>Generated Product Number</small>
+                                <strong id="preview-product-number">XXXXX-000001</strong>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button class="btn btn-primary" type="submit">Save Product</button>
+                            <button id="reset-form" class="btn btn-outline" type="button">Reset</button>
+                        </div>
+                    </form>
+                </article>
+
+                <aside class="panel panel-side">
+                    <div class="panel-head">
+                        <div>
+                            <span class="eyebrow">Live Overview</span>
+                            <h2>Registry Snapshot</h2>
+                        </div>
+                        <p>Ringkasan data untuk membantu input tetap konsisten dan cepat dicek.</p>
+                    </div>
+
+                    <div class="stats-grid" id="stats-grid">
+                        <div class="stat-card">
+                            <small>Total Products</small>
+                            <strong id="stat-total">0</strong>
+                        </div>
+                        <div class="stat-card">
+                            <small>Total Models</small>
+                            <strong id="stat-models">0</strong>
+                        </div>
+                        <div class="stat-card">
+                            <small>Last Serial</small>
+                            <strong id="stat-serial">-</strong>
+                        </div>
+                    </div>
+
+                    <div class="note-card">
+                        <h3>Auto Generate Rules</h3>
+                        <ul class="rule-list">
+                            <li><span>Product Name</span><strong>ETS-{capacity}.{model}</strong></li>
+                            <li><span>Serial</span><strong>XSI-{random}-{capacity}-1-{running}</strong></li>
+                            <li><span>Product Number</span><strong>{randomCode}-{incrementID}</strong></li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section id="catalog-view" class="view hidden">
+            <div class="page-shell catalog-shell">
+                <article class="panel panel-wide">
+                    <div class="panel-head">
+                        <div>
+                            <span class="eyebrow">Search & Filter</span>
+                            <h2>Product Catalog</h2>
+                        </div>
+                        <p>Pencarian diprioritaskan ke serial number, lalu product number, lalu product name.</p>
+                    </div>
+
+                    <div class="toolbar">
+                        <label class="field search-field">
+                            <span>Search</span>
+                            <input id="search-input" type="search" placeholder="Cari serial, product number, atau product name">
+                        </label>
+                        <label class="field">
+                            <span>Model</span>
+                            <select id="filter-model">
+                                <option value="">All models</option>
+                            </select>
+                        </label>
+                        <label class="field">
+                            <span>Capacity</span>
+                            <select id="filter-capacity">
+                                <option value="">All capacities</option>
+                            </select>
+                        </label>
+                        <label class="field">
+                            <span>Voltage</span>
+                            <select id="filter-voltage">
+                                <option value="">All voltages</option>
+                            </select>
+                        </label>
+                        <button id="clear-filters" class="btn btn-outline" type="button">Clear</button>
+                    </div>
+
+                    <div class="catalog-summary">
+                        <div class="summary-chip">
+                            <small>Visible</small>
+                            <strong id="visible-count">0</strong>
+                        </div>
+                        <div class="summary-chip">
+                            <small>Selected</small>
+                            <strong id="selected-summary">None</strong>
+                        </div>
+                    </div>
+
+                    <div id="product-list" class="product-list"></div>
+                </article>
+            </div>
+        </section>
+
+        <section id="detail-view" class="view hidden">
+            <div class="page-shell detail-shell">
+                <article class="panel panel-detail">
+                    <div class="panel-head">
+                        <div>
+                            <span class="eyebrow">Machine Label</span>
+                            <h2>Product Detail</h2>
+                        </div>
+                        <p>Detail dibuat seperti label mesin dengan layout grid, border tegas, dan informasi inti yang mudah discan.</p>
+                    </div>
+
+                    <div id="detail-empty" class="empty-state">
+                        <h3>Belum ada produk terpilih</h3>
+                        <p>Simpan produk baru atau pilih salah satu item dari tab Products untuk melihat detail lengkapnya.</p>
+                    </div>
+
+                    <div id="detail-card" class="machine-label hidden">
+                        <div class="label-header">
+                            <div>
+                                <small>Equipment Type</small>
+                                <strong>Electronic Tag System</strong>
+                            </div>
+                            <div class="label-stamp">ACTIVE</div>
+                        </div>
+
+                        <div class="label-grid">
+                            <div class="label-cell label-cell-wide">
+                                <span>Product Name</span>
+                                <strong id="detail-product-name">-</strong>
+                            </div>
+                            <div class="label-cell">
+                                <span>Serial Number</span>
+                                <strong id="detail-serial-number">-</strong>
+                            </div>
+                            <div class="label-cell">
+                                <span>Product Number</span>
+                                <strong id="detail-product-number">-</strong>
+                            </div>
+                            <div class="label-cell">
+                                <span>Capacity</span>
+                                <strong id="detail-capacity">-</strong>
+                            </div>
+                            <div class="label-cell">
+                                <span>Voltage</span>
+                                <strong id="detail-voltage">-</strong>
+                            </div>
+                            <div class="label-cell">
+                                <span>Frequency</span>
+                                <strong id="detail-frequency">-</strong>
+                            </div>
+                            <div class="label-cell">
+                                <span>Model</span>
+                                <strong id="detail-model">-</strong>
+                            </div>
+                            <div class="label-cell">
+                                <span>Password</span>
+                                <strong id="detail-password">-</strong>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+    <footer class="app-footer">
+        <p>Local-first product management. Built with HTML, CSS, and Vanilla JS.</p>
+    </footer>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+
+</html>

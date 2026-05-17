@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Admin — ETS Asset Tracking</title>
+  <link rel="stylesheet" href="../styles/base.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <style>
+    body {
+      background: var(--gray-50);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .login-wrap {
+      width: 100%;
+      max-width: 400px;
+      padding: 24px;
+    }
+
+    .login-logo {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 32px;
+    }
+
+    .login-logo img {
+      height: 40px;
+    }
+
+    .login-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 32px;
+      box-shadow: var(--shadow-md);
+    }
+
+    .login-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .login-sub {
+      font-size: .82rem;
+      color: var(--text-sub);
+      margin-bottom: 24px;
+    }
+
+    .login-fields {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .login-error {
+      background: var(--red-light);
+      border: 1px solid var(--red);
+      color: var(--red);
+      border-radius: var(--r-sm);
+      padding: 10px 14px;
+      font-size: .82rem;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .login-error.show {
+      display: block;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 12px;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      border-radius: var(--r-sm);
+      font-size: .9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background var(--ease);
+      letter-spacing: .04em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-login:hover {
+      background: var(--green-hover);
+    }
+
+    .btn-login:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .login-footer {
+      text-align: center;
+      font-size: .75rem;
+      color: var(--text-muted);
+      margin-top: 24px;
+    }
+
+    .pw-wrap {
+      position: relative;
+    }
+
+    .pw-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 4px;
+      transition: color var(--ease);
+    }
+
+    .pw-toggle:hover {
+      color: var(--text-sub);
+    }
+
+    .pw-wrap .form-control {
+      padding-right: 42px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-wrap">
+    <div class="login-logo" style="position: relative; display: flex; flex-direction: column; align-items: center; margin-bottom: 32px;">
+      <a href="../public/index.html"
+        style="font-size: .8rem; position: absolute; left: 0px; top: 0; font-weight: 500; color: var(--text-sub); text-decoration: none; display: flex; align-items: center; gap: 4px; padding: 6px 12px; background: var(--white); border-radius: 99px; transition: background 0.2s; box-shadow: var(--shadow-sm);">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="m15 18-6-6 6-6" />
+        </svg>
+        Beranda
+      </a>
+      <img src="../assets/ets-logo.png" alt="ETS" style="height:40px; margin-bottom: 8px;">
+      <span style="font-size: 0.65rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">Protecting & improving Electricity</span>
+    </div>
+    <div class="login-card">
+      <div class="login-title">Masuk ke Admin Panel</div>
+      <div class="login-sub">ETS Industrial Asset Tracking</div>
+
+      <div class="login-error" id="login-error"></div>
+
+      <div class="login-fields">
+        <div class="form-group">
+          <label class="form-label" for="email">Email</label>
+          <input class="form-control" id="email" type="email" placeholder="admin@ets.co.id" autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="pw-wrap">
+            <input class="form-control" id="password" type="password" placeholder="••••••••"
+              autocomplete="current-password">
+            <button class="pw-toggle" id="pw-toggle" type="button" aria-label="Toggle password">
+              <svg id="eye-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.4" />
+                <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.4" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-login" id="btn-login">
+        <span id="btn-text">Masuk</span>
+        <svg id="btn-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </button>
+
+      <div
+        style="margin-top: 24px; padding: 12px; background: var(--red-light); border: 1px dashed var(--red); border-radius: var(--r-sm);">
+        <div style="font-size: .75rem; font-weight: 700; color: var(--red); margin-bottom: 8px;">
+          Demo Credentials:
+          <span style="display: block; font-weight: 400; font-size: .7rem; opacity: .8; margin-top: 2px;">(Bagian ini
+            akan dihapus saat production)</span>
+        </div>
+        <div
+          style="display: flex; align-items: center; justify-content: space-between; font-size: .8rem; font-family: var(--mono); color: var(--text-main); margin-bottom: 4px;">
+          <span>admin@ets.co.id</span>
+          <button onclick="copyDemo(this, 'admin@ets.co.id')"
+            style="background: none; border: none; cursor: pointer; color: var(--text-muted); transition: color 0.2s;"><svg
+              width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg></button>
+        </div>
+        <div
+          style="display: flex; align-items: center; justify-content: space-between; font-size: .8rem; font-family: var(--mono); color: var(--text-main);">
+          <span>Admin123!</span>
+          <button onclick="copyDemo(this, 'Admin123!')"
+            style="background: none; border: none; cursor: pointer; color: var(--text-muted); transition: color 0.2s;"><svg
+              width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg></button>
+        </div>
+      </div>
+    </div>
+    <div class="login-footer">© 2026 ETS — Industrial Asset Tracking</div>
+  </div>
+
+  <script src="../config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../services/auth.js"></script>
+  <script>
+    // If already logged in, redirect to dashboard
+    (async () => {
+      const session = await getSession();
+      if (session) window.location.replace('index.html');
+    })();
+
+    // Password toggle
+    document.getElementById('pw-toggle').addEventListener('click', () => {
+      const pw = document.getElementById('password');
+      pw.type = pw.type === 'password' ? 'text' : 'password';
+    });
+
+    // Copy demo credentials animation
+    function copyDemo(btn, text) {
+      navigator.clipboard.writeText(text);
+      const originalSvg = btn.innerHTML;
+      btn.style.color = 'var(--green)';
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+      setTimeout(() => {
+        btn.style.color = 'var(--text-muted)';
+        btn.innerHTML = originalSvg;
+      }, 1500);
+    }
+
+    // Login handler
+    async function doLogin() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const errEl = document.getElementById('login-error');
+      const btn = document.getElementById('btn-login');
+      const btnText = document.getElementById('btn-text');
+
+      errEl.classList.remove('show');
+
+      if (!email || !password) {
+        errEl.textContent = 'Email dan password wajib diisi.';
+        errEl.classList.add('show');
+        return;
+      }
+
+      btn.disabled = true;
+      btnText.textContent = 'Memproses...';
+
+      try {
+        await login(email, password);
+        window.location.replace('index.html');
+      } catch (e) {
+        errEl.textContent = 'Email atau password salah.';
+        errEl.classList.add('show');
+        btn.disabled = false;
+        btnText.textContent = 'Masuk';
+      }
+    }
+
+    document.getElementById('btn-login').addEventListener('click', doLogin);
+    document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+  </script>
+</body>
+
+</html>

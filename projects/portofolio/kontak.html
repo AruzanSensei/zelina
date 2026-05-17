@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kontak | Rizky Portfolio</title>
+  <meta name="description" content="Hubungi Rizky untuk diskusi project, jasa, atau kolaborasi. Tersedia via WhatsApp, email, dan form kontak." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --off-white: #FAFAF7; --cream: #F4F2EC; --dark: #1A1A1A; --muted: #888880; --border: #E5E3DC;
+      --purple: #7C5CFF; --purple-light: #EDE9FF;
+      --green: #4CAF50; --orange: #FF8C42; --orange-light: #FFF0E6;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.06); --shadow-md: 0 8px 32px rgba(0,0,0,0.09); --shadow-note: 3px 4px 0px rgba(0,0,0,0.08);
+      --font-hand: 'Caveat', cursive; --font-body: 'DM Sans', sans-serif; --font-serif: 'Instrument Serif', serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--off-white); color: var(--dark); line-height: 1.6; overflow-x: hidden; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+
+    /* NAV */
+    #navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; transition: all 0.3s; padding: 20px 0; }
+    #navbar.scrolled { background: rgba(250,250,247,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 12px 0; box-shadow: var(--shadow-sm); }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { font-family: var(--font-hand); font-size: 1.6rem; font-weight: 700; }
+    .nav-logo span { color: var(--purple); }
+    .nav-links { display: flex; align-items: center; gap: 36px; }
+    .nav-links a { font-size: 0.9rem; font-weight: 500; color: var(--muted); position: relative; transition: color 0.2s; }
+    .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px; background: var(--purple); border-radius: 2px; transition: width 0.25s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--dark); }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+    .nav-cta { font-size: 0.85rem !important; background: var(--dark); color: white !important; padding: 8px 18px; border-radius: 999px; }
+    .nav-cta:hover { background: var(--purple) !important; }
+    .nav-cta::after { display: none !important; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; background: none; border: none; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--dark); border-radius: 2px; transition: all 0.3s; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mobile-menu { display: none; position: fixed; top: 64px; left: 0; right: 0; background: var(--off-white); border-bottom: 1px solid var(--border); padding: 24px; z-index: 999; flex-direction: column; gap: 20px; opacity: 0; transform: translateY(-20px); transition: all 0.3s; }
+    .mobile-menu.open { display: flex; opacity: 1; transform: translateY(0); }
+    .mobile-menu a { font-size: 1.1rem; font-weight: 500; color: var(--dark); padding: 8px 0; border-bottom: 1px solid var(--border); }
+
+    /* PAGE HERO */
+    .page-hero { padding: 140px 0 72px; background: var(--dark); position: relative; overflow: hidden; }
+    .page-hero::before { content: ''; position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; border-radius: 50%; background: var(--purple); opacity: 0.12; }
+    .page-hero::after { content: ''; position: absolute; bottom: -60px; left: -60px; width: 280px; height: 280px; border-radius: 50%; background: var(--orange); opacity: 0.1; }
+    .page-label { font-family: var(--font-hand); font-size: 1.1rem; color: rgba(255,255,255,0.5); margin-bottom: 12px; }
+    .page-title { font-family: var(--font-serif); font-size: clamp(2.4rem, 5vw, 3.2rem); font-weight: 400; color: white; }
+    .page-title em { font-style: italic; color: var(--orange); }
+    .page-sub { color: rgba(255,255,255,0.55); font-size: 1rem; margin-top: 12px; max-width: 480px; }
+
+    /* KONTAK GRID */
+    .kontak-section { padding: 80px 0; }
+    .kontak-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 48px; align-items: start; }
+
+    /* CONTACT INFO */
+    .contact-info {}
+    .contact-info h3 { font-family: var(--font-hand); font-size: 1.5rem; color: var(--purple); margin-bottom: 8px; }
+    .contact-info p { color: var(--muted); font-size: 0.92rem; line-height: 1.7; margin-bottom: 28px; }
+
+    .contact-methods { display: flex; flex-direction: column; gap: 14px; margin-bottom: 36px; }
+    .contact-method {
+      display: flex; align-items: center; gap: 16px;
+      background: white; border: 1px solid var(--border); border-radius: 14px;
+      padding: 16px 20px; transition: all 0.2s;
+    }
+    .contact-method:hover { border-color: var(--purple); box-shadow: var(--shadow-sm); transform: translateX(4px); }
+    .method-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .method-label { font-size: 0.75rem; color: var(--muted); margin-bottom: 2px; }
+    .method-value { font-size: 0.9rem; font-weight: 500; color: var(--dark); }
+
+    .availability-card {
+      background: var(--purple-light); border: 1px solid #c8bbff;
+      border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 14px;
+    }
+    .avail-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--green); flex-shrink: 0; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .avail-text { font-size: 0.9rem; color: var(--purple); }
+    .avail-text strong { display: block; font-size: 0.95rem; }
+
+    /* FORM */
+    .contact-form { background: white; border: 1px solid var(--border); border-radius: 24px; padding: 40px; box-shadow: var(--shadow-note); position: relative; }
+    .form-tape { position: absolute; top: -11px; left: 48px; width: 64px; height: 20px; background: rgba(124,92,255,0.25); border-radius: 4px; transform: rotate(-2deg); }
+
+    .form-title { font-family: var(--font-hand); font-size: 1.4rem; margin-bottom: 24px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px; color: var(--dark); }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%; padding: 12px 16px;
+      border: 1.5px solid var(--border); border-radius: 12px;
+      font-family: var(--font-body); font-size: 0.9rem; color: var(--dark);
+      background: var(--off-white); transition: all 0.2s; outline: none;
+      resize: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--purple); background: white; box-shadow: 0 0 0 3px rgba(124,92,255,0.1); }
+    .form-group textarea { height: 120px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .submit-btn {
+      width: 100%; padding: 14px;
+      background: var(--purple); color: white;
+      border: none; border-radius: 12px;
+      font-family: var(--font-body); font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .submit-btn:hover { background: #6a4de8; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(124,92,255,0.35); }
+    .submit-btn:active { transform: translateY(0); }
+
+    .form-success { display: none; text-align: center; padding: 32px; }
+    .form-success .success-icon { font-size: 3rem; margin-bottom: 16px; }
+    .form-success h3 { font-family: var(--font-hand); font-size: 1.6rem; color: var(--green); margin-bottom: 8px; }
+    .form-success p { color: var(--muted); font-size: 0.9rem; }
+
+    .fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 48px 0 32px; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
+    .footer-logo { font-family: var(--font-hand); font-size: 1.4rem; font-weight: 700; }
+    .footer-logo span { color: var(--purple); }
+    .footer-links { display: flex; gap: 24px; }
+    .footer-links a { font-size: 0.88rem; color: var(--muted); transition: color 0.2s; }
+    .footer-links a:hover { color: var(--dark); }
+    .footer-copy { width: 100%; text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 0.82rem; color: var(--muted); }
+
+    @media (max-width: 992px) { .kontak-grid { grid-template-columns: 1fr; } .nav-links { display: none; } .hamburger { display: flex; } }
+    @media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { .kontak-section { padding: 56px 0; } .contact-form { padding: 28px 20px; } .footer-inner { flex-direction: column; text-align: center; } .footer-links { flex-wrap: wrap; justify-content: center; } }
+  </style>
+</head>
+<body>
+  <nav id="navbar">
+    <div class="container">
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo">rz<span>.</span></a>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="tentang.html">Tentang</a></li>
+          <li><a href="project.html">Project</a></li>
+          <li><a href="layanan.html">Layanan</a></li>
+          <li><a href="dokumentasi.html">Dokumentasi</a></li>
+          <li><a href="kontak.html" class="active nav-cta">Kontak</a></li>
+        </ul>
+        <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+      </div>
+    </div>
+  </nav>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html">Home</a><a href="tentang.html">Tentang</a><a href="project.html">Project</a>
+    <a href="layanan.html">Layanan</a><a href="dokumentasi.html">Dokumentasi</a><a href="kontak.html">Kontak</a>
+  </div>
+
+  <div class="page-hero">
+    <div class="container" style="position: relative; z-index: 1;">
+      <div class="page-label">📞 Let's connect!</div>
+      <h1 class="page-title">Yuk, <em>Ngobrol</em><br />Sama Gue</h1>
+      <p class="page-sub">Ceritain project lo, konsultasi gratis, atau sekadar say hi. Gue reply paling lambat 1x24 jam.</p>
+    </div>
+  </div>
+
+  <section class="kontak-section">
+    <div class="container">
+      <div class="kontak-grid">
+        <!-- Info -->
+        <div class="contact-info fade-up">
+          <h3>📬 Hubungi Gue Via</h3>
+          <p>Pilih channel yang paling nyaman buat lo. Gue aktif di semua platform ini.</p>
+
+          <div class="contact-methods">
+            <a href="https://wa.me/6281234567890" target="_blank" class="contact-method">
+              <div class="method-icon" style="background: #E8F5E9; color: #25D366;"><i class="fab fa-whatsapp"></i></div>
+              <div>
+                <div class="method-label">WhatsApp (paling cepat!)</div>
+                <div class="method-value">+62 812-3456-7890</div>
+              </div>
+            </a>
+            <a href="mailto:rizky@email.com" class="contact-method">
+              <div class="method-icon" style="background: var(--purple-light); color: var(--purple);"><i class="fas fa-envelope"></i></div>
+              <div>
+                <div class="method-label">Email</div>
+                <div class="method-value">rizky@email.com</div>
+              </div>
+            </a>
+            <a href="https://instagram.com" target="_blank" class="contact-method">
+              <div class="method-icon" style="background: #FCE4EC; color: #e91e63;"><i class="fab fa-instagram"></i></div>
+              <div>
+                <div class="method-label">Instagram</div>
+                <div class="method-value">@rizky.dev</div>
+              </div>
+            </a>
+            <a href="https://tiktok.com" target="_blank" class="contact-method">
+              <div class="method-icon" style="background: #F3E5F5; color: #9c27b0;"><i class="fab fa-tiktok"></i></div>
+              <div>
+                <div class="method-label">TikTok</div>
+                <div class="method-value">@rizky.dev</div>
+              </div>
+            </a>
+          </div>
+
+          <div class="availability-card">
+            <div class="avail-dot"></div>
+            <div class="avail-text">
+              <strong>Tersedia untuk Project Baru!</strong>
+              Estimasi respon: 1-4 jam di hari kerja
+            </div>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div class="contact-form fade-up">
+          <div class="form-tape"></div>
+          <div id="formContent">
+            <div class="form-title">✏️ Kirim Pesan</div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Nama Lo</label>
+                <input type="text" id="name" placeholder="Rizky, Budi, dll..." />
+              </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="email@domain.com" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="service">Butuh Layanan Apa?</label>
+              <select id="service">
+                <option value="">-- Pilih layanan --</option>
+                <option>Web Development</option>
+                <option>Design & Creative</option>
+                <option>Joki Tugas</option>
+                <option>Lainnya / Konsultasi</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message">Ceritain Project Lo</label>
+              <textarea id="message" placeholder="Gue butuh website untuk..., deadline-nya..., budget sekitar..."></textarea>
+            </div>
+            <button class="submit-btn" onclick="handleSubmit()">
+              <i class="fas fa-paper-plane"></i> Kirim Pesan
+            </button>
+            <p style="font-size: 0.78rem; color: var(--muted); text-align: center; margin-top: 12px;">Atau langsung chat via <a href="https://wa.me/6281234567890" style="color: var(--purple); font-weight: 500;">WhatsApp</a> biar lebih cepat!</p>
+          </div>
+          <div class="form-success" id="formSuccess">
+            <div class="success-icon">🎉</div>
+            <h3>Pesan Terkirim!</h3>
+            <p>Makasih udah reach out! Gue bakal balas secepatnya, biasanya dalam 1-4 jam.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-logo">rz<span>.</span></div>
+        <ul class="footer-links">
+          <li><a href="tentang.html">Tentang</a></li>
+          <li><a href="project.html">Project</a></li>
+          <li><a href="layanan.html">Layanan</a></li>
+          <li><a href="kontak.html">Kontak</a></li>
+        </ul>
+      </div>
+      <div class="footer-copy">Made with ☕ & 💜 oleh <strong>Rizky Pratama</strong> · 2025</div>
+    </div>
+  </footer>
+
+  <script>
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 50) navbar.classList.add('scrolled'); else navbar.classList.remove('scrolled');
+    });
+    document.getElementById('hamburger').addEventListener('click', function() {
+      this.classList.toggle('open');
+      document.getElementById('mobileMenu').classList.toggle('open');
+    });
+    document.querySelectorAll('.fade-up').forEach(el => {
+      new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+      }, { threshold: 0.1 }).observe(el);
+    });
+
+    function handleSubmit() {
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const message = document.getElementById('message').value.trim();
+      if (!name || !email || !message) {
+        alert('Lengkapi dulu ya: nama, email, dan pesan lo!');
+        return;
+      }
+      document.getElementById('formContent').style.display = 'none';
+      document.getElementById('formSuccess').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

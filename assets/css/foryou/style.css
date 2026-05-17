@@ -1,0 +1,222 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #ffe5e5 0%, #fff0f5 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.container {
+    text-align: center;
+    padding: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.main-button {
+    background: #ff69b4;
+    color: white;
+    border: none;
+    padding: 1.5rem 3rem;
+    font-size: 1.5rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    box-shadow: 0 8px 20px rgba(255, 105, 180, 0.3);
+    transition: all 0.3s ease;
+}
+
+.main-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(255, 105, 180, 0.4);
+}
+
+.main-button:active {
+    transform: translateY(1px);
+}
+
+.content {
+    margin-top: -2rem;
+}
+
+.title {
+    font-family: 'Poppins', sans-serif;
+    color: #ff69b4;
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    animation: fadeIn 1s ease-out;
+    font-weight: 700;
+}
+
+.message {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    animation: slideUp 1s ease-out;
+}
+
+.message p {
+    font-size: 1.2rem;
+    color: #666;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+    font-weight: 400;
+}
+
+.signature {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem !important;
+    color: #ff69b4 !important;
+    text-align: right;
+    margin-top: 1rem !important;
+    margin-bottom: 0rem !important;
+    font-weight: 600;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 0.5rem;
+    }
+
+    .container {
+        padding: 1rem;
+    }
+
+    .main-button {
+        font-size: 1.2rem;
+        padding: 1.2rem 2.5rem;
+    }
+    
+    .title {
+        font-size: 2rem;
+    }
+    
+    .message {
+        padding: 1.5rem;
+    }
+
+    .message p {
+        font-size: 1rem;
+    }
+
+    .signature {
+        font-size: 1.3rem !important;
+    }
+} 
+
+
+
+input[type="text"], input[type="email"], input[type="password"], textarea {
+    width: 100%;
+    padding: 1.2rem 2rem;
+    margin-bottom: 1.5rem;
+    border: none;
+    border-radius: 50px;
+    background: #ff69b4;
+    color: white;
+    font-size: 1.3rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 400;
+    box-shadow: 0 4px 15px rgba(255, 105, 180, 0.15);
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+input[type="text"]::placeholder,
+textarea::placeholder {
+    color: #fff0f5;
+    opacity: 1;
+    font-size: 1.1rem;
+}
+
+input[type="text"]:focus, textarea:focus {
+    box-shadow: 0 6px 20px rgba(255, 105, 180, 0.25);
+    background: #ff85c2;
+    transform: translateY(-2px);
+}
+
+
+.main-button-invert {
+    background: #fff !important;
+    color: #ff69b4 !important;
+    border: 2px solid #ff69b4;
+    transition: all 0.3s ease;
+}
+
+.main-button-invert:hover {
+    background: #fff5fa !important;
+    transform: translateY(-3px);
+}
+
+input[type="text"].main-button-invert {
+    background: #fff;
+    color: #ff69b4;
+    border: 2px solid #ff69b4;
+}
+
+input[type="text"].main-button-invert::placeholder {
+    color: #ff69b4;
+    opacity: 0.7;
+}
+
+textarea.main-button-invert {
+    resize: none;
+    min-height: 48px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.small-btn {
+    font-size: 1rem;
+    padding: 0.8rem 2.2rem;
+}
+
+@media (max-width: 768px) {
+    input[type="text"], input[type="email"], input[type="password"], textarea {
+        font-size: 1.1rem;
+        padding: 1rem 1.5rem;
+    }
+
+    input[type="text"]::placeholder,
+    textarea::placeholder {
+        font-size: 1rem;
+    }
+
+    .small-btn {
+        font-size: 0.9rem;
+        padding: 0.7rem 1.8rem;
+    }
+}

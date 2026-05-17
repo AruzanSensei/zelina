@@ -1,0 +1,211 @@
+/* ============================================
+   OneMoment - Inner Pages Stylesheet
+   Additional styles for inner page headers,
+   breadcrumbs, and content areas
+   ============================================ */
+
+/* ==================== PAGE HEADER ==================== */
+.page-header {
+    padding-top: calc(var(--nav-height) + var(--space-16));
+    padding-bottom: var(--space-16);
+    background: var(--primary);
+    position: relative;
+    overflow: hidden;
+}
+
+.page-header::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -15%;
+    width: 500px;
+    height: 500px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 50%;
+}
+
+.page-header::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -5%;
+    width: 300px;
+    height: 300px;
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 50%;
+}
+
+.page-header .container {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: var(--space-8);
+}
+
+.page-header-content {}
+
+.page-header-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    color: var(--white);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+    margin-bottom: var(--space-4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.page-header-title {
+    font-size: var(--fs-4xl);
+    font-weight: var(--fw-extrabold);
+    color: var(--white);
+    margin-bottom: var(--space-4);
+    line-height: 1.15;
+}
+
+.page-header-desc {
+    font-size: var(--fs-md);
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 560px;
+    line-height: 1.7;
+}
+
+.page-header-visual {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-end;
+}
+
+.page-header-img-card {
+    width: 140px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-xl);
+}
+
+.page-header-img-card.tall {
+    width: 160px;
+}
+
+.page-header-img-placeholder {
+    width: 100%;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.page-header-img-placeholder i {
+    font-size: 2rem;
+}
+
+.page-header-img-placeholder span {
+    font-size: var(--fs-xs);
+}
+
+.page-header-img-card.tall .page-header-img-placeholder {
+    height: 260px;
+}
+
+/* ==================== BREADCRUMB ==================== */
+.breadcrumb-bar {
+    background: var(--gray-100);
+    border-bottom: 1px solid var(--gray-200);
+    padding: var(--space-3) 0;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.breadcrumb-item {
+    font-size: var(--fs-sm);
+    color: var(--gray-400);
+}
+
+.breadcrumb-item a {
+    color: var(--primary);
+    transition: color var(--transition-fast);
+}
+
+.breadcrumb-item a:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+.breadcrumb-sep {
+    color: var(--gray-300);
+    font-size: var(--fs-xs);
+}
+
+.breadcrumb-item.current {
+    color: var(--dark);
+    font-weight: var(--fw-medium);
+}
+
+/* ==================== PAGE CONTENT AREA ==================== */
+.page-content {
+    padding: var(--space-16) 0;
+}
+
+.page-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: var(--space-20) var(--space-8);
+    gap: var(--space-4);
+}
+
+.page-empty-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-xl);
+    background: var(--primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 2rem;
+}
+
+.page-empty-title {
+    font-size: var(--fs-xl);
+    font-weight: var(--fw-bold);
+    color: var(--dark);
+}
+
+.page-empty-desc {
+    font-size: var(--fs-sm);
+    color: var(--gray-400);
+    max-width: 380px;
+    line-height: 1.7;
+}
+
+/* ==================== RESPONSIVE INNER ==================== */
+@media (max-width: 768px) {
+    .page-header .container {
+        grid-template-columns: 1fr;
+    }
+
+    .page-header-visual {
+        display: none;
+    }
+
+    .page-header-title {
+        font-size: var(--fs-2xl);
+    }
+}

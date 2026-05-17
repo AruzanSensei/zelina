@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ETS — Product Management System</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue:        #1565C0;
+  --blue-light:  #E3F2FD;
+  --blue-mid:    #1976D2;
+  --blue-dark:   #0D47A1;
+  --green:       #2E7D32;
+  --green-light: #E8F5E9;
+  --yellow:      #E65100;
+  --yellow-light:#FFF3E0;
+  --red:         #C62828;
+  --red-light:   #FFEBEE;
+  --bg:          #F5F7FA;
+  --surface:     #FFFFFF;
+  --surface2:    #F0F2F5;
+  --border:      #DDE1E7;
+  --border-dark: #C4C9D4;
+  --text:        #1A1D23;
+  --text-2:      #4A5568;
+  --text-3:      #8A9BB0;
+  --shadow-sm:   0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md:   0 4px 12px rgba(0,0,0,0.1),0 2px 4px rgba(0,0,0,0.06);
+  --font-head:   'Montserrat', sans-serif;
+  --font-body:   Arial, sans-serif;
+  --radius:      6px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh}
+
+/* TOPBAR */
+.topbar{background:var(--blue-dark);height:56px;display:flex;align-items:center;padding:0 1.5rem;gap:1rem;box-shadow:0 2px 8px rgba(0,0,0,0.25);position:sticky;top:0;z-index:100}
+.topbar-icon{width:32px;height:32px;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.3);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.topbar-icon svg{width:17px;height:17px}
+.topbar-name{font-family:var(--font-head);font-weight:800;font-size:1rem;color:#fff;letter-spacing:0.06em}
+.topbar-name span{color:#90CAF9}
+.topbar-div{width:1px;height:24px;background:rgba(255,255,255,0.2);margin:0 0.25rem}
+.topbar-sub{font-family:var(--font-body);font-size:0.75rem;color:#90CAF9;letter-spacing:0.04em}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:0.5rem;font-family:var(--font-body);font-size:0.72rem;color:#90CAF9}
+.status-dot{width:7px;height:7px;border-radius:50%;background:#4CAF50;box-shadow:0 0 0 2px rgba(76,175,80,0.35);animation:blink 2.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* LAYOUT */
+.layout{display:flex;min-height:calc(100vh - 56px)}
+
+/* SIDEBAR */
+.sidebar{width:220px;background:var(--surface);border-right:1px solid var(--border);padding:1rem 0;flex-shrink:0}
+.sb-section{padding:0.75rem 1rem 0.3rem;font-family:var(--font-head);font-size:0.6rem;font-weight:700;color:var(--text-3);letter-spacing:0.15em;text-transform:uppercase}
+.sb-item{display:flex;align-items:center;gap:0.6rem;width:100%;padding:0.55rem 1rem;background:none;border:none;border-left:3px solid transparent;color:var(--text-2);font-family:var(--font-body);font-size:0.85rem;cursor:pointer;transition:all .12s;text-align:left;user-select:none}
+.sb-item svg{width:15px;height:15px;flex-shrink:0;opacity:.65}
+.sb-item:hover{background:var(--surface2);color:var(--text)}
+.sb-item.active{background:var(--blue-light);color:var(--blue-dark);border-left-color:var(--blue-dark);font-weight:500}
+.sb-item.active svg{opacity:1}
+.sb-badge{margin-left:auto;font-family:var(--font-head);font-size:0.65rem;font-weight:700;background:var(--surface2);color:var(--text-3);padding:1px 6px;border-radius:10px;min-width:20px;text-align:center}
+.sb-item.active .sb-badge{background:var(--blue-dark);color:#fff}
+.sb-hr{height:1px;background:var(--border);margin:.75rem 1rem}
+
+/* MAIN */
+main{flex:1;padding:1.75rem 2rem;overflow-y:auto}
+
+/* PAGE HEADER */
+.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;gap:1rem}
+.ph-title{font-family:var(--font-head);font-size:1.25rem;font-weight:700;color:var(--text);line-height:1.2}
+.ph-sub{font-family:var(--font-body);font-size:0.78rem;color:var(--text-3);margin-top:3px}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.25rem;box-shadow:var(--shadow-sm)}
+.stat-label{font-family:var(--font-body);font-size:0.72rem;color:var(--text-3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.35rem}
+.stat-val{font-family:var(--font-head);font-size:1.75rem;font-weight:800;color:var(--blue-dark);line-height:1}
+.stat-sub{font-family:var(--font-body);font-size:0.7rem;color:var(--text-3);margin-top:.3rem}
+.stat.s-green .stat-val{color:var(--green)}
+.stat.s-orange .stat-val{color:var(--yellow)}
+.stat.s-red .stat-val{color:var(--red)}
+
+/* TOOLBAR */
+.toolbar{display:flex;gap:.65rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center}
+.search-wrap{position:relative;flex:1;min-width:220px}
+.search-wrap svg{position:absolute;left:.65rem;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--text-3);pointer-events:none}
+
+/* INPUTS */
+.input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--font-body);font-size:.85rem;padding:.5rem .85rem;outline:none;transition:border-color .15s,box-shadow .15s;box-shadow:var(--shadow-sm)}
+.input:focus{border-color:var(--blue-mid);box-shadow:0 0 0 3px rgba(25,118,210,.12)}
+.input::placeholder{color:var(--text-3)}
+.input-search{padding-left:2.25rem}
+select.input{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238A9BB0'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .75rem center;padding-right:1.75rem}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.1rem;font-family:var(--font-head);font-size:.8rem;font-weight:600;letter-spacing:.04em;border:none;border-radius:var(--radius);cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn svg{width:14px;height:14px;flex-shrink:0}
+.btn-primary{background:var(--blue-mid);color:#fff;box-shadow:0 1px 3px rgba(25,118,210,.3)}
+.btn-primary:hover{background:var(--blue-dark);transform:translateY(-1px);box-shadow:0 3px 8px rgba(25,118,210,.35)}
+.btn-ghost{background:var(--surface);color:var(--text-2);border:1px solid var(--border);box-shadow:var(--shadow-sm)}
+.btn-ghost:hover{background:var(--surface2);color:var(--text)}
+.btn-danger{background:var(--red-light);color:var(--red);border:1px solid #FFCDD2}
+.btn-danger:hover{background:#FFCDD2}
+
+/* TABLE CARD */
+.tcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden}
+.twrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:600px}
+thead{background:var(--surface2);border-bottom:1px solid var(--border)}
+th{font-family:var(--font-head);font-size:.63rem;font-weight:700;color:var(--text-3);letter-spacing:.12em;text-transform:uppercase;text-align:left;padding:.65rem 1rem;white-space:nowrap}
+td{padding:.8rem 1rem;border-bottom:1px solid var(--border);font-family:var(--font-body);font-size:.85rem;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr{cursor:pointer;transition:background .1s}
+tbody tr:hover{background:#F8FAFC}
+.td-name{font-family:var(--font-head);font-size:.88rem;font-weight:700;color:var(--blue-dark)}
+.td-serial{font-family:'Courier New',monospace;font-size:.77rem;color:var(--text-2)}
+.badge{display:inline-block;font-family:var(--font-head);font-size:.62rem;font-weight:700;letter-spacing:.07em;padding:2px 8px;border-radius:3px;text-transform:uppercase}
+.badge-model{background:var(--blue-light);color:var(--blue-dark)}
+.tfoot{display:flex;align-items:center;justify-content:space-between;padding:.6rem 1rem;border-top:1px solid var(--border);background:var(--surface2)}
+.tfoot-info{font-family:var(--font-body);font-size:.73rem;color:var(--text-3)}
+.empty{padding:3.5rem 1rem;text-align:center}
+.empty-icon{width:48px;height:48px;background:var(--surface2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
+.empty-icon svg{width:22px;height:22px;color:var(--text-3)}
+.empty p{font-family:var(--font-head);font-size:.9rem;font-weight:600;color:var(--text-2);margin-bottom:.3rem}
+.empty span{font-family:var(--font-body);font-size:.78rem;color:var(--text-3)}
+
+/* OVERLAYS */
+.overlay{position:fixed;inset:0;background:rgba(10,15,25,.55);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .18s}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:8px;width:100%;max-width:560px;max-height:92vh;overflow-y:auto;box-shadow:var(--shadow-md);transform:translateY(12px) scale(.99);transition:transform .2s}
+.overlay.open .modal{transform:translateY(0) scale(1)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.25rem;border-bottom:1px solid var(--border);background:var(--surface2);border-radius:8px 8px 0 0}
+.modal-title{font-family:var(--font-head);font-size:.95rem;font-weight:700;color:var(--text)}
+.mclose{background:none;border:none;cursor:pointer;color:var(--text-3);display:flex;padding:4px;border-radius:4px;transition:all .12s}
+.mclose:hover{background:var(--red-light);color:var(--red)}
+.mclose svg{width:17px;height:17px}
+.mbody{padding:1.25rem}
+
+/* FORM */
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.ffield{display:flex;flex-direction:column;gap:.35rem}
+.ffield.full{grid-column:1/-1}
+label{font-family:var(--font-head);font-size:.68rem;font-weight:700;color:var(--text-2);letter-spacing:.06em;text-transform:uppercase}
+.req{color:var(--red);margin-left:2px}
+.hint{font-family:var(--font-body);font-size:.68rem;color:var(--text-3);margin-top:1px}
+.mactions{display:flex;justify-content:flex-end;gap:.65rem;margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--border)}
+
+/* MACHINE LABEL */
+.ml-wrap{margin:1.25rem;border:2.5px solid #1A1D23;border-radius:6px;overflow:hidden;background:#080808;box-shadow:0 4px 24px rgba(0,0,0,.3)}
+.ml-title{background:#111;border-bottom:2px solid #2d2d2d;padding:.85rem 1.5rem;text-align:center}
+.ml-brand{font-family:var(--font-head);font-size:1.1rem;font-weight:800;color:#E8E8E0;letter-spacing:.2em;text-transform:uppercase}
+.ml-grid{display:grid;grid-template-columns:1fr 175px}
+.ml-main{border-right:2px solid #2a2a2a}
+.ml-row{display:flex;border-bottom:1px solid #222}
+.ml-row:last-child{border-bottom:none}
+.ml-key{font-family:var(--font-body);font-size:.78rem;color:#888;padding:.6rem .75rem .6rem 1.25rem;white-space:nowrap;border-right:1px solid #222;min-width:115px}
+.ml-val{font-family:var(--font-head);font-size:.92rem;font-weight:700;color:#E8E8E0;padding:.6rem 1rem;letter-spacing:.03em}
+.ml-side{display:flex;flex-direction:column}
+.ml-cell{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:.85rem;border-bottom:1px solid #2a2a2a}
+.ml-cell:last-child{border-bottom:none}
+.ml-cell-label{font-family:var(--font-body);font-size:.68rem;color:#777;margin-bottom:.25rem}
+.ml-cell-val{font-family:var(--font-head);font-size:1.15rem;font-weight:800;color:#E8E8E0;text-align:center}
+.ml-foot{border-top:1px solid #2a2a2a;display:grid;grid-template-columns:1fr 1fr}
+.ml-fcell{padding:.65rem 1.25rem;border-right:1px solid #2a2a2a}
+.ml-fcell:last-child{border-right:none;display:flex;align-items:center;justify-content:center}
+.ml-fcell p{font-family:var(--font-body);font-size:.75rem;color:#777;margin-bottom:.15rem}
+.ml-fcell span{font-family:var(--font-head);font-size:.85rem;font-weight:600;color:#E0E0D8}
+
+/* CONFIRM */
+.confirm-box{background:var(--surface);border:1px solid var(--border);border-radius:8px;width:100%;max-width:380px;box-shadow:var(--shadow-md);transform:scale(.97);transition:transform .18s;overflow:hidden}
+.overlay.open .confirm-box{transform:scale(1)}
+.confirm-head{background:var(--red-light);padding:1rem 1.25rem;display:flex;align-items:center;gap:.6rem;border-bottom:1px solid #FFCDD2}
+.confirm-head svg{width:19px;height:19px;color:var(--red);flex-shrink:0}
+.confirm-title{font-family:var(--font-head);font-size:.88rem;font-weight:700;color:var(--red)}
+.confirm-body{padding:1.1rem 1.25rem;font-family:var(--font-body);font-size:.85rem;color:var(--text-2);line-height:1.65}
+.confirm-actions{display:flex;justify-content:flex-end;gap:.65rem;padding:.85rem 1.25rem;border-top:1px solid var(--border);background:var(--surface2)}
+
+/* ALERT INLINE */
+.alert{display:flex;align-items:center;gap:.6rem;padding:.65rem 1rem;border-radius:var(--radius);font-family:var(--font-body);font-size:.82rem;margin-bottom:1rem;border:1px solid}
+.alert svg{width:15px;height:15px;flex-shrink:0}
+.alert-info{background:var(--blue-light);color:var(--blue-dark);border-color:#BBDEFB}
+.alert-success{background:var(--green-light);color:var(--green);border-color:#C8E6C9}
+.alert-warn{background:var(--yellow-light);color:var(--yellow);border-color:#FFCC80}
+.alert-error{background:var(--red-light);color:var(--red);border-color:#FFCDD2}
+
+/* PREVIEW CARD */
+.prev-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-top:1rem}
+.prev-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:.65rem .85rem}
+.prev-card-label{font-family:var(--font-body);font-size:.63rem;color:var(--text-3);margin-bottom:.25rem;text-transform:uppercase;letter-spacing:.06em}
+.prev-card-val{font-family:var(--font-head);font-size:.82rem;font-weight:700;color:var(--blue-dark);word-break:break-all}
+.prev-card-val.mono{font-family:'Courier New',monospace;font-size:.72rem;font-weight:400;color:var(--text-2)}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;display:flex;align-items:center;gap:.6rem;background:#1A1D23;color:#fff;font-family:var(--font-body);font-size:.82rem;padding:.75rem 1.1rem;border-radius:var(--radius);box-shadow:var(--shadow-md);z-index:999;transform:translateY(80px);opacity:0;transition:all .25s cubic-bezier(.34,1.56,.64,1)}
+.toast.show{transform:translateY(0);opacity:1}
+.toast svg{width:15px;height:15px;flex-shrink:0}
+.toast-success{background:var(--green)}
+.toast-error{background:var(--red)}
+.toast-warn{background:var(--yellow);color:#fff}
+
+/* DETAIL ACTIONS */
+.dactions{display:flex;gap:.65rem;padding:0 1.25rem 1.25rem;justify-content:flex-end}
+
+/* INFO BADGE ROW */
+.info-row{padding:0 1.25rem;margin-bottom:.75rem;display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+.info-badge{border-radius:var(--radius);padding:.65rem .85rem;border:1px solid}
+.info-badge-label{font-family:var(--font-body);font-size:.63rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.25rem}
+.info-badge-val{font-family:var(--font-head);font-size:.85rem;font-weight:700}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#90CAF9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M7 8h10M7 12h6"/></svg>
+  </div>
+  <div class="topbar-name"><span>ETS</span> Products</div>
+  <div class="topbar-div"></div>
+  <div class="topbar-sub">Electricity Treatment System — Management Console</div>
+  <div class="topbar-right">
+    <div class="status-dot"></div>
+    <span>System Online</span>
+  </div>
+</header>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-section">Navigation</div>
+  <button class="sb-item active" id="nav-products" onclick="showPage('products')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    Products
+    <span class="sb-badge" id="sb-count">0</span>
+  </button>
+  <button class="sb-item" id="nav-add" onclick="showPage('add')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+    Add Product
+  </button>
+  <div class="sb-hr"></div>
+  <div class="sb-section">Filter by Model</div>
+  <button class="sb-item" id="sf-all" onclick="sideFilter('all')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M7 12h10M10 18h4"/></svg>
+    All Models
+  </button>
+  <div id="sidebar-models"></div>
+  <div class="sb-hr"></div>
+  <div class="sb-section">System</div>
+  <button class="sb-item" onclick="showAbout()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+    About
+  </button>
+</aside>
+
+<!-- MAIN -->
+<main id="main">
+
+  <!-- PRODUCTS PAGE -->
+  <div id="page-products">
+    <div class="ph">
+      <div>
+        <div class="ph-title">Product Registry</div>
+        <div class="ph-sub">Manage and monitor all registered ETS products</div>
+      </div>
+      <button class="btn btn-primary" onclick="showPage('add')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        Add Product
+      </button>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Total Products</div>
+        <div class="stat-val" id="stat-total">0</div>
+        <div class="stat-sub">Registered units</div>
+      </div>
+      <div class="stat s-green">
+        <div class="stat-label">Active Models</div>
+        <div class="stat-val" id="stat-models">0</div>
+        <div class="stat-sub">Distinct model types</div>
+      </div>
+      <div class="stat s-orange">
+        <div class="stat-label">Latest Entry</div>
+        <div class="stat-val" id="stat-latest" style="font-size:0.9rem;padding-top:0.4rem">—</div>
+        <div class="stat-sub">Most recent product</div>
+      </div>
+      <div class="stat s-red">
+        <div class="stat-label">Storage Used</div>
+        <div class="stat-val" id="stat-storage">0%</div>
+        <div class="stat-sub">LocalStorage estimate</div>
+      </div>
+    </div>
+
+    <div id="alert-area"></div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input class="input input-search" id="search-input" placeholder="Search by serial, product number, or name…" oninput="doSearch()">
+      </div>
+      <select class="input" id="filter-model" style="width:148px" onchange="doSearch()">
+        <option value="">All Models</option>
+      </select>
+      <select class="input" id="filter-capacity" style="width:145px" onchange="doSearch()">
+        <option value="">All Capacities</option>
+      </select>
+      <button class="btn btn-ghost" onclick="clearFilters()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M7 12h10M10 18h4"/></svg>
+        Reset
+      </button>
+    </div>
+
+    <!-- TABLE -->
+    <div class="tcard">
+      <div class="twrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Product Name</th>
+              <th>Serial Number</th>
+              <th>Prod. Number</th>
+              <th>Model</th>
+              <th>Capacity</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="tfoot">
+        <span class="tfoot-info" id="tinfo">Showing 0 products</span>
+        <span class="tfoot-info" style="font-style:italic">Click a row to view the machine label</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD PAGE -->
+  <div id="page-add" style="display:none">
+    <div class="ph">
+      <div>
+        <div class="ph-title">Add New Product</div>
+        <div class="ph-sub">Serial number and product name will be generated automatically</div>
+      </div>
+      <button class="btn btn-ghost" onclick="showPage('products')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        Back
+      </button>
+    </div>
+
+    <div style="max-width:560px;background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-sm);overflow:hidden">
+      <div class="alert alert-info" style="border-radius:0;margin:0;border:none;border-bottom:1px solid #BBDEFB">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        Fields marked <strong>*</strong> are required. Product Name, Serial No, and Prod. No are auto-generated.
+      </div>
+      <div style="padding:1.5rem">
+        <div class="fgrid">
+          <div class="ffield">
+            <label>Capacity <span class="req">*</span></label>
+            <input class="input" id="f-cap" placeholder="e.g. 5000" oninput="updatePreview()">
+            <span class="hint">VA value — e.g. 1000, 2200, 5000</span>
+          </div>
+          <div class="ffield">
+            <label>Model <span class="req">*</span></label>
+            <input class="input" id="f-model" placeholder="e.g. AIZ" oninput="updatePreview()">
+            <span class="hint">Model code — e.g. AIZ, BXP, MKZ</span>
+          </div>
+          <div class="ffield">
+            <label>Voltage <span class="req">*</span></label>
+            <input class="input" id="f-volt" placeholder="e.g. AC 220V">
+          </div>
+          <div class="ffield">
+            <label>Frequency <span class="req">*</span></label>
+            <input class="input" id="f-freq" placeholder="e.g. 50 Hz">
+          </div>
+          <div class="ffield">
+            <label>Password <span class="req">*</span></label>
+            <input class="input" type="password" id="f-pass" placeholder="Product password">
+          </div>
+          <div class="ffield">
+            <label>Phase</label>
+            <select class="input" id="f-phase">
+              <option value="1-Phase">1-Phase</option>
+              <option value="3-Phase">3-Phase</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- PREVIEW -->
+        <div id="prev-area" style="display:none">
+          <div style="border-top:1px solid var(--border);padding-top:1.1rem;margin-top:1.25rem">
+            <div style="font-family:var(--font-head);font-size:.63rem;font-weight:700;color:var(--text-3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:.7rem">Auto-Generated Preview</div>
+            <div class="prev-cards">
+              <div class="prev-card">
+                <div class="prev-card-label">Product Name</div>
+                <div class="prev-card-val" id="prev-name">—</div>
+              </div>
+              <div class="prev-card">
+                <div class="prev-card-label">Serial No.</div>
+                <div class="prev-card-val mono" id="prev-serial">—</div>
+              </div>
+              <div class="prev-card">
+                <div class="prev-card-label">Prod. No.</div>
+                <div class="prev-card-val mono" id="prev-prodnum">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mactions">
+          <button class="btn btn-ghost" onclick="clearForm()">Clear</button>
+          <button class="btn btn-primary" onclick="saveProduct()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Save Product
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- DETAIL OVERLAY -->
+<div class="overlay" id="detail-ov" onclick="closeDetailOv(event)">
+  <div class="modal" style="max-width:680px" id="detail-modal">
+    <div class="modal-header">
+      <span class="modal-title">Product Detail</span>
+      <button class="mclose" onclick="closeDetailModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div id="detail-content"></div>
+    <div class="dactions">
+      <button class="btn btn-danger" id="del-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        Delete
+      </button>
+      <button class="btn btn-ghost" onclick="closeDetailModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM OVERLAY -->
+<div class="overlay" id="confirm-ov">
+  <div class="confirm-box">
+    <div class="confirm-head">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <span class="confirm-title">Confirm Deletion</span>
+    </div>
+    <div class="confirm-body">Are you sure you want to delete product <strong id="confirm-name"></strong>?<br>This action <strong>cannot be undone</strong>.</div>
+    <div class="confirm-actions">
+      <button class="btn btn-ghost" onclick="closeConfirm()">Cancel</button>
+      <button class="btn btn-danger" id="confirm-ok">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <svg id="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></svg>
+  <span id="toast-msg"></span>
+</div>
+
+<script>
+const DB = 'ets_products';
+const load = () => { try { return JSON.parse(localStorage.getItem(DB)||'[]'); } catch { return []; } };
+const save = arr => localStorage.setItem(DB, JSON.stringify(arr));
+
+function rand(len, chars) {
+  let r = '';
+  for (let i = 0; i < len; i++) r += chars[Math.floor(Math.random() * chars.length)];
+  return r;
+}
+
+function genSerial(cap) {
+  const prods = load();
+  const A = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', D = '0123456789';
+  let s;
+  do {
+    s = `XSI-${rand(2,A)}${rand(3,D)}-${rand(1,A)}-${cap}-1-${rand(4,D)}`;
+  } while (prods.some(p => p.serial_number === s));
+  return s;
+}
+
+function genProdNum() {
+  const prods = load();
+  const id = String(prods.length + 1).padStart(6, '0');
+  const A = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', D = '0123456789';
+  const code = rand(1,A) + rand(3,D) + rand(1,A);
+  return `${code}-${id}`;
+}
+
+function genName(cap, model) { return `ETS-${cap}.${model.toUpperCase()}`; }
+
+function updatePreview() {
+  const cap = document.getElementById('f-cap').value.trim();
+  const model = document.getElementById('f-model').value.trim();
+  const area = document.getElementById('prev-area');
+  if (cap && model) {
+    area.style.display = '';
+    document.getElementById('prev-name').textContent = genName(cap, model);
+    document.getElementById('prev-serial').textContent = genSerial(cap);
+    document.getElementById('prev-prodnum').textContent = genProdNum();
+  } else {
+    area.style.display = 'none';
+  }
+}
+
+function saveProduct() {
+  const cap = document.getElementById('f-cap').value.trim();
+  const model = document.getElementById('f-model').value.trim().toUpperCase();
+  const volt = document.getElementById('f-volt').value.trim();
+  const freq = document.getElementById('f-freq').value.trim();
+  const pass = document.getElementById('f-pass').value.trim();
+  const phase = document.getElementById('f-phase').value;
+  if (!cap || !model || !volt || !freq || !pass) {
+    showToast('Please fill in all required fields.', 'error');
+    return;
+  }
+  const prods = load();
+  const p = {
+    id: Date.now(),
+    product_name: genName(cap, model),
+    serial_number: genSerial(cap),
+    product_number: genProdNum(),
+    capacity: cap, voltage: volt, frequency: freq, model, phase, password: pass,
+    created_at: new Date().toISOString()
+  };
+  prods.push(p);
+  save(prods);
+  clearForm();
+  showPage('products');
+  showToast(`Product ${p.product_name} saved successfully.`, 'success');
+}
+
+function clearForm() {
+  ['f-cap','f-model','f-volt','f-freq','f-pass'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('f-phase').value = '1-Phase';
+  document.getElementById('prev-area').style.display = 'none';
+}
+
+let sideFilt = 'all';
+
+function doSearch() { renderTable(); }
+
+function clearFilters() {
+  document.getElementById('search-input').value = '';
+  document.getElementById('filter-model').value = '';
+  document.getElementById('filter-capacity').value = '';
+  sideFilt = 'all';
+  renderDropdowns();
+  renderTable();
+}
+
+function sideFilter(val) {
+  sideFilt = val;
+  document.getElementById('filter-model').value = val === 'all' ? '' : val;
+  renderTable();
+}
+
+function getFiltered() {
+  const q = document.getElementById('search-input').value.toLowerCase().trim();
+  const mf = document.getElementById('filter-model').value;
+  const cf = document.getElementById('filter-capacity').value;
+  return load().filter(p => {
+    const mq = !q || [p.serial_number, p.product_number, p.product_name].some(f => f.toLowerCase().includes(q));
+    return mq && (!mf || p.model === mf) && (!cf || p.capacity === cf);
+  }).reverse();
+}
+
+function renderTable() {
+  const data = getFiltered();
+  const all = load();
+  document.getElementById('tinfo').textContent = `Showing ${data.length} of ${all.length} products`;
+  const tbody = document.getElementById('tbody');
+  if (!data.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty">
+      <div class="empty-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
+      <p>No products found</p>
+      <span>Adjust your search or filters, or add a new product.</span>
+    </div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = data.map((p, i) => `
+    <tr onclick="openDetail(${p.id})">
+      <td style="color:var(--text-3);font-size:.73rem">${i+1}</td>
+      <td><div class="td-name">${p.product_name}</div></td>
+      <td><div class="td-serial">${p.serial_number}</div></td>
+      <td><div class="td-serial">${p.product_number}</div></td>
+      <td><span class="badge badge-model">${p.model}</span></td>
+      <td style="font-family:var(--font-head);font-weight:600;color:var(--text)">${p.capacity} VA</td>
+      <td>
+        <button class="btn btn-ghost" style="padding:.28rem .65rem;font-size:.72rem" onclick="event.stopPropagation();openDetail(${p.id})">View</button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderStats() {
+  const prods = load();
+  const models = [...new Set(prods.map(p => p.model))];
+  document.getElementById('stat-total').textContent = prods.length;
+  document.getElementById('stat-models').textContent = models.length;
+  const last = prods[prods.length - 1];
+  document.getElementById('stat-latest').textContent = last ? last.product_name : '—';
+  const pct = Math.round((JSON.stringify(prods).length / (5*1024*1024)) * 100);
+  document.getElementById('stat-storage').textContent = pct + '%';
+  document.getElementById('sb-count').textContent = prods.length;
+}
+
+function renderDropdowns() {
+  const prods = load();
+  const models = [...new Set(prods.map(p => p.model))].sort();
+  const caps = [...new Set(prods.map(p => p.capacity))].sort((a,b) => +a - +b);
+  document.getElementById('filter-model').innerHTML = '<option value="">All Models</option>' + models.map(m => `<option value="${m}">${m}</option>`).join('');
+  document.getElementById('filter-capacity').innerHTML = '<option value="">All Capacities</option>' + caps.map(c => `<option value="${c}">${c} VA</option>`).join('');
+  document.getElementById('sidebar-models').innerHTML = models.map(m => `
+    <button class="sb-item" onclick="sideFilter('${m}')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+      ${m}
+      <span class="sb-badge">${prods.filter(p=>p.model===m).length}</span>
+    </button>
+  `).join('');
+}
+
+function refreshAll() { renderStats(); renderDropdowns(); renderTable(); }
+
+function showPage(id) {
+  document.getElementById('page-products').style.display = id === 'products' ? '' : 'none';
+  document.getElementById('page-add').style.display = id === 'add' ? '' : 'none';
+  document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
+  if (id === 'products') { document.getElementById('nav-products').classList.add('active'); refreshAll(); }
+  if (id === 'add') { document.getElementById('nav-add').classList.add('active'); }
+}
+
+let curId = null;
+
+function openDetail(id) {
+  const p = load().find(x => x.id == id);
+  if (!p) return;
+  curId = id;
+  const kva = (p.capacity / 1000).toFixed(p.capacity % 1000 === 0 ? 0 : 1);
+  document.getElementById('detail-content').innerHTML = `
+    <div class="ml-wrap">
+      <div class="ml-title"><div class="ml-brand">Electricity Treatment System</div></div>
+      <div class="ml-grid">
+        <div class="ml-main">
+          <div class="ml-row"><div class="ml-key">Product Name.</div><div class="ml-val">${p.product_name}</div></div>
+          <div class="ml-row"><div class="ml-key">Serial No.</div><div class="ml-val" style="font-size:.8rem">${p.serial_number}</div></div>
+          <div class="ml-row"><div class="ml-key">Capacity :</div><div class="ml-val">${p.capacity} VA / ${kva} KVA</div></div>
+          <div class="ml-row"><div class="ml-key">Prod. No :</div><div class="ml-val">${p.product_number}</div></div>
+        </div>
+        <div class="ml-side">
+          <div class="ml-cell"><div class="ml-cell-label">Model.</div><div class="ml-cell-val">${p.model}</div></div>
+          <div class="ml-cell"><div class="ml-cell-val" style="font-size:1rem">${p.phase||'1-Phase'}</div></div>
+        </div>
+      </div>
+      <div class="ml-foot">
+        <div class="ml-fcell">
+          <p>Voltage</p><span>${p.voltage}</span><br>
+          <p style="margin-top:4px">Frequency</p><span>${p.frequency}</span>
+        </div>
+        <div class="ml-fcell"><span style="font-family:var(--font-head);font-size:.88rem;font-weight:700;color:#ccc;letter-spacing:.07em">Made in INDONESIA</span></div>
+      </div>
+    </div>
+    <div class="info-row">
+      <div class="info-badge" style="background:var(--green-light);border-color:#C8E6C9">
+        <div class="info-badge-label" style="color:var(--green)">Status</div>
+        <div class="info-badge-val" style="color:var(--green)">Active / Registered</div>
+      </div>
+      <div class="info-badge" style="background:var(--surface2);border-color:var(--border)">
+        <div class="info-badge-label" style="color:var(--text-3)">Registered</div>
+        <div class="info-badge-val" style="color:var(--text-2)">${new Date(p.created_at).toLocaleDateString('id-ID',{year:'numeric',month:'long',day:'numeric'})}</div>
+      </div>
+    </div>
+  `;
+  document.getElementById('del-btn').style.display = '';
+  document.getElementById('del-btn').onclick = () => confirmDelete(p.id, p.product_name);
+  document.getElementById('detail-ov').classList.add('open');
+}
+
+function closeDetailOv(e) { if (e.target === document.getElementById('detail-ov')) closeDetailModal(); }
+function closeDetailModal() { document.getElementById('detail-ov').classList.remove('open'); }
+
+let pendingDel = null;
+function confirmDelete(id, name) {
+  pendingDel = id;
+  document.getElementById('confirm-name').textContent = name;
+  document.getElementById('confirm-ov').classList.add('open');
+  document.getElementById('confirm-ok').onclick = doDelete;
+}
+
+function doDelete() {
+  save(load().filter(p => p.id != pendingDel));
+  closeConfirm(); closeDetailModal(); refreshAll();
+  showToast('Product deleted successfully.', 'success');
+}
+
+function closeConfirm() { document.getElementById('confirm-ov').classList.remove('open'); pendingDel = null; }
+
+function showAbout() {
+  document.getElementById('detail-content').innerHTML = `
+    <div style="padding:1.5rem">
+      <div class="alert alert-info" style="margin-bottom:1rem">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        ETS Product Management System — v1.0
+      </div>
+      <p style="font-family:var(--font-body);font-size:.85rem;color:var(--text-2);line-height:1.7;margin-bottom:.75rem">Manages product registration for <strong>Electricity Treatment System</strong> units manufactured in Indonesia. Data is stored locally in your browser using LocalStorage — no internet required.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem">
+        <div class="alert alert-success" style="margin:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>Green = Normal / Active</div>
+        <div class="alert alert-warn" style="margin:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>Orange = Warning</div>
+        <div class="alert alert-error" style="margin:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg>Red = Error / Danger</div>
+        <div class="alert alert-info" style="margin:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Blue = Information</div>
+      </div>
+    </div>
+  `;
+  document.getElementById('del-btn').style.display = 'none';
+  document.getElementById('detail-ov').classList.add('open');
+}
+
+let toastTmr;
+function showToast(msg, type='success') {
+  const el = document.getElementById('toast');
+  const icon = document.getElementById('toast-icon');
+  document.getElementById('toast-msg').textContent = msg;
+  el.className = 'toast toast-' + type;
+  if (type==='success') icon.innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+  else if (type==='error') icon.innerHTML = '<path d="M18 6 6 18M6 6l12 12"/>';
+  else icon.innerHTML = '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/>';
+  el.classList.add('show');
+  clearTimeout(toastTmr);
+  toastTmr = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+refreshAll();
+</script>
+</body>
+</html>

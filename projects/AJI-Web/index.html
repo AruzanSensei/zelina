@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <title>PT Anugrah Jasatama Indonesia</title>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="assets/logo AJI.png" alt="Logo" class="logo-img">
+                <span>Anugrah Jasatama Indonesia</span>
+            </div>
+            <nav>
+                <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+                <ul id="nav-menu">
+                    <li><a href="#about">Tentang Kami</a></li>
+                    <li><a href="#products">Produk</a></li>
+                    <li><a href="#services">Layanan</a></li>
+                    <li><a href="#" onclick="scrollToFooter()">Kontak</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <section class="hero">
+        <h1>Solusi Digital untuk Bisnis Anda</h1>
+        <div class="hero-description">
+            <p class="desktop-description">Kami menyediakan solusi teknologi terintegrasi untuk membantu bisnis Anda tumbuh di era digital. Dengan tim ahli dan pendekatan inovatif, kami siap menjadi mitra digital Anda.</p>
+        </div>
+        <a href="#about" class="cta">Jelajahi</a>
+    </section>
+    <section id="about">
+        <div class="about-container">
+            <div class="about-text">
+                <h2>PT Anugrah Jasatama Indonesia</h2>
+                <p>Perusahaan teknologi yang berfokus pada solusi digital inovatif untuk industri modern. Kami mengembangkan perangkat lunak, layanan cloud, dan sistem terintegrasi untuk meningkatkan efisiensi operasional dan pertumbuhan bisnis di era digital.</p>
+            </div>
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Tentang Perusahaan">
+            </div>
+        </div>
+    </section>
+    <section id="products">
+        <h2>Produk Kami</h2>
+        <div class="products-container">
+            <div class="product-scroll">
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Enterprise Resource Planning">
+                    <h3>Enterprise Resource Planning</h3>
+                    <p class="price">Rp 10.000.000</p>
+                </div>
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Customer Management System">
+                    <h3>Customer Management System</h3>
+                    <p class="price">Rp 8.500.000</p>
+                </div>
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Inventory Management">
+                    <h3>Inventory Management</h3>
+                    <p class="price">Rp 7.200.000</p>
+                </div>
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1511&q=80" alt="Accounting Software">
+                    <h3>Accounting Software</h3>
+                    <p class="price">Rp 9.000.000</p>
+                </div>
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1469&q=80" alt="HR Management System">
+                    <h3>HR Management System</h3>
+                    <p class="price">Rp 6.800.000</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="services">
+        <h2>Pelayanan & Jasa</h2>
+        <div class="services-grid">
+            <div class="service-card">
+                <i class="fas fa-laptop-code"></i>
+                <h3>Pengembangan Aplikasi</h3>
+                <p>Solusi aplikasi custom untuk bisnis Anda</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-mobile-alt"></i>
+                <h3>Aplikasi Mobile</h3>
+                <p>Pengembangan aplikasi iOS dan Android</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-cloud"></i>
+                <h3>Cloud Computing</h3>
+                <p>Layanan penyimpanan dan komputasi awan</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>Analisis Data</h3>
+                <p>Solusi analitik untuk pengambilan keputusan</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Keamanan IT</h3>
+                <p>Proteksi sistem dan data perusahaan</p>
+            </div>
+            <div class="service-card">
+                <i class="fas fa-headset"></i>
+                <h3>Dukungan 24/7</h3>
+                <p>Layanan dukungan teknis setiap saat</p>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>PT Anugrah Jasatama Indonesia</h3>
+                <p><i class="fas fa-map-marker-alt"></i> JL. Mampang Prapatan XVII No.9, Duren Tiga Kec, Pancoran. Jakarta Selatan.</p>
+                <p><i class="fas fa-phone"></i> Telp1: +62 21 7781 2820</p>
+                <p><i class="fas fa-phone"></i> Telp2: +62 813 2109 0902</p>
+                <p><i class="fas fa-envelope"></i> Email : anugerahjasatamaindonesia@gmail.com</p>
+                <div class="working-hours">
+                    <h4>Jam Operasional</h4>
+                    <p>Senin-Jumat: 08.00 - 17.00</p>
+                    <p>Sabtu: 08.00 - 12.00</p>
+                </div>
+            </div>
+    
+            <div class="footer-section">
+                <h3>Menu</h3>
+                <ul>
+                    <li><a href="#about">Tentang Kami</a></li>
+                    <li><a href="#products">Produk</a></li>
+                    <li><a href="#services">Layanan</a></li>
+                    <li><a href="#contact">Kontak</a></li>
+                </ul>
+            </div>
+    
+            <div class="footer-section">
+                <h3>Newsletter</h3>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Email Anda" required>
+                    <button type="submit">Berlangganan</button>
+                </form>
+                <div class="social-media">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2023 PT Anugrah Jasatama Indonesia. All Rights Reserved.
+        </div>
+        <button class="back-to-top">↑</button>
+    </footer>
+    <script>
+        function scrollToFooter() {
+            document.querySelector('footer').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+            return false;
+        }
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>

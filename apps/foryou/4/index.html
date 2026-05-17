@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Polaroid Gallery — Lihat Momen Orang Lain</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* ── VARIABLES ── */
+  :root {
+    --cream: #f5efe6;
+    --cream2: #ede4d8;
+    --cream3: #e2d5c3;
+    --warm: #c9b99a;
+    --ink: #3a2e22;
+    --ink2: #6b5c47;
+    --ink3: #9c8b78;
+    --accent: #d4845a;
+    --accent2: #e8a87c;
+    --green: #7dab8a;
+    --blue: #7b9ec9;
+    --lilac: #b89dd4;
+    --shadow: rgba(58,46,34,0.12);
+    --shadow2: rgba(58,46,34,0.22);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background-color: var(--cream);
+    background-image:
+      radial-gradient(ellipse at 20% 0%, #f0e6d3 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 100%, #e8ddd0 0%, transparent 60%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 28px 40px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1.5px solid var(--cream3);
+    position: sticky;
+    top: 0;
+    background: rgba(245,239,230,0.92);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.7rem;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo span { color: var(--accent); font-style: italic; }
+
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: var(--ink);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .logo-icon svg { width: 20px; height: 20px; }
+
+  nav { display: flex; align-items: center; gap: 16px; }
+
+  .btn {
+    padding: 9px 22px;
+    border-radius: 100px;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    transition: all .2s;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 7px;
+  }
+  .btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--cream3);
+    color: var(--ink2);
+  }
+  .btn-outline:hover { border-color: var(--warm); background: var(--cream2); }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--cream);
+  }
+  .btn-primary:hover { background: var(--accent); }
+  .btn-google {
+    background: white;
+    border: 1.5px solid #e0d8d0;
+    color: #3c3c3c;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  }
+  .btn-google:hover { box-shadow: 0 4px 14px rgba(0,0,0,.13); transform: translateY(-1px); }
+
+  .user-avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2.5px solid var(--cream3);
+    cursor: pointer;
+    transition: border-color .2s;
+  }
+  .user-avatar:hover { border-color: var(--accent); }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 64px 20px 48px;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: var(--cream2);
+    border: 1px solid var(--cream3);
+    border-radius: 100px;
+    padding: 5px 16px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--ink2);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 16px;
+  }
+  .hero h1 em { color: var(--accent); font-style: italic; }
+  .hero p {
+    font-size: 1rem;
+    color: var(--ink2);
+    max-width: 440px;
+    margin: 0 auto 32px;
+    line-height: 1.65;
+  }
+
+  /* ── SEARCH BAR ── */
+  .search-wrap {
+    max-width: 520px;
+    margin: 0 auto 52px;
+    position: relative;
+  }
+  .search-wrap input {
+    width: 100%;
+    padding: 14px 52px 14px 20px;
+    border-radius: 100px;
+    border: 1.5px solid var(--cream3);
+    background: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    outline: none;
+    box-shadow: 0 4px 20px var(--shadow);
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .search-wrap input:focus {
+    border-color: var(--warm);
+    box-shadow: 0 4px 24px var(--shadow2);
+  }
+  .search-wrap input::placeholder { color: var(--ink3); }
+  .search-icon {
+    position: absolute; right: 18px; top: 50%; transform: translateY(-50%);
+    color: var(--ink3); pointer-events: none;
+  }
+
+  /* Autocomplete dropdown */
+  .search-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0; right: 0;
+    background: white;
+    border: 1.5px solid var(--cream3);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px var(--shadow2);
+    z-index: 50;
+    display: none;
+  }
+  .search-dropdown.open { display: block; }
+  .dropdown-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .dropdown-item:hover { background: var(--cream); }
+  .dropdown-avatar {
+    width: 32px; height: 32px; border-radius: 50%; object-fit: cover;
+    background: var(--cream2); flex-shrink: 0;
+  }
+  .dropdown-info { flex: 1; min-width: 0; }
+  .dropdown-name { font-weight: 500; font-size: .9rem; color: var(--ink); }
+  .dropdown-email { font-size: .78rem; color: var(--ink3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* ── SECTION LABEL ── */
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    max-width: 1200px; margin: 0 auto 28px; padding: 0 32px;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.5rem; color: var(--ink);
+  }
+  .section-meta { font-size: .85rem; color: var(--ink3); }
+
+  /* ── GALLERY GRID ── */
+  .gallery-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px 80px;
+    columns: 4;
+    column-gap: 28px;
+  }
+  @media (max-width: 1100px) { .gallery-grid { columns: 3; } }
+  @media (max-width: 750px) { .gallery-grid { columns: 2; column-gap: 18px; padding: 0 16px 60px; } }
+  @media (max-width: 480px) { .gallery-grid { columns: 1; } }
+
+  /* ── GALLERY CARD ── */
+  .gallery-card {
+    break-inside: avoid;
+    margin-bottom: 28px;
+    cursor: pointer;
+    animation: fadeUp .5s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px) rotate(0deg); }
+    to { opacity: 1; }
+  }
+
+  /* Polaroid wrapper */
+  .polaroid {
+    background: white;
+    padding: 12px 12px 36px;
+    box-shadow: 0 6px 24px var(--shadow), 0 2px 6px rgba(0,0,0,.06);
+    border-radius: 3px;
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s;
+    position: relative;
+    display: block;
+  }
+  /* Slight random tilt per card via nth-child */
+  .gallery-card:nth-child(4n+1) .polaroid { transform: rotate(-1.2deg); }
+  .gallery-card:nth-child(4n+2) .polaroid { transform: rotate(0.8deg); }
+  .gallery-card:nth-child(4n+3) .polaroid { transform: rotate(-0.5deg); }
+  .gallery-card:nth-child(4n+4) .polaroid { transform: rotate(1.5deg); }
+  .gallery-card:hover .polaroid {
+    transform: rotate(0deg) scale(1.03) translateY(-4px) !important;
+    box-shadow: 0 16px 48px var(--shadow2), 0 4px 12px rgba(0,0,0,.1);
+    z-index: 10;
+  }
+
+  /* Tape decoration */
+  .polaroid::before {
+    content: '';
+    position: absolute;
+    top: -10px; left: 50%; transform: translateX(-50%);
+    width: 52px; height: 20px;
+    background: rgba(201,185,154,0.55);
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  }
+
+  .polaroid-img-wrap {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 1px;
+    background: var(--cream2);
+    position: relative;
+  }
+
+  /* Multi-photo grid inside polaroid */
+  .photo-grid { display: grid; gap: 2px; }
+  .photo-grid.count-1 { grid-template-columns: 1fr; }
+  .photo-grid.count-2 { grid-template-columns: 1fr 1fr; }
+  .photo-grid.count-3 { grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; }
+  .photo-grid.count-3 .pg-item:first-child { grid-column: 1 / -1; }
+  .photo-grid.count-4 { grid-template-columns: 1fr 1fr; }
+  .photo-grid.count-many { grid-template-columns: 1fr 1fr; }
+
+  .pg-item {
+    overflow: hidden;
+    position: relative;
+  }
+  .pg-item img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .4s;
+  }
+  .gallery-card:hover .pg-item img { transform: scale(1.04); }
+
+  /* For single photo: preserve aspect ratio */
+  .photo-grid.count-1 .pg-item img {
+    height: auto; max-height: 320px; object-fit: cover; width: 100%;
+  }
+  /* Multi-photo fixed heights */
+  .photo-grid:not(.count-1) .pg-item { height: 110px; }
+
+  /* +N overlay */
+  .more-overlay {
+    position: absolute; inset: 0;
+    background: rgba(58,46,34,.52);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.4rem;
+    color: white;
+    letter-spacing: .02em;
+  }
+
+  /* Polaroid caption */
+  .polaroid-caption {
+    padding: 10px 4px 0;
+    text-align: center;
+  }
+  .polaroid-title {
+    font-family: 'Caveat', cursive;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .polaroid-meta {
+    font-size: 0.72rem;
+    color: var(--ink3);
+    margin-top: 3px;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .polaroid-meta img {
+    width: 16px; height: 16px; border-radius: 50%; object-fit: cover;
+  }
+
+  /* ── LOAD MORE ── */
+  .load-more-wrap { text-align: center; padding-bottom: 60px; }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: var(--ink3);
+  }
+  .empty-icon { font-size: 3rem; margin-bottom: 16px; }
+  .empty-state h3 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--ink2); margin-bottom: 8px; }
+  .empty-state p { font-size: .9rem; line-height: 1.6; }
+
+  /* ── LIGHTBOX ── */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(32,24,16,.88);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity .3s;
+    backdrop-filter: blur(8px);
+  }
+  .lightbox.open { opacity: 1; pointer-events: all; }
+
+  .lb-inner {
+    max-width: 880px; width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: white;
+    border-radius: 6px;
+    padding: 28px 28px 36px;
+    position: relative;
+    transform: scale(.95);
+    transition: transform .3s;
+    scrollbar-width: thin;
+  }
+  .lightbox.open .lb-inner { transform: scale(1); }
+
+  .lb-close {
+    position: absolute; top: 16px; right: 16px;
+    background: var(--cream2); border: none; cursor: pointer;
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink2); font-size: 1.1rem;
+    transition: background .2s;
+  }
+  .lb-close:hover { background: var(--cream3); }
+
+  .lb-user {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+  }
+  .lb-user img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
+  .lb-user-name { font-weight: 500; color: var(--ink); }
+  .lb-user-email { font-size: .8rem; color: var(--ink3); }
+
+  .lb-title {
+    font-family: 'Caveat', cursive;
+    font-size: 2rem; font-weight: 700;
+    color: var(--ink); margin-bottom: 6px;
+  }
+  .lb-desc { font-size: .9rem; color: var(--ink2); line-height: 1.6; margin-bottom: 20px; }
+
+  .lb-photos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .lb-photo {
+    border-radius: 2px;
+    overflow: hidden;
+    background: var(--cream2);
+  }
+  .lb-photo img {
+    width: 100%; height: 200px; object-fit: cover; display: block;
+    transition: transform .3s;
+  }
+  .lb-photo:hover img { transform: scale(1.04); }
+
+  .lb-date { font-size: .78rem; color: var(--ink3); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 28px; right: 28px;
+    background: var(--ink); color: var(--cream);
+    padding: 12px 20px; border-radius: 10px;
+    font-size: .88rem; font-weight: 500;
+    box-shadow: 0 8px 24px var(--shadow2);
+    z-index: 9999;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── SKELETON ── */
+  .skel { background: linear-gradient(90deg, var(--cream2) 25%, var(--cream3) 50%, var(--cream2) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+  @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+  .skel-card { break-inside: avoid; margin-bottom: 28px; }
+  .skel-card .polaroid { cursor: default; }
+  .skel-card .polaroid:hover { transform: none !important; box-shadow: 0 6px 24px var(--shadow); }
+  .skel-img { height: 180px; border-radius: 2px; }
+  .skel-line { height: 14px; border-radius: 8px; margin-top: 12px; }
+  .skel-line.short { width: 60%; margin: 8px auto 0; }
+
+  /* ── FILTER CHIPS ── */
+  .filter-bar { display: flex; gap: 8px; justify-content: center; margin-bottom: 36px; flex-wrap: wrap; padding: 0 20px; }
+  .chip {
+    padding: 6px 16px; border-radius: 100px;
+    border: 1.5px solid var(--cream3);
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .82rem; font-weight: 500;
+    color: var(--ink2); cursor: pointer;
+    transition: all .2s;
+  }
+  .chip:hover, .chip.active { background: var(--ink); border-color: var(--ink); color: white; }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <a href="index.html" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+        <rect x="3" y="3" width="18" height="18" rx="2"/>
+        <line x1="3" y1="17" x2="21" y2="17"/>
+        <circle cx="8" cy="10" r="2"/>
+      </svg>
+    </div>
+    Pola<span>roid</span>
+  </a>
+  <nav id="nav-area">
+    <a href="create.html" class="btn btn-outline">+ Buat Galeri</a>
+    <div id="auth-btn"></div>
+  </nav>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-tag">✦ Galeri Komunitas</div>
+  <h1>Momen yang <em>Tak Terlupakan</em><br>dari Semua Orang</h1>
+  <p>Lihat polaroid-polaroid indah dari komunitas. Cari teman lewat email dan jelajahi karya mereka.</p>
+
+  <!-- Search -->
+  <div class="search-wrap">
+    <input type="text" id="search-input" placeholder="Cari lewat email seseorang…" autocomplete="off">
+    <span class="search-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+    </span>
+    <div class="search-dropdown" id="search-dropdown"></div>
+  </div>
+</section>
+
+<!-- ── FILTER CHIPS ── -->
+<div class="filter-bar">
+  <button class="chip active" data-filter="all">Semua</button>
+  <button class="chip" data-filter="recent">Terbaru</button>
+  <button class="chip" data-filter="popular">Terbanyak Foto</button>
+</div>
+
+<!-- ── GALLERY ── -->
+<div class="section-header">
+  <span class="section-title" id="section-label">Semua Galeri</span>
+  <span class="section-meta" id="section-count"></span>
+</div>
+
+<div class="gallery-grid" id="gallery-grid">
+  <!-- Skeleton loader -->
+  <div class="skel-card" id="skel1">
+    <div class="polaroid"><div class="skel skel-img"></div><div class="skel skel-line"></div><div class="skel skel-line short"></div></div>
+  </div>
+  <div class="skel-card" id="skel2">
+    <div class="polaroid"><div class="skel" style="height:220px;border-radius:2px"></div><div class="skel skel-line"></div><div class="skel skel-line short"></div></div>
+  </div>
+  <div class="skel-card" id="skel3">
+    <div class="polaroid"><div class="skel" style="height:160px;border-radius:2px"></div><div class="skel skel-line"></div><div class="skel skel-line short"></div></div>
+  </div>
+  <div class="skel-card" id="skel4">
+    <div class="polaroid"><div class="skel skel-img"></div><div class="skel skel-line"></div><div class="skel skel-line short"></div></div>
+  </div>
+</div>
+
+<div class="load-more-wrap" id="load-more-wrap" style="display:none">
+  <button class="btn btn-outline" id="btn-load-more">Muat lebih banyak</button>
+</div>
+
+<!-- ── LIGHTBOX ── -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <div class="lb-inner" id="lb-inner">
+    <button class="lb-close" onclick="closeLightbox()">✕</button>
+    <div id="lb-content"></div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────────────────
+const WORKER_URL = 'https://YOUR_WORKER.YOUR_SUBDOMAIN.workers.dev'; // Ganti dengan URL worker kamu
+
+// ── STATE ───────────────────────────────────────────────────────────────────
+let currentUser = null;
+let page = 1;
+let currentFilter = 'all';
+let searchEmail = '';
+let totalLoaded = 0;
+
+// ── INIT ────────────────────────────────────────────────────────────────────
+(async () => {
+  await checkAuth();
+  await loadGalleries(true);
+})();
+
+// ── AUTH ─────────────────────────────────────────────────────────────────────
+async function checkAuth() {
+  try {
+    const res = await fetch(`${WORKER_URL}/auth/me`, { credentials: 'include' });
+    const { user } = await res.json();
+    currentUser = user;
+    renderAuthBtn();
+  } catch {}
+}
+
+function renderAuthBtn() {
+  const el = document.getElementById('auth-btn');
+  if (currentUser) {
+    el.innerHTML = `
+      <img src="${currentUser.picture}" class="user-avatar" title="${currentUser.email}" onclick="logout()">
+    `;
+  } else {
+    el.innerHTML = `
+      <a href="${WORKER_URL}/auth/google" class="btn btn-google">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Masuk dengan Google
+      </a>
+    `;
+  }
+}
+
+async function logout() {
+  await fetch(`${WORKER_URL}/auth/logout`, { credentials: 'include' });
+  currentUser = null;
+  renderAuthBtn();
+  showToast('Berhasil keluar 👋');
+}
+
+// ── LOAD GALLERIES ───────────────────────────────────────────────────────────
+async function loadGalleries(reset = false) {
+  if (reset) {
+    page = 1;
+    totalLoaded = 0;
+    // Remove skeletons
+    ['skel1','skel2','skel3','skel4'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    });
+    // Clear existing cards
+    document.querySelectorAll('.gallery-card').forEach(c => c.remove());
+  }
+
+  let url = `${WORKER_URL}/api/galleries?page=${page}&limit=12`;
+  if (searchEmail) url += `&email=${encodeURIComponent(searchEmail)}`;
+
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    const galleries = Array.isArray(data) ? data : [];
+
+    // Remove skeletons on first load
+    ['skel1','skel2','skel3','skel4'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    });
+
+    if (!galleries.length && page === 1) {
+      document.getElementById('gallery-grid').innerHTML = `
+        <div class="empty-state" style="column-span:all">
+          <div class="empty-icon">📷</div>
+          <h3>Belum ada galeri</h3>
+          <p>Jadilah yang pertama berbagi momen polaroid!</p>
+        </div>
+      `;
+      document.getElementById('section-count').textContent = '';
+      document.getElementById('load-more-wrap').style.display = 'none';
+      return;
+    }
+
+    totalLoaded += galleries.length;
+    document.getElementById('section-count').textContent = `${totalLoaded} galeri`;
+
+    const grid = document.getElementById('gallery-grid');
+    galleries.forEach((g, i) => {
+      const card = buildCard(g, i);
+      grid.appendChild(card);
+    });
+
+    // Animate new cards
+    grid.querySelectorAll('.gallery-card:not(.loaded)').forEach((c, i) => {
+      c.style.animationDelay = `${i * 0.06}s`;
+      c.classList.add('loaded');
+    });
+
+    const loadMoreBtn = document.getElementById('load-more-wrap');
+    loadMoreBtn.style.display = galleries.length >= 12 ? 'block' : 'none';
+
+    page++;
+  } catch (e) {
+    console.error(e);
+    showToast('Gagal memuat galeri 😢');
+  }
+}
+
+// ── BUILD CARD ───────────────────────────────────────────────────────────────
+function buildCard(g, i) {
+  const photos = Array.isArray(g.photo_urls) ? g.photo_urls : [];
+  const count = photos.length;
+  const user = g.users || {};
+  const avatar = user.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.display_name || '?')}&background=e2d5c3&color=3a2e22`;
+
+  // Determine grid class
+  const cls = count <= 4 ? `count-${Math.max(count,1)}` : 'count-many';
+  const showPhotos = photos.slice(0, 4);
+
+  const photoItems = showPhotos.map((url, idx) => {
+    const isLast = idx === 3 && count > 4;
+    return `
+      <div class="pg-item">
+        <img src="${url}" alt="" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22%3E%3Crect fill=%22%23e2d5c3%22 width=%22100%22 height=%22100%22/%3E%3C/svg%3E'">
+        ${isLast ? `<div class="more-overlay">+${count - 3}</div>` : ''}
+      </div>
+    `;
+  }).join('');
+
+  const date = new Date(g.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+
+  const card = document.createElement('div');
+  card.className = 'gallery-card';
+  card.innerHTML = `
+    <div class="polaroid" onclick="openLightbox('${g.id}')">
+      <div class="polaroid-img-wrap">
+        <div class="photo-grid ${cls}">${photoItems}</div>
+      </div>
+      <div class="polaroid-caption">
+        <div class="polaroid-title">${escHtml(g.title)}</div>
+        <div class="polaroid-meta">
+          <img src="${avatar}" alt="">
+          <span>${escHtml(user.display_name || user.email || 'Anonim')}</span>
+          · ${date}
+        </div>
+      </div>
+    </div>
+  `;
+  return card;
+}
+
+// ── LIGHTBOX ─────────────────────────────────────────────────────────────────
+async function openLightbox(id) {
+  const lb = document.getElementById('lightbox');
+  const content = document.getElementById('lb-content');
+  content.innerHTML = '<p style="color:var(--ink3);text-align:center;padding:40px 0">Memuat…</p>';
+  lb.classList.add('open');
+
+  try {
+    const res = await fetch(`${WORKER_URL}/api/galleries/${id}`);
+    const g = await res.json();
+    const photos = Array.isArray(g.photo_urls) ? g.photo_urls : [];
+    const user = g.users || {};
+    const avatar = user.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.display_name || '?')}&background=e2d5c3&color=3a2e22`;
+    const date = new Date(g.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    content.innerHTML = `
+      <div class="lb-user">
+        <img src="${avatar}" alt="">
+        <div>
+          <div class="lb-user-name">${escHtml(user.display_name || 'Anonim')}</div>
+          <div class="lb-user-email">${escHtml(user.email || '')}</div>
+        </div>
+      </div>
+      <div class="lb-title">${escHtml(g.title)}</div>
+      ${g.description ? `<div class="lb-desc">${escHtml(g.description)}</div>` : ''}
+      <div class="lb-photos">
+        ${photos.map(url => `
+          <div class="lb-photo">
+            <img src="${url}" alt="" loading="lazy">
+          </div>
+        `).join('')}
+      </div>
+      <div class="lb-date">📅 ${date} · ${photos.length} foto</div>
+    `;
+  } catch {
+    content.innerHTML = '<p style="color:var(--accent);text-align:center;padding:40px 0">Gagal memuat detail galeri.</p>';
+  }
+}
+
+function closeLightbox(e) {
+  if (e && e.target !== document.getElementById('lightbox') && !e.target.classList.contains('lb-close')) return;
+  if (!e) {
+    document.getElementById('lightbox').classList.remove('open');
+    return;
+  }
+  if (e.target === document.getElementById('lightbox') || e.target.classList.contains('lb-close')) {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('open'); });
+
+// ── SEARCH ───────────────────────────────────────────────────────────────────
+let searchTimer;
+const searchInput = document.getElementById('search-input');
+const dropdown = document.getElementById('search-dropdown');
+
+searchInput.addEventListener('input', () => {
+  clearTimeout(searchTimer);
+  const q = searchInput.value.trim();
+  if (!q) {
+    dropdown.classList.remove('open');
+    searchEmail = '';
+    document.getElementById('section-label').textContent = 'Semua Galeri';
+    loadGalleries(true);
+    return;
+  }
+  searchTimer = setTimeout(async () => {
+    try {
+      const res = await fetch(`${WORKER_URL}/api/users/search?q=${encodeURIComponent(q)}`);
+      const users = await res.json();
+      if (!users.length) { dropdown.classList.remove('open'); return; }
+      dropdown.innerHTML = users.map(u => `
+        <div class="dropdown-item" onclick="selectUser('${u.email}','${escHtml(u.display_name||u.email)}')">
+          <img class="dropdown-avatar" src="${u.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.display_name||'?')}&background=e2d5c3&color=3a2e22`}" alt="">
+          <div class="dropdown-info">
+            <div class="dropdown-name">${escHtml(u.display_name || '')}</div>
+            <div class="dropdown-email">${escHtml(u.email)}</div>
+          </div>
+        </div>
+      `).join('');
+      dropdown.classList.add('open');
+    } catch {}
+  }, 350);
+});
+
+function selectUser(email, name) {
+  searchInput.value = email;
+  searchEmail = email;
+  dropdown.classList.remove('open');
+  document.getElementById('section-label').textContent = `Galeri ${name}`;
+  loadGalleries(true);
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.search-wrap')) dropdown.classList.remove('open');
+});
+
+// ── FILTER CHIPS ─────────────────────────────────────────────────────────────
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    currentFilter = chip.dataset.filter;
+    loadGalleries(true);
+  });
+});
+
+// ── LOAD MORE ────────────────────────────────────────────────────────────────
+document.getElementById('btn-load-more').addEventListener('click', () => loadGalleries(false));
+
+// ── UTILS ────────────────────────────────────────────────────────────────────
+function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SegarMeat - Daging Segar</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Icons (Lucide) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --primary: #DC2626;
+            --primary-dark: #B91C1C;
+            --text-dark: #1E293B;
+            --text-gray: #64748B;
+            --bg-page: #F2F4F7;
+            --bg-card: #FFFFFF;
+            --accent-orange: #F97316;
+            --accent-green: #10B981;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: #E5E7EB; color: var(--text-dark); }
+        
+        /* Mobile Wrapper */
+        #app {
+            max-width: 480px;
+            margin: 0 auto;
+            background-color: #F8FAFC;
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 80px; /* Space for bottom nav if needed */
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        /* Utilities */
+        .hidden { display: none !important; }
+        .flex { display: flex; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-1 { gap: 4px; }
+        .gap-2 { gap: 8px; }
+        .text-primary { color: var(--primary); }
+        .font-bold { font-weight: 700; }
+        .text-xs { fontSize: 10px; }
+        .text-sm { fontSize: 12px; }
+
+        /* Navbar */
+        .navbar {
+            position: sticky; top: 0; z-index: 50;
+            background: white; padding: 10px 16px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .search-bar {
+            flex: 1; margin: 0 12px; position: relative;
+        }
+        .search-input {
+            width: 100%; padding: 8px 12px 8px 32px;
+            background: #F1F5F9; border: 1px solid #E2E8F0;
+            border-radius: 6px; font-size: 13px; outline: none;
+        }
+        .cart-btn { position: relative; background: none; border: none; cursor: pointer; padding: 4px; }
+        .cart-badge {
+            position: absolute; top: 0; right: 0;
+            background: var(--primary); color: white;
+            font-size: 10px; font-weight: bold;
+            width: 16px; height: 16px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* Banner */
+        .banner {
+            background: linear-gradient(180deg, #DC2626 0%, #991B1B 100%);
+            color: white; padding: 16px; margin-bottom: 12px;
+        }
+
+        /* Categories */
+        .category-scroll {
+            display: flex; gap: 8px; overflow-x: auto;
+            padding: 0 12px 12px 12px;
+            scrollbar-width: none; /* Firefox */
+        }
+        .category-scroll::-webkit-scrollbar { display: none; }
+        .cat-btn {
+            white-space: nowrap; padding: 6px 14px;
+            border-radius: 4px; border: 1px solid #E2E8F0;
+            background: white; color: var(--text-gray);
+            font-size: 12px; font-weight: 500; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .cat-btn.active {
+            background: #FEF2F2; border-color: var(--primary);
+            color: var(--primary); font-weight: 600;
+        }
+
+        /* Product Grid */
+        .grid-container {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 8px; padding: 0 8px;
+        }
+        .product-card {
+            background: white; border: 1px solid #F1F5F9;
+            border-radius: 4px; overflow: hidden;
+            position: relative; cursor: pointer;
+        }
+        .card-image-wrap {
+            width: 100%; padding-top: 100%; /* 1:1 Ratio */
+            position: relative; background: #f0f0f0;
+        }
+        .card-image {
+            position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%; object-fit: cover;
+        }
+        .discount-badge {
+            position: absolute; top: 0; right: 0;
+            background: rgba(255, 230, 0, 0.95); color: #D0011B;
+            font-size: 10px; font-weight: 700; padding: 2px 4px;
+            border-bottom-left-radius: 4px;
+        }
+        .cod-badge {
+            position: absolute; bottom: 0; left: 0;
+            background: rgba(0,0,0,0.6); color: white;
+            font-size: 9px; padding: 2px 4px; font-weight: 600;
+        }
+        .card-info { padding: 8px; }
+        .product-name {
+            font-size: 12px; line-height: 1.4; color: #333;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+            overflow: hidden; height: 34px; margin-bottom: 4px;
+        }
+        .seller-badge {
+            background: #D0011B; color: white; border-radius: 2px;
+            padding: 0 3px; font-size: 9px; font-weight: bold;
+            margin-right: 4px; vertical-align: middle; display: inline-block;
+        }
+        .tag-line { display: flex; gap: 4px; margin-bottom: 4px; height: 14px; overflow: hidden;}
+        .tag-item {
+            border: 1px solid #D0011B; color: #D0011B;
+            font-size: 9px; padding: 0 2px; border-radius: 2px; line-height: 12px;
+        }
+        .price-row { margin-top: 2px; }
+        .original-price { font-size: 10px; text-decoration: line-through; color: #94A3B8; }
+        .final-price { font-size: 14px; font-weight: 700; color: #DC2626; }
+        .stats-row {
+            display: flex; align-items: center; gap: 4px; margin-top: 4px;
+            font-size: 10px; color: #64748B;
+        }
+        .location-row {
+            display: flex; align-items: center; gap: 2px; margin-top: 2px;
+            font-size: 10px; color: #64748B;
+        }
+
+        /* Detail Page */
+        #detail-view {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #F8FAFC; z-index: 100; overflow-y: auto;
+            max-width: 480px; left: 50%; transform: translateX(-50%);
+        }
+        .detail-header {
+            position: sticky; top: 0; background: white; z-index: 10;
+            padding: 12px 16px; display: flex; align-items: center; gap: 16px;
+            border-bottom: 1px solid #eee;
+        }
+        .detail-image { width: 100%; height: 375px; object-fit: cover; background: white; }
+        .detail-content { background: white; padding: 16px; margin-bottom: 8px; }
+        .detail-footer {
+            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px;
+            background: white; padding: 12px 16px; border-top: 1px solid #eee;
+            display: flex; gap: 12px; z-index: 20;
+        }
+        
+        /* Cart Modal */
+        #cart-modal {
+            position: fixed; inset: 0; z-index: 200;
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(2px);
+            display: flex; justify-content: center; align-items: flex-end;
+        }
+        .cart-content {
+            background: white; width: 100%; max-width: 480px;
+            border-radius: 16px 16px 0 0; max-height: 80vh;
+            display: flex; flexDirection: column;
+            animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        /* Buttons */
+        .btn-add {
+            border: 1px solid #DC2626; color: #DC2626; background: #FEF2F2;
+            padding: 2px 4px; border-radius: 4px; cursor: pointer;
+        }
+        .btn-primary {
+            background: var(--primary); color: white; border: none;
+            padding: 12px; border-radius: 6px; font-weight: 600; flex: 1; cursor: pointer;
+        }
+        .btn-secondary {
+            background: #FEF2F2; color: var(--primary); border: 1px solid var(--primary);
+            padding: 12px; border-radius: 6px; font-weight: 600; flex: 1; cursor: pointer;
+        }
+
+    </style>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+
+<div id="app">
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="flex items-center gap-1" onclick="goHome()">
+            <i data-lucide="chef-hat" color="#DC2626" width="24"></i>
+            <span style="font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px;">Segar<span class="text-primary">Meat</span></span>
+        </div>
+        <div class="search-bar">
+            <i data-lucide="search" width="14" color="#94A3B8" style="position: absolute; left: 10px; top: 10px;"></i>
+            <input type="text" class="search-input" placeholder="Cari daging...">
+        </div>
+        <button class="cart-btn" onclick="toggleCart()">
+            <i data-lucide="shopping-cart" width="24" color="#334155"></i>
+            <span class="cart-badge hidden" id="cart-count">0</span>
+        </button>
+    </nav>
+
+    <!-- Home View -->
+    <div id="home-view">
+        <!-- Banner -->
+        <div class="banner">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h2 style="font-size: 1.1rem; font-weight: 800; margin: 0;">Flash Sale ⚡</h2>
+                    <p style="margin: 2px 0 0 0; font-size: 0.75rem; opacity: 0.9;">Diskon s/d 50% hari ini</p>
+                </div>
+                <div style="background: white; color: var(--primary); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 700;">
+                    02:15:40
+                </div>
+            </div>
+        </div>
+
+        <!-- Categories -->
+        <div class="category-scroll" id="category-container">
+            <!-- Injected by JS -->
+        </div>
+
+        <!-- Product Grid -->
+        <div class="grid-container" id="product-grid">
+            <!-- Injected by JS -->
+        </div>
+        
+        <div style="text-align: center; padding: 24px; color: #94A3B8; font-size: 11px;">
+            Semua produk telah ditampilkan
+        </div>
+    </div>
+
+    <!-- Detail View (Hidden by default) -->
+    <div id="detail-view" class="hidden">
+        <div class="detail-header">
+            <button onclick="closeDetail()" style="background:none; border:none; cursor:pointer; padding:0;">
+                <i data-lucide="arrow-left" width="24" color="#333"></i>
+            </button>
+            <span style="font-weight: 600; font-size: 1.1rem;">Detail Produk</span>
+        </div>
+        
+        <div id="detail-content-placeholder">
+            <!-- Dynamic Content -->
+        </div>
+    </div>
+
+    <!-- Cart Modal (Hidden by default) -->
+    <div id="cart-modal" class="hidden" onclick="if(event.target === this) toggleCart()">
+        <div class="cart-content">
+            <div style="padding: 16px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; font-size: 1rem;">Keranjang Belanja</h3>
+                <button onclick="toggleCart()" style="background:none; border:none; cursor:pointer;"><i data-lucide="x" width="20"></i></button>
+            </div>
+            <div id="cart-items" style="padding: 16px; overflow-y: auto; max-height: 50vh;">
+                <!-- Items -->
+            </div>
+            <div style="padding: 16px; border-top: 1px solid #eee;">
+                <div class="flex justify-between" style="margin-bottom: 12px; font-weight: 700;">
+                    <span>Total</span>
+                    <span id="cart-total" class="text-primary">Rp 0</span>
+                </div>
+                <button class="btn-primary" style="width: 100%;">Checkout</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- DATA ---
+    const PRODUCTS = [
+      {
+        id: 1,
+        name: "Daging Sapi Sirloin Premium Lokal",
+        category: "sapi",
+        price: 185000,
+        originalPrice: 220000,
+        unit: "1kg",
+        rating: 4.8,
+        reviews: 124,
+        sold: "1,2rb",
+        location: "Jakarta Selatan",
+        sellerType: "Star+",
+        delivery: "Instant",
+        image: "https://images.unsplash.com/photo-1603048297172-c92544798d5e?auto=format&fit=crop&q=80&w=600",
+        tags: ["Diskon 15%"],
+        description: "Potongan daging sapi has luar dengan lapisan lemak di bagian pinggir. Rasa gurih juicy saat dipanggang.",
+        nutrition: "Protein tinggi, Zat Besi"
+      },
+      {
+        id: 2,
+        name: "Dada Ayam Fillet Segar Bersih",
+        category: "ayam",
+        price: 44999,
+        originalPrice: 48000,
+        unit: "1kg",
+        rating: 4.9,
+        reviews: 342,
+        sold: "10rb+",
+        location: "Jakarta Barat",
+        sellerType: "Mall",
+        delivery: "COD",
+        image: "https://images.unsplash.com/photo-1604503468506-a8da13d82791?auto=format&fit=crop&q=80&w=600",
+        tags: ["Murah Lebay"],
+        description: "Dada ayam tanpa tulang dan kulit. Diproses higienis dari ayam peternakan terpilih.",
+        nutrition: "Rendah Lemak"
+      },
+      {
+        id: 3,
+        name: "Iga Kambing Muda Empuk Sop Sate",
+        category: "kambing",
+        price: 135000,
+        originalPrice: 150000,
+        unit: "1kg",
+        rating: 4.7,
+        reviews: 89,
+        sold: "500+",
+        location: "Bogor",
+        sellerType: "Star",
+        delivery: "Instant",
+        image: "https://images.unsplash.com/photo-1544025162-d76690b6d012?auto=format&fit=crop&q=80&w=600",
+        tags: ["Promo"],
+        description: "Iga kambing muda dengan tekstur empuk dan tidak prengus. Pas untuk sop atau tongseng.",
+        nutrition: "Zat Besi, Kalsium"
+      },
+      {
+        id: 4,
+        name: "Daging Sapi Wagyu Meltique Slice",
+        category: "sapi",
+        price: 99000,
+        originalPrice: 125000,
+        unit: "500gr",
+        rating: 5.0,
+        reviews: 56,
+        sold: "2,5rb",
+        location: "Tangerang",
+        sellerType: "Star+",
+        delivery: "Same Day",
+        image: "https://images.unsplash.com/photo-1615937657715-bc7b4b7962c1?auto=format&fit=crop&q=80&w=600",
+        tags: ["Bebas Ongkir"],
+        description: "Daging sapi dengan marbling buatan yang sangat lembut. Meleleh di mulut.",
+        nutrition: "Lemak Jenuh"
+      },
+      {
+        id: 5,
+        name: "Paha Ayam Utuh Fresh (Paha Bawah)",
+        category: "ayam",
+        price: 39900,
+        originalPrice: 45000,
+        unit: "1kg",
+        rating: 4.6,
+        reviews: 210,
+        sold: "3,1rb",
+        location: "Jakarta Barat",
+        sellerType: "Star",
+        delivery: "COD",
+        image: "https://images.unsplash.com/photo-1587593810167-a84920ea0781?auto=format&fit=crop&q=80&w=600",
+        tags: [],
+        description: "Paha ayam utuh dengan kulit. Daging lebih juicy dan gurih dibanding dada.",
+        nutrition: "Protein, Lemak Sehat"
+      },
+      {
+        id: 6,
+        name: "Daging Giling Sapi Premium Low Fat",
+        category: "sapi",
+        price: 140000,
+        originalPrice: 0,
+        unit: "1kg",
+        rating: 4.8,
+        reviews: 150,
+        sold: "800+",
+        location: "Bekasi",
+        sellerType: "Official",
+        delivery: "Instant",
+        image: "https://images.unsplash.com/photo-1551028150-64b9f398f678?auto=format&fit=crop&q=80&w=600",
+        tags: ["Terlaris"],
+        description: "Daging sapi pilihan yang digiling halus tanpa campuran lemak berlebih.",
+        nutrition: "Protein Mudah Cerna"
+      }
+    ];
+
+    const CATEGORIES = [
+      { id: 'all', name: 'Semua' },
+      { id: 'sapi', name: 'Daging Sapi' },
+      { id: 'ayam', name: 'Daging Ayam' },
+      { id: 'kambing', name: 'Daging Kambing' }
+    ];
+
+    // --- STATE ---
+    let state = {
+        cart: [],
+        activeTab: 'all',
+        selectedProduct: null
+    };
+
+    // --- UTILS ---
+    const formatRupiah = (num) => {
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(num).replace("Rp", "Rp");
+    };
+
+    // --- RENDER FUNCTIONS ---
+    function init() {
+        renderCategories();
+        renderProducts();
+        renderCart();
+        lucide.createIcons();
+    }
+
+    function renderCategories() {
+        const container = document.getElementById('category-container');
+        container.innerHTML = CATEGORIES.map(cat => `
+            <button class="cat-btn ${state.activeTab === cat.id ? 'active' : ''}" 
+                    onclick="filterCategory('${cat.id}')">
+                ${cat.name}
+            </button>
+        `).join('');
+    }
+
+    function renderProducts() {
+        const container = document.getElementById('product-grid');
+        const filtered = state.activeTab === 'all' 
+            ? PRODUCTS 
+            : PRODUCTS.filter(p => p.category === state.activeTab);
+
+        container.innerHTML = filtered.map(p => {
+            const discount = p.originalPrice > p.price 
+                ? `<div class="discount-badge">${Math.round((1 - p.price/p.originalPrice)*100)}%</div>` 
+                : '';
+            const originalPrice = p.originalPrice > 0 
+                ? `<div class="original-price">${formatRupiah(p.originalPrice)}</div>` 
+                : '';
+            
+            const sellerBadge = p.sellerType === 'Star+' || p.sellerType === 'Star' || p.sellerType === 'Mall'
+                ? `<span class="seller-badge">${p.sellerType}</span>` : '';
+            
+            const tags = p.tags.map(t => `<span class="tag-item">${t}</span>`).join('');
+            const instantTag = p.delivery === 'Instant' ? `<span class="tag-item" style="border-color:#00BFA5; color:#00BFA5;">Instant</span>` : '';
+
+            return `
+            <div class="product-card" onclick="openDetail(${p.id})">
+                <div class="card-image-wrap">
+                    <img src="${p.image}" class="card-image" alt="${p.name}">
+                    ${discount}
+                    ${p.delivery === 'COD' ? '<div class="cod-badge">COD</div>' : ''}
+                </div>
+                <div class="card-info">
+                    <div class="product-name">
+                        ${sellerBadge}
+                        ${p.name}
+                    </div>
+                    <div class="tag-line">${tags}${instantTag}</div>
+                    <div class="price-row">
+                        ${originalPrice}
+                        <div class="flex justify-between items-center">
+                            <div class="final-price">${formatRupiah(p.price)}</div>
+                            <button class="btn-add" onclick="event.stopPropagation(); addToCart(${p.id})">
+                                <i data-lucide="plus" width="12"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="stats-row">
+                        <i data-lucide="star" width="10" fill="#FFC107" color="#FFC107"></i>
+                        <span>${p.rating}</span>
+                        <span>| ${p.sold} terjual</span>
+                    </div>
+                    <div class="location-row">
+                        <i data-lucide="map-pin" width="10"></i>
+                        <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100px;">${p.location}</span>
+                    </div>
+                </div>
+            </div>
+            `
+        }).join('');
+        lucide.createIcons();
+    }
+
+    function renderDetail(p) {
+        const container = document.getElementById('detail-content-placeholder');
+        const discount = p.originalPrice > p.price ? Math.round((1 - p.price/p.originalPrice)*100) : 0;
+        
+        container.innerHTML = `
+            <img src="${p.image}" class="detail-image">
+            
+            <div class="detail-content">
+                <div class="flex items-center gap-2" style="margin-bottom: 8px;">
+                     <div class="final-price" style="font-size: 1.5rem;">${formatRupiah(p.price)}</div>
+                     <span style="color: #64748B; font-size: 0.9rem;">/ ${p.unit}</span>
+                </div>
+                ${p.originalPrice > 0 ? `<div class="original-price" style="font-size: 0.9rem; margin-bottom: 8px;">${formatRupiah(p.originalPrice)}</div>` : ''}
+                
+                <h1 style="font-size: 1.1rem; font-weight: 500; margin: 0 0 12px 0; line-height: 1.4;">${p.name}</h1>
+                
+                <div class="stats-row" style="font-size: 0.85rem;">
+                    <i data-lucide="star" width="14" fill="#FFC107" color="#FFC107"></i>
+                    <span style="color:#333;">${p.rating} (${p.reviews})</span>
+                    <span>•</span>
+                    <span>Terjual ${p.sold}</span>
+                </div>
+            </div>
+
+            <div class="detail-content flex gap-2" style="overflow-x: auto;">
+                 <div class="flex items-center gap-2" style="background:#EFF6FF; padding: 8px 12px; border-radius:4px; flex-shrink:0;">
+                     <i data-lucide="truck" width="16" color="#00BFA5"></i>
+                     <div>
+                        <div style="font-size: 10px; color: #00BFA5; font-weight:700;">Gratis Ongkir</div>
+                        <div style="font-size: 10px; color: #64748B;">Min. Belanja 30rb</div>
+                     </div>
+                 </div>
+                 <div class="flex items-center gap-2" style="background:#FFF7ED; padding: 8px 12px; border-radius:4px; flex-shrink:0;">
+                     <i data-lucide="tag" width="16" color="#EA580C"></i>
+                     <div>
+                        <div style="font-size: 10px; color: #EA580C; font-weight:700;">Diskon Spesial</div>
+                        <div style="font-size: 10px; color: #64748B;">Berakhir 5 jam</div>
+                     </div>
+                 </div>
+            </div>
+
+            <div class="detail-content">
+                <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 12px;">Rincian Produk</h3>
+                <div style="display:grid; grid-template-columns: 80px 1fr; gap: 8px; font-size: 0.9rem; color: #333;">
+                    <span style="color: #64748B;">Kategori</span><span>${p.category}</span>
+                    <span style="color: #64748B;">Lokasi</span><span>${p.location}</span>
+                </div>
+                <div style="border-top: 1px solid #F1F5F9; margin-top: 16px; padding-top: 16px;">
+                    <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 8px;">Deskripsi</h4>
+                    <p style="margin:0; font-size: 0.9rem; line-height: 1.6; color: #475569;">${p.description}</p>
+                </div>
+            </div>
+
+             <div class="detail-content" style="margin-bottom: 80px;">
+                <h4 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 8px;">Nutrisi</h4>
+                <p style="margin:0; font-size: 0.9rem; color: #475569;">${p.nutrition}</p>
+            </div>
+
+            <div class="detail-footer">
+                <button class="btn-secondary" onclick="addToCart(${p.id})">+ Keranjang</button>
+                <button class="btn-primary" onclick="alert('Checkout!')">Beli Sekarang</button>
+            </div>
+        `;
+        lucide.createIcons();
+    }
+
+    function renderCart() {
+        const container = document.getElementById('cart-items');
+        const badge = document.getElementById('cart-count');
+        const totalEl = document.getElementById('cart-total');
+
+        const totalQty = state.cart.reduce((sum, item) => sum + item.qty, 0);
+        const totalPrice = state.cart.reduce((sum, item) => sum + (item.product.price * item.qty), 0);
+
+        if (totalQty > 0) {
+            badge.textContent = totalQty;
+            badge.classList.remove('hidden');
+        } else {
+            badge.classList.add('hidden');
+        }
+
+        totalEl.textContent = formatRupiah(totalPrice);
+
+        if (state.cart.length === 0) {
+            container.innerHTML = `<div style="text-align:center; color:#94A3B8; padding: 20px;">Keranjang kosong</div>`;
+            return;
+        }
+
+        container.innerHTML = state.cart.map(item => `
+            <div class="flex gap-2" style="margin-bottom: 16px;">
+                <img src="${item.product.image}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;">
+                <div style="flex:1;">
+                    <div style="font-size: 0.9rem; margin-bottom: 4px;">${item.product.name}</div>
+                    <div style="color: #DC2626; font-weight: 700; font-size: 0.9rem;">${formatRupiah(item.product.price)}</div>
+                    <div class="flex items-center gap-2" style="margin-top: 8px;">
+                         <button onclick="updateQty(${item.product.id}, -1)" style="padding: 2px 8px; border: 1px solid #ddd; background:white;">-</button>
+                         <span style="font-size: 0.9rem; min-width: 20px; text-align: center;">${item.qty}</span>
+                         <button onclick="updateQty(${item.product.id}, 1)" style="padding: 2px 8px; border: 1px solid #ddd; background:white;">+</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // --- ACTIONS ---
+    function filterCategory(id) {
+        state.activeTab = id;
+        renderCategories();
+        renderProducts();
+    }
+
+    function openDetail(id) {
+        const product = PRODUCTS.find(p => p.id === id);
+        if(product) {
+            renderDetail(product);
+            document.getElementById('detail-view').classList.remove('hidden');
+        }
+    }
+
+    function closeDetail() {
+        document.getElementById('detail-view').classList.add('hidden');
+    }
+
+    function addToCart(id) {
+        const product = PRODUCTS.find(p => p.id === id);
+        const existing = state.cart.find(item => item.product.id === id);
+        if (existing) {
+            existing.qty++;
+        } else {
+            state.cart.push({ product, qty: 1 });
+        }
+        renderCart();
+        // Optional: Show toast
+    }
+
+    function updateQty(id, delta) {
+        const itemIndex = state.cart.findIndex(item => item.product.id === id);
+        if (itemIndex > -1) {
+            state.cart[itemIndex].qty += delta;
+            if (state.cart[itemIndex].qty <= 0) {
+                state.cart.splice(itemIndex, 1);
+            }
+            renderCart();
+        }
+    }
+
+    function toggleCart() {
+        const modal = document.getElementById('cart-modal');
+        if (modal.classList.contains('hidden')) {
+            modal.classList.remove('hidden');
+        } else {
+            modal.classList.add('hidden');
+        }
+    }
+    
+    function goHome() {
+        closeDetail();
+        document.getElementById('cart-modal').classList.add('hidden');
+        window.scrollTo(0,0);
+    }
+
+    // Start
+    init();
+
+</script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>

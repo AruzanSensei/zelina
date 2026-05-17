@@ -1,0 +1,33 @@
+/**
+ * theme.css — Dark Mode Variable Overrides ONLY
+ *
+ * This file contains ONLY the [data-theme="dark"] token overrides.
+ * Component-specific dark-mode rules live alongside their components
+ * in the relevant page CSS file (e.g., history.css, settings.css).
+ *
+ * SaaS multi-client theming: add [data-client="acme"] { ... } blocks
+ * in a separate client-override.css file, importing after this one.
+ */
+
+[data-theme="dark"] {
+    /* Backgrounds */
+    --bg-body: #121212;
+    --bg-transparent: #121212;
+    --bg-card: #1E1E1E;
+    --bg-input: #2D2D2D;
+
+    /* Text */
+    --text-main: #E0E0E0;
+    --text-muted: #A0A0A0;
+
+    /* Borders & Dividers */
+    --border-color: #333333;
+
+    /* Feature-specific backgrounds */
+    --invoice-bg: #1A237E;
+    --letter-bg: #4A148C;
+
+    /* Finance */
+    --finance-green: #2ecc71;
+    --finance-yellow: #f1c40f;
+}

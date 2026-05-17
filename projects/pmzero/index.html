@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>PMO Tracker</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+
+<body>
+
+  <!-- =============================================
+     PAGE 1 — HARI INI (DASHBOARD)
+============================================== -->
+  <div class="page active" id="pg-dashboard">
+    <div class="hero">
+      <div class="hero-inner">
+        <div class="hero-greet" id="hgreet">Hari ini</div>
+        <div class="hero-date" id="hdate">-</div>
+        <div class="sw-wrap">
+          <div class="sw-caption">⏱ Ketahanan sejak terakhir relaps</div>
+          <div class="sw-row">
+            <div class="sw-unit">
+              <div class="sw-num" id="h-d">00</div>
+              <div class="sw-lbl">Hari</div>
+            </div>
+            <div class="sw-sep">:</div>
+            <div class="sw-unit">
+              <div class="sw-num" id="h-h">00</div>
+              <div class="sw-lbl">Jam</div>
+            </div>
+            <div class="sw-sep">:</div>
+            <div class="sw-unit">
+              <div class="sw-num" id="h-m">00</div>
+              <div class="sw-lbl">Mnt</div>
+            </div>
+            <div class="sw-sep">:</div>
+            <div class="sw-unit">
+              <div class="sw-num" id="h-s">00</div>
+              <div class="sw-lbl">Dtk</div>
+            </div>
+          </div>
+          <div class="hero-since" id="h-since">Belum ada catatan relaps — tetap semangat! 💪</div>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="card">
+        <div class="card-hd">
+          Kalender Minggu Ini
+          <div class="ileg">
+            <div class="ileg-i">
+              <div class="ileg-d id-0"></div>0
+            </div>
+            <div class="ileg-i">
+              <div class="ileg-d id-1"></div>1
+            </div>
+            <div class="ileg-i">
+              <div class="ileg-d id-2"></div>2
+            </div>
+            <div class="ileg-i">
+              <div class="ileg-d id-3"></div>3+
+            </div>
+          </div>
+        </div>
+        <div class="wscroll">
+          <div class="wstrip" id="wstrip"></div>
+        </div>
+        <div class="week-hint">Ketuk tanggal untuk lihat / tambah catatan</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-v" id="s-streak">0</div>
+          <div class="stat-l">🔥 Streak Kini (hari)</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-v" id="s-month">0</div>
+          <div class="stat-l">📅 PMO Bulan Ini</div>
+        </div>
+      </div>
+      <div class="qcard">
+        <div class="q-text" id="qtxt"></div>
+        <div class="q-src" id="qsrc"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================================
+     PAGE 2 — STOPWATCH
+============================================== -->
+  <div class="page" id="pg-stopwatch">
+    <div class="sw-hero">
+      <div class="sw-hero-inner">
+        <div class="sw-big-cap">⏱ Waktu Tahan PMO</div>
+        <div class="sw-big-row">
+          <div class="sw-big-unit">
+            <div class="sw-big-num" id="sw-d">0</div>
+            <div class="sw-big-lbl">Hari</div>
+          </div>
+          <div class="sw-big-sep">:</div>
+          <div class="sw-big-unit">
+            <div class="sw-big-num" id="sw-h">00</div>
+            <div class="sw-big-lbl">Jam</div>
+          </div>
+          <div class="sw-big-sep">:</div>
+          <div class="sw-big-unit">
+            <div class="sw-big-num" id="sw-m">00</div>
+            <div class="sw-big-lbl">Menit</div>
+          </div>
+          <div class="sw-big-sep">:</div>
+          <div class="sw-big-unit">
+            <div class="sw-big-num" id="sw-s">00</div>
+            <div class="sw-big-lbl">Detik</div>
+          </div>
+        </div>
+        <button class="btn-relapse" id="btn-relapse">⚡ RELAPS — Catat Sekarang</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="card">
+        <div class="card-hd">Riwayat Terakhir <button class="chip" id="sw-add">+ Tambah</button></div>
+        <div class="log-list" id="recent-logs"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================================
+     PAGE 3 — EVALUASI
+============================================== -->
+  <div class="page" id="pg-evaluasi">
+    <div class="pg-hd">Evaluasi <span>Progress</span></div>
+    <div class="content">
+      <div class="cal-card">
+        <div class="cal-nav-row">
+          <button class="cal-arrow" id="cal-prev">‹</button>
+          <div class="cal-month" id="cal-month">-</div>
+          <button class="cal-arrow" id="cal-next">›</button>
+        </div>
+        <div class="cal-grid" id="cal-dh">
+          <div class="cal-dh">Min</div>
+          <div class="cal-dh">Sen</div>
+          <div class="cal-dh">Sel</div>
+          <div class="cal-dh">Rab</div>
+          <div class="cal-dh">Kam</div>
+          <div class="cal-dh">Jum</div>
+          <div class="cal-dh">Sab</div>
+        </div>
+        <div class="cal-grid" id="cal-grid" style="margin-top:3px"></div>
+        <div class="ileg" style="margin-top:11px;justify-content:center">
+          <div class="ileg-i">
+            <div class="ileg-d id-0"></div>Bersih
+          </div>
+          <div class="ileg-i">
+            <div class="ileg-d id-1"></div>1x
+          </div>
+          <div class="ileg-i">
+            <div class="ileg-d id-2"></div>2x
+          </div>
+          <div class="ileg-i">
+            <div class="ileg-d id-3"></div>3x+
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-hd">Grafik PMO</div>
+        <div class="tgl-grp">
+          <button class="tgl on" data-mode="day">Harian</button>
+          <button class="tgl" data-mode="week">Mingguan</button>
+          <button class="tgl" data-mode="month">Bulanan</button>
+          <button class="tgl" data-mode="year">Tahunan</button>
+        </div>
+        <div class="bar-wrap" id="bar-chart"></div>
+      </div>
+      <div class="card">
+        <div class="card-hd">🏆 Rekor Streak Terpanjang</div>
+        <div id="streak-bars"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================================
+     PAGE 4 — CATATAN
+============================================== -->
+  <div class="page" id="pg-catatan">
+    <div class="pg-hd">Analisis <span>Pola</span></div>
+    <div class="content">
+      <div class="donut-card">
+        <div class="donut-title">📍 Berdasarkan Tempat</div>
+        <div class="donut-layout">
+          <svg class="donut-svg" id="dsvg-t" viewBox="0 0 88 88" width="90" height="90"></svg>
+          <div class="donut-leg" id="dleg-t"></div>
+        </div>
+      </div>
+      <div class="donut-card">
+        <div class="donut-title">🕐 Berdasarkan Waktu</div>
+        <div class="donut-layout">
+          <svg class="donut-svg" id="dsvg-w" viewBox="0 0 88 88" width="90" height="90"></svg>
+          <div class="donut-leg" id="dleg-w"></div>
+        </div>
+      </div>
+      <div class="donut-card">
+        <div class="donut-title">📱 Berdasarkan Media</div>
+        <div class="donut-layout">
+          <svg class="donut-svg" id="dsvg-m" viewBox="0 0 88 88" width="90" height="90"></svg>
+          <div class="donut-leg" id="dleg-m"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================================
+     PAGE 5 — SETELAN
+============================================== -->
+  <div class="page" id="pg-setting">
+    <div class="pg-hd">Pengaturan</div>
+    <div class="content">
+      <div class="set-label">DATA</div>
+      <div class="set-group">
+        <div class="set-row" id="do-export">
+          <div class="set-ico">📤</div>
+          <div>
+            <div class="set-name">Export Data</div>
+            <div class="set-desc">Unduh backup sebagai file JSON</div>
+          </div>
+          <span class="set-arr">›</span>
+        </div>
+        <div class="set-row" id="do-import">
+          <div class="set-ico">📥</div>
+          <div>
+            <div class="set-name">Import Data</div>
+            <div class="set-desc">Pulihkan data dari file backup</div>
+          </div>
+          <span class="set-arr">›</span>
+        </div>
+      </div>
+      <input type="file" id="imp-file" accept=".json" style="display:none">
+      <div class="set-label" style="margin-top:14px">TENTANG</div>
+      <div class="set-group">
+        <div class="set-row" style="cursor:default">
+          <div class="set-ico">🔵</div>
+          <div>
+            <div class="set-name">PMO Tracker</div>
+            <div class="set-desc">Versi 1.0 — Single-file app</div>
+          </div>
+        </div>
+      </div>
+      <div class="app-credit">
+        Semua data tersimpan lokal di perangkatmu.<br>
+        Tidak ada data yang dikirim ke server. 🔒
+      </div>
+    </div>
+  </div>
+
+  <!-- FAB -->
+  <button class="fab" id="fab" title="Tambah catatan PMO">+</button>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <div class="nav-inner">
+      <button class="nav-btn on" data-pg="dashboard"><span class="nav-ico">🏠</span><span class="nav-lbl">Hari
+          Ini</span></button>
+      <button class="nav-btn" data-pg="stopwatch"><span class="nav-ico">⏱</span><span
+          class="nav-lbl">Stopwatch</span></button>
+      <button class="nav-btn" data-pg="evaluasi"><span class="nav-ico">📊</span><span
+          class="nav-lbl">Evaluasi</span></button>
+      <button class="nav-btn" data-pg="catatan"><span class="nav-ico">📝</span><span
+          class="nav-lbl">Catatan</span></button>
+      <button class="nav-btn" data-pg="setting"><span class="nav-ico">⚙️</span><span
+          class="nav-lbl">Setelan</span></button>
+    </div>
+  </nav>
+
+  <!-- Modal overlay (one instance, reused) -->
+  <div class="ov" id="ov">
+    <div class="sheet" id="sheet"></div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- JS Modules (urutan penting: helpers → db → stopwatch → ui → charts → pages → app) -->
+  <script src="js/helpers.js"></script>
+  <script src="js/db.js"></script>
+  <script src="js/stopwatch.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/pages.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+
+</html>

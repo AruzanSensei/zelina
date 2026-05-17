@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>ETS Asset Tracking</title>
+  <!-- Backward compatibility redirect -->
+  <!-- QR code lama mengarah ke /product.html?id=... -->
+  <!-- File ini meneruskan ke /public/product.html?id=... -->
+</head>
+<body>
+  <script>
+    // Preserve QR scan URL lama (product.html?id=...)
+    const id = new URLSearchParams(location.search).get('id');
+    if (id) {
+      window.location.replace('public/product.html?id=' + encodeURIComponent(id));
+    } else {
+      window.location.replace('public/index.html');
+    }
+  </script>
+</body>
+</html>

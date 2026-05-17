@@ -1,0 +1,94 @@
+/* ============================================================
+   styles/base.css — Shared tokens, reset, utilities
+   Used by: admin pages + public pages
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Grayscale */
+  --white:    #ffffff;
+  --gray-50:  #f8f9fa;
+  --gray-100: #f1f3f4;
+  --gray-200: #e8eaed;
+  --gray-300: #dadce0;
+  --gray-400: #bdc1c6;
+  --gray-500: #9aa0a6;
+  --gray-600: #5f6368;
+  --gray-700: #3c4043;
+  --gray-800: #202124;
+  --gray-900: #0a0a0a;
+
+  /* ETS Brand */
+  --green:        #1a7c3e;
+  --green-hover:  #166234;
+  --green-light:  #e8f5ed;
+  --green-bright: #22a853;
+  --red:          #c0392b;
+  --red-light:    #fdecea;
+  --yellow:       #e67e22;
+  --yellow-light: #fef3e2;
+  --blue:         #1a73e8;
+  --blue-light:   #e8f0fe;
+
+  /* Semantic */
+  --bg-app:     var(--gray-50);
+  --bg-card:    var(--white);
+  --bg-sidebar: var(--gray-900);
+  --text-main:  var(--gray-900);
+  --text-sub:   var(--gray-600);
+  --text-muted: var(--gray-400);
+  --border:     var(--gray-200);
+  --border-md:  var(--gray-300);
+
+  /* Layout */
+  --sidebar-w: 240px;
+  --topbar-h:  60px;
+
+  /* Typography */
+  --font: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', 'DM Mono', monospace;
+
+  /* Elevation */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,.10);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,.14);
+
+  /* Radius */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+
+  /* Transition */
+  --ease: 0.18s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body { font-family: var(--font); color: var(--text-main); background: var(--bg-app); }
+img  { display: block; max-width: 100%; }
+a    { color: inherit; text-decoration: none; }
+button { cursor: pointer; font-family: var(--font); border: none; }
+
+.hidden   { display: none !important; }
+.mono     { font-family: var(--mono); }
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Shimmer skeleton */
+.sk {
+  background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
+  background-size: 200% 100%;
+  border-radius: var(--r-sm);
+  animation: shimmer 1.4s infinite;
+}
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position:  200% 0; }
+}
+
+/* Fade in */
+.fade-in { animation: fadeIn .3s ease both; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

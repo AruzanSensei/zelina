@@ -1,0 +1,14 @@
+{
+  "name": "Corpolution",
+  "short_name": "Corpolution",
+  "icons": [
+    {
+      "src": "/assets/icon/zanxa-transparent.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#786FFB",
+  "background_color": "#FFFFFF",
+  "display": "standalone"
+}

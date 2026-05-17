@@ -1,0 +1,20 @@
+{
+  "name": "Zanxa AI",
+  "short_name": "Zanxa AI",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "500x500 192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "128x128 32x32 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": "/",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "display": "standalone"
+}

@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alzan's Portofolio</title>
+  <meta name="description"
+    content="Portfolio personal Alzan Adytia untuk menampilkan project web, design, dan content creation dengan tampilan galaxy yang profesional.">
+  <meta property="og:title" content="Alzan Adytia Portfolio">
+  <meta property="og:description"
+    content="Showcase project, testimonial, dan kontak Alzan Adytia dalam satu halaman modern.">
+  <meta property="og:image"
+    content="https://images.unsplash.com/photo-1511367461989-f85a21fda167?auto=format&fit=crop&w=1200&q=80">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <meta name="theme-color" content="#050816">
+</head>
+
+<body class="is-loading">
+  <svg class="icon-defs" aria-hidden="true" focusable="false">
+    <symbol id="icon-star-pointed" viewBox="0 0 24 24">
+      <path d="M12 1.5 14.9 9.1 22.5 12l-7.6 2.9L12 22.5l-2.9-7.6L1.5 12l7.6-2.9L12 1.5Z"></path>
+    </symbol>
+  </svg>
+
+  <div class="site-shell">
+    <div class="starfield" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a class="brand" href="#home" aria-label="Beranda Alzan Adytia">
+          <span>Alzan</span>
+          <span class="brand-muted">Adytia</span>
+        </a>
+
+        <nav class="nav desktop-nav" aria-label="Navigasi utama">
+          <a href="#about">About Me</a>
+          <a href="#portfolio">Portofolio</a>
+          <a href="#testimonials">Testimoni</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+
+        <a class="button button-light desktop-cta" href="#contact">Kontak</a>
+
+        <!-- Mobile: Kontak button outside burger, then burger -->
+        <a class="button button-light mobile-contact-btn" href="#contact">Kontak</a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu"
+          aria-label="Buka menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+
+      <div class="mobile-menu" id="mobile-menu">
+        <nav class="nav mobile-nav" aria-label="Navigasi mobile">
+          <a href="#about">About Me</a>
+          <a href="#portfolio">Portofolio</a>
+          <a href="#testimonials">Testimoni</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <!-- HERO -->
+      <section class="section hero-section" id="home">
+        <div class="container hero-grid">
+          <div class="hero-copy reveal">
+            <span class="eyebrow">Available for new projects</span>
+            <h1>
+              <span class="intro-step-1">Hi, I'm Alzan</span>
+              <span class="hero-role-row intro-step-2">
+                I'm a <span class="typed-text" data-roles="Web Dev,Designer,Creator"></span><span
+                  class="typed-cursor">|</span>
+              </span>
+            </h1>
+            <p class="hero-description">
+              Saya membantu brand, bisnis, dan personal project tampil lebih rapi, jelas, dan meyakinkan lewat website,
+              visual design, dan konten yang terarah.
+            </p>
+
+            <div class="stats-grid">
+              <article class="stat-card">
+                <svg class="star-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#icon-star-pointed"></use>
+                </svg>
+                <div>
+                  <strong>1 Tahun</strong>
+                  <span>Pengalaman</span>
+                </div>
+              </article>
+              <article class="stat-card">
+                <i class="fa-regular fa-folder-open" aria-hidden="true"></i>
+                <div>
+                  <strong>20+ Project</strong>
+                  <span>Project selesai</span>
+                </div>
+              </article>
+              <article class="stat-card">
+                <i class="fa-solid fa-user-group" aria-hidden="true"></i>
+                <div>
+                  <strong>14 Client</strong>
+                  <span>Kolaborasi aktif</span>
+                </div>
+              </article>
+            </div>
+
+            <div class="hero-actions">
+              <a class="button button-ghost rainbow-outline" href="#portfolio">Portofolio</a>
+              <a class="button button-accent" href="#contact">Kontak</a>
+              <a class="button button-alert" href="#contact">Portofolio dalam pengembangan</a>
+            </div>
+          </div>
+
+          <div class="hero-visual reveal">
+            <div class="hero-photo-card">
+              <img src="https://zanxa.site/assets/img/profile-alzan.webp" alt="Portrait profesional Alzan Adytia"
+                width="520" height="780">
+              <div class="floating-badge badge-code">
+                <i class="fa-solid fa-code" aria-hidden="true"></i>
+                <span>Web</span>
+              </div>
+              <div class="floating-badge badge-design">
+                <i class="fa-solid fa-pen-nib" aria-hidden="true"></i>
+                <span>Design</span>
+              </div>
+              <div class="floating-badge badge-creator">
+                <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+                <span>Content</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section class="section section-about" id="about">
+        <div class="container stack">
+          <div class="section-heading reveal">
+            <span class="eyebrow">About Me</span>
+            <h2>Cerita Singkat Saya</h2>
+          </div>
+
+          <div class="accordion-group reveal" data-accordion-group>
+            <article class="accordion-item is-open">
+              <button class="accordion-trigger" type="button" aria-expanded="true">
+                <span class="accordion-label">Tentang saya</span>
+                <svg class="star-icon accordion-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#icon-star-pointed"></use>
+                </svg>
+              </button>
+              <div class="accordion-panel">
+                <p>
+                  <b>saya seorang freelancer yang aktif dalam pengembangan web dan desain grafis.</b>
+                  <br>Saya telah membantu brand, bisnis, dan personal project tampil lebih rapi, jelas, dan meyakinkan
+                  lewat
+                  website, visual design, dan konten yang terarah.
+                </p>
+              </div>
+            </article>
+
+            <article class="accordion-item">
+              <button class="accordion-trigger" type="button" aria-expanded="false">
+                <span class="accordion-label">Perjalanan karir</span>
+                <svg class="star-icon accordion-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#icon-star-pointed"></use>
+                </svg>
+              </button>
+              <div class="accordion-panel">
+                <div class="timeline-content">
+
+                  <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-body">
+                      <div class="timeline-header">
+                        <span class="timeline-place">Zanxa Studio</span>
+                        <span class="timeline-role">Founder</span>
+                        <span class="timeline-year">2026 – now</span>
+                      </div>
+                      <p class="timeline-desc">
+                        Saya mendirikan <a href="https://zanxa.site" target="_blank" rel="noreferrer"
+                          class="tl-link">Zanxa Studio</a>
+                        untuk menampung semua project yang saya kerjakan. Saya telah membuat Web Undangan Digital dan
+                        beberapa
+                        web untuk Company seperti <a href="https://zanxa.site/projects/berkah-maju-elektrik"
+                          target="_blank" rel="noreferrer" class="tl-link">Web Dokumen Invoice</a>
+                        yang terintegrasi dengan AI, dan masih banyak lainnya yang bisa anda lihat di
+                        <a href="https://zanxa.site/projects" target="_blank" rel="noreferrer" class="tl-link">sini</a>.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-body">
+                      <div class="timeline-header">
+                        <span class="timeline-place">Tasnim Property</span>
+                        <span class="timeline-role">Designer</span>
+                        <span class="timeline-year">2025 – 2026</span>
+                      </div>
+                      <p class="timeline-desc">
+                        Setelah lulus sekolah saya bekerja di <a href="https://tasnimproperty.id" target="_blank"
+                          rel="noreferrer" class="tl-link">Tasnim Property</a>
+                        sebagai Content Creator. Tasnim sendiri adalah Agensi Perumahan yang tidak hanya menjual rumah
+                        namun juga tersedia Agroeduwisata.
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </article>
+
+            <article class="accordion-item">
+              <button class="accordion-trigger" type="button" aria-expanded="false">
+                <span class="accordion-label">Pendidikan</span>
+                <svg class="star-icon accordion-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#icon-star-pointed"></use>
+                </svg>
+              </button>
+              <div class="accordion-panel">
+                <div class="timeline-content">
+
+                  <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-body">
+                      <div class="timeline-header">
+                        <span class="timeline-place">Universitas Islam Bogor</span>
+                        <span class="timeline-role">Bisnis Digital</span>
+                        <span class="timeline-year">2026 – Sekarang</span>
+                      </div>
+                      <p class="timeline-desc">
+                        Meski seorang programer, saya memilih jurusan bisnis digital di <a
+                          href="https://iuqibogor.ac.id/" target="_blank" rel="noreferrer" class="tl-link">Universitas
+                          Islam Bogor</a> guna mengisi gap kemampuan saya dalam dunia bisnis. dengan kombinasi bisnis
+                        dan teknologi yang dikuasai, saya pastikan bisa lulus menjadi seorang programer handal.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-body">
+                      <div class="timeline-header">
+                        <span class="timeline-place">SMKN 1 Leuwiliang</span>
+                        <span class="timeline-role">Desain Komunikasi Visual</span>
+                        <span class="timeline-year">2022 – 2025</span>
+                      </div>
+                      <p class="timeline-desc">
+                        Selain dalam pembuatan web, saya pun menguasai bidang desain. <a
+                          href="https://www.instagram.com/smkn1leuwiliang_official/" target="_blank" rel="noreferrer"
+                          class="tl-link">SMKN 1
+                          Leuwiliang</a> telah mengasah
+                        skill saya hingga memenuhi standar industri saat ini. Bisa anda lihat desain yang telah saya
+                        buat <a href="#portfolio" class="tl-link">disini</a>.
+                      </p>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- PORTFOLIO -->
+      <section class="section section-portfolio" id="portfolio">
+        <div class="container stack">
+          <div class="section-heading reveal">
+            <span class="eyebrow">Portofolio</span>
+            <h2>Proyek yang pernah saya kerjakan.</h2>
+          </div>
+
+          <div class="filter-bar reveal" role="tablist" aria-label="Filter project">
+            <button class="filter-chip is-active" type="button" data-filter="all">All</button>
+            <button class="filter-chip" type="button" data-filter="web">Web</button>
+            <button class="filter-chip" type="button" data-filter="design">Design</button>
+            <button class="filter-chip" type="button" data-filter="content">Content</button>
+          </div>
+
+          <div class="project-grid reveal">
+            <article class="project-card" data-category="web">
+              <div class="project-img-wrap">
+                <img src="https://zanxa.site/assets/img/cover-project--one-moment.webp"
+                  alt="Thumbnail project landing page SaaS" width="640" height="640" loading="lazy">
+              </div>
+              <div class="project-body">
+                <span class="category-badge badge-code">Web</span>
+                <h3>Undangan Digital (OneMoment)</h3>
+                <p>Website undangan digital untuk segala jenis acara.</p>
+                <a href="https://onemoment.zanxa.site" target="_blank" rel="noreferrer">Lihat Project</a>
+              </div>
+            </article>
+
+            <article class="project-card" data-category="design">
+              <div class="project-img-wrap">
+                <img src="https://zanxa.site/assets/img/cover-project--wfl.webp"
+                  alt="Thumbnail project brand visual system" width="640" height="480" loading="lazy">
+              </div>
+              <div class="project-body">
+                <span class="category-badge badge-design">Design</span>
+                <h3>Company Branding (Waru Farmland)</h3>
+                <p>Set identitas visual dengan layout sosial media dan guideline yang konsisten.</p>
+                <a href="https://www.instagram.com/warufarmland/" target="_blank" rel="noreferrer">Lihat perusahaan</a>
+              </div>
+            </article>
+
+            <article class="project-card" data-category="web">
+              <div class="project-img-wrap">
+                <img src="https://zanxa.site/assets/img/cover-project--zanxa-ai.webp"
+                  alt="Thumbnail project dashboard studio" width="640" height="480" loading="lazy">
+              </div>
+              <div class="project-body">
+                <span class="category-badge badge-code">Web</span>
+                <h3>Web Chatbot AI</h3>
+                <p>Ai Chatbot seperti <b>ChatGPT</b></p>
+                <a href="https://chat.zanxa.site" target="_blank" rel="noreferrer">Lihat Project</a>
+              </div>
+            </article>
+
+            <article class="project-card" data-category="web">
+              <div class="project-img-wrap">
+                <img src="https://picsum.photos/seed/content-one/640/480" alt="Thumbnail project content campaign"
+                  width="640" height="480" loading="lazy">
+              </div>
+              <div class="project-body">
+                <span class="category-badge badge-code">web</span>
+                <h3>Creator Campaign Kit</h3>
+                <p>Framework konten mingguan untuk menaikkan konsistensi dan engagement brand.</p>
+                <a href="#contact">Lihat Project</a>
+              </div>
+            </article>
+
+            <article class="project-card" data-category="design">
+              <div class="project-img-wrap">
+                <img src="https://picsum.photos/seed/design-two/640/480" alt="Thumbnail project editorial design"
+                  width="640" height="480" loading="lazy">
+              </div>
+              <div class="project-body">
+                <span class="category-badge badge-design">Design</span>
+                <h3>Editorial Motion Boards</h3>
+                <p>Template visual untuk kampanye produk yang lebih premium dan terstruktur.</p>
+                <a href="#contact">Lihat Project</a>
+              </div>
+            </article>
+
+            <article class="project-card" data-category="content">
+              <div class="project-img-wrap">
+                <img src="https://picsum.photos/seed/content-two/640/480" alt="Thumbnail project social content system"
+                  width="640" height="480" loading="lazy">
+              </div>
+              <div class="project-body">
+                <span class="category-badge badge-creator">Content</span>
+                <h3>Social Content System</h3>
+                <p>Playbook konten singkat untuk Reels, TikTok, dan carousel edukasi mingguan.</p>
+                <a href="#contact">Lihat Project</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- TESTIMONIALS -->
+      <section class="section section-testimonials" id="testimonials">
+        <div class="container stack">
+          <div class="section-heading reveal">
+            <span class="eyebrow">Testimoni</span>
+            <h2>Jangan dengar kata saya,
+              <br>Dengar kata mereka.
+            </h2>
+          </div>
+
+          <div class="marquee-stack reveal">
+            <div class="testimonial-row" data-direction="left">
+              <article class="testimonial-card">
+                <p>Terima kasih banyak untuk zanxa yg selalu memberikan hasil memuaskan dlm proses pembuatan desain yg
+                  diinginkan...sukses terus untuk zanxa dan semoga semakin berkibar.
+                </p>
+                <div class="testimonial-author">
+                  <img src="https://zanxa.site/assets/icon/client-m.arif.mulya.webp" alt="Avatar Muhammad Arif Mulya"
+                    width="44" height="44" loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Muhammad Arif Mulya</h3>
+                    <span>Dosen Vokasi IPB</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="testimonial-card">
+                <p>Saya menggunakan jasa Zanxa untuk mendesain proposal, kartu nama, dan lanyard. Desain yang dihasilkan
+                  sesuai dengan brief yang saya berikan, bahkan melebihi ekspektasi. Harganya juga terjangkau dan sesuai
+                  dengan budget perusahaan.</p>
+                <div class="testimonial-author">
+                  <img src="https://zanxa.site/assets/icon/client-andini nurannisa.webp" alt="Avatar Andini Nurannisa"
+                    width="44" height="44" loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Andini Nurannisa</h3>
+                    <span>Marketing, Waru Farmland</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="testimonial-card">
+                <p>Kontennya jadi lebih konsisten karena Alzan bikin sistem asset yang jelas dari awal.</p>
+                <div class="testimonial-author">
+                  <img src="https://zanxa.site/assets/icon/client-kiswanto nugroho.webp" alt="Avatar Kiswanto Nugroho"
+                    width="44" height="44" loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Kiswanto Nugroho</h3>
+                    <span>Head of Tourism, Waru Farmland</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="testimonial-card">
+                <p>Proses kerjanya sangat terstruktur, mulai dari wireframe sampai final delivery selalu on-point.</p>
+                <div class="testimonial-author">
+                  <img src="https://i.pravatar.cc/100?img=53" alt="Avatar Andrean Syah" width="44" height="44"
+                    loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Andrean Syah</h3>
+                    <span>CEO, TechFlow Indonesia</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="testimonial-card">
+                <p>Sangat responsif dan memberikan solusi kreatif untuk masalah User Experience kompleks kami.</p>
+                <div class="testimonial-author">
+                  <img src="https://i.pravatar.cc/100?img=47" alt="Avatar Maya Putri" width="44" height="44"
+                    loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Maya Putri</h3>
+                    <span>Product Manager, Glint App</span>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <div class="testimonial-row" data-direction="right">
+              <article class="testimonial-card">
+                <p>Website yang dibikin compact tapi tetap terasa premium. Leads yang masuk juga jadi lebih serius.</p>
+                <div class="testimonial-author">
+                  <img src="https://zanxa.site/assets/icon/client-ardhana pratama saputra.webp"
+                    alt="Avatar Ardhana Pratama Saputra" width="44" height="44" loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Ardhana Pratama Saputra</h3>
+                    <span>Pegawai, Soto Sedaap Boyolali</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="testimonial-card">
+                <p>Alzan ngerti banget cara bikin visual yang terasa profesional tanpa kehilangan sisi personal brand.
+                </p>
+                <div class="testimonial-author">
+                  <img src="https://i.pravatar.cc/100?img=16" alt="Avatar Dimas" width="44" height="44" loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Rere Oktavia</h3>
+                    <span>Personal Brand Coach</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="testimonial-card">
+                <p>Eksekusinya cepat, detail spacing terjaga, dan semua komponen terasa jauh lebih clean dari draft
+                  awal.</p>
+                <div class="testimonial-author">
+                  <img src="https://i.pravatar.cc/100?img=28" alt="Avatar Dimas Santoso" width="44" height="44"
+                    loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Dimas Santoso</h3>
+                    <span>Co-Founder, Pixel Forge</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="testimonial-card">
+                <p>Bukan cuma jago visual, tapi juga paham aspek psikologi warna yang bikin audiens betah scrolling.</p>
+                <div class="testimonial-author">
+                  <img src="https://i.pravatar.cc/100?img=61" alt="Avatar Linda Sari" width="44" height="44"
+                    loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Linda Sari</h3>
+                    <span>Director, Bloom Studio</span>
+                  </div>
+                </div>
+              </article>
+
+              <article class="testimonial-card">
+                <p>Landing page buatan Alzan benar-benar mendongkrak konversi iklan kami hingga dua kali lipat!</p>
+                <div class="testimonial-author">
+                  <img src="https://i.pravatar.cc/100?img=33" alt="Avatar Bagas Pamungkas" width="44" height="44"
+                    loading="lazy">
+                  <div class="testimonial-meta">
+                    <h3>Bagas Pamungkas</h3>
+                    <span>Growth Marketer, Fastly</span>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <!-- CTA Section bawah testimoni -->
+          <div class="cta-project reveal">
+            <div class="cta-project-inner">
+              <span class="eyebrow">Siap berkolaborasi?</span>
+              <h2>Ayo mulai project bersama</h2>
+              <p>Konsultasikan kebutuhan project kamu, saya siap bantu wujudkan dengan desain yang tajam dan eksekusi
+                yang cepat.</p>
+              <a class="button button-accent" href="#contact">Mulai Sekarang</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section class="section section-contact" id="contact">
+        <div class="container contact-grid">
+          <div class="contact-copy reveal">
+            <span class="eyebrow">Kontak</span>
+            <h2>Saatnya project kamu naik level.</h2>
+            <p>Saya terbuka untuk freelance project, kolaborasi visual, dan kebutuhan landing page yang cepat tayang.
+            </p>
+
+            <div class="social-list">
+              <a href="https://wa.me/6285770631367?text=Hai%20kak%2C%20saya%20mau%20nanya%20terkait%20..."
+                target="_blank" rel="noreferrer">
+                <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                <span>WhatsApp</span>
+              </a>
+              <a href="https://www.linkedin.com" target="_blank" rel="noreferrer">
+                <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+                <span>LinkedIn</span>
+              </a>
+              <a href="https://instagram.com/alzanaditya" target="_blank" rel="noreferrer">
+                <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+                <span>Instagram</span>
+              </a>
+              <a href="https://www.tiktok.com" target="_blank" rel="noreferrer">
+                <i class="fa-brands fa-tiktok" aria-hidden="true"></i>
+                <span>TikTok</span>
+              </a>
+            </div>
+          </div>
+
+          <form class="contact-form reveal" id="contact-form" novalidate data-email-target="hello@alzanadytia.com">
+            <label>
+              <span>Nama</span>
+              <input type="text" name="name" placeholder="Nama lengkap" required>
+            </label>
+            <label>
+              <span>Email</span>
+              <input type="email" name="email" placeholder="email@domain.com" required>
+            </label>
+            <label>
+              <span>Pesan</span>
+              <textarea name="message" rows="5" placeholder="Ceritakan kebutuhan project kamu..." required></textarea>
+            </label>
+            <button class="button button-accent" type="submit">Kirim Pesan</button>
+            <p class="form-feedback" id="form-feedback" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="section section-faq" id="faq">
+        <div class="container faq-grid">
+          <span class="eyebrow">FAQ</span>
+          <h2>Pertanyaan yang sering muncul</h2>
+          <aside class="faq-aside reveal">
+            <div class="faq-photo-card">
+              <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80"
+                alt="Foto Alzan Adytia untuk section FAQ" width="480" height="720" loading="lazy">
+            </div>
+          </aside>
+
+          <div class="accordion-group reveal" data-accordion-group>
+            <article class="accordion-item is-open">
+              <button class="accordion-trigger" type="button" aria-expanded="true">
+                <span class="accordion-label">Berapa lama pengerjaan 1 project web?</span>
+                <svg class="star-icon accordion-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#icon-star-pointed"></use>
+                </svg>
+              </button>
+              <div class="accordion-panel">
+                <p>Rata-rata 1 sampai 3 minggu, tergantung jumlah halaman, revisi, dan kesiapan materi dari pihak klien.
+                </p>
+              </div>
+            </article>
+
+            <article class="accordion-item">
+              <button class="accordion-trigger" type="button" aria-expanded="false">
+                <span class="accordion-label">Apakah kamu menerima project freelance?</span>
+                <svg class="star-icon accordion-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#icon-star-pointed"></use>
+                </svg>
+              </button>
+              <div class="accordion-panel">
+                <p>Ya, saya menerima freelance project untuk landing page, desain visual pendukung, dan sistem konten
+                  ringan.</p>
+              </div>
+            </article>
+
+            <article class="accordion-item">
+              <button class="accordion-trigger" type="button" aria-expanded="false">
+                <span class="accordion-label">Teknologi apa yang kamu gunakan?</span>
+                <svg class="star-icon accordion-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#icon-star-pointed"></use>
+                </svg>
+              </button>
+              <div class="accordion-panel">
+                <p>Saya menyesuaikan stack dengan kebutuhan, tapi banyak menggunakan HTML, CSS, JavaScript, dan tooling
+                  desain untuk eksekusi cepat.</p>
+              </div>
+            </article>
+
+            <article class="accordion-item">
+              <button class="accordion-trigger" type="button" aria-expanded="false">
+                <span class="accordion-label">Bagaimana proses pembayarannya?</span>
+                <svg class="star-icon accordion-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#icon-star-pointed"></use>
+                </svg>
+              </button>
+              <div class="accordion-panel">
+                <p>Umumnya DP di awal, pelunasan setelah final approval. Skema bisa disesuaikan berdasarkan ruang
+                  lingkup kerja.</p>
+              </div>
+            </article>
+
+            <article class="accordion-item">
+              <button class="accordion-trigger" type="button" aria-expanded="false">
+                <span class="accordion-label">Apakah tersedia revisi setelah selesai?</span>
+                <svg class="star-icon accordion-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#icon-star-pointed"></use>
+                </svg>
+              </button>
+              <div class="accordion-panel">
+                <p>Ada. Revisi minor biasanya termasuk dalam paket, sementara perubahan scope besar akan dibicarakan
+                  terpisah.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/animations.js" defer></script>
+  <script src="js/interactions.js" defer></script>
+  <script src="js/form.js" defer></script>
+</body>
+
+</html>

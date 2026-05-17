@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alzan Adytia — Web Developer, Designer & Content Creator</title>
+  <meta name="description" content="Portfolio personal Alzan Adytia — Web Developer, Designer, dan Content Creator berbasis Indonesia.">
+  <meta property="og:title" content="Alzan Adytia — Portfolio">
+  <meta property="og:description" content="Web Developer, Designer & Content Creator">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+
+<canvas id="stars-canvas"></canvas>
+
+<!-- ═══════════════ NAVBAR ═══════════════ -->
+<nav class="navbar" role="navigation">
+  <a href="#hero" class="nav-logo">Alzan <span>Adytia</span></a>
+  <div class="nav-links">
+    <a href="#about">About Me</a>
+    <a href="#gallery">Portofolio</a>
+    <a href="#testimonials">Testimoni</a>
+  </div>
+  <a href="#contact" class="nav-cta">Kontak</a>
+  <button class="nav-burger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="nav-drawer" role="menu">
+  <a href="#about">About Me</a>
+  <a href="#gallery">Portofolio</a>
+  <a href="#testimonials">Testimoni</a>
+  <a href="#contact" class="nav-cta">Kontak</a>
+</div>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section id="hero">
+  <div class="hero-inner">
+
+    <!-- LEFT -->
+    <div class="hero-left">
+      <div class="hero-eyebrow">
+        <span class="diamond-star"></span>
+        Available for freelance
+      </div>
+
+      <h1 class="hero-heading reveal">
+        Hi, I'm <span style="color:var(--purple)">Alzan</span>
+      </h1>
+
+      <div class="typewriter-line reveal reveal-d1">
+        I'm a <span id="typewriter-text"></span><span class="cursor"></span>
+      </div>
+
+      <p class="hero-tagline reveal reveal-d2">
+        Saya membantu bisnis dan brand tampil lebih profesional di dunia digital — mulai dari website, visual identity, hingga konten kreatif.
+      </p>
+
+      <div class="stat-cards reveal reveal-d3">
+        <div class="stat-card">
+          <span class="diamond-star" style="color:var(--purple);width:10px;height:10px"></span>
+          <span class="val">1+</span>
+          <span>Tahun Exp.</span>
+        </div>
+        <div class="stat-card">
+          <i class="fa-regular fa-folder-open" style="color:var(--orange)"></i>
+          <span class="val">20+</span>
+          <span>Project</span>
+        </div>
+        <div class="stat-card">
+          <i class="fa-regular fa-user" style="color:var(--blue)"></i>
+          <span class="val">14</span>
+          <span>Client</span>
+        </div>
+      </div>
+
+      <div class="hero-ctas reveal reveal-d4">
+        <a href="#gallery" class="btn btn-outline">
+          <i class="fa-regular fa-folder-open"></i> Portofolio
+        </a>
+        <a href="#contact" class="btn btn-primary">
+          <i class="fa-regular fa-paper-plane"></i> Kontak
+        </a>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="hero-right reveal reveal-d2">
+      <div class="photo-wrapper">
+        <div class="photo-frame">
+          <div class="placeholder-person">
+            <!-- Silhouette SVG -->
+            <svg viewBox="0 0 200 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <ellipse cx="100" cy="65" rx="38" ry="40" fill="rgba(124,58,237,0.5)"/>
+              <path d="M20 280 C20 180 60 155 100 155 C140 155 180 180 180 280Z" fill="rgba(124,58,237,0.4)"/>
+            </svg>
+          </div>
+        </div>
+        <!-- Floating icons -->
+        <div class="float-icon"><i class="fa-solid fa-code"></i></div>
+        <div class="float-icon"><i class="fa-solid fa-pen-nib"></i></div>
+        <div class="float-icon"><i class="fa-solid fa-users"></i></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="gradient-line"></div>
+
+<!-- ═══════════════ ABOUT ═══════════════ -->
+<section id="about" class="section-alt">
+  <div class="container">
+    <div class="about-inner">
+      <div class="section-eyebrow reveal">
+        <span class="diamond-star"></span> Kenali saya
+      </div>
+      <h2 class="section-heading reveal reveal-d1">About <span class="accent">Me</span></h2>
+
+      <div class="accordion-list">
+
+        <div class="accordion-item reveal reveal-d2">
+          <button class="accordion-trigger" aria-expanded="true">
+            <span class="acc-title">Tentang Ku</span>
+            <span class="diamond-star acc-icon"></span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              Halo! Saya Alzan Adytia — seorang kreator digital yang passionate dalam membangun pengalaman web yang indah dan fungsional. Dengan latar belakang di web development, desain visual, dan content creation, saya hadir sebagai satu solusi lengkap untuk kebutuhan digital kamu.<br><br>
+              Saya percaya bahwa desain yang baik bukan hanya soal estetika, tapi bagaimana ia menyampaikan nilai dan membangun kepercayaan.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item reveal reveal-d3">
+          <button class="accordion-trigger" aria-expanded="false">
+            <span class="acc-title">Karirku</span>
+            <span class="diamond-star acc-icon"></span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <strong style="color:var(--text-primary)">Freelance Web Developer & Designer</strong><br>
+              <span style="color:var(--text-muted);font-size:11.5px">2024 – Sekarang</span><br><br>
+              Mengerjakan berbagai project website untuk klien dari berbagai industri — mulai dari landing page, company profile, hingga e-commerce. Juga aktif membantu brand membangun visual identity yang kuat dan konsisten.
+            </div>
+          </div>
+        </div>
+
+        <div class="accordion-item reveal reveal-d4">
+          <button class="accordion-trigger" aria-expanded="false">
+            <span class="acc-title">Pendidikan</span>
+            <span class="diamond-star acc-icon"></span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">
+              <strong style="color:var(--text-primary)">Teknik Informatika / Ilmu Komputer</strong><br>
+              <span style="color:var(--text-muted);font-size:11.5px">2023 – Sekarang</span><br><br>
+              Mendalami ilmu pemrograman, algoritma, dan rekayasa perangkat lunak. Aktif mengembangkan diri melalui kursus online di bidang UI/UX Design, Frontend Development, dan Digital Marketing.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gradient-line" style="opacity:0.2"></div>
+
+<!-- ═══════════════ GALLERY ═══════════════ -->
+<section id="gallery">
+  <div class="container">
+    <div class="section-eyebrow reveal">
+      <span class="diamond-star"></span> Hasil kerja
+    </div>
+    <h2 class="section-heading reveal reveal-d1">Portofolio <span class="accent">Project</span></h2>
+
+    <div class="filter-tabs reveal reveal-d2">
+      <button class="filter-tab" data-filter="all">Semua</button>
+      <button class="filter-tab" data-filter="web">Web Dev</button>
+      <button class="filter-tab" data-filter="design">Design</button>
+      <button class="filter-tab" data-filter="content">Content</button>
+    </div>
+
+    <div class="projects-grid">
+
+      <!-- WEB -->
+      <div class="project-card reveal" data-cat="web">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#1a1040,#0d0820)">
+          <i class="fa-solid fa-globe thumb-icon" style="color:var(--purple)"></i>
+        </div>
+        <div class="project-info">
+          <div class="project-title">E-Commerce Landing Page</div>
+          <div class="project-bottom">
+            <span class="badge badge-web">Web Dev</span>
+            <a href="#" class="project-link">Lihat →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card reveal reveal-d1" data-cat="web">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#1a1040,#0d0820)">
+          <i class="fa-solid fa-laptop-code thumb-icon" style="color:var(--purple)"></i>
+        </div>
+        <div class="project-info">
+          <div class="project-title">Company Profile Website</div>
+          <div class="project-bottom">
+            <span class="badge badge-web">Web Dev</span>
+            <a href="#" class="project-link">Lihat →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card reveal reveal-d2" data-cat="web">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#1a1040,#0d0820)">
+          <i class="fa-solid fa-mobile-screen thumb-icon" style="color:var(--purple)"></i>
+        </div>
+        <div class="project-info">
+          <div class="project-title">Portfolio Web App</div>
+          <div class="project-bottom">
+            <span class="badge badge-web">Web Dev</span>
+            <a href="#" class="project-link">Lihat →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- DESIGN -->
+      <div class="project-card reveal reveal-d1" data-cat="design">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#2d1008,#0d0d1a)">
+          <i class="fa-solid fa-pen-nib thumb-icon" style="color:var(--orange)"></i>
+        </div>
+        <div class="project-info">
+          <div class="project-title">Brand Identity — Startup F&B</div>
+          <div class="project-bottom">
+            <span class="badge badge-design">Design</span>
+            <a href="#" class="project-link">Lihat →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card reveal reveal-d2" data-cat="design">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#2d1008,#0d0d1a)">
+          <i class="fa-solid fa-paintbrush thumb-icon" style="color:var(--orange)"></i>
+        </div>
+        <div class="project-info">
+          <div class="project-title">UI/UX Design — Fintech App</div>
+          <div class="project-bottom">
+            <span class="badge badge-design">Design</span>
+            <a href="#" class="project-link">Lihat →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTENT -->
+      <div class="project-card reveal reveal-d2" data-cat="content">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#071a38,#0d0d1a)">
+          <i class="fa-solid fa-photo-film thumb-icon" style="color:var(--blue)"></i>
+        </div>
+        <div class="project-info">
+          <div class="project-title">Social Media Campaign</div>
+          <div class="project-bottom">
+            <span class="badge badge-content">Content</span>
+            <a href="#" class="project-link">Lihat →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card reveal reveal-d3" data-cat="content">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#071a38,#0d0d1a)">
+          <i class="fa-brands fa-youtube thumb-icon" style="color:var(--blue)"></i>
+        </div>
+        <div class="project-info">
+          <div class="project-title">YouTube Series — Tech Tips</div>
+          <div class="project-bottom">
+            <span class="badge badge-content">Content</span>
+            <a href="#" class="project-link">Lihat →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card reveal reveal-d1" data-cat="design">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#2d1008,#0d0d1a)">
+          <i class="fa-solid fa-layer-group thumb-icon" style="color:var(--orange)"></i>
+        </div>
+        <div class="project-info">
+          <div class="project-title">Poster & Visual Kit — Event</div>
+          <div class="project-bottom">
+            <span class="badge badge-design">Design</span>
+            <a href="#" class="project-link">Lihat →</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="project-card reveal reveal-d2" data-cat="web">
+        <div class="project-thumb" style="background:linear-gradient(135deg,#1a1040,#0d0820)">
+          <i class="fa-solid fa-store thumb-icon" style="color:var(--purple)"></i>
+        </div>
+        <div class="project-info">
+          <div class="project-title">Dashboard Admin Panel</div>
+          <div class="project-bottom">
+            <span class="badge badge-web">Web Dev</span>
+            <a href="#" class="project-link">Lihat →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="gradient-line" style="opacity:0.2"></div>
+
+<!-- ═══════════════ TESTIMONIALS ═══════════════ -->
+<section id="testimonials">
+  <div class="container">
+    <div class="section-eyebrow reveal">
+      <span class="diamond-star"></span> Kata mereka
+    </div>
+    <h2 class="section-heading reveal reveal-d1" style="margin-bottom:28px">Apa Kata <span class="accent">Klien</span></h2>
+  </div>
+
+  <!-- Row 1 → left -->
+  <div class="testi-track-wrap">
+    <div class="testi-track" id="track1">
+      <!-- cards duplicated for infinite loop -->
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar">R</div>
+          <div class="testi-meta"><div class="testi-name">Rizky Pratama</div><div class="testi-role">CEO, StartupKu</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Alzan sangat profesional dan cepat. Website yang dibuatnya melampaui ekspektasi kami — desainnya modern dan performa-nya luar biasa.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,var(--orange),#f97316)">S</div>
+          <div class="testi-meta"><div class="testi-name">Siti Rahayu</div><div class="testi-role">Owner, Butik Elegan</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Brand identity yang dibuat Alzan benar-benar mencerminkan jiwa bisnis kami. Responnya juga cepat dan revisi tidak terbatas.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,var(--blue),#3b82f6)">D</div>
+          <div class="testi-meta"><div class="testi-name">Dimas Wijaya</div><div class="testi-role">Marketing Manager, TechCorp</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Konten yang dibuat Alzan meningkatkan engagement kami 3x lipat dalam sebulan. Sangat kreatif dan memahami target audience.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#7c3aed,#a78bfa)">A</div>
+          <div class="testi-meta"><div class="testi-name">Andi Setiawan</div><div class="testi-role">Founder, EduTech ID</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Platform belajar online kami sekarang jauh lebih menarik berkat UI/UX yang Alzan rancang. User retention naik signifikan.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#ea580c,#fb923c)">M</div>
+          <div class="testi-meta"><div class="testi-name">Maya Indah</div><div class="testi-role">Creative Director, AdAgency</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Kolaborasi yang sangat menyenangkan. Alzan punya sense of design yang kuat dan selalu datang dengan ide segar.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#0ea5e9,#2563eb)">F</div>
+          <div class="testi-meta"><div class="testi-name">Fajar Nugroho</div><div class="testi-role">Product Manager, Fintech App</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Deadline selalu tepat waktu dan kualitas tidak pernah kompromi. Highly recommended untuk project apapun!</div>
+      </div>
+      <!-- Duplicate for seamless loop -->
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar">R</div>
+          <div class="testi-meta"><div class="testi-name">Rizky Pratama</div><div class="testi-role">CEO, StartupKu</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Alzan sangat profesional dan cepat. Website yang dibuatnya melampaui ekspektasi kami — desainnya modern dan performa-nya luar biasa.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,var(--orange),#f97316)">S</div>
+          <div class="testi-meta"><div class="testi-name">Siti Rahayu</div><div class="testi-role">Owner, Butik Elegan</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Brand identity yang dibuat Alzan benar-benar mencerminkan jiwa bisnis kami. Responnya juga cepat dan revisi tidak terbatas.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,var(--blue),#3b82f6)">D</div>
+          <div class="testi-meta"><div class="testi-name">Dimas Wijaya</div><div class="testi-role">Marketing Manager, TechCorp</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Konten yang dibuat Alzan meningkatkan engagement kami 3x lipat dalam sebulan. Sangat kreatif dan memahami target audience.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#7c3aed,#a78bfa)">A</div>
+          <div class="testi-meta"><div class="testi-name">Andi Setiawan</div><div class="testi-role">Founder, EduTech ID</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Platform belajar online kami sekarang jauh lebih menarik berkat UI/UX yang Alzan rancang. User retention naik signifikan.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#ea580c,#fb923c)">M</div>
+          <div class="testi-meta"><div class="testi-name">Maya Indah</div><div class="testi-role">Creative Director, AdAgency</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Kolaborasi yang sangat menyenangkan. Alzan punya sense of design yang kuat dan selalu datang dengan ide segar.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2 → right -->
+  <div class="testi-track-wrap" style="margin-top:10px">
+    <div class="testi-track reverse" id="track2">
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#10b981,#2563eb)">N</div>
+          <div class="testi-meta"><div class="testi-name">Nina Kartika</div><div class="testi-role">Head of Branding, Retail Co.</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Alzan mampu menangkap visi brand kami dengan sangat tepat. Hasilnya elegan, minimalis, dan memorable.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#f59e0b,#ea580c)">H</div>
+          <div class="testi-meta"><div class="testi-name">Hendra Saputra</div><div class="testi-role">CEO, Property Group</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Website property kami sekarang mendapat banyak inquiry organik. Loading cepat dan tampilannya premium sekali.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">L</div>
+          <div class="testi-meta"><div class="testi-name">Lina Amelia</div><div class="testi-role">Influencer & Content Creator</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Personal branding saya naik level banget setelah dibantu Alzan. Feed Instagram sekarang jauh lebih cohesive dan profesional.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#14b8a6,#2563eb)">B</div>
+          <div class="testi-meta"><div class="testi-name">Bagus Prasetyo</div><div class="testi-role">Founder, SaaS Platform</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Dashboard admin yang dibuat Alzan sangat intuitif. Tim kami langsung bisa menggunakannya tanpa training khusus.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#ec4899,#7c3aed)">P</div>
+          <div class="testi-meta"><div class="testi-name">Putri Dewi</div><div class="testi-role">Owner, Fashion Brand</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Saya sangat puas dengan hasilnya. Alzan sangat komunikatif dan selalu memberikan update progress secara rutin.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#0ea5e9,#6366f1)">I</div>
+          <div class="testi-meta"><div class="testi-name">Irfan Hakim</div><div class="testi-role">Digital Marketing Lead</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Landing page yang Alzan buat memiliki conversion rate yang luar biasa. ROI dari project ini sudah balik modal dalam minggu pertama.</div>
+      </div>
+      <!-- Duplicate for loop -->
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#10b981,#2563eb)">N</div>
+          <div class="testi-meta"><div class="testi-name">Nina Kartika</div><div class="testi-role">Head of Branding, Retail Co.</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Alzan mampu menangkap visi brand kami dengan sangat tepat. Hasilnya elegan, minimalis, dan memorable.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#f59e0b,#ea580c)">H</div>
+          <div class="testi-meta"><div class="testi-name">Hendra Saputra</div><div class="testi-role">CEO, Property Group</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Website property kami sekarang mendapat banyak inquiry organik. Loading cepat dan tampilannya premium sekali.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">L</div>
+          <div class="testi-meta"><div class="testi-name">Lina Amelia</div><div class="testi-role">Influencer & Content Creator</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Personal branding saya naik level banget setelah dibantu Alzan. Feed Instagram sekarang jauh lebih cohesive dan profesional.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#14b8a6,#2563eb)">B</div>
+          <div class="testi-meta"><div class="testi-name">Bagus Prasetyo</div><div class="testi-role">Founder, SaaS Platform</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Dashboard admin yang dibuat Alzan sangat intuitif. Tim kami langsung bisa menggunakannya tanpa training khusus.</div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-top">
+          <div class="testi-avatar" style="background:linear-gradient(135deg,#ec4899,#7c3aed)">P</div>
+          <div class="testi-meta"><div class="testi-name">Putri Dewi</div><div class="testi-role">Owner, Fashion Brand</div></div>
+        </div>
+        <div class="testi-stars"><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span><span class="diamond-star"></span></div>
+        <div class="testi-text">Saya sangat puas dengan hasilnya. Alzan sangat komunikatif dan selalu memberikan update progress secara rutin.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gradient-line" style="opacity:0.2"></div>
+
+<!-- ═══════════════ CONTACT ═══════════════ -->
+<section id="contact">
+  <div class="container">
+    <div class="section-eyebrow reveal">
+      <span class="diamond-star" style="color:var(--blue)"></span> Hubungi saya
+    </div>
+    <h2 class="section-heading reveal reveal-d1">Let's <span style="color:var(--blue)">Connect</span></h2>
+    <p class="reveal reveal-d2" style="color:var(--text-secondary);font-size:13.5px;max-width:500px;margin-top:8px">Punya project menarik? Jangan ragu untuk menghubungi saya. Saya siap berdiskusi dan membantu mewujudkan ide kamu.</p>
+
+    <div class="contact-grid">
+      <!-- Socials -->
+      <div class="reveal reveal-d2">
+        <p class="social-left-head" style="margin-bottom:16px">Temukan saya di platform berikut, atau langsung kirim pesan melalui form di samping.</p>
+        <div class="socials">
+          <a href="https://wa.me/62" class="social-link" target="_blank" rel="noopener">
+            <i class="fa-brands fa-whatsapp" style="color:#25d366"></i>
+            <span>WhatsApp</span>
+            <i class="fa-solid fa-arrow-right" style="margin-left:auto;font-size:10px;opacity:0.4"></i>
+          </a>
+          <a href="https://linkedin.com/in/alzan" class="social-link" target="_blank" rel="noopener">
+            <i class="fa-brands fa-linkedin" style="color:#0077b5"></i>
+            <span>LinkedIn</span>
+            <i class="fa-solid fa-arrow-right" style="margin-left:auto;font-size:10px;opacity:0.4"></i>
+          </a>
+          <a href="https://instagram.com/alzan" class="social-link" target="_blank" rel="noopener">
+            <i class="fa-brands fa-instagram" style="color:#e1306c"></i>
+            <span>Instagram</span>
+            <i class="fa-solid fa-arrow-right" style="margin-left:auto;font-size:10px;opacity:0.4"></i>
+          </a>
+          <a href="https://tiktok.com/@alzan" class="social-link" target="_blank" rel="noopener">
+            <i class="fa-brands fa-tiktok" style="color:var(--text-primary)"></i>
+            <span>TikTok</span>
+            <i class="fa-solid fa-arrow-right" style="margin-left:auto;font-size:10px;opacity:0.4"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="reveal reveal-d3">
+        <form class="contact-form" id="contact-form" novalidate>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="inp-name">Nama</label>
+              <input type="text" id="inp-name" name="name" placeholder="Nama kamu" autocomplete="off">
+            </div>
+            <div class="form-field">
+              <label for="inp-email">Email</label>
+              <input type="email" id="inp-email" name="email" placeholder="email@kamu.com" autocomplete="off">
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="inp-msg">Pesan</label>
+            <textarea id="inp-msg" name="message" placeholder="Ceritakan project kamu..."></textarea>
+          </div>
+          <div id="form-msg" class="form-msg"></div>
+          <button type="submit" class="btn btn-primary" style="align-self:flex-start">
+            <i class="fa-regular fa-paper-plane"></i> Kirim Pesan
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gradient-line" style="opacity:0.2"></div>
+
+<!-- ═══════════════ FAQ ═══════════════ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-eyebrow reveal">
+      <span class="diamond-star" style="color:var(--blue)"></span> Pertanyaan umum
+    </div>
+    <h2 class="section-heading reveal reveal-d1" style="margin-bottom:36px">FAQ <span style="color:var(--blue)">—</span></h2>
+
+    <div class="faq-inner">
+      <!-- LEFT -->
+      <div class="faq-left reveal">
+        <div class="faq-photo">
+          <svg viewBox="0 0 200 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="100" cy="65" rx="38" ry="40" fill="rgba(37,99,235,0.45)"/>
+            <path d="M20 280 C20 180 60 155 100 155 C140 155 180 180 180 280Z" fill="rgba(37,99,235,0.35)"/>
+          </svg>
+        </div>
+        <div>
+          <div style="font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--text-secondary);margin-bottom:4px">FAQ</div>
+          <p class="faq-subtitle">Pertanyaan yang sering ditanyakan calon klien sebelum memulai project bersama saya.</p>
+        </div>
+      </div>
+
+      <!-- RIGHT: FAQ Accordion -->
+      <div class="accordion-list faq-accordion">
+
+        <div class="accordion-item reveal reveal-d1">
+          <button class="accordion-trigger">
+            <span class="acc-title">Berapa lama pengerjaan 1 project web?</span>
+            <span class="diamond-star acc-icon"></span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">Tergantung kompleksitas project. Landing page sederhana bisa selesai dalam 3–5 hari kerja. Website company profile dengan banyak halaman biasanya membutuhkan 1–3 minggu. Saya selalu memberikan estimasi timeline yang jelas sebelum memulai.</div>
+          </div>
+        </div>
+
+        <div class="accordion-item reveal reveal-d2">
+          <button class="accordion-trigger">
+            <span class="acc-title">Apakah kamu menerima project freelance?</span>
+            <span class="diamond-star acc-icon"></span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">Ya, saya aktif menerima project freelance untuk web development, desain, maupun content creation. Silahkan hubungi saya untuk diskusi lebih lanjut mengenai kebutuhan project kamu.</div>
+          </div>
+        </div>
+
+        <div class="accordion-item reveal reveal-d3">
+          <button class="accordion-trigger">
+            <span class="acc-title">Teknologi apa yang kamu gunakan?</span>
+            <span class="diamond-star acc-icon"></span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">Untuk web development saya menggunakan HTML, CSS, JavaScript, React, dan Next.js. Untuk desain saya menggunakan Figma dan Adobe Creative Suite. Saya juga terbiasa dengan berbagai CMS seperti WordPress dan Webflow.</div>
+          </div>
+        </div>
+
+        <div class="accordion-item reveal reveal-d4">
+          <button class="accordion-trigger">
+            <span class="acc-title">Bagaimana proses pembayarannya?</span>
+            <span class="diamond-star acc-icon"></span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">Sistem pembayaran saya adalah 50% di awal sebelum pengerjaan dimulai, dan 50% sisanya setelah project selesai dan disetujui. Pembayaran dapat dilakukan melalui transfer bank atau e-wallet.</div>
+          </div>
+        </div>
+
+        <div class="accordion-item reveal reveal-d4">
+          <button class="accordion-trigger">
+            <span class="acc-title">Apakah tersedia revisi setelah selesai?</span>
+            <span class="diamond-star acc-icon"></span>
+          </button>
+          <div class="accordion-body">
+            <div class="accordion-body-inner">Tentu! Setiap project sudah termasuk 2–3 kali revisi gratis. Jika diperlukan revisi lebih dari itu, akan ada biaya tambahan yang dibahas bersama. Kepuasan klien adalah prioritas utama saya.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <div class="footer-logo">Alzan <span>Adytia</span></div>
+  <div style="display:flex;align-items:center;gap:6px;font-size:11.5px">
+    <span class="diamond-star" style="width:7px;height:7px;color:var(--purple)"></span>
+    Designed & Built with passion
+  </div>
+  <div style="font-size:11.5px">© 2025 Alzan Adytia</div>
+</footer>
+
+<!-- Scripts -->
+<script src="js/animations.js"></script>
+<script src="js/interactions.js"></script>
+<script src="js/form.js"></script>
+
+<!-- FAQ accordion uses same logic — re-init for .faq-accordion -->
+<script>
+(function() {
+  const faqItems = document.querySelectorAll('.faq-accordion .accordion-item');
+  faqItems.forEach(item => {
+    const trigger = item.querySelector('.accordion-trigger');
+    const body = item.querySelector('.accordion-body');
+    trigger.addEventListener('click', () => {
+      const isOpen = item.classList.contains('active');
+      faqItems.forEach(i => { i.classList.remove('active'); i.querySelector('.accordion-body').classList.remove('open'); });
+      if (!isOpen) { item.classList.add('active'); body.classList.add('open'); }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>

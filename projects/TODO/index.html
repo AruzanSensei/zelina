@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="DevHub — Local Project Todo &amp; Asset Hub. Manage todos, prompts, and assets across all your local projects." />
+  <title>DevHub — Local Project Control Center</title>
+
+  <!-- Preconnect Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="./styles/main.css" />
+  <link rel="stylesheet" href="./styles/components.css" />
+  <link rel="stylesheet" href="./styles/animations.css" />
+  <link rel="stylesheet" href="./styles/phase2.css" />
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <!-- Favicon (inline SVG) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2316A34A'/><text y='22' x='6' font-size='18' font-weight='bold' fill='white' font-family='monospace'>D</text></svg>" />
+
+  <style>
+    /* ── Lucide icon wrapper & sizing ── */
+    i[data-lucide] {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    i[data-lucide] svg { display: block; }
+
+    /* Wrapper span (persists after lucide renders <i> → <svg>) */
+    .ic {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    /* Lucide SVG baseline defaults */
+    .ic svg,
+    [data-lucide] + svg,
+    i[data-lucide] + svg {
+      display: block;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+     BROWSER UNSUPPORTED SCREEN
+══════════════════════════════════════════════════════ -->
+<div id="browser-unsupported" role="alert">
+  <div class="warn-icon"><i data-lucide="alert-triangle" style="width:48px;height:48px;color:#F59E0B;"></i></div>
+  <h2>Browser Not Supported</h2>
+  <p>DevHub requires the <strong>File System Access API</strong> to read your local project files.<br>Please use <strong>Chrome, Edge, or Brave</strong> (version 86 or later).</p>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+    <a href="https://www.google.com/chrome/" target="_blank" rel="noopener" class="btn btn-primary">Download Chrome</a>
+    <a href="https://www.microsoft.com/edge"  target="_blank" rel="noopener" class="btn btn-secondary">Download Edge</a>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     MAIN APP
+══════════════════════════════════════════════════════ -->
+<div id="app">
+
+  <!-- ── TOPBAR ──────────────────────────────────────── -->
+  <header id="topbar" role="banner">
+    <div class="topbar-left">
+      <!-- Hamburger (mobile) -->
+      <button id="hamburger-btn" aria-label="Toggle sidebar menu">
+        <i data-lucide="menu" style="width:18px;height:18px;"></i>
+      </button>
+
+      <!-- Breadcrumb -->
+      <nav class="breadcrumb" id="breadcrumb" aria-label="Breadcrumb">
+        <span>DevHub</span>
+        <span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-active">Dashboard</span>
+      </nav>
+    </div>
+
+    <!-- Search -->
+    <div class="topbar-center">
+      <div class="search-wrapper" role="search">
+        <i data-lucide="search" style="width:14px;height:14px;color:var(--color-secondary);"></i>
+        <input
+          type="search"
+          id="search-input"
+          placeholder="Search tasks, projects, tags..."
+          autocomplete="off"
+          aria-label="Search tasks, projects, tags"
+          aria-autocomplete="list"
+          aria-controls="search-dropdown"
+        />
+        <span class="search-shortcut">⌘K</span>
+
+        <!-- Search Dropdown -->
+        <div id="search-dropdown" role="listbox" aria-label="Search results"></div>
+      </div>
+    </div>
+
+    <!-- Right controls -->
+    <div class="topbar-right">
+      <!-- Theme Toggle -->
+      <button id="theme-toggle" class="btn-icon" aria-label="Toggle dark/light mode" title="Toggle theme">
+        <i data-lucide="moon" style="width:16px;height:16px;"></i>
+      </button>
+
+      <!-- Write Mode Toggle -->
+      <div class="write-toggle-wrap">
+        <button
+          id="write-toggle"
+          class="write-toggle"
+          role="switch"
+          aria-checked="false"
+          aria-label="Toggle write mode"
+          title="Toggle Write Mode (⌘W)"
+        >
+          <div class="write-toggle-thumb">Read</div>
+          <div class="write-toggle-bg-text">
+            <span>Read</span>
+            <span>Write</span>
+          </div>
+        </button>
+      </div>
+
+      <!-- User Avatar -->
+      <div style="position:relative;">
+        <button id="user-avatar-btn" class="user-avatar-btn" aria-label="User menu" aria-haspopup="true">
+          DH
+        </button>
+        <div id="user-dropdown" class="user-dropdown" role="menu" aria-label="User menu">
+          <div style="padding:12px 16px 8px;border-bottom:1px solid var(--color-border)">
+            <div style="font-weight:600;font-size:13px;">DevHub</div>
+            <div style="font-size:11px;color:var(--color-secondary);">Local Project Manager</div>
+          </div>
+          <button class="user-dropdown-item" role="menuitem" id="user-menu-settings">
+            <i data-lucide="settings" style="width:14px;height:14px;"></i> Settings
+          </button>
+          <button class="user-dropdown-item" role="menuitem" id="user-menu-activity">
+            <i data-lucide="clipboard-list" style="width:14px;height:14px;"></i> Activity Log
+          </button>
+          <div class="user-dropdown-sep"></div>
+          <button class="user-dropdown-item" role="menuitem" id="user-menu-shortcuts"
+            onclick="document.getElementById('nav-settings').click();setTimeout(()=>{document.querySelector('[data-tab=shortcuts]')?.click()},100)">
+            <i data-lucide="keyboard" style="width:14px;height:14px;"></i> Keyboard Shortcuts
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Write Mode Banner -->
+  <div id="write-banner" role="status" aria-live="polite">
+    <i data-lucide="alert-triangle" style="width:14px;height:14px;color:#92400E;"></i>
+    <strong>Write mode enabled</strong> — changes will be saved directly to your files on disk.
+    <button onclick="document.getElementById('write-toggle').click()" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:12px;color:#92400E;font-weight:600;" aria-label="Disable write mode">Disable</button>
+  </div>
+
+  <!-- ── BODY LAYOUT ─────────────────────────────────── -->
+  <div id="body-layout">
+
+    <!-- Mobile sidebar backdrop -->
+    <div id="sidebar-backdrop" aria-hidden="true"></div>
+
+    <!-- ── SIDEBAR ──────────────────────────────────── -->
+    <nav id="sidebar" aria-label="Main navigation">
+      <div id="sidebar-inner">
+
+        <!-- Logo -->
+        <div class="sidebar-logo">
+          <div class="logo-brand">
+            <div class="logo-icon" aria-hidden="true">
+              <i data-lucide="code-2" style="width:16px;height:16px;"></i>
+            </div>
+            <span class="logo-text">DevHub</span>
+          </div>
+          <button id="sidebar-collapse-btn" class="sidebar-collapse-btn" aria-label="Collapse sidebar" title="Toggle Sidebar (⌘B)">
+            <i data-lucide="chevron-left" style="width:14px;height:14px;"></i>
+          </button>
+        </div>
+
+        <!-- Scrollable area -->
+        <div class="sidebar-scroll">
+
+          <!-- Dashboard Nav -->
+          <div class="sidebar-section">
+            <button class="sidebar-item active" id="nav-dashboard" aria-label="Go to Dashboard">
+              <span class="item-icon"><i data-lucide="layout-dashboard" style="width:15px;height:15px;"></i></span>
+              <span class="item-label">Dashboard</span>
+            </button>
+            <button class="sidebar-item" id="nav-activity" aria-label="Go to Activity Log">
+              <span class="item-icon"><i data-lucide="activity" style="width:15px;height:15px;"></i></span>
+              <span class="item-label">Activity Log</span>
+            </button>
+          </div>
+
+          <!-- Workspace Section -->
+          <div class="sidebar-section">
+            <div class="sidebar-section-label">Workspace</div>
+            <div id="workspace-list" role="list" aria-label="Workspaces"></div>
+            <button class="sidebar-add-btn" id="add-workspace-btn" aria-label="Add workspace folder">
+              <i data-lucide="plus" style="width:12px;height:12px;"></i>
+              Add Workspace
+            </button>
+          </div>
+
+          <!-- Projects Section -->
+          <div class="sidebar-section">
+            <div class="sidebar-section-label">Projects</div>
+            <div id="project-list" role="list" aria-label="Projects"></div>
+            <button class="sidebar-add-btn" id="add-workspace-btn-2" aria-label="Add another workspace folder">
+              <i data-lucide="folder-plus" style="width:12px;height:12px;"></i>
+              Add Folder
+            </button>
+          </div>
+
+        </div><!-- /sidebar-scroll -->
+
+        <!-- Bottom nav -->
+        <div class="sidebar-bottom">
+          <div class="sidebar-divider"></div>
+          <button class="sidebar-item" id="nav-settings" aria-label="Go to Settings">
+            <span class="item-icon"><i data-lucide="settings" style="width:15px;height:15px;"></i></span>
+            <span class="item-label">Settings</span>
+          </button>
+          <button class="sidebar-item" aria-label="Help">
+            <span class="item-icon"><i data-lucide="help-circle" style="width:15px;height:15px;"></i></span>
+            <span class="item-label">Help</span>
+          </button>
+        </div>
+
+      </div><!-- /sidebar-inner -->
+    </nav>
+
+    <!-- ── MAIN CONTENT ──────────────────────────────── -->
+    <main id="main-content" role="main" aria-label="Main content">
+      <!-- Rendered by app.js -->
+      <div class="empty-state">
+        <div class="empty-state-icon"><i data-lucide="loader-2" style="width:48px;height:48px;color:var(--color-accent);"></i></div>
+        <h2>Loading DevHub...</h2>
+      </div>
+    </main>
+
+  </div><!-- /body-layout -->
+
+</div><!-- /app -->
+
+<!-- ══════════════════════════════════════════════════════
+     CONFIRM MODAL
+══════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title">
+  <div class="modal">
+    <div class="modal-header" id="confirm-modal-title">Confirm</div>
+    <div class="modal-body" id="confirm-modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" id="confirm-cancel-btn" aria-label="Cancel">Cancel</button>
+      <button class="btn btn-primary"   id="confirm-action-btn" aria-label="Confirm action">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     TOAST CONTAINER
+══════════════════════════════════════════════════════ -->
+<div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     ASSET PREVIEW MODAL (Phase 2)
+══════════════════════════════════════════════════════ -->
+<div id="asset-modal" role="dialog" aria-modal="true" aria-labelledby="asset-modal-title">
+  <div class="asset-modal-inner">
+    <div class="asset-modal-header">
+      <span id="asset-modal-title">Asset Preview</span>
+      <button class="asset-modal-close" id="asset-modal-close-btn" aria-label="Close preview">
+        <i data-lucide="x" style="width:18px;height:18px;"></i>
+      </button>
+    </div>
+    <div id="asset-modal-body"></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SETTINGS PAGE TEMPLATE (hidden, cloned by app.js)
+══════════════════════════════════════════════════════ -->
+<template id="settings-page-template">
+  <div class="settings-page page-content">
+    <h1>Settings</h1>
+    <div class="settings-layout">
+
+      <!-- SettingsNav -->
+      <nav class="settings-nav" aria-label="Settings sections">
+        <button class="settings-nav-item active" data-tab="general"    aria-label="General settings">General</button>
+        <button class="settings-nav-item"         data-tab="appearance" aria-label="Appearance settings">Appearance</button>
+        <button class="settings-nav-item"         data-tab="workspaces" aria-label="Workspaces settings">Workspaces</button>
+        <button class="settings-nav-item"         data-tab="shortcuts"  aria-label="Keyboard shortcuts">Shortcuts</button>
+        <button class="settings-nav-item"         data-tab="about"      aria-label="About DevHub">About</button>
+      </nav>
+
+      <div class="settings-content">
+
+        <!-- ── General ── -->
+        <div class="settings-panel active" id="settings-panel-general">
+          <div class="settings-card">
+            <h3>General</h3>
+
+            <div class="settings-row">
+              <div class="settings-row-label">
+                <strong>App Language</strong>
+                <span>Interface language</span>
+              </div>
+              <div class="settings-row-control">
+                <select class="settings-select" id="setting-language" aria-label="App language">
+                  <option value="ID">Bahasa Indonesia</option>
+                  <option value="EN">English</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-row-label">
+                <strong>Default View</strong>
+                <span>What to show on startup</span>
+              </div>
+              <div class="settings-row-control">
+                <select class="settings-select" id="setting-default-view" aria-label="Default view">
+                  <option value="dashboard">Dashboard</option>
+                  <option value="todo">Last Project</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-row-label">
+                <strong>Auto-refresh on Focus</strong>
+                <span>Reload project data when window regains focus</span>
+              </div>
+              <div class="settings-row-control">
+                <label class="toggle-switch" aria-label="Auto-refresh on focus">
+                  <input type="checkbox" id="setting-auto-refresh" />
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-row-label">
+                <strong>Show Completed Tasks</strong>
+                <span>Display done tasks in todo list</span>
+              </div>
+              <div class="settings-row-control">
+                <label class="toggle-switch" aria-label="Show completed tasks">
+                  <input type="checkbox" id="setting-show-completed" />
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-row-label">
+                <strong>Confirm Before Write</strong>
+                <span>Ask for confirmation when enabling write mode</span>
+              </div>
+              <div class="settings-row-control">
+                <label class="toggle-switch" aria-label="Confirm before write">
+                  <input type="checkbox" id="setting-confirm-write" />
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Appearance ── -->
+        <div class="settings-panel" id="settings-panel-appearance">
+          <div class="settings-card">
+            <h3>Appearance</h3>
+
+            <div class="settings-row">
+              <div class="settings-row-label">
+                <strong>Theme</strong>
+                <span>Light or dark interface</span>
+              </div>
+              <div class="settings-row-control" style="display:flex;align-items:center;gap:8px;">
+                <span style="font-size:12px;color:var(--color-secondary)">Light</span>
+                <label class="toggle-switch" aria-label="Dark mode toggle">
+                  <input type="checkbox" id="setting-theme" />
+                  <span class="toggle-track"></span>
+                </label>
+                <span style="font-size:12px;color:var(--color-secondary)">Dark</span>
+              </div>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-row-label">
+                <strong>Font Size</strong>
+                <span>Base font size for the app</span>
+              </div>
+              <div class="settings-row-control">
+                <div class="settings-slider-wrap">
+                  <input type="range" class="settings-slider" id="font-size-slider" min="12" max="18" step="1" aria-label="Font size" />
+                  <span class="slider-value" id="font-size-display">14px</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-row-label">
+                <strong>Compact Mode</strong>
+                <span>Reduce spacing for more content density</span>
+              </div>
+              <div class="settings-row-control">
+                <label class="toggle-switch" aria-label="Compact mode">
+                  <input type="checkbox" id="setting-compact-mode" />
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-row-label">
+                <strong>Sidebar Width</strong>
+                <span>Adjust sidebar panel width</span>
+              </div>
+              <div class="settings-row-control">
+                <div class="settings-slider-wrap">
+                  <input type="range" class="settings-slider" id="sidebar-width-slider" min="200" max="300" step="10" aria-label="Sidebar width" />
+                  <span class="slider-value" id="sidebar-width-display">240px</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-row">
+              <div class="settings-row-label">
+                <strong>Show Project Badges</strong>
+                <span>Show pending task count badges in sidebar</span>
+              </div>
+              <div class="settings-row-control">
+                <label class="toggle-switch" aria-label="Show project badges">
+                  <input type="checkbox" id="setting-show-badges" />
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Workspaces ── -->
+        <div class="settings-panel" id="settings-panel-workspaces">
+          <div class="settings-card">
+            <h3>Workspaces</h3>
+            <p style="font-size:var(--text-sm);color:var(--color-secondary);margin-bottom:var(--space-4);">
+              Manage all your connected local workspace folders.
+            </p>
+            <button class="btn btn-primary btn-sm" id="settings-add-workspace-btn" style="margin-bottom:var(--space-4);" aria-label="Add workspace">
+              <i data-lucide="plus" style="width:12px;height:12px;"></i>
+              Add Workspace
+            </button>
+            <div class="workspace-list" id="settings-workspace-list"></div>
+          </div>
+        </div>
+
+        <!-- ── Shortcuts ── -->
+        <div class="settings-panel" id="settings-panel-shortcuts">
+          <div class="settings-card">
+            <h3>Keyboard Shortcuts</h3>
+            <table class="shortcuts-table" aria-label="Keyboard shortcuts">
+              <tbody>
+                <tr><td style="color:var(--color-secondary)">Open search</td>          <td style="text-align:right"><span class="kbd">⌘K</span> / <span class="kbd">Ctrl+K</span></td></tr>
+                <tr><td style="color:var(--color-secondary)">Add new task</td>          <td style="text-align:right"><span class="kbd">⌘N</span> / <span class="kbd">Ctrl+N</span></td></tr>
+                <tr><td style="color:var(--color-secondary)">Toggle write mode</td>     <td style="text-align:right"><span class="kbd">⌘W</span> / <span class="kbd">Ctrl+W</span></td></tr>
+                <tr><td style="color:var(--color-secondary)">Toggle sidebar</td>        <td style="text-align:right"><span class="kbd">⌘B</span> / <span class="kbd">Ctrl+B</span></td></tr>
+                <tr><td style="color:var(--color-secondary)">Refresh active project</td><td style="text-align:right"><span class="kbd">⌘R</span> / <span class="kbd">Ctrl+R</span></td></tr>
+                <tr><td style="color:var(--color-secondary)">Close modal / dropdown</td><td style="text-align:right"><span class="kbd">Esc</span></td></tr>
+                <tr><td style="color:var(--color-secondary)">Navigate search results</td><td style="text-align:right"><span class="kbd">↑</span> <span class="kbd">↓</span></td></tr>
+                <tr><td style="color:var(--color-secondary)">Select focused item</td>   <td style="text-align:right"><span class="kbd">Enter</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ── About ── -->
+        <div class="settings-panel" id="settings-panel-about">
+          <div class="settings-card">
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;">
+              <div style="width:52px;height:52px;background:linear-gradient(135deg,#16A34A,#059669);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+                <i data-lucide="code-2" style="width:24px;height:24px;color:white;"></i>
+              </div>
+              <div>
+                <div style="font-size:18px;font-weight:700;">DevHub</div>
+                <div style="font-size:12px;color:var(--color-secondary);">Version 1.0.0 — Phase 3</div>
+              </div>
+            </div>
+            <p style="font-size:14px;color:var(--color-secondary);line-height:1.7;margin-bottom:16px;">
+              DevHub is a local-first project management tool for developers. Manage todos, prompts, and assets across all your local projects — 100% in the browser, no server required.
+            </p>
+            <p style="font-size:13px;color:var(--color-secondary);">
+              Built with <strong>Vanilla JS</strong> + <strong>File System Access API</strong> + <strong>IndexedDB</strong>.
+            </p>
+          </div>
+        </div>
+
+      </div><!-- /settings-content -->
+    </div><!-- /settings-layout -->
+  </div>
+</template>
+
+<!-- ══════════════════════════════════════════════════════
+     SCRIPT
+══════════════════════════════════════════════════════ -->
+<script type="module" src="./app.js"></script>
+<script>
+  // Apply per-icon stroke-width to static HTML icons
+  const STROKE_MAP = {
+    'info':1.5,'help-circle':1.5,'calendar':1.5,'clock':1.5,
+    'loader-2':1.5,'circle':1.5,'layers':1.5,'image':1.5,
+    'video':1.5,'file':1.5,'file-type-2':1.5,'code-2':1.5,'moon':1.5,
+    'folder':2,'folder-open':2,'folder-plus':2,'file-text':2,
+    'layout-dashboard':2,'activity':2,'settings':2,'clipboard-list':2,
+    'clipboard':2,'archive':2,'tag':2,'keyboard':2,'menu':2,
+    'list':2,'layout-grid':2,'chevron-left':2,'chevron-down':2,
+    'chevron-right':2,'pencil':2,'save':2,'search':2,'paperclip':2,
+    'plus':2.5,'plus-circle':2.5,'check':2.5,'check-circle-2':2.5,
+    'check-square':2.5,'x':2.5,'x-circle':2.5,'trash-2':2.5,
+    'refresh-cw':2.5,'download':2.5,
+    'alert-triangle':2.75,'alert-circle':2.75,'zap':2.75,
+  };
+  document.addEventListener('DOMContentLoaded', () => {
+    if (!window.lucide) return;
+    lucide.createIcons();
+    document.querySelectorAll('[data-lucide]').forEach(el => {
+      const name = el.getAttribute('data-lucide') || el.closest('[data-lucide]')?.getAttribute('data-lucide');
+    });
+    // Apply stroke-width to all .ic wrappers
+    document.querySelectorAll('.ic[data-sw]').forEach(wrap => {
+      const svg = wrap.querySelector('svg');
+      if (svg) svg.setAttribute('stroke-width', wrap.dataset.sw);
+    });
+    // Also handle bare <i data-lucide> without wrapper (static HTML in index.html)
+    document.querySelectorAll('[data-lucide]').forEach(icon => {
+      const name = icon.getAttribute('data-lucide');
+      const sw = STROKE_MAP[name] ?? 2;
+      // Check if it's an SVG (already replaced by lucide.createIcons)
+      if (icon.tagName.toLowerCase() === 'svg') {
+        icon.setAttribute('stroke-width', sw);
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

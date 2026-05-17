@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detail Produk — ETS Asset Tracking</title>
+  <meta name="description" content="Spesifikasi teknis produk ETS Industrial UPS.">
+
+  <link rel="stylesheet" href="../styles/base.css">
+  <link rel="stylesheet" href="../styles/components.css">
+  <link rel="stylesheet" href="../styles/public.css">
+</head>
+
+<body>
+
+  <header class="site-header">
+    <a href="index.html" class="back-link">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M9 2L3 7l6 5" stroke-linecap="round" />
+      </svg>
+      ETS Tracking
+    </a>
+    <div style="display:flex; flex-direction:column; align-items:flex-end;">
+      <img src="../assets/ets-logo.png" alt="ETS" class="site-logo" style="height:28px;">
+      <span style="font-size: 0.6rem; color: var(--text-muted); font-weight: 500; margin-top: 2px;">Protecting &
+        improving Electricity</span>
+    </div>
+  </header>
+
+  <!-- Skeleton -->
+  <div class="product-main" id="skeleton-screen">
+    <div class="breadcrumb" style="padding:0 0 16px;">
+      <div class="sk" style="width:120px;height:14px;"></div>
+    </div>
+    <div class="sk sk-img" style="height:260px;margin-bottom:32px;border-radius:12px;"></div>
+    <div class="sk sk-title" style="height:36px;width:55%;margin-bottom:16px;"></div>
+    <div class="sk sk-line" style="height:16px;margin-bottom:10px;"></div>
+    <div class="sk sk-line short" style="height:16px;"></div>
+  </div>
+
+  <!-- Product content -->
+  <div class="product-main hidden" id="product-screen">
+    <!-- <div class="breadcrumb">
+      <a href="index.html">ETS Tracking</a>
+      <span class="bc-sep">/</span>
+      <span class="bc-current" id="bc-name">—</span>
+    </div> -->
+
+    <!-- Cover image -->
+    <div class="product-cover-wrap" id="cover-wrap" style="display:none;">
+      <img class="product-cover-img" id="cover-img" src="" alt="">
+    </div>
+
+    <!-- Product top -->
+    <div class="product-top">
+      <div class="product-info">
+        <div class="info-header">
+          <div class="product-type-tag" id="prod-type" style="display:none;"></div>
+        </div>
+        <div class="product-name" id="prod-name"></div>
+      </div>
+
+      <div class="product-details-row">
+        <div class="details-left">
+          <!-- Info grid -->
+          <div class="info-grid" id="info-grid"></div>
+
+          <!-- Tambahan -->
+          <div id="tambahan-wrap" style="display:none; margin-top: 24px;">
+            <div
+              style="font-family:var(--pub-mono);font-size:.6rem;letter-spacing:.15em;color:var(--text-muted);margin-bottom:8px;">
+              TAMBAHAN / OPTIONAL</div>
+            <div id="tambahan-text"
+              style="font-size:.875rem;line-height:1.7;color:var(--text-sub);white-space:pre-wrap;"></div>
+          </div>
+        </div>
+
+        <!-- QR Panel -->
+        <div class="details-right">
+          <div class="qr-panel" id="qr-panel">
+            <div class="demo-label qr-panel-title" style="margin-bottom:0;">QR CODE</div>
+            <div class="qr-panel-left">
+              <div id="qr-box"></div>
+            </div>
+            <div class="qr-panel-right">
+              <div style="font-size:.875rem;font-weight:600;margin-bottom:4px;color:var(--text-main);" id="qr-nomor">
+              </div>
+              <div class="qr-url" id="qr-url"></div>
+            </div>
+            <button class="copy-link-btn" id="copy-btn">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="3" width="7" height="7" rx="1" />
+                <path d="M1 8V1h7" />
+              </svg>
+              Copy Link
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gallery -->
+    <div class="gallery-section" id="gallery-section" style="display:none;">
+      <div class="section-label">FOTO PRODUK</div>
+      <div class="gallery-grid" id="gallery-grid"></div>
+    </div>
+  </div>
+
+  <!-- Error screen -->
+  <div class="product-main hidden" id="error-screen">
+    <div class="error-screen">
+      <div class="error-code">404</div>
+      <div class="error-title">Produk tidak ditemukan</div>
+      <div class="error-sub">Nomor seri yang kamu cari tidak terdaftar dalam sistem ETS.</div>
+      <a href="index.html" class="error-btn">← Kembali ke Pencarian</a>
+    </div>
+  </div>
+
+  <!-- Lightbox -->
+  <div class="lightbox-overlay" id="lb">
+    <div class="lightbox-inner">
+      <button class="lb-close" id="lb-close">×</button>
+      <div class="lightbox-img-wrap" id="lb-wrap">
+        <img class="lightbox-img" id="lb-img" src="" alt="">
+      </div>
+      <div class="lightbox-controls">
+        <button class="lb-btn" id="lb-zoom-out" title="Zoom out">−</button>
+        <span class="lb-zoom-val" id="lb-zoom-val">100%</span>
+        <button class="lb-btn" id="lb-zoom-in" title="Zoom in">+</button>
+        <div class="lb-divider"></div>
+        <button class="lb-btn" id="lb-reset" title="Reset">⊠</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <span>© 2026 ETS — Industrial Asset Tracking</span>
+    <span class="footer-domain">qr.zanxa.site</span>
+  </footer>
+
+  <script src="../config.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="../components/qr-generator.js"></script>
+  <script src="../scripts/public/product.js"></script>
+</body>
+
+</html>

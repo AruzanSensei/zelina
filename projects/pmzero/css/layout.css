@@ -1,0 +1,271 @@
+/* =========================================
+   PAGES — each page scrolls independently
+========================================= */
+.page {
+    display: none;
+    flex-direction: column;
+    min-height: 100vh;
+    padding-bottom: calc(var(--nav-h) + var(--safe-b) + 20px);
+}
+
+.page.active {
+    display: flex;
+}
+
+/* =========================================
+   HERO HEADER
+========================================= */
+.hero {
+    background: var(--grad-hero);
+    padding: 22px 16px 20px;
+    border-radius: 0 0 26px 26px;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 8px 30px rgba(37, 99, 235, .25);
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -35px;
+    right: -35px;
+    width: 170px;
+    height: 170px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .11);
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    bottom: -55px;
+    left: -25px;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .07);
+}
+
+.hero-inner {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-greet {
+    font-size: 12px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, .8);
+    letter-spacing: .03em;
+    margin-bottom: 1px;
+}
+
+.hero-date {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 16px;
+}
+
+/* Stopwatch in hero */
+.sw-wrap {
+    text-align: center;
+}
+
+.sw-caption {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, .72);
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    margin-bottom: 4px;
+}
+
+.sw-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.sw-unit {
+    text-align: center;
+    min-width: 54px;
+}
+
+.sw-num {
+    font-family: var(--ff);
+    font-size: 46px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, .2);
+    letter-spacing: -1px;
+}
+
+.sw-lbl {
+    font-size: 9px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, .65);
+    text-transform: uppercase;
+    margin-top: 1px;
+}
+
+.sw-sep {
+    font-family: var(--ff);
+    font-size: 34px;
+    font-weight: 800;
+    color: rgba(255, 255, 255, .45);
+    padding-bottom: 14px;
+    width: 18px;
+    text-align: center;
+}
+
+.hero-since {
+    text-align: center;
+    font-size: 11px;
+    color: rgba(255, 255, 255, .7);
+    margin-top: 6px;
+    font-weight: 500;
+    min-height: 16px;
+}
+
+/* =========================================
+   CONTENT AREA
+========================================= */
+.content {
+    flex: 1;
+    padding: 14px 14px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
+/* =========================================
+   PAGE HEADER
+========================================= */
+.pg-hd {
+    padding: 22px 16px 12px;
+    font-family: var(--ff);
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text);
+    flex-shrink: 0;
+}
+
+.pg-hd span {
+    color: var(--blue-600);
+}
+
+/* =========================================
+   FAB
+========================================= */
+.fab {
+    position: fixed;
+    bottom: calc(var(--nav-h) + var(--safe-b) + 14px);
+    right: 18px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--grad-btn);
+    color: #fff;
+    font-size: 28px;
+    line-height: 1;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--sh-lg), 0 0 0 3px rgba(59, 130, 246, .18);
+    z-index: 80;
+    transition: transform .15s;
+}
+
+.fab:active {
+    transform: scale(.88);
+}
+
+/* =========================================
+   BOTTOM NAV
+========================================= */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    height: calc(var(--nav-h) + var(--safe-b));
+    padding: 0 12px calc(var(--safe-b) + 8px);
+    display: flex;
+    align-items: flex-end;
+    background: linear-gradient(to top, #fff 56%, transparent);
+    z-index: 100;
+}
+
+.nav-inner {
+    width: 100%;
+    height: 54px;
+    background: #fff;
+    border-radius: 27px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    box-shadow: var(--sh-lg);
+    border: 1px solid var(--border);
+    padding: 0 4px;
+}
+
+.nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+    padding: 4px 2px;
+    border: none;
+    background: transparent;
+    border-radius: 14px;
+    transition: transform .15s;
+    position: relative;
+}
+
+.nav-btn:active {
+    transform: scale(.82);
+}
+
+.nav-ico {
+    font-size: 19px;
+    filter: grayscale(1) opacity(.4);
+    transition: all .2s;
+}
+
+.nav-lbl {
+    font-family: var(--fb);
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--textm);
+    text-transform: uppercase;
+    letter-spacing: .02em;
+    transition: color .2s;
+}
+
+.nav-btn.on .nav-ico {
+    filter: none;
+    transform: scale(1.12) translateY(-2px);
+}
+
+.nav-btn.on .nav-lbl {
+    color: var(--blue-600);
+    font-weight: 800;
+}
+
+.nav-btn.on::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 18px;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--blue-500);
+}
