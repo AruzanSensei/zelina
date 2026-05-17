@@ -1,9 +1,0 @@
-{
-  "sort_method": "date",
-  "available_sort_methods": ["order", "name", "date"],
-  "sort_descriptions": {
-    "order": "Manual ordering (drag & drop in config)",
-    "name": "Alphabetical order",
-    "date": "Creation date order"
-  }
-}

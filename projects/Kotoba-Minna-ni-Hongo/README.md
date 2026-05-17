@@ -1,1 +1,0 @@
-# hayooo mau ngapain liat code nya ya??
