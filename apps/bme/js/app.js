@@ -231,8 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
             'dark': 'moon',
             'system': 'monitor'
         };
-        themeCycleBtn.innerHTML = `<i data-lucide="${icons[theme] || 'monitor'}" style="width:16px;height:16px;stroke-width:2"></i>`;
-        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [themeCycleBtn] });
+        themeCycleBtn.innerHTML = `<i-ui name="${icons[theme] || 'monitor'}" size="16"></i-ui>`;
     };
 
     if (themeCycleBtn) {
@@ -273,7 +272,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }));
         });
-        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...btnGlobalPicker.querySelectorAll('[data-lucide]')] });
     }
 
     // Initial show

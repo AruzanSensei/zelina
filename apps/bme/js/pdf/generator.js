@@ -1002,10 +1002,9 @@ export function initPDFGenerator() {
                     const alertEl = document.getElementById('custom-alert');
                     const messageEl = document.getElementById('alert-message');
                     if (alertEl && messageEl) {
-                        messageEl.innerHTML = 'Mengekspor... <i data-lucide="loader-2" class="spin-icon" style="width:14px;height:14px;stroke-width:1.5"></i>';
+                        messageEl.innerHTML = 'Mengekspor... <i-ui name="loading-01" size="14" class="spin-icon"></i-ui>';
                         alertEl.classList.remove('hidden');
                         alertEl.style.animation = 'alert-in 0.3s ease-out forwards';
-                        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...messageEl.querySelectorAll('[data-lucide]')] });
                     }
 
                     if (defaultMethod === 'jpeg') {
@@ -1087,10 +1086,9 @@ export function initPDFGenerator() {
                 const alertEl = document.getElementById('custom-alert');
                 const messageEl = document.getElementById('alert-message');
                 if (alertEl && messageEl) {
-                    messageEl.innerHTML = 'Mengekspor... <i data-lucide="loader-2" class="spin-icon" style="width:14px;height:14px;stroke-width:1.5"></i>';
+                    messageEl.innerHTML = 'Mengekspor... <i-ui name="loading-01" size="14" class="spin-icon"></i-ui>';
                     alertEl.classList.remove('hidden');
                     alertEl.style.animation = 'alert-in 0.3s ease-out forwards';
-                    if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...messageEl.querySelectorAll('[data-lucide]')] });
                 }
 
                 if (defaultMethod === 'jpeg') {
@@ -1256,10 +1254,9 @@ export function initPDFGenerator() {
         const messageEl = document.getElementById('alert-message');
         if (!alertEl || !messageEl) return;
 
-        messageEl.innerHTML = isSuccess ? `${message} <i data-lucide="check-circle-2" style="width:16px;height:16px;stroke-width:2;color:#2ecc71;"></i>` : message;
+        messageEl.innerHTML = isSuccess ? `${message} <i-ui name="check-circle" size="16" style="color:#2ecc71"></i-ui>` : message;
         alertEl.classList.remove('hidden');
         alertEl.style.animation = 'alert-in 0.3s ease-out forwards';
-        if (isSuccess && window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...messageEl.querySelectorAll('[data-lucide]')] });
 
         setTimeout(() => {
             alertEl.style.animation = 'alert-out 0.3s ease-in forwards';
@@ -1282,12 +1279,11 @@ export function initPDFGenerator() {
         popup.href = 'https://www.ilovepdf.com/id/jpg-ke-pdf/';
         popup.target = '_blank';
         popup.innerHTML = `
-            <i data-lucide="file-type-2" style="width:18px;height:18px;stroke-width:1.5"></i>
+            <i-ui name="file-02" size="18"></i-ui>
             <span>Jadikan PDF</span>
-            <i data-lucide="x" class="close-popup" id="close-conv-popup" style="width:14px;height:14px;stroke-width:2.5"></i>
+            <i-ui name="x" size="14" class="close-popup" id="close-conv-popup"></i-ui>
         `;
         document.body.appendChild(popup);
-        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...popup.querySelectorAll('[data-lucide]')] });
 
         // Handle close button click
         const closeBtn = popup.querySelector('#close-conv-popup');
@@ -1522,14 +1518,13 @@ export function initPDFGenerator() {
                 <div style="font-size:0.75rem; color:var(--text-muted); padding:4px 10px; margin-bottom:4px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">Pilih Format</div>
                 ${options.map(opt => `
                     <button class="ctx-item" data-format="${opt.id}" style="display:flex; align-items:center; gap:12px; width:100%; padding:10px; border:none; background:none; cursor:pointer; border-radius:var(--radius-sm); transition:background 0.2s;">
-                        <i data-lucide="${opt.icon}" style="width:18px;height:18px;stroke-width:2; color:${opt.color};"></i>
+                        <i-ui name="${opt.icon}" size="18" style="color:${opt.color}"></i-ui>
                         <span style="font-weight:600; font-size:0.9rem; color:var(--text-main);">${opt.label}</span>
                     </button>
                 `).join('')}
             `;
 
             document.body.appendChild(menu);
-            if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...menu.querySelectorAll('[data-lucide]')] });
 
             const closeMenu = (e) => {
                 if (!menu.contains(e.target) && e.target !== btnDownload) {
@@ -1692,7 +1687,7 @@ class PDFPrintQueue {
 
         return `
         <div class="pqi-header">
-            <span class="pqi-icon-wrap"><i data-lucide="file-text" style="width:16px;height:16px;stroke-width:2;"></i></span>
+            <span class="pqi-icon-wrap"><i-ui name="file-01" size="16"></i-ui></span>
             <span class="pqi-count">${done} <span class="pqi-sep">/</span> ${total}</span>
             <span class="pqi-label-text">PDF</span>
             <button id="pqi-close-btn" class="pqi-close" title="Tutup">×</button>
@@ -1701,15 +1696,14 @@ class PDFPrintQueue {
         <div class="pqi-bar-track"><div class="pqi-bar-fill" style="width:${pct}%"></div></div>
         <button id="pqi-next-btn" class="pqi-btn ${hasN ? '' : 'pqi-btn-done'}">
             ${hasN
-                ? `<i data-lucide="chevron-right" style="width:14px;height:14px;stroke-width:2.5;"></i> Cetak Berikutnya`
-                : `<i data-lucide="check-circle-2" style="width:14px;height:14px;stroke-width:2;"></i> Selesai`}
+                ? `<i-ui name="chevron-right" size="14"></i-ui> Cetak Berikutnya`
+                : `<i-ui name="check-circle" size="14"></i-ui> Selesai`}
         </button>`;
     }
 
     _updateIndicator() {
         if (!this._el) return;
         this._el.innerHTML = this._html();
-        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...this._el.querySelectorAll('[data-lucide]')] });
 
         // Re-wire buttons
         this._el.querySelector('#pqi-next-btn')?.addEventListener('click', () => {

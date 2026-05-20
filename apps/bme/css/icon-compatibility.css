@@ -1,0 +1,28 @@
+/* Lucide & i-ui icon baseline compatibility */
+i-ui {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+/* Spinner animation for loader-2 (replaces fa-spin) */
+@keyframes bme-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.spin-icon {
+    animation: bme-spin 0.8s linear infinite;
+    display: inline-flex;
+    vertical-align: middle;
+}
+
+.spin-icon svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}

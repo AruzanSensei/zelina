@@ -225,10 +225,9 @@ export async function exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML,
     const alertEl = document.getElementById('custom-alert');
     const messageEl = document.getElementById('alert-message');
     if (alertEl && messageEl) {
-        messageEl.innerHTML = 'Mengekspor dokumen... <i data-lucide="loader-2" class="spin-icon" style="width:14px;height:14px;stroke-width:1.5"></i>';
+        messageEl.innerHTML = 'Mengekspor dokumen... <i-ui name="loading-01" size="14" class="spin-icon"></i-ui>';
         alertEl.classList.remove('hidden');
         alertEl.style.animation = 'alert-in 0.3s ease-out forwards';
-        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...messageEl.querySelectorAll('[data-lucide]')] });
     }
 
     try {
@@ -246,8 +245,7 @@ export async function exportBothDocuments(buildInvoiceHTML, buildSuratJalanHTML,
 
         // Hide loading and show success
         if (alertEl && messageEl) {
-            messageEl.innerHTML = 'Berhasil mengekspor dokumen <i data-lucide="check-circle-2" style="width:16px;height:16px;stroke-width:2;color:#2ecc71;"></i>';
-            if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...messageEl.querySelectorAll('[data-lucide]')] });
+            messageEl.innerHTML = 'Berhasil mengekspor dokumen <i-ui name="check-circle" size="16" style="color:#2ecc71"></i-ui>';
             setTimeout(() => {
                 alertEl.style.animation = 'alert-out 0.3s ease-in forwards';
                 setTimeout(() => {

@@ -24,7 +24,7 @@ window.showBMEAlert = (message, type = 'info', options = {}) => {
 
     alert.innerHTML = `
         <div class="alert-content">
-            <i data-lucide="${icon}" class="alert-icon"></i>
+            <i-ui name="${icon}" class="alert-icon"></i-ui>
             <span class="alert-message">${message}</span>
         </div>
         ${confirm ? `
@@ -36,7 +36,6 @@ window.showBMEAlert = (message, type = 'info', options = {}) => {
     `;
 
     document.body.appendChild(alert);
-    if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [alert.querySelector('.alert-icon')] });
 
     // Interaction
     if (confirm) {
@@ -258,7 +257,7 @@ export function initSettings() {
             tooltip.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
                     <strong>Format Token</strong>
-                    <button id="close-format-help" style="background:none; border:none; cursor:pointer; color:var(--text-muted);"><i data-lucide="x" style="width:18px;height:18px;stroke-width:2.5"></i></button>
+                    <button id="close-format-help" style="background:none; border:none; cursor:pointer; color:var(--text-muted);"><i-ui name="x" size="18"></i-ui></button>
                 </div>
                 <table style="width:100%; font-size:0.85rem; border-collapse:collapse;">
                     <tr style="border-bottom:1px solid var(--border-color);"><td style="padding:6px 4px;"><code>{judul}</code></td><td>Judul invoice</td></tr>
@@ -274,7 +273,6 @@ export function initSettings() {
                 </div>
             `;
             document.body.appendChild(tooltip);
-            if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...tooltip.querySelectorAll('[data-lucide]')] });
 
             const backdrop = document.createElement('div');
             backdrop.id = 'format-help-backdrop';
@@ -359,26 +357,25 @@ export function initSettings() {
     const showSyncMenu = (x, y, isImport) => {
         syncContextMenu.innerHTML = isImport ? `
             <button class="ctx-item" data-action="import-json">
-                <i data-lucide="file-code" style="width:14px;height:14px;stroke-width:1.5"></i> Data JSON
+                <i-ui name="file-code-01" size="14"></i-ui> Data JSON
             </button>
         ` : `
             <button class="ctx-item" data-action="export-json">
-                <i data-lucide="file-code" style="width:14px;height:14px;stroke-width:1.5"></i> Data JSON
+                <i-ui name="file-code-01" size="14"></i-ui> Data JSON
             </button>
             <button class="ctx-item" data-action="export-csv">
-                <i data-lucide="table" style="width:14px;height:14px;stroke-width:2"></i> Tabel CSV
+                <i-ui name="table" size="14"></i-ui> Tabel CSV
             </button>
             <button class="ctx-item" data-action="export-pdf">
-                <i data-lucide="file-type-2" style="width:14px;height:14px;stroke-width:1.5"></i> Dokumen PDF
+                <i-ui name="file-02" size="14"></i-ui> Dokumen PDF
             </button>
             <div class="ctx-separator"></div>
             <button class="ctx-item orange" data-action="export-zip">
-                <i data-lucide="archive" style="width:14px;height:14px;stroke-width:2"></i> Semua (ZIP)
+                <i-ui name="archive" size="14"></i-ui> Semua (ZIP)
             </button>
         `;
 
         syncContextMenu.id = 'bme-context-menu';
-        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...syncContextMenu.querySelectorAll('[data-lucide]')] });
 
         syncContextMenu.querySelectorAll('.ctx-item').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -565,10 +562,9 @@ export function initSettings() {
             const btnAlert = document.getElementById('custom-alert');
             const msgAlert = document.getElementById('alert-message');
             if (btnAlert && msgAlert) {
-                msgAlert.innerHTML = 'Memproses ZIP... <i data-lucide="loader-2" class="spin-icon" style="width:14px;height:14px;stroke-width:1.5"></i>';
+                msgAlert.innerHTML = 'Memproses ZIP... <i-ui name="loading-01" size="14" class="spin-icon"></i-ui>';
                 btnAlert.classList.remove('hidden');
                 btnAlert.style.animation = 'alert-in 0.3s ease-out forwards';
-                if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...msgAlert.querySelectorAll('[data-lucide]')] });
             }
 
             zip.generateAsync({ type: "blob" }).then(function (content) {
@@ -632,15 +628,14 @@ export function initSettings() {
                 </div>
                 <div class="template-actions" style="margin-left:12px; display:flex; gap:6px;">
                     <button class="btn btn-sm btn-outline use-template" data-index="${i}" title="Pakai" style="padding:6px; border-radius:8px;">
-                        <i data-lucide="check" style="width:14px;height:14px;stroke-width:2.5"></i>
+                        <i-ui name="check" size="14"></i-ui>
                     </button>
                     <button class="btn btn-sm btn-outline delete-template" data-index="${i}" style="color:#ff4d4f; border-color:#ff4d4f; padding:6px; border-radius:8px;">
-                        <i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i>
+                        <i-ui name="trash-01" size="14"></i-ui>
                     </button>
                 </div>
     `;
             templateList.appendChild(div);
-            if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...div.querySelectorAll('[data-lucide]')] });
         });
 
         // Init Drag Logic after render
@@ -894,7 +889,7 @@ export function initSettings() {
         <div class="modal-content">
                         <div class="modal-header">
                             <h2>Edit Item</h2>
-                            <button class="close-picker"><i data-lucide="x" style="width:17px;height:17px;stroke-width:2.5"></i></button>
+                            <button class="close-picker"><i-ui name="x" size="17"></i-ui></button>
                         </div>
                         <div class="modal-body">
                             <div class="input-group">
@@ -942,7 +937,7 @@ export function initSettings() {
         <div class="modal-content">
                         <div class="modal-header">
                             <h2>Tambah Item Baru</h2>
-                            <button class="close-picker"><i data-lucide="x" style="width:17px;height:17px;stroke-width:2.5"></i></button>
+                            <button class="close-picker"><i-ui name="x" size="17"></i-ui></button>
                         </div>
                         <div class="modal-body">
                             <div class="input-group">
@@ -998,11 +993,11 @@ export function initSettings() {
                                 <input type="text" id="picker-search-input" class="form-input" placeholder="Cari barang..." 
                                     style="width: 32px; height: 32px; padding: 0; border-radius: 20px; transition: all 0.3s ease; border: 1px solid var(--border-color); background: rgba(0,0,0,0.05); cursor: pointer; padding-left: 32px; font-size: 0.85rem;"
                                     value="${searchQuery}">
-                                <i data-lucide="search" class="search-icon" style="position: absolute; left: 8px; width: 14px; height: 14px; color: var(--text-muted); pointer-events: none;"></i>
+                                <i-ui name="search-lg" size="14" class="search-icon" style="position: absolute; left: 8px; color: var(--text-muted); pointer-events: none"></i-ui>
                             </div>
 
                             <button class="close-picker" style="background: rgba(0, 0, 0, 0.05); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; cursor: pointer;">
-                                <i data-lucide="x" style="width: 17px; height: 17px; stroke-width: 2.5;"></i>
+                                <i-ui name="x" size="17"></i-ui>
                             </button>
                         </div>
                         <div class="modal-body">
@@ -1010,8 +1005,8 @@ export function initSettings() {
                                 ${filteredItems.length > 0 ? filteredItems.map((t) => `
                                     <div class="item-swipe-container" style="position:relative; overflow:hidden; border-radius:var(--radius-sm); margin-bottom:8px;">
                                         <div class="swipe-actions" style="position:absolute; top:0; bottom:0; right:0; display:flex; z-index:1;">
-                                            <button class="swipe-btn swipe-edit" data-index="${t.originalIndex}" style="background-color:#F5A623; border:none; color:white; padding:0 20px; cursor:pointer;"><i data-lucide="pencil" style="width:15px;height:15px;stroke-width:2"></i></button>
-                                            <button class="swipe-btn swipe-delete" data-index="${t.originalIndex}" style="background-color:#ff4d4f; border:none; color:white; padding:0 20px; cursor:pointer; border-radius:0 var(--radius-sm) var(--radius-sm) 0;"><i data-lucide="trash-2" style="width:15px;height:15px;stroke-width:2.5"></i></button>
+                                            <button class="swipe-btn swipe-edit" data-index="${t.originalIndex}" style="background-color:#F5A623; border:none; color:white; padding:0 20px; cursor:pointer;"><i-ui name="pencil-01" size="15"></i-ui></button>
+                                            <button class="swipe-btn swipe-delete" data-index="${t.originalIndex}" style="background-color:#ff4d4f; border:none; color:white; padding:0 20px; cursor:pointer; border-radius:0 var(--radius-sm) var(--radius-sm) 0;"><i-ui name="trash-01" size="15"></i-ui></button>
                                         </div>
                                         <div class="item-card picker-item" data-index="${t.originalIndex}" style="padding:12px; display:flex; flex-direction:column; gap:4px; cursor:pointer; border:1px solid var(--border-color); box-shadow: var(--app-shadow-sm) !important; background:var(--bg-card); z-index:2; position:relative; transition:transform 0.2s;">
                                             <div style="display:flex; justify-content:space-between; align-items:center; width:100%; pointer-events:none;">
@@ -1020,19 +1015,19 @@ export function initSettings() {
                                             </div>
                                             <div style="font-size:0.72rem; color:var(--text-muted); display:flex; gap:12px; pointer-events:none; align-items:center; flex-wrap:nowrap;">
                                                 <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
-                                                    <i data-lucide="tag" style="width:11px;height:11px;opacity:0.6;"></i>
+                                                    <i-ui name="tag-01" size="11" style="opacity:0.6"></i-ui>
                                                     ${t.tipe || '-'}
                                                 </div>
                                                 <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
-                                                    <i data-lucide="hash" style="width:11px;height:11px;opacity:0.6;"></i>
+                                                    <i-ui name="hash-01" size="11" style="opacity:0.6"></i-ui>
                                                     ${t.qty || '-'}
                                                 </div>
                                                 <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
-                                                    <i data-lucide="package" style="width:11px;height:11px;opacity:0.6;"></i>
+                                                    <i-ui name="package" size="11" style="opacity:0.6"></i-ui>
                                                     ${t.qtyUnit || 'pcs'}
                                                 </div>
                                                 <div style="display:flex; align-items:center; gap:4px; min-width:0; flex:1;">
-                                                    <i data-lucide="sticky-note" style="width:11px;height:11px;opacity:0.6; flex-shrink:0;"></i>
+                                                    <i-ui name="file-01" size="11" style="opacity:0.6; flex-shrink:0"></i-ui>
                                                     <p style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size:0.7rem">${t.note || '-'}</p>
                                                 </div>
                                             </div>
@@ -1041,7 +1036,7 @@ export function initSettings() {
                                 `).join('') : '<p style="text-align:center; padding: 20px; color: var(--text-muted);">Barang tidak ditemukan.</p>'}
                             </div>
                             <button id="btn-to-add-view" class="btn btn-outline btn-full" style="margin-top:10px;">
-                                <i data-lucide="plus" style="width:14px;height:14px;stroke-width:2.5"></i> Tambah Item Baru
+                                <i-ui name="plus" size="14"></i-ui> Tambah Item Baru
                             </button>
                         </div>
                     </div >
@@ -1148,7 +1143,6 @@ export function initSettings() {
             if (editBtn) {
                 const idx = parseInt(editBtn.dataset.index);
                 pickerOverlay.innerHTML = renderPickerContent(false, idx);
-                if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...pickerOverlay.querySelectorAll('[data-lucide]')] });
                 initPickerTextarea();
                 return;
             }
@@ -1163,7 +1157,6 @@ export function initSettings() {
                         itemTemplates.splice(idx, 1);
                         saveItemTemplates();
                         pickerOverlay.innerHTML = renderPickerContent(false);
-                        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...pickerOverlay.querySelectorAll('[data-lucide]')] });
                         initPickerSwipe();
                     }
                 });
@@ -1181,14 +1174,12 @@ export function initSettings() {
             // Switch to Add View
             if (target.closest('#btn-to-add-view')) {
                 pickerOverlay.innerHTML = renderPickerContent(true);
-                if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...pickerOverlay.querySelectorAll('[data-lucide]')] });
                 initPickerTextarea();
             }
 
             // Back to List
             if (target.id === 'btn-back-picker') {
                 pickerOverlay.innerHTML = renderPickerContent(false);
-                if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...pickerOverlay.querySelectorAll('[data-lucide]')] });
                 initPickerSwipe();
             }
 
@@ -1242,7 +1233,6 @@ export function initSettings() {
                 };
                 saveItemTemplates();
                 pickerOverlay.innerHTML = renderPickerContent(false);
-                if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...pickerOverlay.querySelectorAll('[data-lucide]')] });
                 initPickerSwipe();
 
                 // Init auto-resize for textarea after render
@@ -1268,7 +1258,6 @@ export function initSettings() {
                 modalBody.innerHTML = tempDiv.querySelector('.modal-body').innerHTML;
 
                 // Re-init icons and search bar state
-                if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...modalBody.querySelectorAll('[data-lucide]')] });
                 initPickerSwipe();
 
                 // Keep focus and expanded state
@@ -1287,7 +1276,6 @@ export function initSettings() {
         });
 
         // Final icon init for initial view
-        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...pickerOverlay.querySelectorAll('[data-lucide]')] });
 
         function initPickerTextarea() {
             pickerOverlay.querySelectorAll('textarea').forEach(ta => {

@@ -40,3 +40,6 @@
 # workers
 **/workers
 
+**/.todo
+
+**/.obsidian

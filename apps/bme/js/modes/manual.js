@@ -118,10 +118,9 @@ export function initManualMode() {
             const alertEl = document.getElementById('custom-alert');
             const messageEl = document.getElementById('alert-message');
             if (alertEl && messageEl) {
-                messageEl.innerHTML = 'Teks disalin <i data-lucide="check" style="width:14px;height:14px;stroke-width:2.5;color:#27AE60;margin-left:5px;"></i>';
+                messageEl.innerHTML = 'Teks disalin <i-ui name="check" size="14" style="color:#27AE60;margin-left:5px"></i-ui>';
                 alertEl.classList.remove('hidden');
                 alertEl.style.animation = 'alert-in 0.3s ease-out forwards';
-                if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...messageEl.querySelectorAll('[data-lucide]')] });
 
                 setTimeout(() => {
                     alertEl.classList.add('hidden');
@@ -144,7 +143,7 @@ export function initManualMode() {
             div.className = `item-card ${isSelected ? 'is-selected' : ''} ${item.isNew ? 'new-item' : ''}`;
             div.dataset.index = index;
             div.innerHTML = `
-                <button class="remove-item-btn" data-index="${index}"><i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i></button>
+                <button class="remove-item-btn" data-index="${index}"><i-ui name="trash-01" size="14"></i-ui></button>
                     
                 <div class="input-group item-field-wrap" style="margin-bottom: 8px;">
                     <label class="field-label"><strong>Invoice</strong> - Keterangan</label>
@@ -156,7 +155,7 @@ export function initManualMode() {
                         <label class="field-label"><strong>SurJal</strong> - Nama Barang</label>
                         <div class="input-with-icon">
                             <textarea class="form-input item-name ${!item.name ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Nama Barang" rows="1" style="resize:none; overflow:hidden; padding-right:30px; font-family:inherit; white-space:pre-wrap;">${item.name || ''}</textarea>
-                            <button class="input-icon-btn template-picker-btn" data-index="${index}"><i data-lucide="list" style="width:18px;height:18px;stroke-width:3.5"></i></button>
+                            <button class="input-icon-btn template-picker-btn" data-index="${index}"><i-ui name="list" size="18"></i-ui></button>
                         </div>
                     </div>
                     <div style="width: 100px; display: flex; flex-direction: column;">
@@ -194,7 +193,6 @@ export function initManualMode() {
             `;
             container.appendChild(div);
             div.querySelectorAll('textarea').forEach(ta => autoResize(ta));
-            if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...div.querySelectorAll('[data-lucide]')] });
         });
     };
 
@@ -212,27 +210,27 @@ export function initManualMode() {
             div.className = `item-card ${isSelected ? 'is-selected' : ''} ${item.isNew ? 'new-item' : ''}`;
             div.dataset.index = index;
             div.innerHTML = `
-                <button class="remove-item-btn" data-index="${index}"><i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i></button>
+                <button class="remove-item-btn" data-index="${index}"><i-ui name="trash-01" size="14"></i-ui></button>
                     
                     <div class="input-group item-field-wrap" style="margin-bottom: 4px;">
                         <label class="field-label">Barang</label>
                         <div class="input-with-icon">
                             <textarea class="form-input item-name ${!item.name ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Nama Barang" rows="1" style="resize:none; overflow:hidden; padding-right:30px; font-family:inherit; white-space:pre-wrap;">${item.name || ''}</textarea>
-                            <button class="input-icon-btn template-picker-btn" data-index="${index}"><i data-lucide="list" style="width:18px;height:18px;stroke-width:3.5"></i></button>
+                            <button class="input-icon-btn template-picker-btn" data-index="${index}"><i-ui name="list" size="18"></i-ui></button>
                         </div>
                     </div>
                     
                     <div class="item-row">
                         <div class="item-price-wrap" style="flex: 2.2; padding-top: 4px;">
-                            <label class="field-label"><i data-lucide="banknote" style="width:12px;height:12px;vertical-align:middle;margin-top:-2px;"></i> Harga</label>
+                            <label class="field-label"><i-ui name="bank-note-01" size="12" style="vertical-align:middle;margin-top:-2px"></i-ui> Harga</label>
                             <input type="text" class="form-input item-price-format ${!item.price || item.price <= 0 ? 'required-empty-orange' : ''}" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="0" inputmode="numeric">
                         </div>
                         <div class="item-tipe-wrap" style="flex: 2; padding-top: 4px;">
-                            <label class="field-label"><i data-lucide="tag" style="width:12px;height:12px;vertical-align:middle;margin-top:-2px;"></i> Tipe</label>
+                            <label class="field-label"><i-ui name="tag-01" size="12" style="vertical-align:middle;margin-top:-2px"></i-ui> Tipe</label>
                             <div class="custom-select item-tipe" data-index="${index}" data-value="${item.tipe || ''}">
                                 <div class="select-selected form-input ${!item.tipe ? 'required-empty-orange' : ''}" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
                                     <span class="selected-text" style="opacity: ${!item.tipe ? '0.5' : '1'}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.tipe || 'Tipe'}</span>
-                                    <i data-lucide="chevron-down" style="width:14px;height:14px;stroke-width:2;opacity:0.5;flex-shrink:0;"></i>
+                                    <i-ui name="chevron-down" size="14" style="opacity:0.5;flex-shrink:0"></i-ui>
                                 </div>
                                 <div class="select-items select-hide">
                                     <div data-value="-" class="${item.tipe === '-' ? 'same-as-selected' : ''}">-</div>
@@ -259,7 +257,7 @@ export function initManualMode() {
                     <div class="input-group" style="margin-bottom: 0;">
                         <div class="input-wrapper">
                             <textarea class="form-textarea item-note ${!item.note ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Deskripsi Item (wajib)" rows="1" style="padding-right: 30px; resize:none; overflow:hidden; min-height:36px; line-height:1.4;">${item.note || ''}</textarea>
-                            <button class="copy-icon-btn" data-index="${index}" title="Copy Note"><i data-lucide="copy" style="width:13px;height:13px;stroke-width:2"></i></button>
+                            <button class="copy-icon-btn" data-index="${index}" title="Copy Note"><i-ui name="copy-01" size="13"></i-ui></button>
                         </div>
                     </div>
                     
@@ -277,7 +275,6 @@ export function initManualMode() {
             // Init resize for this item's textareas
             const textareas = div.querySelectorAll('textarea');
             textareas.forEach(ta => autoResize(ta));
-            if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...div.querySelectorAll('[data-lucide]')] });
         });
     };
 
@@ -307,7 +304,7 @@ export function initManualMode() {
                             <span class="input-sizer" data-value="${item.name || 'Nama Barang'}">
                                 <input type="text" class="item-name ${!item.name ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Nama Barang" value="${item.name || ''}" oninput="this.parentNode.dataset.value = this.value || 'Nama Barang'">
                             </span>
-                            <button class="input-icon-btn template-picker-btn" data-index="${index}"><i data-lucide="list" style="width:12px;height:12px;stroke-width:2"></i></button>
+                            <button class="input-icon-btn template-picker-btn" data-index="${index}"><i-ui name="list" size="12"></i-ui></button>
                         </div>
                     </td>
                     <td>
@@ -319,7 +316,7 @@ export function initManualMode() {
                         <div class="custom-select item-tipe table-select" data-index="${index}" data-value="${item.tipe || ''}">
                             <div class="select-selected ${!item.tipe ? 'required-empty-orange' : ''}" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer; width:100%; padding: 4px;">
                                 <span class="selected-text" style="opacity: ${!item.tipe ? '0.5' : '1'}">${item.tipe || 'Tipe'}</span>
-                                <i data-lucide="chevron-down" style="width:12px;height:12px;stroke-width:2;opacity:0.5;"></i>
+                                <i-ui name="chevron-down" size="12" style="opacity:0.5"></i-ui>
                             </div>
                             <div class="select-items select-hide">
                                 <div data-value="-" class="${item.tipe === '-' ? 'same-as-selected' : ''}">-</div>
@@ -337,7 +334,7 @@ export function initManualMode() {
                     </td>
                     <td><textarea class="item-note table-note ${!item.note ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Deskripsi (wajib)" rows="1">${item.note || ''}</textarea></td>
                     <td>
-                        <button class="remove-item-btn" data-index="${index}"><i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i></button>
+                        <button class="remove-item-btn" data-index="${index}"><i-ui name="trash-01" size="14"></i-ui></button>
                     </td>
                 </tr>
                 `).join('')}
@@ -345,7 +342,6 @@ export function initManualMode() {
         `;
         container.appendChild(table);
         container.querySelectorAll('textarea').forEach(ta => autoResize(ta));
-        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...table.querySelectorAll('[data-lucide]')] });
     };
 
     const render = () => {
@@ -401,18 +397,17 @@ export function initManualMode() {
 
         menu.innerHTML = `
             <button class="ctx-item" data-action="duplicate">
-                <i data-lucide="copy" style="width:14px;height:14px;stroke-width:2"></i> Duplikat
+                <i-ui name="copy-01" size="14"></i-ui> Duplikat
             </button>
             <button class="ctx-item" data-action="multiselect">
-                <i data-lucide="check-check" style="width:14px;height:14px;stroke-width:2.5"></i> Pilih beberapa...
+                <i-ui name="check-done-01" size="14"></i-ui> Pilih beberapa...
             </button>
             <div class="ctx-separator"></div>
             <button class="ctx-item danger" data-action="delete">
-                <i data-lucide="trash-2" style="width:14px;height:14px;stroke-width:2.5"></i> Hapus
+                <i-ui name="trash-01" size="14"></i-ui> Hapus
             </button>
         `;
 
-        if (window.lucide) lucide.createIcons({ nameAttr: 'data-lucide', nodes: [...menu.querySelectorAll('[data-lucide]')] });
 
         menu.querySelectorAll('.ctx-item').forEach(btn => {
             btn.addEventListener('click', (e) => {

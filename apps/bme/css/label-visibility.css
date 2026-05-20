@@ -1,0 +1,140 @@
+/* ============================================
+   GLOBAL LABEL VISIBILITY (EYE TOGGLE)
+   ============================================ */
+
+/* Transition dasar untuk animasi smooth */
+.field-label,
+.view-toggle-container,
+.item-field-wrap,
+.item-price-wrap,
+.item-tipe-wrap,
+.item-qty-wrap,
+.item-name,
+.item-note,
+.qty-control,
+.remove-item-btn,
+.template-picker-btn,
+.age-badge,
+.history-info-text,
+.history-content-wrapper,
+.history-row-1,
+.history-row-2 {
+    transition: all 400ms ease;
+}
+
+/* --- MANUAL MODE --- */
+/* Eye Open (Normal) */
+.qty-control {
+    height: 45px;
+}
+
+.item-qty-wrap {
+    margin-top: 0 !important;
+}
+
+/* Eye Closed (Compact) */
+.labels-hidden .qty-control {
+    height: 24px;
+}
+
+/* Label & Field collapse */
+.field-label {
+    max-height: 20px;
+    overflow: hidden;
+}
+
+.labels-hidden .field-label {
+    opacity: 0;
+    max-height: 0;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    pointer-events: none;
+}
+
+/* UI Auxiliaries */
+.labels-hidden .remove-item-btn,
+.labels-hidden .view-toggle-container,
+.labels-hidden .input-icon-btn,
+.labels-hidden .copy-icon-btn,
+.labels-hidden .template-picker-btn {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.labels-hidden .item-price-wrap,
+.labels-hidden .item-tipe-wrap {
+    padding-top: 0 !important;
+}
+
+.labels-hidden .item-field-wrap {
+    margin-bottom: 0 !important;
+}
+
+.labels-hidden .item-name {
+    margin-bottom: 6px !important;
+}
+
+.labels-hidden .item-note {
+    margin-top: 6px !important;
+}
+
+/* --- HISTORY MODE --- */
+.history-content-wrapper {
+    width: 100%;
+    transition: all 400ms ease;
+}
+
+.form-input.item-inv-keterangan {
+    margin-bottom: 0px !important;
+}
+
+.labels-hidden .form-input.item-inv-keterangan {
+    margin-bottom: 6px !important;
+}
+
+.form-input.item-sj-keterangan {
+    margin-bottom: 0px !important;
+}
+
+.labels-hidden .form-input.item-sj-keterangan {
+    margin-bottom: 6px !important;
+}
+
+.labels-hidden .unit-switch.adv {
+    margin-top: -2px !important;
+}
+
+.labels-hidden .item-row.adv {
+    margin-bottom: 0px !important;
+}
+
+.age-badge,
+.history-info-text {
+    max-height: 22px;
+    opacity: 1;
+    overflow: hidden;
+    transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.history-info-text {
+    margin-top: 2px;
+}
+
+.age-badge {
+    margin-bottom: 4px;
+}
+
+/* Eye Closed (Compact) */
+.labels-hidden .age-badge,
+.labels-hidden .history-info-text {
+    opacity: 0;
+    max-height: 0;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+    pointer-events: none;
+}
+
+.labels-hidden .history-content-wrapper {
+    align-items: center !important;
+}
