@@ -34,17 +34,36 @@ export function initManualMode() {
     let selectedIndices = new Set();
     let longPressTimer = null;
     let contextActiveItem = null;
+    const titleInputDesktop = document.getElementById('manual-title-desktop');
+
+    const updateTitleInputsVisuals = (val) => {
+        if (titleInput) titleInput.value = val;
+        if (titleInputDesktop) titleInputDesktop.value = val;
+
+        if (!val.trim()) {
+            titleInput?.classList.add('required-empty-orange');
+            titleInputDesktop?.classList.add('required-empty-orange');
+        } else {
+            titleInput?.classList.remove('required-empty-orange');
+            titleInputDesktop?.classList.remove('required-empty-orange');
+        }
+    };
+
     if (titleInput) {
-        titleInput.value = appState.state.manualTitle || '';
-        // Show orange outline if empty on load
-        if (!titleInput.value.trim()) titleInput.classList.add('required-empty-orange');
-        else titleInput.classList.remove('required-empty-orange');
+        updateTitleInputsVisuals(appState.state.manualTitle || '');
 
         titleInput.addEventListener('input', (e) => {
             appState.updateManualTitle(e.target.value);
-            // Toggle orange outline based on content
-            if (!e.target.value.trim()) e.target.classList.add('required-empty-orange');
-            else e.target.classList.remove('required-empty-orange');
+            updateTitleInputsVisuals(e.target.value);
+            render();
+            updateEmptyFieldsInfo();
+        });
+    }
+
+    if (titleInputDesktop) {
+        titleInputDesktop.addEventListener('input', (e) => {
+            appState.updateManualTitle(e.target.value);
+            updateTitleInputsVisuals(e.target.value);
             render();
             updateEmptyFieldsInfo();
         });
@@ -345,6 +364,13 @@ export function initManualMode() {
     };
 
     const render = () => {
+        // ── Scroll Preservation ──────────────────────────────────────────
+        // Capture current scroll position before DOM is rebuilt
+        const isDesktop = window.innerWidth >= 1024;
+        const scrollEl = document.getElementById('app-content');
+        const savedScroll = isDesktop && scrollEl ? scrollEl.scrollTop : window.scrollY;
+        // ─────────────────────────────────────────────────────────────────
+
         if (appState.state.manualViewMode === 'table') {
             renderTableView();
             btnCardView.classList.remove('active');
@@ -381,6 +407,15 @@ export function initManualMode() {
 
         // Clear isNew flags after first render
         items.forEach(item => { if (item.isNew) delete item.isNew; });
+
+        // ── Restore Scroll Position ───────────────────────────────────────
+        // Restore scroll synchronously after DOM rebuild to prevent jump-to-top
+        if (isDesktop && scrollEl) {
+            scrollEl.scrollTop = savedScroll;
+        } else {
+            window.scrollTo(0, savedScroll);
+        }
+        // ─────────────────────────────────────────────────────────────────
     };
 
     // ============================================
@@ -905,6 +940,15 @@ export function initManualMode() {
             });
         } else {
             applyAI();
+        }
+    });
+
+    document.addEventListener('tab-switched', (e) => {
+        if (e.detail.mode === 'manual') {
+            items = appState.state.invoiceItems || [];
+            updateTitleInputsVisuals(appState.state.manualTitle || '');
+            render();
+            updateEmptyFieldsInfo();
         }
     });
 

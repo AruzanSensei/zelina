@@ -1,0 +1,1292 @@
+.btn-quick-add {
+    display: none;
+}
+
+/* Hide desktop elements on mobile by default */
+.desktop-sidebar,
+.chrome-tabs-bar,
+.workspace-header,
+.desktop-preview-panel,
+.collapsed-preview-strip {
+    display: none;
+}
+
+@media (min-width: 1024px) {
+
+    /* ============================================
+       BASE DESKTOP LAYOUT (3-PANEL SHELL)
+       ============================================ */
+    body {
+        overflow: hidden;
+        /* Prevent body standard scrolling */
+        height: 100vh;
+        background-color: var(--bg-body);
+        color: var(--text-main);
+    }
+
+    /* Primary Container layout grid */
+    .app-container {
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        grid-template-rows: 100vh;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Mobile headers and standard navigation hidden on desktop */
+    .app-header,
+    .tab-nav,
+    .app-footer,
+    #manual-view>.item-field-wrap,
+    #manual-view .view-toggle-container {
+        display: none !important;
+    }
+
+    /* ============================================
+       SIDEBAR DESKTOP
+       ============================================ */
+    .desktop-sidebar {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        width: 100%;
+        background: #181818;
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 20px 16px;
+        box-sizing: border-box;
+        overflow-y: auto;
+        overflow-x: hidden;
+        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 100;
+        position: relative;
+    }
+
+    [data-theme="light"] .desktop-sidebar {
+        background: #ffffff;
+        border-right: 1px solid #e2e8f0;
+    }
+
+    /* Sidebar - Collapsed State */
+    .sidebar-collapsed .app-container {
+        grid-template-columns: 72px 1fr;
+    }
+
+    .sidebar-collapsed .desktop-sidebar {
+        padding: 20px 8px;
+    }
+
+    /* Logo Brand Header */
+    .sidebar-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 4px 8px;
+        margin-bottom: 24px;
+        overflow: hidden;
+        white-space: nowrap;
+        transition: padding 0.3s ease;
+    }
+
+    .sidebar-brand-text {
+        display: flex;
+        flex-direction: column;
+        transition: opacity 0.25s ease;
+    }
+
+    .sidebar-brand-text h2 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        margin: 0;
+        letter-spacing: 0.5px;
+        color: #ffffff;
+    }
+
+    [data-theme="light"] .sidebar-brand-text h2 {
+        color: #0f172a;
+    }
+
+    .sidebar-brand-text p {
+        font-size: 0.72rem;
+        margin: 0;
+        opacity: 0.5;
+        color: #ffffff;
+    }
+
+    [data-theme="light"] .sidebar-brand-text p {
+        color: #64748b;
+    }
+
+    /* Sidebar Logo Icon */
+    .sidebar-brand i-ui {
+        color: var(--primary);
+        flex-shrink: 0;
+    }
+
+    /* Sidebar Nav Links */
+    .sidebar-menu {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex: 1;
+    }
+
+    .sidebar-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-radius: var(--radius-md);
+        border: none;
+        background: transparent;
+        color: #8c8c8c;
+        font-size: 0.92rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-align: left;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        white-space: nowrap;
+    }
+
+    [data-theme="light"] .sidebar-item {
+        color: #64748b;
+    }
+
+    .sidebar-item:hover {
+        background: rgba(255, 255, 255, 0.04);
+        color: #ffffff;
+    }
+
+    [data-theme="light"] .sidebar-item:hover {
+        background: #f1f5f9;
+        color: #0f172a;
+    }
+
+    /* Active Nav States mapped to brand colors from elements.png */
+    .sidebar-item[data-tab="manual"].active {
+        background: linear-gradient(135deg, #1e3a8a 0%, #2e5aac 100%);
+        color: #ffffff !important;
+    }
+
+    .sidebar-item[data-tab="ai"].active {
+        background: linear-gradient(135deg, #6b21a8 0%, #9c27b0 100%);
+        color: #ffffff !important;
+    }
+
+    .sidebar-item[data-tab="finance"].active {
+        background: linear-gradient(135deg, #064e3b 0%, #00c853 100%);
+        color: #ffffff !important;
+    }
+
+    .sidebar-item[data-tab="history"].active {
+        background: linear-gradient(135deg, #9a3412 0%, #d84315 100%);
+        color: #ffffff !important;
+    }
+
+    /* Bottom Profile & Settings */
+    .sidebar-bottom {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        padding-top: 16px;
+        margin-top: auto;
+    }
+
+    [data-theme="light"] .sidebar-bottom {
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .sidebar-profile {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        border-radius: var(--radius-md);
+        background: rgba(255, 255, 255, 0.03) !important;
+        border: 1px solid rgba(255, 255, 255, 0.06) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+        overflow: hidden;
+        white-space: nowrap;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #ffffff;
+    }
+
+    [data-theme="light"] .sidebar-profile {
+        background: rgba(0, 0, 0, 0.02) !important;
+        border: 1px solid rgba(0, 0, 0, 0.05) !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+        color: #0f172a;
+    }
+
+    .sidebar-profile i-ui {
+        flex-shrink: 0;
+        color: var(--primary);
+    }
+
+    /* Collapsed Sidebar Hidden Text Override */
+    .sidebar-collapsed .sidebar-brand-text,
+    .sidebar-collapsed .sidebar-item span,
+    .sidebar-collapsed .sidebar-profile span,
+    .sidebar-collapsed .sidebar-bottom button span {
+        display: none !important;
+    }
+
+    .sidebar-collapsed .sidebar-brand,
+    .sidebar-collapsed .sidebar-item,
+    .sidebar-collapsed .sidebar-profile,
+    .sidebar-collapsed .sidebar-bottom button {
+        justify-content: center;
+        padding: 10px 0;
+        width: 100%;
+    }
+
+    /* ============================================
+       WORKSPACE CONTAINER
+       ============================================ */
+    .workspace-container {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        background: #111111;
+        overflow: hidden;
+        position: relative;
+    }
+
+    [data-theme="light"] .workspace-container {
+        background: #f8fafc;
+    }
+
+    /* Workspace Body View Panels */
+    #app-content {
+        flex: 1;
+        padding: 20px 24px;
+        margin: 0;
+        max-width: none;
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+        box-sizing: border-box;
+        scrollbar-width: none;
+        /* Firefox */
+        -ms-overflow-style: none;
+        /* IE/Edge */
+    }
+
+    #app-content::-webkit-scrollbar {
+        display: none;
+        /* Chrome/Safari */
+    }
+
+    .view {
+        height: 100%;
+    }
+
+    /* ============================================
+       CHROME-LIKE TABS BAR
+       ============================================ */
+    .chrome-tabs-bar {
+        display: flex;
+        align-items: flex-end;
+        background: #0a0a0a;
+        height: 48px;
+        padding: 0 10px;
+        padding-top: 6px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        z-index: 10;
+        overflow-x: auto;
+        scrollbar-width: none;
+        /* Hide scrollbars */
+        box-sizing: border-box;
+    }
+
+    .chrome-tabs-bar::-webkit-scrollbar {
+        display: none;
+    }
+
+    [data-theme="light"] .chrome-tabs-bar {
+        background: #e2e8f0;
+        border-bottom: 1px solid #cbd5e1;
+    }
+
+    /* Collapse Sidebar Trigger Inside Tabs Bar */
+    .sidebar-toggle-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        width: 32px;
+        height: 32px;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        margin-right: 8px;
+        margin-bottom: 4px;
+        transition: all 0.2s ease;
+    }
+
+    .sidebar-toggle-btn:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-main);
+    }
+
+    [data-theme="light"] .sidebar-toggle-btn:hover {
+        background: rgba(0, 0, 0, 0.05);
+    }
+
+    /* Single Tab Item */
+    .chrome-tab {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 36px;
+        min-width: 130px;
+        max-width: 180px;
+        padding: 0 16px;
+        background: transparent;
+        border: none;
+        color: #7a7a7a;
+        font-size: 0.82rem;
+        font-weight: 500;
+        position: relative;
+        cursor: pointer;
+        border-radius: 10px 10px 0 0;
+        transition: all 0.2s ease;
+        margin-right: -4px;
+        z-index: 1;
+        overflow: hidden;
+    }
+
+    [data-theme="light"] .chrome-tab {
+        color: #64748b;
+    }
+
+    /* Angled Side Shapes fallback using smooth border radii */
+    .chrome-tab::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: transparent;
+        transition: background 0.2s ease;
+    }
+
+    /* Tab Hover States */
+    .chrome-tab:hover {
+        background: rgba(255, 255, 255, 0.03);
+        color: #a6a6a6;
+    }
+
+    [data-theme="light"] .chrome-tab:hover {
+        background: rgba(0, 0, 0, 0.03);
+    }
+
+    /* Active Tab Style (Chrome Glassy look) */
+    .chrome-tab.active {
+        background: #111111;
+        color: #ffffff;
+        z-index: 2;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    [data-theme="light"] .chrome-tab.active {
+        background: #f8fafc;
+        color: #0f172a;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
+    }
+
+    /* Mode Indicators (Left border or small dot) */
+    .chrome-tab.manual::before {
+        background: var(--primary);
+    }
+
+    .chrome-tab.ai::before {
+        background: var(--secondary);
+    }
+
+    .chrome-tab.finance::before {
+        background: var(--finance-green);
+    }
+
+    .chrome-tab.history::before {
+        background: var(--tertiary);
+    }
+
+    /* Tab Text Crop */
+    .tab-title {
+        flex: 1;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Tab Close Button */
+    .tab-close {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: transparent;
+        border: none;
+        color: inherit;
+        font-size: 0.7rem;
+        cursor: pointer;
+        opacity: 0.5;
+        transition: all 0.2s ease;
+    }
+
+    .tab-close:hover {
+        background: rgba(255, 255, 255, 0.15);
+        opacity: 1;
+        color: #ff4d4f;
+    }
+
+    [data-theme="light"] .tab-close:hover {
+        background: rgba(0, 0, 0, 0.08);
+    }
+
+    /* Add Tab Button */
+    .btn-add-tab {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        cursor: pointer;
+        margin-left: 8px;
+        margin-bottom: 6px;
+        transition: all 0.2s ease;
+    }
+
+    .btn-add-tab:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--text-main);
+    }
+
+    [data-theme="light"] .btn-add-tab:hover {
+        background: rgba(0, 0, 0, 0.06);
+    }
+
+    /* ============================================
+       WORKSPACE HEADER (JUDUL & TOOLBAR)
+       ============================================ */
+    .workspace-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        margin-bottom: 20px;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    [data-theme="light"] .workspace-header {
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    /* Glass Title block wrapper */
+    .workspace-title-wrap {
+        display: flex;
+        align-items: stretch;
+        background: rgba(0, 0, 0, 0.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        flex: 1;
+        max-width: 460px;
+    }
+
+    [data-theme="light"] .workspace-title-wrap {
+        background: rgba(255, 255, 255, 0.5) !important;
+        border-color: rgba(0, 0, 0, 0.08) !important;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+    }
+
+    .workspace-title-label {
+        background: var(--primary);
+        color: white;
+        padding: 8px 16px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+    }
+
+    .workspace-title-input {
+        background: transparent !important;
+        border: none !important;
+        color: var(--text-main) !important;
+        padding: 8px 16px !important;
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+        flex: 1;
+    }
+
+    .workspace-title-input:focus {
+        box-shadow: none !important;
+    }
+
+    /* Top control toolbar */
+    .workspace-header-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--glass-bg) !important;
+        backdrop-filter: var(--glass-blur) !important;
+        -webkit-backdrop-filter: var(--glass-blur) !important;
+        border: var(--glass-border) !important;
+        box-shadow: var(--glass-shadow) !important;
+        border-radius: var(--radius-md) !important;
+        padding: 6px 12px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+    }
+
+    [data-theme="light"] .workspace-header-toolbar {
+        background: rgba(255, 255, 255, 0.75) !important;
+        box-shadow:
+            0 8px 32px 0 rgba(0, 0, 0, 0.03),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    }
+
+    /* Toolbar collapse trigger */
+    .toolbar-toggle {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px;
+        border-radius: var(--radius-sm);
+        transition: background 0.2s ease;
+    }
+
+    .toolbar-toggle:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-main);
+    }
+
+    [data-theme="light"] .toolbar-toggle:hover {
+        background: rgba(0, 0, 0, 0.05);
+    }
+
+    /* Toolbar collapsed state styles */
+    .workspace-header-toolbar.collapsed {
+        max-width: 32px;
+        padding: 6px 4px;
+    }
+
+    .workspace-header-toolbar.collapsed .toolbar-content {
+        display: none !important;
+    }
+
+    .workspace-header-toolbar.collapsed .toolbar-toggle i-ui {
+        transform: rotate(180deg);
+    }
+
+    .toolbar-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: opacity 0.2s ease;
+    }
+
+    /* ============================================
+       WORKSPACE BODY & CARDS GRID
+       ============================================ */
+    .workspace-body-wrapper {
+        display: flex;
+        align-items: stretch;
+        gap: 20px;
+        height: calc(100% - 68px);
+        width: 100%;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    /* Cards area */
+    .workspace-cards-area {
+        flex: 1;
+        height: 100%;
+        overflow-y: auto;
+        padding-right: 4px;
+    }
+
+    /* Responsive Manual Cards grid */
+    body #manual-items-container {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
+        gap: 18px !important;
+        margin-bottom: 24px !important;
+    }
+
+    body .item-card {
+        margin-bottom: 0 !important;
+    }
+
+    /* ============================================
+       PREVIEW COLLAPSIBLE PANEL (RIGHT SIDEBAR)
+       ============================================ */
+    .desktop-preview-panel {
+        display: flex;
+        flex-direction: column;
+        width: 170px !important;
+        flex: 0 0 170px !important;
+        background: #1c1c1e !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 16px !important;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45) !important;
+        box-sizing: border-box;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 10;
+        position: relative;
+        margin: 16px 16px 16px 0 !important;
+
+        /* Easily adjustable preview dimensions */
+        --preview-w: 130px;
+        --preview-h: 184px;
+        --preview-scale: 0.1637;
+    }
+
+    [data-theme="light"] .desktop-preview-panel {
+        background: #ffffff !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    /* Collapsed Preview State */
+    .preview-collapsed .desktop-preview-panel {
+        width: 0 !important;
+        flex: 0 0 0 !important;
+        border: none !important;
+        overflow: hidden !important;
+        padding: 0 !important;
+        margin: 16px 0 !important;
+    }
+
+    /* Collapsed preview — compact floating button (like toolbar-toggle) */
+    .collapsed-preview-strip {
+        display: none;
+        position: absolute;
+        top: 50%;
+        right: 12px;
+        transform: translateY(-50%);
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        z-index: 50;
+        pointer-events: all;
+    }
+
+    .preview-collapsed .collapsed-preview-strip {
+        display: flex;
+    }
+
+    /* The expand button — pill identical to toolbar-toggle */
+    .strip-btn {
+        background: var(--glass-bg);
+        border: var(--glass-border);
+        backdrop-filter: var(--glass-blur);
+        -webkit-backdrop-filter: var(--glass-blur);
+        box-shadow: var(--glass-shadow);
+        border-radius: var(--radius-md);
+        color: var(--text-muted);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        flex-shrink: 0;
+    }
+
+    [data-theme="light"] .strip-btn {
+        background: rgba(255, 255, 255, 0.75);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .strip-btn:hover {
+        color: var(--text-main);
+        background: var(--glass-bg-hover);
+    }
+
+    /* Label below the button */
+    .strip-text {
+        font-size: 0.6rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        writing-mode: unset;
+        transform: none;
+        text-align: center;
+    }
+
+    /* Expanded Preview Headers & Previews */
+    .preview-panel-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        box-sizing: border-box;
+    }
+
+    [data-theme="light"] .preview-panel-header {
+        border-bottom: 1px solid #cbd5e1;
+    }
+
+    .preview-panel-header h3 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .preview-panel-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        box-sizing: border-box;
+    }
+
+    /* Duplicate preview cards overlay fixes */
+    .preview-card {
+        margin: 0 !important;
+        position: relative !important;
+    }
+
+    /* Hide standard inline-preview section in workspace body */
+    .workspace-container #preview-section {
+        display: none !important;
+    }
+
+    /* ============================================
+       FLOATING ACTION BAR & QUICK PLUS BTN
+       ============================================ */
+    .action-bar-sticky {
+        position: fixed;
+        bottom: 24px;
+        left: calc(50% + 120px - 170px);
+        /* centered matching offsets */
+        transform: translateX(-50%);
+        width: auto !important;
+        max-width: 520px;
+        min-width: 320px;
+        border-radius: 50px;
+        padding: 10px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        background: rgba(20, 20, 20, 0.65) !important;
+        backdrop-filter: var(--glass-blur-heavy) !important;
+        -webkit-backdrop-filter: var(--glass-blur-heavy) !important;
+        border: var(--glass-border) !important;
+        box-shadow:
+            0 20px 50px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+        z-index: 99;
+        transition: all 0.3s ease;
+    }
+
+    .sidebar-collapsed .action-bar-sticky {
+        left: calc(50% + 36px - 170px);
+    }
+
+    .preview-collapsed .action-bar-sticky {
+        left: calc(50% + 120px);
+    }
+
+    .sidebar-collapsed.preview-collapsed .action-bar-sticky {
+        left: calc(50% + 36px);
+    }
+
+    [data-theme="light"] .action-bar-sticky {
+        background: rgba(255, 255, 255, 0.75) !important;
+        box-shadow:
+            0 20px 50px rgba(0, 0, 0, 0.06),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+        border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    }
+
+    /* Idle hiding visual support */
+    .action-bar-sticky.hide {
+        transform: translateX(-50%) translateY(90px);
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* Total display block */
+    .total-display {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+    }
+
+    .total-display small {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+
+    .total-display span {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: var(--primary);
+    }
+
+    /* Plus Quick insertion button */
+    .btn-quick-add {
+        background: var(--finance-green);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 38px;
+        height: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        ;
+    }
+
+    .btn-quick-add:hover {
+        transform: scale(1.1) rotate(90deg);
+        background: color-mix(in srgb, var(--finance-green) 85%, white);
+        box-shadow: var(--shadow-md);
+    }
+
+    /* ============================================
+       POIN 1: HIDE MOBILE-ONLY ADD BUTTON GROUP
+       ============================================ */
+    .mobile-add-group {
+        display: none !important;
+    }
+
+    /* ============================================
+       POIN 2: ITEM CARD — COMPACT DESKTOP SIZE
+       ============================================ */
+    body .item-card {
+        margin-bottom: 0 !important;
+        min-width: 240px !important;
+        padding: 12px !important;
+    }
+
+    /* Scale down all text inside item-card */
+    body .item-card .item-name,
+    body .item-card .item-input.name-input,
+    body .item-card input.item-name {
+        font-size: 0.83rem !important;
+    }
+
+    body .item-card .field-label,
+    body .item-card .item-label,
+    body .item-card label,
+    body .item-card .item-field label,
+    body .item-card .input-label {
+        font-size: 0.68rem !important;
+    }
+
+    body .item-card .item-price,
+    body .item-card input[type="text"].price-input,
+    body .item-card .price-display,
+    body .item-card .item-total {
+        font-size: 0.8rem !important;
+    }
+
+    body .item-card .qty-btn,
+    body .item-card .qty-display,
+    body .item-card .unit-switch {
+        font-size: 0.78rem !important;
+        padding: 4px 8px !important;
+        min-width: 26px !important;
+        height: 26px !important;
+    }
+
+    body .item-card .item-note,
+    body .item-card textarea {
+        font-size: 0.78rem !important;
+    }
+
+    /* ============================================
+       POIN 3: TOOLBAR → HOVER DROPDOWN TRIGGER
+       ============================================ */
+
+    /* Transform toolbar into a compact trigger pill */
+    .workspace-header-toolbar {
+        position: relative !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 0 !important;
+        padding: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        overflow: visible !important;
+    }
+
+    /* The trigger button (the "> " chevron pill visible always) */
+    .toolbar-toggle {
+        background: var(--glass-bg) !important;
+        border: var(--glass-border) !important;
+        backdrop-filter: var(--glass-blur) !important;
+        -webkit-backdrop-filter: var(--glass-blur) !important;
+        box-shadow: var(--glass-shadow) !important;
+        border-radius: var(--radius-md) !important;
+        color: var(--text-muted) !important;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        flex-shrink: 0;
+    }
+
+    [data-theme="light"] .toolbar-toggle {
+        background: rgba(255, 255, 255, 0.75) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    }
+
+    .toolbar-toggle:hover {
+        color: var(--text-main) !important;
+        background: var(--glass-bg-hover) !important;
+    }
+
+    /* Dropdown popup — hidden by default */
+    .toolbar-content {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        position: absolute !important;
+        top: calc(100% + 10px);
+        right: 0;
+        min-width: 220px;
+        background: rgba(18, 18, 18, 0.92);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius-md);
+        box-shadow:
+            0 16px 40px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        padding: 10px;
+        z-index: 200;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(-6px) scale(0.97);
+        transition:
+            opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+            transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    [data-theme="light"] .toolbar-content {
+        background: rgba(255, 255, 255, 0.96);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow:
+            0 16px 40px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    /* Show dropdown on hover of toolbar parent */
+    .workspace-header-toolbar:hover .toolbar-content,
+    .workspace-header-toolbar:focus-within .toolbar-content {
+        opacity: 1 !important;
+        pointer-events: all !important;
+        transform: translateY(0) scale(1) !important;
+    }
+
+    /* Each toggle group inside becomes a grid cell button */
+    .toolbar-content>div {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 5px !important;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: var(--radius-sm);
+        padding: 8px 4px;
+    }
+
+    [data-theme="light"] .toolbar-content>div {
+        background: rgba(0, 0, 0, 0.03);
+        border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+
+    /* Label inside each group */
+    .toolbar-content .view-label {
+        font-size: 0.65rem !important;
+        color: var(--text-muted) !important;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 700;
+        margin: 0 !important;
+    }
+
+    /* Toggle group inside dropdown */
+    .toolbar-content .toggle-group {
+        display: flex;
+        gap: 3px;
+        margin: 0 !important;
+    }
+
+    .toolbar-content .toggle-btn {
+        width: 28px !important;
+        height: 28px !important;
+        padding: 0 !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--radius-sm) !important;
+        font-size: 0.7rem !important;
+    }
+
+    /* Eye + Theme icon-btn inside dropdown */
+    .toolbar-content .icon-btn {
+        width: 28px !important;
+        height: 28px !important;
+        border-radius: var(--radius-sm) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+
+    /* Collapsed state no longer needed (toolbar is always compact trigger) */
+    .workspace-header-toolbar.collapsed {
+        max-width: none !important;
+        padding: 0 !important;
+    }
+
+    .workspace-header-toolbar.collapsed .toolbar-content {
+        display: grid !important;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .workspace-header-toolbar.collapsed .toolbar-toggle i-ui {
+        transform: none;
+    }
+
+    /* ============================================
+       POIN 4: PREVIEW PANEL — COMPACT THUMBNAIL
+       ============================================ */
+
+    /* Panel wrapper stays full height */
+    .desktop-preview-panel {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    /* Header stays compact and floats */
+    .preview-panel-header {
+        flex-shrink: 0;
+        padding: 16px 18px 12px 18px !important;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+    }
+
+    [data-theme="light"] .preview-panel-header {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+    }
+
+    .preview-panel-header h3 {
+        order: 2;
+        /* Put heading second */
+        font-size: 0.82rem !important;
+        font-weight: 700;
+        margin: 0;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+    }
+
+    .preview-panel-header .icon-btn {
+        order: 1;
+        /* Put button first (left side like max.png) */
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+        padding: 0;
+    }
+
+    .preview-panel-header .icon-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-main);
+    }
+
+    [data-theme="light"] .preview-panel-header .icon-btn:hover {
+        background: rgba(0, 0, 0, 0.05);
+    }
+
+    /* Body scrolls, lays out cards vertically, with generous padding and hidden scrollbars */
+    .preview-panel-body {
+        flex: 1;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 24px 16px !important;
+        display: flex;
+        flex-direction: column;
+        gap: 28px !important;
+        box-sizing: border-box;
+        scrollbar-width: none;
+        /* Firefox */
+        -ms-overflow-style: none;
+        /* IE/Edge */
+    }
+
+    .preview-panel-body::-webkit-scrollbar {
+        display: none;
+        /* Chrome/Safari */
+    }
+
+    /* CRITICAL: Override mobile .preview-cards flex-row → column inside desktop panel */
+    #desktop-preview-body .preview-cards {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        margin: 0 !important;
+        width: 100% !important;
+    }
+
+    /* Each preview-card is a thumbnail container.
+       Precisely width = A4_W_PX * scale, height = A4_H_PX * scale */
+    #desktop-preview-body .preview-card,
+    .desktop-preview-panel .preview-card {
+        position: relative !important;
+        width: var(--preview-w, 130px) !important;
+        height: var(--preview-h, 184px) !important;
+        flex: none !important;
+        aspect-ratio: unset !important;
+        margin: 0 !important;
+        flex-shrink: 0;
+        background: #ffffff !important;
+        border-radius: 8px !important;
+        /* Premium rounded corner for floating page mockup */
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
+        overflow: hidden !important;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+        transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    }
+
+    #desktop-preview-body .preview-card:hover,
+    .desktop-preview-panel .preview-card:hover {
+        transform: translateY(-5px) scale(1.02) !important;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+    }
+
+    [data-theme="light"] #desktop-preview-body .preview-card,
+    [data-theme="light"] .desktop-preview-panel .preview-card {
+        background: #ffffff !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+    }
+
+    [data-theme="light"] #desktop-preview-body .preview-card:hover,
+    [data-theme="light"] .desktop-preview-panel .preview-card:hover {
+        box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12), 0 4px 10px rgba(0, 0, 0, 0.06) !important;
+    }
+
+    /* The actual A4 document rendered at native size, then scaled to thumbnail */
+    #desktop-preview-body .preview-content,
+    .desktop-preview-panel .preview-content {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 794px !important;
+        height: 1123px !important;
+        transform-origin: top left !important;
+        transform: scale(var(--preview-scale, 0.1637)) !important;
+        overflow: hidden !important;
+        pointer-events: none !important;
+        background: white !important;
+        display: block !important;
+        align-items: unset !important;
+        justify-content: unset !important;
+        padding: 0 !important;
+    }
+
+    /* Action buttons overlay — glassy style */
+    #desktop-preview-body .preview-card-download-btn,
+    .desktop-preview-panel .preview-card-download-btn {
+        position: absolute !important;
+        opacity: 0;
+        transition: opacity 0.25s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+        z-index: 10;
+        pointer-events: all !important;
+    }
+
+    #desktop-preview-body .preview-card:hover .preview-card-download-btn,
+    .desktop-preview-panel .preview-card:hover .preview-card-download-btn {
+        opacity: 1;
+    }
+
+    /* Vibrant Orange active download button */
+    #desktop-preview-body .preview-card-download-btn,
+    .desktop-preview-panel .preview-card-download-btn {
+        right: 8px !important;
+        bottom: 8px !important;
+        border-radius: 50% !important;
+        width: 26px !important;
+        height: 26px !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: #e67e22 !important;
+        border: none !important;
+        color: #ffffff !important;
+        box-shadow: 0 4px 10px rgba(230, 126, 34, 0.4) !important;
+        transition: background 0.2s, transform 0.2s !important;
+    }
+
+    #desktop-preview-body .preview-card-download-btn:hover,
+    .desktop-preview-panel .preview-card-download-btn:hover {
+        background: #d35400 !important;
+        transform: scale(1.1) !important;
+    }
+}

@@ -1,0 +1,305 @@
+/**
+ * glass-ui.css — Premium Liquid Glassmorphism System
+ * Component stylings, blur effects, noise overlays, and edge light systems.
+ */
+
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.04);
+    --glass-bg-hover: rgba(255, 255, 255, 0.08);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.06);
+    --glass-border-light: 1px solid rgba(255, 255, 255, 0.12);
+    --glass-blur: blur(6x);
+    --glass-blur-heavy: blur(8px);
+
+    --glass-shadow:
+        0 8px 32px 0 rgba(0, 0, 0, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.06),
+        inset 0 0 20px 2px rgba(255, 255, 255, 0.04);
+}
+
+/* ============================================
+   GLASS COMPONENTS
+   ============================================ */
+
+/* Base Glass Card */
+.glass-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: var(--glass-border);
+    box-shadow: var(--glass-shadow);
+    isolation: isolate;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Glass Panel (Sidebar, Action Bar) */
+.glass-panel {
+    background: rgba(20, 20, 20, 0.65);
+    backdrop-filter: var(--glass-blur-heavy);
+    -webkit-backdrop-filter: var(--glass-blur-heavy);
+    border: var(--glass-border);
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="light"] .glass-panel {
+    background: rgba(255, 255, 255, 0.75);
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Glass Noise Overlay */
+.glass-noise {
+    /* position: absolute; */
+    /* inset: 0; */
+    background: radial-gradient(circle at 30% 20%,
+            rgba(255, 255, 255, 0.15),
+            transparent 50%);
+    /* opacity: 0.25; */
+    pointer-events: none;
+    z-index: 0;
+}
+
+[data-theme="dark"] .glass-noise {
+    opacity: 0.15;
+}
+
+/* Edge Lighting System */
+.glass-edge-light::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.6),
+            transparent);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.glass-edge-light::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 100%;
+    background: linear-gradient(180deg,
+            rgba(255, 255, 255, 0.5),
+            transparent,
+            rgba(255, 255, 255, 0.1));
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* ============================================
+   GLASS INTERACTIVE ELEMENTS
+   ============================================ */
+
+/* Glass Buttons */
+.glass-btn {
+    background: rgba(255, 255, 255, 0.06);
+    border: var(--glass-border);
+    color: var(--text-main);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow:
+        0 2px 6px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.glass-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.glass-btn:active {
+    transform: translateY(0);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+/* Glass Inputs */
+.glass-input {
+    background: rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    color: var(--text-main) !important;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.25s ease !important;
+}
+
+[data-theme="light"] .glass-input {
+    background: rgba(255, 255, 255, 0.5) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+}
+
+.glass-input:focus {
+    border-color: var(--primary) !important;
+    box-shadow:
+        inset 0 1px 2px rgba(0, 0, 0, 0.2),
+        0 0 0 3px color-mix(in srgb, var(--primary) 20%, transparent) !important;
+    outline: none;
+}
+
+/* ============================================
+   SPLIT ACTION BAR & DROPDOWN
+   ============================================ */
+
+/* Split Download Button Container */
+.download-split-btn {
+    display: flex;
+    align-items: stretch;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s ease;
+}
+
+.download-split-btn:hover {
+    box-shadow: var(--shadow-md);
+}
+
+/* Toggles & Menus */
+.split-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+    color: white;
+    padding: 0 12px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.split-arrow:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Glass Option Dropdown Menu */
+.glass-dropdown-menu {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    right: 0;
+    min-width: 120px;
+    background: rgba(30, 30, 30, 0.85);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: var(--glass-border-light);
+    border-radius: var(--radius-md);
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    padding: 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-theme="light"] .glass-dropdown-menu {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+.glass-dropdown-menu.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Dropdown Option Items */
+.glass-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    color: var(--text-main);
+    font-size: 0.88rem;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.glass-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--primary);
+}
+
+[data-theme="light"] .glass-dropdown-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.glass-dropdown-item i-ui {
+    opacity: 0.7;
+    transition: color 0.15s ease;
+}
+
+.glass-dropdown-item:hover i-ui {
+    opacity: 1;
+    color: var(--primary);
+}
+
+/* Liquid Pill Toast alert */
+.glass-pill-toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    opacity: 0;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: var(--shadow-md);
+    transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 10000;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-pill-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.glass-pill-toast.success {
+    background: rgba(39, 174, 96, 0.15);
+    border: 1px solid rgba(39, 174, 96, 0.3);
+    color: #27ae60;
+}
+
+.glass-pill-toast.error {
+    background: rgba(192, 57, 43, 0.15);
+    border: 1px solid rgba(192, 57, 43, 0.3);
+    color: #c0392b;
+}

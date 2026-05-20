@@ -29,35 +29,420 @@ document.addEventListener('DOMContentLoaded', () => {
     initSafely('Settings', initSettings);
     initSafely('PDFGenerator', initPDFGenerator);
 
-    // Tab Switching Logic
-    const tabs = document.querySelectorAll('.tab-btn');
-    const views = document.querySelectorAll('.view');
-    const previewSection = document.getElementById('preview-section');
+    // ============================================
+    // SYSTEM TABS & LAYOUT CONTROLLER
+    // ============================================
 
-    tabs.forEach(tab => {
-        tab.addEventListener('click', () => {
-            // UI Toggle
-            tabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
+    // Render Chrome-like tabs bar UI dynamically based on state tabs
+    const renderChromeTabs = () => {
+        const tabsList = document.getElementById('chrome-tabs-list');
+        if (!tabsList) return;
+        tabsList.innerHTML = '';
 
-            const target = tab.dataset.tab;
 
-            // View Toggle
-            views.forEach(v => {
-                if (v.id === `${target}-view`) v.classList.remove('hidden');
-                else v.classList.add('hidden');
+        appState.state.tabs.forEach(tab => {
+            const isActive = tab.id === appState.state.activeTabId;
+            const tabEl = document.createElement('div');
+            tabEl.className = `chrome-tab ${isActive ? 'active' : ''} ${tab.mode}`;
+            tabEl.dataset.id = tab.id;
+            tabEl.innerHTML = `
+                <div class="tab-color-indicator"></div>
+                <span class="tab-title">${tab.title || 'Tab Baru'}</span>
+                <button class="tab-close" data-id="${tab.id}"><i-ui name="x" size="20"></i-ui></button>
+            `;
+
+            // Click to switch tab
+            tabEl.addEventListener('click', (e) => {
+                if (e.target.closest('.tab-close')) return;
+                appState.switchTab(tab.id);
             });
 
-            // Handle Global Mode State
-            appState.state.currentMode = target; // Simplified, not persisting mode for now
+            // Close tab
+            const closeBtn = tabEl.querySelector('.tab-close');
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                appState.closeTab(tab.id);
+            });
 
-            // Preview Section Visibility
-            if (target === 'history' || target === 'finance') {
-                previewSection.style.display = 'none';
+            tabsList.appendChild(tabEl);
+        });
+    };
+
+    // Card/Table and Simple/Advance control toggles sync
+    const syncControlToggles = () => {
+        const viewMode = appState.state.manualViewMode || 'card';
+        const cardMode = appState.state.manualCardMode || 'simple';
+
+        // Card/Table View
+        const btnCard = document.getElementById('view-card-btn');
+        const btnTable = document.getElementById('view-table-btn');
+        const btnCardD = document.getElementById('desktop-view-card-btn');
+        const btnTableD = document.getElementById('desktop-view-table-btn');
+
+        if (viewMode === 'table') {
+            btnCard?.classList.remove('active');
+            btnTable?.classList.add('active');
+            btnCardD?.classList.remove('active');
+            btnTableD?.classList.add('active');
+        } else {
+            btnCard?.classList.add('active');
+            btnTable?.classList.remove('active');
+            btnCardD?.classList.add('active');
+            btnTableD?.classList.remove('active');
+        }
+
+        // Simple/Advance Card Mode
+        const btnSimple = document.getElementById('mode-simple-btn');
+        const btnAdvance = document.getElementById('mode-advance-btn');
+        const btnSimpleD = document.getElementById('desktop-mode-simple-btn');
+        const btnAdvanceD = document.getElementById('desktop-mode-advance-btn');
+
+        if (cardMode === 'advance') {
+            btnSimple?.classList.remove('active');
+            btnAdvance?.classList.add('active');
+            btnSimpleD?.classList.remove('active');
+            btnAdvanceD?.classList.add('active');
+        } else {
+            btnSimple?.classList.add('active');
+            btnAdvance?.classList.remove('active');
+            btnSimpleD?.classList.add('active');
+            btnAdvanceD?.classList.remove('active');
+        }
+
+        // Label Visibility eye toggle sync
+        const labelHidden = document.body.classList.contains('hide-labels');
+        const eyeIcon = document.getElementById('wrap-icon-eye');
+        const eyeClosedIcon = document.getElementById('wrap-icon-eye-closed');
+        const eyeIconD = document.getElementById('desktop-wrap-icon-eye');
+        const eyeClosedIconD = document.getElementById('desktop-wrap-icon-eye-closed');
+
+        if (labelHidden) {
+            if (eyeIcon) eyeIcon.style.display = 'none';
+            if (eyeClosedIcon) eyeClosedIcon.style.display = 'block';
+            if (eyeIconD) eyeIconD.style.display = 'none';
+            if (eyeClosedIconD) eyeClosedIconD.style.display = 'block';
+        } else {
+            if (eyeIcon) eyeIcon.style.display = 'block';
+            if (eyeClosedIcon) eyeClosedIcon.style.display = 'none';
+            if (eyeIconD) eyeIconD.style.display = 'block';
+            if (eyeClosedIconD) eyeClosedIconD.style.display = 'none';
+        }
+    };
+
+    // Dynamically compute the correct CSS scale for preview thumbnails.
+    // Handled completely by CSS variables for a fixed, easily adjustable design.
+    const updatePreviewScale = () => {
+        // No-op: Scaling is now fully driven by CSS variables in desktop-ui.css
+    };
+
+    // Dynamic Preview DOM transfer (highly efficient)
+    const syncPreviewPanelDOM = () => {
+        const previewCards = document.querySelector('.preview-cards');
+        if (!previewCards) return;
+
+        const isDesktop = window.innerWidth >= 1024;
+        const activeTab = appState.getActiveTab();
+        const isPreviewEnabled = activeTab && (activeTab.mode === 'manual' || activeTab.mode === 'ai');
+
+        if (isDesktop) {
+            const desktopPreviewBody = document.getElementById('desktop-preview-body');
+            if (desktopPreviewBody && isPreviewEnabled) {
+                if (previewCards.parentNode !== desktopPreviewBody) {
+                    desktopPreviewBody.appendChild(previewCards);
+                }
+            }
+        } else {
+            const mobilePreviewSection = document.getElementById('preview-section');
+            if (mobilePreviewSection && isPreviewEnabled) {
+                if (previewCards.parentNode !== mobilePreviewSection) {
+                    mobilePreviewSection.appendChild(previewCards);
+                }
+            }
+        }
+
+        // Sync thumbnail scale after any DOM transfer
+        updatePreviewScale();
+    };
+
+
+    // Sync all tab navigation states, panel visibilities, and title inputs
+    const syncActiveTabUI = () => {
+        renderChromeTabs();
+
+        const activeTab = appState.getActiveTab();
+        if (!activeTab) return;
+
+        const currentMode = activeTab.mode;
+
+        // 1. Sync sidebar nav active state
+        const sidebarItems = document.querySelectorAll('.sidebar-item');
+        sidebarItems.forEach(item => {
+            const tabAttr = item.getAttribute('data-tab');
+            if (tabAttr === currentMode) {
+                item.classList.add('active');
             } else {
-                previewSection.style.display = 'block';
+                item.classList.remove('active');
             }
         });
+
+        // 2. Sync mobile nav active state
+        const mobileTabs = document.querySelectorAll('.tab-nav .tab-btn');
+        mobileTabs.forEach(tab => {
+            const tabAttr = tab.getAttribute('data-tab');
+            if (tabAttr === currentMode) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+        });
+
+        // 3. Switch view stack
+        const views = document.querySelectorAll('.view');
+        views.forEach(v => {
+            if (v.id === `${currentMode}-view`) {
+                v.classList.remove('hidden');
+                v.classList.add('active');
+            } else {
+                v.classList.add('hidden');
+                v.classList.remove('active');
+            }
+        });
+
+        // 4. Preview panel visibility (Manual & AI modes only)
+        const previewSection = document.getElementById('preview-section');
+        const desktopPreviewPanel = document.getElementById('desktop-preview-panel');
+        const collapsedPreviewStrip = document.getElementById('collapsed-preview-strip');
+
+        const isPreviewEnabled = (currentMode === 'manual' || currentMode === 'ai');
+
+        if (window.innerWidth >= 1024) {
+            previewSection.style.display = 'none'; // always hide mobile block
+
+            if (isPreviewEnabled) {
+                const isCollapsed = document.body.classList.contains('preview-collapsed');
+                if (isCollapsed) {
+                    desktopPreviewPanel.style.display = 'none';
+                    collapsedPreviewStrip.style.display = 'flex';
+                } else {
+                    desktopPreviewPanel.style.display = 'flex';
+                    collapsedPreviewStrip.style.display = 'none';
+                }
+            } else {
+                desktopPreviewPanel.style.display = 'none';
+                collapsedPreviewStrip.style.display = 'none';
+            }
+        } else {
+            if (isPreviewEnabled) {
+                previewSection.style.display = 'block';
+            } else {
+                previewSection.style.display = 'none';
+            }
+            desktopPreviewPanel.style.display = 'none';
+            collapsedPreviewStrip.style.display = 'none';
+        }
+
+        // 5. Action bar visibility (Manual & AI modes only)
+        const footer = document.querySelector('.action-bar-sticky');
+        if (footer) {
+            if (isPreviewEnabled) {
+                footer.style.display = 'flex';
+            } else {
+                footer.style.display = 'none';
+            }
+        }
+
+        // 6. Sync manual titles inputs
+        const titleInputMobile = document.getElementById('manual-title');
+        const titleInputDesktop = document.getElementById('manual-title-desktop');
+
+        if (currentMode === 'manual') {
+            const titleVal = activeTab.title || '';
+            if (titleInputMobile) titleInputMobile.value = titleVal;
+            if (titleInputDesktop) titleInputDesktop.value = titleVal;
+
+            if (!titleVal.trim()) {
+                titleInputMobile?.classList.add('required-empty-orange');
+                titleInputDesktop?.classList.add('required-empty-orange');
+            } else {
+                titleInputMobile?.classList.remove('required-empty-orange');
+                titleInputDesktop?.classList.remove('required-empty-orange');
+            }
+        }
+
+        // 7. Desktop workspace-title-wrap: only visible in Manual Mode
+        const titleWrap = document.querySelector('.workspace-title-wrap');
+        if (titleWrap) {
+            titleWrap.style.display = (currentMode === 'manual') ? 'flex' : 'none';
+        }
+
+        // 8. Sync control toggles & DOM previews
+        syncControlToggles();
+        syncPreviewPanelDOM();
+    };
+
+    // Load and apply cached collapsible states
+    const initCollapseStates = () => {
+        const sidebarCollapsed = localStorage.getItem('bme_sidebar_collapsed') === 'true';
+        document.body.classList.toggle('sidebar-collapsed', sidebarCollapsed);
+
+        const previewCollapsed = localStorage.getItem('bme_preview_collapsed') === 'true';
+        document.body.classList.toggle('preview-collapsed', previewCollapsed);
+
+        const toolbarCollapsed = localStorage.getItem('bme_toolbar_collapsed') === 'true';
+        const toolbar = document.querySelector('.workspace-header-toolbar');
+        if (toolbar) {
+            toolbar.classList.toggle('collapsed', toolbarCollapsed);
+        }
+    };
+
+    // Connect Sidebar Collapse click
+    const btnSidebarToggle = document.getElementById('btn-sidebar-toggle');
+    btnSidebarToggle?.addEventListener('click', () => {
+        const collapsed = document.body.classList.toggle('sidebar-collapsed');
+        localStorage.setItem('bme_sidebar_collapsed', collapsed);
+        syncActiveTabUI();
+    });
+
+    // Connect Preview Collapse/Expand clicks
+    const btnPreviewCollapse = document.getElementById('btn-preview-collapse');
+    btnPreviewCollapse?.addEventListener('click', () => {
+        document.body.classList.add('preview-collapsed');
+        localStorage.setItem('bme_preview_collapsed', 'true');
+        syncActiveTabUI();
+    });
+
+    const btnPreviewExpand = document.getElementById('btn-preview-expand');
+    btnPreviewExpand?.addEventListener('click', () => {
+        document.body.classList.remove('preview-collapsed');
+        localStorage.setItem('bme_preview_collapsed', 'false');
+        syncActiveTabUI();
+        // Re-compute scale after panel transition completes (300ms)
+        setTimeout(updatePreviewScale, 320);
+    });
+
+    // Connect Workspace Toolbar collapse click
+    const btnToolbarToggle = document.getElementById('btn-toolbar-toggle');
+    btnToolbarToggle?.addEventListener('click', () => {
+        const toolbar = document.querySelector('.workspace-header-toolbar');
+        if (toolbar) {
+            const collapsed = toolbar.classList.toggle('collapsed');
+            localStorage.setItem('bme_toolbar_collapsed', collapsed);
+        }
+    });
+
+    // Connect mobile nav bar tabs switching
+    const mobileTabs = document.querySelectorAll('.tab-nav .tab-btn');
+    mobileTabs.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const mode = btn.getAttribute('data-tab');
+            const existingTab = appState.state.tabs.find(t => t.mode === mode);
+            if (existingTab) {
+                appState.switchTab(existingTab.id);
+            } else {
+                appState.createNewTab(mode);
+            }
+        });
+    });
+
+    // Connect desktop sidebar navigation links
+    const sidebarNavLinks = document.querySelectorAll('.sidebar-item[data-tab]');
+    sidebarNavLinks.forEach(item => {
+        item.addEventListener('click', () => {
+            const mode = item.getAttribute('data-tab');
+            const existingTab = appState.state.tabs.find(t => t.mode === mode);
+            if (existingTab) {
+                appState.switchTab(existingTab.id);
+            } else {
+                appState.createNewTab(mode);
+            }
+        });
+    });
+
+    // Connect settings proxy
+    const btnSidebarSettings = document.getElementById('btn-sidebar-settings');
+    btnSidebarSettings?.addEventListener('click', () => {
+        document.getElementById('btn-settings')?.click();
+    });
+
+    // Connect Chrome tabs add button
+    const btnAddTabChrome = document.getElementById('btn-add-tab-chrome');
+    btnAddTabChrome?.addEventListener('click', () => {
+        appState.createNewTab('manual');
+    });
+
+    // Bind Proxy clicks
+    const bindProxyClick = (desktopId, mobileId) => {
+        const dBtn = document.getElementById(desktopId);
+        const mBtn = document.getElementById(mobileId);
+        if (dBtn && mBtn) {
+            dBtn.addEventListener('click', () => {
+                mBtn.click();
+                syncControlToggles();
+            });
+        }
+    };
+
+    bindProxyClick('desktop-view-card-btn', 'view-card-btn');
+    bindProxyClick('desktop-view-table-btn', 'view-table-btn');
+    bindProxyClick('desktop-mode-simple-btn', 'mode-simple-btn');
+    bindProxyClick('desktop-mode-advance-btn', 'mode-advance-btn');
+    bindProxyClick('desktop-btn-label-toggle', 'btn-label-toggle');
+    bindProxyClick('desktop-btn-theme-cycle', 'btn-theme-cycle');
+
+    // Split Format Download Menu triggers
+    const splitArrow = document.getElementById('btn-download-split-arrow');
+    const formatDropdown = document.getElementById('download-format-dropdown');
+
+    splitArrow?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        formatDropdown?.classList.toggle('show');
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.download-split-btn')) {
+            formatDropdown?.classList.remove('show');
+        }
+    });
+
+    const formatOptions = document.querySelectorAll('.glass-dropdown-item');
+    formatOptions.forEach(opt => {
+        opt.addEventListener('click', () => {
+            const format = opt.getAttribute('data-format');
+            appState.updateSettings({ defaultDownloadMethod: format });
+            formatDropdown?.classList.remove('show');
+            document.getElementById('btn-download')?.click();
+        });
+    });
+
+    // Wire quick insert plus green button
+    const btnQuickAddAction = document.getElementById('btn-quick-add-action');
+    btnQuickAddAction?.addEventListener('click', () => {
+        const btnAddItem = document.getElementById('btn-add-item');
+        btnAddItem?.click();
+        setTimeout(() => {
+            const container = document.getElementById('manual-items-container');
+            if (container && container.lastElementChild) {
+                container.lastElementChild.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 100);
+    });
+
+    // Initialize Collapse States & Tab UI on start
+    initCollapseStates();
+    syncActiveTabUI();
+
+    // Subscribe to state updates to react automatically
+    appState.subscribe('tabs', () => {
+        syncActiveTabUI();
+    });
+    appState.subscribe('activeTabId', () => {
+        syncActiveTabUI();
+    });
+
+    // Listen on resize event
+    window.addEventListener('resize', () => {
+        syncActiveTabUI();
+        updatePreviewScale();
     });
 
     // Check for "Logo" existence (Visual fix)
@@ -126,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
         applyHeaderMode(appState.state.currentMode);
 
         // Reapply on tab switch
-        tabs.forEach(tab => {
+        mobileTabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 applyHeaderMode(tab.dataset.tab);
                 lastScrollY = window.scrollY;
@@ -223,13 +608,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Theme cycle control (1 button: light -> dark -> system)
     const themeCycleBtn = document.getElementById('btn-theme-cycle');
     const themeSequence = ['light', 'dark', 'system'];
-    
+
     const updateThemeIcon = (theme) => {
         if (!themeCycleBtn) return;
         const icons = {
             'light': 'sun',
-            'dark': 'moon',
-            'system': 'monitor'
+            'dark': 'moon-01',
+            'system': 'monitor-02'
         };
         themeCycleBtn.innerHTML = `<i-ui name="${icons[theme] || 'monitor'}" size="16"></i-ui>`;
     };
@@ -239,7 +624,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const current = appState.state.settings.theme || 'system';
             const nextIdx = (themeSequence.indexOf(current) + 1) % themeSequence.length;
             const nextTheme = themeSequence[nextIdx];
-            
+
             appState.updateSettings({ theme: nextTheme });
             applyTheme(nextTheme);
             updateThemeIcon(nextTheme);

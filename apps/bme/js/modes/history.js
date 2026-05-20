@@ -1017,16 +1017,32 @@ export function initHistoryMode() {
         const total = items.reduce((s, i) => s + (i.price * i.qty), 0);
         const totalHTML = `<sup style="font-size:0.6em; font-weight:500; vertical-align:super; opacity:0.75;">Rp</sup>${formatNum(total)}`;
 
+        const isCollapsed = localStorage.getItem('bme_history_info_collapsed') === 'true';
         const infoBar = document.createElement('div');
-        infoBar.className = 'detail-info-bar';
+        infoBar.className = `detail-info-bar ${isCollapsed ? 'collapsed' : ''}`;
         infoBar.innerHTML = `
-            <div class="detail-date-time">
-                <span class="date-chip" id="detail-date-chip">${datePart}</span>
-                <span class="time-chip" id="detail-time-chip">${timePart}</span>
+            <button class="detail-info-toggle" id="btn-detail-info-toggle" title="Sembunyikan/Tampilkan Detail">
+                <i-ui name="${isCollapsed ? 'chevron-down' : 'chevron-up'}" size="14"></i-ui>
+            </button>
+            <div class="detail-info-content">
+                <div class="detail-date-time">
+                    <span class="date-chip" id="detail-date-chip">${datePart}</span>
+                    <span class="time-chip" id="detail-time-chip">${timePart}</span>
+                </div>
+                <div class="detail-total">${totalHTML}</div>
             </div>
-            <div class="detail-total">${totalHTML}</div>
         `;
         detailContent.appendChild(infoBar);
+
+        const btnToggle = infoBar.querySelector('#btn-detail-info-toggle');
+        btnToggle.addEventListener('click', () => {
+            const currentlyCollapsed = infoBar.classList.toggle('collapsed');
+            localStorage.setItem('bme_history_info_collapsed', currentlyCollapsed);
+            const icon = btnToggle.querySelector('i-ui');
+            if (icon) {
+                icon.setAttribute('name', currentlyCollapsed ? 'chevron-down' : 'chevron-up');
+            }
+        });
 
         // Date chip click → custom date picker
         const dateChip = infoBar.querySelector('#detail-date-chip');

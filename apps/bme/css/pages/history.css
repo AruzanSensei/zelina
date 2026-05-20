@@ -9,7 +9,6 @@
    ============================================ */
 #history-sticky-wrapper {
     position: sticky;
-    top: 0;
     z-index: 50;
     background: var(--bg-body);
     border-bottom: 1px solid var(--border-color);
@@ -647,4 +646,53 @@
 
 .detail-item-card .edit-input:focus {
     border-color: var(--primary);
+}
+
+/* Premium Collapsible Detail Info Bar */
+.detail-info-bar {
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.detail-info-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    transition: opacity 0.25s ease, max-height 0.3s ease;
+    max-height: 100px;
+    opacity: 1;
+    overflow: hidden;
+}
+
+.detail-info-toggle {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.2s ease;
+    margin-right: 8px;
+}
+
+.detail-info-toggle:hover {
+    border-color: var(--primary);
+    color: var(--text-main);
+}
+
+/* Collapsed State */
+.detail-info-bar.collapsed {
+    padding: 2px 0;
+    margin-bottom: 4px;
+}
+
+.detail-info-bar.collapsed .detail-info-content {
+    max-height: 0;
+    opacity: 0;
+    pointer-events: none;
 }

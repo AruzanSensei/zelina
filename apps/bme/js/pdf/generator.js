@@ -1028,12 +1028,17 @@ export function initPDFGenerator() {
         });
     }
 
-    // Preview buttons (bottom-right) instead of whole card click
-    const previewButtons = document.querySelectorAll('.preview-open-btn');
-    previewButtons.forEach((btn) => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const type = btn.dataset.previewType === 'surat' ? 'surat' : 'invoice';
+    // Make the entire preview card clickable to open full preview
+    const previewCards = document.querySelectorAll('.preview-card');
+    previewCards.forEach((card) => {
+        card.style.cursor = 'pointer';
+        card.addEventListener('click', (e) => {
+            // If they clicked the download button, stop it from opening the preview
+            if (e.target.closest('.preview-card-download-btn')) {
+                return;
+            }
+            const isSurat = card.classList.contains('letter-preview');
+            const type = isSurat ? 'surat' : 'invoice';
             openFullPreview(type);
         });
     });

@@ -26,6 +26,8 @@
     <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/glass-ui.css">
+    <link rel="stylesheet" href="css/desktop-ui.css">
     <link rel="stylesheet" href="css/icon-compatibility.css">
     <link rel="stylesheet" href="css/label-visibility.css">
     <!-- Feature pages -->
@@ -46,7 +48,7 @@
 
 <body>
 
-    <!-- App Header -->
+    <!-- App Header (Mobile Only) -->
     <header class="app-header">
         <div class="brand">
             <div class="logo-container">
@@ -68,7 +70,7 @@
         </div>
     </header>
 
-    <!-- Tab Navigation -->
+    <!-- Tab Navigation (Mobile Only) -->
     <nav class="tab-nav">
         <button class="tab-btn active" data-tab="manual">Manual</button>
         <button class="tab-btn" data-tab="ai">AI <i-ui name="lock-01" size="11" style="opacity:0.5"></i-ui></button>
@@ -76,8 +78,120 @@
         <button class="tab-btn" data-tab="history">History</button>
     </nav>
 
-    <!-- Main Content Area -->
-    <main id="app-content">
+    <!-- Primary App Container Grid System (Desktop structure) -->
+    <div class="app-container">
+
+        <!-- DESKTOP SIDEBAR -->
+        <aside class="desktop-sidebar">
+            <div class="sidebar-brand">
+                <i-ui name="activity" size="24" style="color:var(--primary); filter: drop-shadow(0 0 8px var(--primary));"></i-ui>
+                <div class="sidebar-brand-text">
+                    <h2>BERKAH MAJU</h2>
+                    <p>Elektrik Generator</p>
+                </div>
+            </div>
+            <div class="sidebar-menu">
+                <button class="sidebar-item active" data-tab="manual">
+                    <i-ui name="file-02" size="20"></i-ui>
+                    <span>Manual</span>
+                </button>
+                <button class="sidebar-item" data-tab="ai">
+                    <i-ui name="magic-wand-01" size="20"></i-ui>
+                    <span>AI Mode</span>
+                </button>
+                <button class="sidebar-item" data-tab="finance">
+                    <i-ui name="coins-stacked-01" size="20"></i-ui>
+                    <span>Keuangan</span>
+                </button>
+                <button class="sidebar-item" data-tab="history">
+                    <i-ui name="clock-rewind" size="20"></i-ui>
+                    <span>Histori</span>
+                </button>
+            </div>
+            <div class="sidebar-bottom">
+                <button class="sidebar-item" id="btn-sidebar-settings" style="width:100%; border:none; background:transparent;">
+                    <i-ui name="settings-01" size="20"></i-ui>
+                    <span>Pengaturan</span>
+                </button>
+                <div class="sidebar-profile">
+                    <i-ui name="user-01" size="20"></i-ui>
+                    <span>Operator</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- WORKSPACE CONTAINER -->
+        <div class="workspace-container">
+            
+            <!-- CHROME TABS BAR -->
+            <div class="chrome-tabs-bar">
+                <button class="sidebar-toggle-btn" id="btn-sidebar-toggle" title="Kecilkan/Besarkan Sidebar">
+                    <i-ui name="menu-01" size="20"></i-ui>
+                </button>
+                <div id="chrome-tabs-list" style="display:flex; align-items:flex-end;">
+                    <!-- Dynamically injected tabs -->
+                </div>
+                <button class="btn-add-tab" id="btn-add-tab-chrome" title="Tambah Tab Baru">
+                    <i-ui name="plus" size="18"></i-ui>
+                </button>
+            </div>
+
+            <!-- Workspace Header (Unified Judul + Toolbar) -->
+            <div class="workspace-header">
+                <div class="workspace-title-wrap">
+                    <div class="workspace-title-label">JUDUL</div>
+                    <input type="text" id="manual-title-desktop" class="workspace-title-input" placeholder="Contoh: Invoice #001">
+                </div>
+                <div class="workspace-header-toolbar">
+                    <button class="toolbar-toggle" id="btn-toolbar-toggle">
+                        <i-ui name="chevron-right" size="16"></i-ui>
+                    </button>
+                    <div class="toolbar-content">
+                        <!-- Card/Table Toggle -->
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="view-label" style="margin:0; font-size:0.75rem;">Tampilan</span>
+                            <div class="toggle-group orange-theme" style="margin:0;">
+                                <button class="toggle-btn active" id="desktop-view-card-btn" title="Card View">
+                                    <i-ui name="list" size="14"></i-ui>
+                                </button>
+                                <button class="toggle-btn" id="desktop-view-table-btn" title="Table View">
+                                    <i-ui name="layout-grid-01" size="14"></i-ui>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Simple/Advance Card Mode Toggle -->
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <span class="view-label" style="margin:0; font-size:0.75rem;">Mode</span>
+                            <div class="toggle-group orange-theme" style="margin:0;">
+                                <button class="toggle-btn active" id="desktop-mode-simple-btn" title="Simple Mode">
+                                    <i-ui name="square" size="14"></i-ui>
+                                </button>
+                                <button class="toggle-btn" id="desktop-mode-advance-btn" title="Advance Mode">
+                                    <i-ui name="grid-01" size="14"></i-ui>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Label Visibility eye toggle -->
+                        <button id="desktop-btn-label-toggle" class="icon-btn" title="Sembunyikan / Tampilkan Label" style="border:1px solid rgba(255,255,255,0.08); border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer;">
+                            <span id="desktop-wrap-icon-eye"><i-ui name="eye" size="14"></i-ui></span>
+                            <span id="desktop-wrap-icon-eye-closed" style="display:none"><i-ui name="eye-off" size="14"></i-ui></span>
+                        </button>
+
+                        <!-- Theme cycle cycle -->
+                        <button id="desktop-btn-theme-cycle" class="icon-btn" title="Tema" style="background:transparent; border:1px solid rgba(255,255,255,0.08); border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text-main);">
+                            <i-ui name="monitor-01" size="14"></i-ui>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Workspace Body Wrapper (Holds Main Panels & Collapsible Right Preview Panel) -->
+            <div class="workspace-body-wrapper">
+                
+                <!-- Main Content Area -->
+                <main id="app-content">
 
         <!-- MODE 1: MANUAL -->
         <section id="manual-view" class="view client-view active">
@@ -136,7 +250,7 @@
                     <!-- Items will be injected here -->
                 </div>
 
-                <div style="display: flex; gap: 8px; align-items: stretch;">
+                <div class="mobile-add-group" style="display: flex; gap: 8px; align-items: stretch;">
                     <button id="btn-add-item" class="btn btn-outline" style="flex: 1;">
                         <i-ui name="plus" size="15"></i-ui> Tambah Item
                     </button>
@@ -279,10 +393,6 @@
                     <div id="invoice-preview-container" class="preview-content">
                         <!-- Real-time HTML render -->
                     </div>
-                    <button class="btn btn-outline preview-open-btn" data-preview-type="invoice"
-                        style="position:absolute; right:50px; bottom:10px; padding:6px 10px; font-size:0.8rem;">
-                        Preview
-                    </button>
                     <button class="btn preview-card-download-btn" data-download-type="invoice"
                         style="position:absolute; right:10px; bottom:10px; padding:8px 10px; font-size:0.8rem; background:#e67e22; border-color:#d35400; color:white;">
                         <i-ui name="download-01" size="15"></i-ui>
@@ -292,10 +402,6 @@
                     <div id="letter-preview-container" class="preview-content">
                         <!-- Real-time HTML render -->
                     </div>
-                    <button class="btn btn-outline preview-open-btn" data-preview-type="surat"
-                        style="position:absolute; right:50px; bottom:10px; padding:6px 10px; font-size:0.8rem;">
-                        Preview
-                    </button>
                     <button class="btn preview-card-download-btn" data-download-type="surat"
                         style="position:absolute; right:10px; bottom:10px; padding:8px 10px; font-size:0.8rem; background:#e67e22; border-color:#d35400; color:white;">
                         <i-ui name="download-01" size="15"></i-ui>
@@ -303,31 +409,82 @@
                 </div>
             </div>
 
-            <div class="action-bar-sticky">
-                <!-- Floating Required Fields Indicator (Inside to sync position) -->
-                <div id="required-fields-indicator" class="floating-indicator hidden">
-                    <div class="indicator-badge">0</div>
-                    <span>Data Kosong</span>
-                </div>
+        </section>
 
-                <div class="total-display">
-                    <small>Total</small>
-                    <span id="grand-total">Rp 0</span>
-                </div>
-                <div style="display:flex; gap:10px;">
-                    <button id="btn-save-only" class="btn btn-outline" style="border-width:2px; font-weight:600;">
-                        Simpan
-                    </button>
-                    <button id="btn-download" class="btn btn-primary btn-lg">
+        <!-- FLOATING ACTION BAR -->
+        <div class="action-bar-sticky">
+            <!-- Floating Required Fields Indicator (Inside to sync position) -->
+            <div id="required-fields-indicator" class="floating-indicator hidden">
+                <div class="indicator-badge">0</div>
+                <span>Data Kosong</span>
+            </div>
+
+            <!-- Quick Add Button (Desktop Only) -->
+            <button id="btn-quick-add-action" class="btn-quick-add" title="Tambah Item Cepat">
+                <i-ui name="plus" size="20"></i-ui>
+            </button>
+
+            <div class="total-display">
+                <small>Total</small>
+                <span id="grand-total">Rp 0</span>
+            </div>
+            
+            <div style="display:flex; gap:10px; align-items: center; position: relative;">
+                <button id="btn-save-only" class="btn btn-outline" style="border-width:2px; font-weight:600;">
+                    Simpan
+                </button>
+                <!-- Split Dropdown button for Unduh -->
+                <div class="download-split-btn">
+                    <button id="btn-download" class="btn btn-primary btn-lg" style="border-radius: 50px 0 0 50px; border-right: 1px solid rgba(255,255,255,0.15);">
                         Unduh
                     </button>
+                    <button id="btn-download-split-arrow" class="split-arrow" title="Format Ekspor Lainnya" style="border-radius: 0 50px 50px 0;">
+                        <i-ui name="chevron-up" size="14"></i-ui>
+                    </button>
+                    <!-- Options Dropdown Menu above it -->
+                    <div class="glass-dropdown-menu" id="download-format-dropdown">
+                        <button class="glass-dropdown-item" data-format="pdf">
+                            <i-ui name="file-02" size="14"></i-ui> PDF
+                        </button>
+                        <button class="glass-dropdown-item" data-format="png">
+                            <i-ui name="image-01" size="14"></i-ui> PNG
+                        </button>
+                        <button class="glass-dropdown-item" data-format="jpeg">
+                            <i-ui name="image-02" size="14"></i-ui> JPG
+                        </button>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
 
     </main>
 
-    <!-- Footer -->
+    <!-- Collapsible Preview Panel (Right column on desktop) -->
+    <aside class="desktop-preview-panel" id="desktop-preview-panel">
+        <div class="preview-panel-header">
+            <h3>Pratinjau</h3>
+            <button class="icon-btn" id="btn-preview-collapse" title="Sembunyikan Preview">
+                <i-ui name="chevron-right" size="18"></i-ui>
+            </button>
+        </div>
+        <div class="preview-panel-body" id="desktop-preview-body">
+            <!-- Dynamically injected preview cards -->
+        </div>
+    </aside>
+
+    <!-- Collapsed vertical strip for preview -->
+    <div class="collapsed-preview-strip" id="collapsed-preview-strip" title="Tampilkan Pratinjau">
+        <button class="strip-btn" id="btn-preview-expand">
+            <i-ui name="chevron-left" size="16"></i-ui>
+        </button>
+        <div class="strip-text">Pratinjau</div>
+    </div>
+
+    </div> <!-- Close .workspace-body-wrapper -->
+    </div> <!-- Close .workspace-container -->
+    </div> <!-- Close .app-container -->
+
+    <!-- Footer (Mobile Only) -->
     <footer class="app-footer">
         Powered By <strong><a href="https://zanxa.site" target="_blank" style="color: #fff;">Zanxa Studio</a></strong>
     </footer>
