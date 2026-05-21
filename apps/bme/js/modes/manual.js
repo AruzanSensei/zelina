@@ -297,27 +297,82 @@ export function initManualMode() {
         });
     };
 
+    // Sync external checkbox sidebar heights to match table rows
+    const syncTableCheckboxHeights = () => {
+        const cbSidebar = container.querySelector('.table-cb-sidebar');
+        if (!cbSidebar) return;
+        const theadRow = container.querySelector('.item-table thead tr');
+        const rows     = Array.from(container.querySelectorAll('.item-table tbody tr.item-table-row'));
+        const cbHeader = cbSidebar.querySelector('.table-cb-header');
+        const cbRows   = Array.from(cbSidebar.querySelectorAll('.table-cb-row'));
+
+        if (theadRow && cbHeader) {
+            cbHeader.style.height = theadRow.getBoundingClientRect().height + 'px';
+        }
+        rows.forEach((row, i) => {
+            if (cbRows[i]) cbRows[i].style.height = row.getBoundingClientRect().height + 'px';
+        });
+    };
+
     const renderTableView = () => {
         container.innerHTML = '';
         container.classList.add('table-view-container');
 
+        // ── Outer flex wrapper: [checkbox sidebar | table] ─────────────────
+        const wrapper = document.createElement('div');
+        wrapper.className = 'table-with-checkboxes';
+
+        // ── Checkbox sidebar (outside the <table>) ──────────────────────────
+        const cbSidebar = document.createElement('div');
+        cbSidebar.className = 'table-cb-sidebar';
+
+        // Header slot (height will be synced with thead tr)
+        const cbHeader = document.createElement('div');
+        cbHeader.className = 'table-cb-header';
+        const selAll = document.createElement('input');
+        selAll.type = 'checkbox';
+        selAll.id = 'table-select-all';
+        if (items.length > 0 && selectedIndices.size === items.length) selAll.checked = true;
+        cbHeader.appendChild(selAll);
+        cbSidebar.appendChild(cbHeader);
+
+        // Per-row checkbox slots
+        items.forEach((_, index) => {
+            const cbRow = document.createElement('div');
+            cbRow.className = `table-cb-row${selectedIndices.has(index) ? ' is-selected' : ''}`;
+            cbRow.dataset.cbIndex = index;
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.className = 'table-row-checkbox';
+            cb.dataset.index = index;
+            if (selectedIndices.has(index)) cb.checked = true;
+            cbRow.appendChild(cb);
+            cbSidebar.appendChild(cbRow);
+        });
+
+        // ── Table (8 columns, no checkbox column inside) ────────────────────
         const table = document.createElement('table');
         table.className = 'item-table';
 
         table.innerHTML = `
             <thead>
                 <tr>
+                    <th style="width:36px; text-align:center;">No.</th>
                     <th>Barang</th>
                     <th>Harga</th>
                     <th>Tipe</th>
                     <th>Pcs</th>
                     <th>Note</th>
+                    <th>Total</th>
                     <th style="width:40px;"></th>
                 </tr>
             </thead>
             <tbody>
                 ${items.map((item, index) => `
-                <tr>
+                <tr class="item-table-row ${selectedIndices.has(index) ? 'is-selected' : ''}" data-index="${index}">
+                    <td style="text-align:center; font-weight:600; color:var(--text-muted); font-size:0.85rem;">
+                        ${index + 1}
+                    </td>
                     <td>
                         <div class="input-with-icon">
                             <span class="input-sizer" data-value="${item.name || 'Nama Barang'}">
@@ -353,14 +408,31 @@ export function initManualMode() {
                     </td>
                     <td><textarea class="item-note table-note ${!item.note ? 'required-empty-orange' : ''}" data-index="${index}" placeholder="Deskripsi (wajib)" rows="1">${item.note || ''}</textarea></td>
                     <td>
-                        <button class="remove-item-btn" data-index="${index}"><i-ui name="trash-01" size="14"></i-ui></button>
+                        <span class="row-subtotal" data-index="${index}" style="font-weight: 600; color: var(--primary);">
+                            ${formatCurrency(item.price * item.qty)}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="remove-item-btn" data-index="${index}"><i-ui name="trash-02" size="14"></i-ui></button>
                     </td>
                 </tr>
                 `).join('')}
             </tbody>
         `;
-        container.appendChild(table);
+
+        wrapper.appendChild(cbSidebar);
+        wrapper.appendChild(table);
+        container.appendChild(wrapper);
+
         container.querySelectorAll('textarea').forEach(ta => autoResize(ta));
+
+        // Sync sidebar heights after paint; re-sync if any row resizes
+        requestAnimationFrame(() => {
+            syncTableCheckboxHeights();
+            // Watch for textarea resize (note column auto-grows)
+            const obs = new ResizeObserver(() => syncTableCheckboxHeights());
+            container.querySelectorAll('.item-table tbody tr').forEach(tr => obs.observe(tr));
+        });
     };
 
     const render = () => {
@@ -520,23 +592,32 @@ export function initManualMode() {
     };
 
     const setupContextMenuListeners = () => {
-        // Desktop Context Menu
+        // Desktop Context Menu — cards AND table rows
         container.addEventListener('contextmenu', (e) => {
+            // Don't override right-click on inputs / textareas
+            if (e.target.closest('input, textarea, select')) return;
+
             const card = e.target.closest('.item-card');
-            if (card && !isMultiSelectMode) {
+            const row  = e.target.closest('.item-table-row');
+            const targetEl = card || row;
+
+            if (targetEl && !isMultiSelectMode) {
                 e.preventDefault();
-                const index = parseInt(card.dataset.index);
+                const index = parseInt(targetEl.dataset.index);
                 showManualContextMenu(e.pageX, e.pageY, index);
             }
         });
 
-        // Mobile Long Press
+        // Mobile Long Press — cards AND table rows
         container.addEventListener('touchstart', (e) => {
             const card = e.target.closest('.item-card');
-            if (card && !isMultiSelectMode) {
+            const row  = e.target.closest('.item-table-row');
+            const targetEl = card || row;
+
+            if (targetEl && !isMultiSelectMode) {
                 longPressTimer = setTimeout(() => {
                     const touch = e.touches[0];
-                    const index = parseInt(card.dataset.index);
+                    const index = parseInt(targetEl.dataset.index);
                     showManualContextMenu(touch.pageX, touch.pageY, index);
                 }, 600);
             }
@@ -545,11 +626,86 @@ export function initManualMode() {
         container.addEventListener('touchend', () => clearTimeout(longPressTimer));
         container.addEventListener('touchmove', () => clearTimeout(longPressTimer));
 
-        // Click to select in multi-select mode
+        // Checkbox delegation — per-row checkbox in table view
+        container.addEventListener('change', (e) => {
+            // Select-All checkbox
+            if (e.target.id === 'table-select-all') {
+                if (e.target.checked) {
+                    isMultiSelectMode = true;
+                    items.forEach((_, i) => selectedIndices.add(i));
+                } else {
+                    isMultiSelectMode = false;
+                    selectedIndices.clear();
+                }
+                render();
+                return;
+            }
+
+            // Per-row checkbox
+            if (e.target.classList.contains('table-row-checkbox')) {
+                const index = parseInt(e.target.dataset.index);
+                if (e.target.checked) {
+                    selectedIndices.add(index);
+                    isMultiSelectMode = true;
+                } else {
+                    selectedIndices.delete(index);
+                    if (selectedIndices.size === 0) isMultiSelectMode = false;
+                }
+                // Update tr and cb-row classes immediately without full re-render to preserve focus
+                const tr = container.querySelector(`.item-table-row[data-index="${index}"]`);
+                if (tr) tr.classList.toggle('is-selected', selectedIndices.has(index));
+                
+                const cbRow = container.querySelector(`.table-cb-row[data-cb-index="${index}"]`);
+                if (cbRow) cbRow.classList.toggle('is-selected', selectedIndices.has(index));
+
+                // Update select-all state
+                const selAll = container.querySelector('#table-select-all');
+                if (selAll) selAll.checked = selectedIndices.size === items.length;
+                return;
+            }
+        });
+
+        // Hover sync between table row and external checkbox row
+        container.addEventListener('mouseover', (e) => {
+            const row = e.target.closest('.item-table-row');
+            if (row) {
+                const index = row.dataset.index;
+                const cbRow = container.querySelector(`.table-cb-row[data-cb-index="${index}"]`);
+                if (cbRow) cbRow.classList.add('row-hover');
+                return;
+            }
+            const cbRow = e.target.closest('.table-cb-row');
+            if (cbRow) {
+                const index = cbRow.dataset.cbIndex;
+                const tblRow = container.querySelector(`.item-table-row[data-index="${index}"]`);
+                if (tblRow) tblRow.classList.add('row-hover');
+                return;
+            }
+        });
+
+        container.addEventListener('mouseout', (e) => {
+            const row = e.target.closest('.item-table-row');
+            if (row) {
+                const index = row.dataset.index;
+                const cbRow = container.querySelector(`.table-cb-row[data-cb-index="${index}"]`);
+                if (cbRow) cbRow.classList.remove('row-hover');
+                return;
+            }
+            const cbRow = e.target.closest('.table-cb-row');
+            if (cbRow) {
+                const index = cbRow.dataset.cbIndex;
+                const tblRow = container.querySelector(`.item-table-row[data-index="${index}"]`);
+                if (tblRow) tblRow.classList.remove('row-hover');
+                return;
+            }
+        });
+
+
+        // Click to select in multi-select mode (card view)
         container.addEventListener('click', (e) => {
             if (!isMultiSelectMode) return;
-            // Prevent interference with inputs/buttons
-            if (e.target.closest('.form-input') || e.target.closest('button')) return;
+            // Prevent interference with inputs/buttons/checkboxes
+            if (e.target.closest('input, textarea, select, button')) return;
 
             const card = e.target.closest('.item-card');
             if (card) {
@@ -559,7 +715,6 @@ export function initManualMode() {
                 } else {
                     selectedIndices.add(index);
                 }
-                // If nothing selected, exit multi-select mode
                 if (selectedIndices.size === 0) isMultiSelectMode = false;
                 render();
             }
@@ -585,8 +740,13 @@ export function initManualMode() {
                 document.querySelectorAll('.select-items-portal').forEach(el => el.remove());
             }
 
-            // Exit multi-select if clicking away from any card or inputs
-            if (isMultiSelectMode && !e.target.closest('.item-card') && !e.target.closest('#bme-context-menu') && !e.target.closest('.sticky-action-bar')) {
+            // Exit multi-select if clicking away from any card/row or inputs
+            const insideCard    = e.target.closest('.item-card');
+            const insideRow     = e.target.closest('.item-table-row');
+            const insideMenu    = e.target.closest('#bme-context-menu');
+            const insideActBar  = e.target.closest('.sticky-action-bar, .action-bar-sticky');
+            const insideCheckbox = e.target.classList.contains('table-row-checkbox') || e.target.id === 'table-select-all';
+            if (isMultiSelectMode && !insideCard && !insideRow && !insideMenu && !insideActBar && !insideCheckbox) {
                 isMultiSelectMode = false;
                 selectedIndices.clear();
                 render();
@@ -894,7 +1054,13 @@ export function initManualMode() {
             const total = items.reduce((sum, item) => sum + (item.price * item.qty), 0);
             document.getElementById('grand-total').textContent = formatCurrency(total);
 
-            if (appState.state.manualViewMode === 'card') {
+            if (appState.state.manualViewMode === 'table') {
+                const row = target.closest('tr');
+                if (row) {
+                    const subtotalDisplay = row.querySelector('.row-subtotal');
+                    if (subtotalDisplay) subtotalDisplay.textContent = formatCurrency(items[index].price * items[index].qty);
+                }
+            } else {
                 const card = target.closest('.item-card');
                 if (card) {
                     const subtotalDisplay = card.querySelector('div[style*="text-align: right"]');

@@ -471,7 +471,7 @@
 }
 
 .item-table {
-    width: auto;
+    width: 100%;
     min-width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
@@ -603,42 +603,172 @@
     text-align: center;
 }
 
-.item-table th:nth-child(2) {
+/* Table Container with Sidebar Checkboxes */
+.table-with-checkboxes {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    position: relative;
+}
+
+.table-with-checkboxes .item-table {
+    flex: 1;
+    margin-left: 0;
+}
+
+/* Checkbox Sidebar */
+.table-cb-sidebar {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    width: 36px;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    background-color: transparent;
+}
+
+/* Header Slot */
+.table-cb-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.12);
+    box-sizing: border-box;
+}
+
+/* Row Slot */
+.table-cb-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    box-sizing: border-box;
+    transition: background-color 0.15s ease;
+}
+
+/* Row states & hover sync class */
+.table-cb-row:hover,
+.table-cb-row.row-hover {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+.table-cb-row.is-selected {
+    background-color: rgba(39, 174, 96, 0.09) !important;
+}
+
+.table-cb-row.is-selected:hover,
+.table-cb-row.is-selected.row-hover {
+    background-color: rgba(39, 174, 96, 0.14) !important;
+}
+
+/* Table columns constraints (8 columns) */
+.item-table th:nth-child(1),
+.item-table td:nth-child(1) {
+    /* No */
+    width: 36px;
     text-align: center;
 }
 
-.item-table td:nth-child(2) {
+.item-table th:nth-child(3) {
+    text-align: center;
+}
+
+.item-table td:nth-child(3) {
     /* Harga */
     text-align: right;
     width: auto;
 }
 
-.item-table th:nth-child(3),
-.item-table td:nth-child(3) {
+.item-table th:nth-child(4),
+.item-table td:nth-child(4) {
     /* Tipe */
     min-width: 110px;
 }
 
-.item-table th:nth-child(4),
-.item-table td:nth-child(4) {
+.item-table th:nth-child(5),
+.item-table td:nth-child(5) {
     /* Qty */
     text-align: center;
 }
 
-.item-table th:nth-child(5),
-.item-table td:nth-child(5) {
+.item-table th:nth-child(6),
+.item-table td:nth-child(6) {
     /* Note */
     text-align: left;
-    width: auto;
+    width: 100%;
     white-space: normal;
 }
 
-.item-table th:nth-child(6),
-.item-table td:nth-child(6) {
+.item-table th:nth-child(7),
+.item-table td:nth-child(7) {
+    /* Total */
+    text-align: right;
+    width: 100px;
+}
+
+.item-table th:nth-child(8),
+.item-table td:nth-child(8) {
     /* Actions */
     width: 40px;
     text-align: center;
 }
+
+/* Row hover & selection states */
+.item-table tbody tr.item-table-row {
+    transition: background-color 0.15s ease;
+}
+.item-table tbody tr.item-table-row:hover,
+.item-table tbody tr.item-table-row.row-hover {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+}
+.item-table tbody tr.item-table-row.is-selected {
+    background-color: rgba(39, 174, 96, 0.09) !important;
+}
+.item-table tbody tr.item-table-row.is-selected:hover,
+.item-table tbody tr.item-table-row.is-selected.row-hover {
+    background-color: rgba(39, 174, 96, 0.14) !important;
+}
+
+/* Custom checkable elements styling */
+.table-with-checkboxes input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    border: 1.5px solid rgba(255, 255, 255, 0.25);
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    transition: border-color 0.15s, background-color 0.15s;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.table-with-checkboxes input[type="checkbox"]:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.table-with-checkboxes input[type="checkbox"]:checked {
+    background-color: var(--primary, #27ae60);
+    border-color: var(--primary, #27ae60);
+}
+
+.table-with-checkboxes input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 4.5px;
+    top: 1px;
+    width: 3px;
+    height: 6px;
+    border: 2px solid #fff;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
+}
+
 
 /* Quantity in table view */
 .item-table td .item-qty,
@@ -657,6 +787,12 @@
     justify-content: center;
     opacity: 0.7;
     transition: opacity 0.2s;
+}
+
+/* Ensure delete btn in table stays visible even when labels are hidden */
+.labels-hidden .item-table .remove-item-btn {
+    opacity: 0.7 !important;
+    pointer-events: auto !important;
 }
 
 .item-card .remove-item-btn {

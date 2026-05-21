@@ -631,10 +631,27 @@
     }
 
     /* Responsive Manual Cards grid */
-    body #manual-items-container {
+    body #manual-items-container:not(.table-view-container) {
         display: grid !important;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
         gap: 18px !important;
+        margin-bottom: 24px !important;
+    }
+
+    body #manual-items-container.table-view-container {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-bottom: 24px !important;
+    }
+
+    /* Table view adjustments for desktop */
+    body .table-view-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        position: relative !important;
+        left: 0 !important;
+        transform: none !important;
         margin-bottom: 24px !important;
     }
 
