@@ -332,6 +332,26 @@
     transform: translateY(110%);
 }
 
+/* Desktop-only sections hidden on mobile only */
+@media (max-width: 1023px) {
+    .action-bar-total,
+    .action-bar-buttons,
+    .action-bar-divider {
+        display: none;
+    }
+}
+
+/* Mobile-only action content — shown on mobile only */
+@media (max-width: 1023px) {
+    .mobile-action-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        gap: 10px;
+    }
+}
+
 .total-display {
     display: flex;
     flex-direction: column;

@@ -17,9 +17,9 @@
             const isLocal = window.location.hostname === 'localhost' ||
                 window.location.hostname === '127.0.0.1' ||
                 window.location.protocol === 'file:';
-            
+
             const cdnBase = isLocal ? '../../cdn' : 'https://cdn.zanxa.site';
-            
+
             // 1. Inject Preload Icon Bundle JSON
             const preloadLink = document.createElement('link');
             preloadLink.rel = 'preload';
@@ -27,7 +27,7 @@
             preloadLink.as = 'fetch';
             preloadLink.crossOrigin = 'anonymous';
             document.head.appendChild(preloadLink);
-            
+
             // 2. Inject Universal Web Component Icon System Script
             const scriptEl = document.createElement('script');
             scriptEl.src = cdnBase + '/js/i-ui.js';
@@ -116,15 +116,15 @@
                     <span>Manual</span>
                 </button>
                 <button class="sidebar-item" data-tab="ai">
-                    <i-ui name="magic-wand-01" size="20"></i-ui>
+                    <i-ui name="star-06" size="20"></i-ui>
                     <span>AI Mode</span>
                 </button>
                 <button class="sidebar-item" data-tab="finance">
-                    <i-ui name="coins-stacked-01" size="20"></i-ui>
+                    <i-ui name="bar-line-chart" size="20"></i-ui>
                     <span>Keuangan</span>
                 </button>
                 <button class="sidebar-item" data-tab="history">
-                    <i-ui name="clock-rewind" size="20"></i-ui>
+                    <i-ui name="hourglass-02" size="20"></i-ui>
                     <span>Histori</span>
                 </button>
             </div>
@@ -300,9 +300,88 @@
                                 <button id="btn-add-item" class="btn btn-outline" style="flex: 1;">
                                     <i-ui name="plus" size="15"></i-ui> Tambah Item
                                 </button>
-                                <button id="btn-global-template-picker" class="btn" title="Pilih dari Template Barang"
-                                    style="background: var(--tertiary); color: white; border: none; aspect-ratio: 1; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); flex-shrink: 0; min-width: 44px;">
-                                    <i-ui name="align-justify" size="18"></i-ui>
+                            </div>
+                        </div>
+
+                        <!-- ACTION BAR FLOATING (Mobile + Desktop) -->
+                        <div class="action-bar-sticky">
+                            <!-- Floating Required Fields Indicator -->
+                            <div id="required-fields-indicator" class="floating-indicator hidden">
+                                <div class="indicator-badge">0</div>
+                                <span>Data Kosong</span>
+                            </div>
+
+                            <!-- MOBILE: total + buttons -->
+                            <div class="mobile-action-content">
+                                <div class="total-display">
+                                    <small>Total</small>
+                                    <span id="grand-total-mobile">Rp 0</span>
+                                </div>
+                                <div style="display:flex; gap:8px; align-items:center; position:relative;">
+                                    <button id="btn-save-only-mobile" class="btn btn-outline" style="border-width:2px; font-weight:600;">
+                                        Simpan
+                                    </button>
+                                    <div class="download-split-btn">
+                                        <button id="btn-download-mobile" class="btn btn-primary btn-lg"
+                                            style="border-radius: 50px 0 0 50px; border-right: 1px solid rgba(255,255,255,0.15);">
+                                            Unduh
+                                        </button>
+                                        <button id="btn-download-split-arrow-mobile" class="split-arrow" title="Format Ekspor Lainnya"
+                                            style="border-radius: 0 50px 50px 0;">
+                                            <i-ui name="chevron-up" size="14"></i-ui>
+                                        </button>
+                                        <div class="glass-dropdown-menu" id="download-format-dropdown-mobile">
+                                            <button class="glass-dropdown-item" data-format="pdf">
+                                                <i-ui name="file-02" size="14"></i-ui> PDF
+                                            </button>
+                                            <button class="glass-dropdown-item" data-format="png">
+                                                <i-ui name="image-01" size="14"></i-ui> PNG
+                                            </button>
+                                            <button class="glass-dropdown-item" data-format="jpeg">
+                                                <i-ui name="image-02" size="14"></i-ui> JPG
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- DESKTOP: liquid pill two-section -->
+                            <div class="action-bar-total">
+                                <span class="action-bar-total-label">Total</span>
+                                <span id="grand-total" class="action-bar-total-value">Rp 0</span>
+                            </div>
+                            <div class="action-bar-divider"></div>
+                            <div class="action-bar-buttons">
+                                <button id="btn-save-only" class="strip-btn action-strip-btn" title="Simpan">
+                                    <i-ui name="floppy-disk" size="16"></i-ui>
+                                    <span>Simpan</span>
+                                </button>
+                                <div class="action-download-group">
+                                    <button id="btn-download" class="strip-btn action-strip-btn action-strip-btn--primary" title="Unduh">
+                                        <i-ui name="download-01" size="16"></i-ui>
+                                        <span>Unduh</span>
+                                    </button>
+                                    <button id="btn-download-split-arrow" class="strip-btn action-strip-btn action-strip-btn--arrow" title="Format Ekspor Lainnya">
+                                        <i-ui name="chevron-up" size="13"></i-ui>
+                                    </button>
+                                    <div class="glass-dropdown-menu" id="download-format-dropdown">
+                                        <button class="glass-dropdown-item" data-format="pdf">
+                                            <i-ui name="file-02" size="14"></i-ui> PDF
+                                        </button>
+                                        <button class="glass-dropdown-item" data-format="png">
+                                            <i-ui name="image-01" size="14"></i-ui> PNG
+                                        </button>
+                                        <button class="glass-dropdown-item" data-format="jpeg">
+                                            <i-ui name="image-02" size="14"></i-ui> JPG
+                                        </button>
+                                    </div>
+                                </div>
+                                <button id="btn-quick-add-action" class="strip-btn action-strip-btn action-strip-btn--add" title="Tambah Item">
+                                    <i-ui name="plus" size="16"></i-ui>
+                                    <span>Tambah</span>
+                                </button>
+                                <button id="btn-global-template-picker" class="strip-btn action-strip-btn" title="Pilih dari Template Barang">
+                                    <i-ui name="align-justify" size="16"></i-ui>
                                 </button>
                             </div>
                         </div>
@@ -458,54 +537,6 @@
 
                     </section>
 
-                    <!-- FLOATING ACTION BAR -->
-                    <div class="action-bar-sticky">
-                        <!-- Floating Required Fields Indicator (Inside to sync position) -->
-                        <div id="required-fields-indicator" class="floating-indicator hidden">
-                            <div class="indicator-badge">0</div>
-                            <span>Data Kosong</span>
-                        </div>
-
-                        <!-- Quick Add Button (Desktop Only) -->
-                        <button id="btn-quick-add-action" class="btn-quick-add" title="Tambah Item Cepat">
-                            <i-ui name="plus" size="20"></i-ui>
-                        </button>
-
-                        <div class="total-display">
-                            <small>Total</small>
-                            <span id="grand-total">Rp 0</span>
-                        </div>
-
-                        <div style="display:flex; gap:10px; align-items: center; position: relative;">
-                            <button id="btn-save-only" class="btn btn-outline"
-                                style="border-width:2px; font-weight:600;">
-                                Simpan
-                            </button>
-                            <!-- Split Dropdown button for Unduh -->
-                            <div class="download-split-btn">
-                                <button id="btn-download" class="btn btn-primary btn-lg"
-                                    style="border-radius: 50px 0 0 50px; border-right: 1px solid rgba(255,255,255,0.15);">
-                                    Unduh
-                                </button>
-                                <button id="btn-download-split-arrow" class="split-arrow" title="Format Ekspor Lainnya"
-                                    style="border-radius: 0 50px 50px 0;">
-                                    <i-ui name="chevron-up" size="14"></i-ui>
-                                </button>
-                                <!-- Options Dropdown Menu above it -->
-                                <div class="glass-dropdown-menu" id="download-format-dropdown">
-                                    <button class="glass-dropdown-item" data-format="pdf">
-                                        <i-ui name="file-02" size="14"></i-ui> PDF
-                                    </button>
-                                    <button class="glass-dropdown-item" data-format="png">
-                                        <i-ui name="image-01" size="14"></i-ui> PNG
-                                    </button>
-                                    <button class="glass-dropdown-item" data-format="jpeg">
-                                        <i-ui name="image-02" size="14"></i-ui> JPG
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                 </main>
 

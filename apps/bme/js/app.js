@@ -479,6 +479,33 @@ document.addEventListener('DOMContentLoaded', () => {
     bindProxyClick('desktop-btn-label-toggle', 'btn-label-toggle');
     bindProxyClick('desktop-btn-theme-cycle', 'btn-theme-cycle');
 
+    // ── Label Visibility Toggle (Mobile & Desktop Integration) ────────
+    const btnLabelToggle = document.getElementById('btn-label-toggle');
+    
+    // Restore saved state from localStorage
+    let labelsHidden = localStorage.getItem('bme_labels_hidden') === 'true';
+    
+    const applyLabelState = () => {
+        if (labelsHidden) {
+            document.body.classList.add('labels-hidden');
+            document.body.classList.add('hide-labels');
+        } else {
+            document.body.classList.remove('labels-hidden');
+            document.body.classList.remove('hide-labels');
+        }
+        syncControlToggles();
+    };
+
+    // Apply initial state immediately on load
+    applyLabelState();
+
+    // Listen for click event
+    btnLabelToggle?.addEventListener('click', () => {
+        labelsHidden = !labelsHidden;
+        localStorage.setItem('bme_labels_hidden', labelsHidden);
+        applyLabelState();
+    });
+
     // Connect Premium Desktop Toolbar Dropdown items
     const optViewCard = document.getElementById('opt-view-card');
     const optViewTable = document.getElementById('opt-view-table');
@@ -519,6 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bindThemeOption('opt-theme-light', 'light');
     bindThemeOption('opt-theme-system', 'system');
 
+
     // Split Format Download Menu triggers
     const splitArrow = document.getElementById('btn-download-split-arrow');
     const formatDropdown = document.getElementById('download-format-dropdown');
@@ -528,9 +556,18 @@ document.addEventListener('DOMContentLoaded', () => {
         formatDropdown?.classList.toggle('show');
     });
 
+    // Also wire mobile split arrow → same dropdown
+    const splitArrowMobile = document.getElementById('btn-download-split-arrow-mobile');
+    const formatDropdownMobile = document.getElementById('download-format-dropdown-mobile');
+    splitArrowMobile?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        formatDropdownMobile?.classList.toggle('show');
+    });
+
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.download-split-btn')) {
+        if (!e.target.closest('.download-split-btn') && !e.target.closest('.action-download-group')) {
             formatDropdown?.classList.remove('show');
+            formatDropdownMobile?.classList.remove('show');
         }
     });
 
@@ -540,9 +577,28 @@ document.addEventListener('DOMContentLoaded', () => {
             const format = opt.getAttribute('data-format');
             appState.updateSettings({ defaultDownloadMethod: format });
             formatDropdown?.classList.remove('show');
+            formatDropdownMobile?.classList.remove('show');
+            // Trigger download on the active (visible) button
             document.getElementById('btn-download')?.click();
         });
     });
+
+    // Proxy mobile save/download buttons → desktop handlers
+    document.getElementById('btn-save-only-mobile')?.addEventListener('click', () => {
+        document.getElementById('btn-save-only')?.click();
+    });
+    document.getElementById('btn-download-mobile')?.addEventListener('click', () => {
+        document.getElementById('btn-download')?.click();
+    });
+    // Sync grand-total-mobile with grand-total (observe DOM changes)
+    const grandTotal = document.getElementById('grand-total');
+    const grandTotalMobile = document.getElementById('grand-total-mobile');
+    if (grandTotal && grandTotalMobile) {
+        const syncMobileTotal = () => { grandTotalMobile.textContent = grandTotal.textContent; };
+        new MutationObserver(syncMobileTotal).observe(grandTotal, { childList: true, characterData: true, subtree: true });
+        syncMobileTotal();
+    }
+
 
     // Wire quick insert plus green button
     const btnQuickAddAction = document.getElementById('btn-quick-add-action');

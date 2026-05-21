@@ -269,23 +269,21 @@
         margin: 0;
         max-width: none;
         width: 100%;
-        height: 100%;
         overflow-y: auto;
+        overflow-x: hidden;
         box-sizing: border-box;
         scrollbar-width: none;
-        /* Firefox */
         -ms-overflow-style: none;
-        /* IE/Edge */
     }
 
     #app-content::-webkit-scrollbar {
         display: none;
-        /* Chrome/Safari */
     }
 
     .view {
-        height: 100%;
+        /* views take natural height, app-content scrolls */
     }
+
 
     /* ============================================
        CHROME-LIKE TABS BAR
@@ -786,110 +784,244 @@
         display: none !important;
     }
 
+
+
+
     /* ============================================
-       FLOATING ACTION BAR & QUICK PLUS BTN
+       DESKTOP ACTION BAR — FLOATING LIQUID PILL
        ============================================ */
+
+    /* Enter animation: rises from below + fades in */
+    @keyframes actionBarIn {
+        from {
+            opacity: 0;
+            transform: translateX(-50%) translateY(20px) scale(0.96);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0) scale(1);
+        }
+    }
+
+    /* Exit animation: sinks down + fades out */
+    @keyframes actionBarOut {
+        from {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0) scale(1);
+        }
+
+        to {
+            opacity: 0;
+            transform: translateX(-50%) translateY(24px) scale(0.94);
+        }
+    }
+
     .action-bar-sticky {
+        /* Floating pill fixed to viewport bottom, horizontally centred in the workspace main column */
         position: fixed;
-        bottom: 24px;
-        left: calc(50% + 120px - 170px);
-        /* centered matching offsets */
+        bottom: 24px !important;
+        /* default: sidebar expanded (240px) + preview expanded (~340px) → centre of middle column */
+        left: calc(240px + (100vw - 240px - 340px) / 2);
         transform: translateX(-50%);
-        width: auto !important;
-        max-width: 520px;
-        min-width: 320px;
+        width: calc(100% - 48px) !important;
+        max-width: 70%;
+        min-width: 360px;
         border-radius: 50px;
-        padding: 10px 24px;
-        display: flex;
+        padding: 10px 18px;
+        display: flex !important;
         align-items: center;
         justify-content: space-between;
-        gap: 16px;
-        background: rgba(20, 20, 20, 0.65) !important;
-        backdrop-filter: var(--glass-blur-heavy) !important;
-        -webkit-backdrop-filter: var(--glass-blur-heavy) !important;
-        border: var(--glass-border) !important;
+        gap: 14px;
+        background: rgba(14, 14, 14, 0.72) !important;
+        backdrop-filter: blur(24px) saturate(160%) !important;
+        -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+        border: 1px solid rgba(255, 255, 255, 0.10) !important;
         box-shadow:
-            0 20px 50px rgba(0, 0, 0, 0.3),
-            inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
-        z-index: 99;
-        transition: all 0.3s ease;
+            0 8px 32px rgba(0, 0, 0, 0.45),
+            0 2px 8px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.07) !important;
+        z-index: 200;
+        /* Animate in by default */
+        animation: actionBarIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+            box-shadow 0.2s ease,
+            background 0.2s ease;
+        will-change: transform, opacity;
     }
 
+    /* Adjust centre when sidebar collapses (72px) */
     .sidebar-collapsed .action-bar-sticky {
-        left: calc(50% + 36px - 170px);
+        left: calc(72px + (100vw - 72px - 340px) / 2);
     }
 
+    /* Adjust centre when preview collapses (48px strip) */
     .preview-collapsed .action-bar-sticky {
-        left: calc(50% + 120px);
+        left: calc(240px + (100vw - 240px - 48px) / 2);
     }
 
+    /* Both collapsed */
     .sidebar-collapsed.preview-collapsed .action-bar-sticky {
-        left: calc(50% + 36px);
+        left: calc(72px + (100vw - 72px - 48px) / 2);
     }
 
     [data-theme="light"] .action-bar-sticky {
-        background: rgba(255, 255, 255, 0.75) !important;
+        background: rgba(255, 255, 255, 0.82) !important;
+        border: 1px solid rgba(0, 0, 0, 0.07) !important;
         box-shadow:
-            0 20px 50px rgba(0, 0, 0, 0.06),
-            inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
-        border: 1px solid rgba(0, 0, 0, 0.05) !important;
+            0 8px 32px rgba(0, 0, 0, 0.10),
+            0 2px 8px rgba(0, 0, 0, 0.06),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
     }
 
-    /* Idle hiding visual support */
+    /* Hide state: animate out then hide */
     .action-bar-sticky.hide {
-        transform: translateX(-50%) translateY(90px);
-        opacity: 0;
+        animation: actionBarOut 0.28s cubic-bezier(0.4, 0, 1, 2.5) forwards;
         pointer-events: none;
     }
 
-    /* Total display block */
-    .total-display {
+    /* Total section: left side of pill */
+    .action-bar-total {
         display: flex;
         flex-direction: column;
         gap: 1px;
+        flex-shrink: 0;
     }
 
-    .total-display small {
-        font-size: 0.65rem;
-        color: var(--text-muted);
-        text-transform: uppercase;
+    .action-bar-total-label {
+        font-size: 0.6rem;
         font-weight: 700;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.45);
+        line-height: 1;
     }
 
-    .total-display span {
+    [data-theme="light"] .action-bar-total-label {
+        color: var(--text-muted);
+    }
+
+    .action-bar-total-value {
         font-size: 1.15rem;
         font-weight: 800;
         color: var(--primary);
+        line-height: 1.25;
+        white-space: nowrap;
     }
 
-    /* Plus Quick insertion button */
-    .btn-quick-add {
-        background: var(--finance-green);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 38px;
-        height: 38px;
+    /* Buttons group: right side of pill */
+    .action-bar-buttons {
         display: flex;
         align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-shadow: var(--shadow-sm);
-        transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        ;
+        gap: 5px;
+        flex-shrink: 0;
     }
 
-    .btn-quick-add:hover {
-        transform: scale(1.1) rotate(90deg);
-        background: color-mix(in srgb, var(--finance-green) 85%, white);
-        box-shadow: var(--shadow-md);
+    /* Liquid action button inside pill */
+    .action-strip-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 0 13px;
+        height: 32px;
+        width: auto;
+        font-size: 0.8rem;
+        font-weight: 600;
+        border-radius: 50px;
+        white-space: nowrap;
+        color: rgba(255, 255, 255, 0.75);
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        cursor: pointer;
+        transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+        letter-spacing: 0.01em;
+        flex-shrink: 0;
+    }
+
+    [data-theme="light"] .action-strip-btn {
+        color: var(--text-muted);
+        background: rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .action-strip-btn:hover {
+        background: rgba(255, 255, 255, 0.14);
+        color: #fff;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    [data-theme="light"] .action-strip-btn:hover {
+        background: rgba(0, 0, 0, 0.08);
+        color: var(--text-main);
+    }
+
+    /* Primary: Unduh button */
+    .action-strip-btn--primary {
+        background: var(--primary);
+        color: #fff;
+        border-color: transparent;
+        border-right: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 50px 0 0 50px;
+        box-shadow: 0 2px 10px color-mix(in srgb, var(--primary) 45%, transparent);
+    }
+
+    .action-strip-btn--primary:hover {
+        background: color-mix(in srgb, var(--primary) 82%, white);
+        transform: translateY(-1px);
+    }
+
+    /* Arrow companion for split button */
+    .action-strip-btn--arrow {
+        border-radius: 0 50px 50px 0;
+        padding: 0 10px;
+        background: color-mix(in srgb, var(--primary) 75%, black);
+        color: #fff;
+        border-color: transparent;
+        height: 32px;
+    }
+
+    .action-strip-btn--arrow:hover {
+        background: color-mix(in srgb, var(--primary) 65%, black);
+        transform: translateY(-1px);
+    }
+
+    /* Green Tambah */
+    .action-strip-btn--add {
+        background: color-mix(in srgb, var(--finance-green) 18%, transparent);
+        color: var(--finance-green);
+        border-color: color-mix(in srgb, var(--finance-green) 35%, transparent);
+    }
+
+    .action-strip-btn--add:hover {
+        background: color-mix(in srgb, var(--finance-green) 28%, transparent);
+        box-shadow: 0 3px 12px color-mix(in srgb, var(--finance-green) 28%, transparent);
+    }
+
+    /* Download split group container */
+    .action-download-group {
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    /* Divider line between pill sections */
+    .action-bar-divider {
+        width: 1px;
+        height: 24px;
+        background: rgba(255, 255, 255, 0.12);
+        flex-shrink: 0;
+    }
+
+    [data-theme="light"] .action-bar-divider {
+        background: rgba(0, 0, 0, 0.1);
     }
 
     /* ============================================
-       POIN 1: HIDE MOBILE-ONLY ADD BUTTON GROUP
+       POIN 1: HIDE MOBILE-ONLY ELEMENTS ON DESKTOP
        ============================================ */
-    .mobile-add-group {
+    .mobile-add-group,
+    .mobile-action-content {
         display: none !important;
     }
 
@@ -1109,14 +1241,14 @@
         flex-direction: column !important;
         gap: 2px !important;
         min-width: 120px !important;
-        box-shadow: 
+        box-shadow:
             0 12px 30px rgba(0, 0, 0, 0.35),
             inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
         z-index: 300 !important;
         opacity: 0 !important;
         transform: translateY(-8px) scale(0.95) !important;
         pointer-events: none !important;
-        transition: 
+        transition:
             opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
             transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
         box-sizing: border-box !important;
@@ -1125,7 +1257,7 @@
     [data-theme="light"] .pill-dropdown-menu {
         background: rgba(255, 255, 255, 0.96) !important;
         border: 1px solid rgba(0, 0, 0, 0.08) !important;
-        box-shadow: 
+        box-shadow:
             0 12px 30px rgba(0, 0, 0, 0.08),
             inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
     }
@@ -1168,7 +1300,8 @@
     }
 
     .pill-dropdown-item.active {
-        display: none !important; /* Hide active items from dropdown options */
+        display: none !important;
+        /* Hide active items from dropdown options */
     }
 
     /* ============================================
@@ -1188,7 +1321,7 @@
     /* Header stays compact and floats */
     .preview-panel-header {
         flex-shrink: 0;
-        padding: 16px 18px 12px 18px !important;
+        padding: 6px 18px 6px 18px !important;
         display: flex;
         align-items: center;
         gap: 10px;
