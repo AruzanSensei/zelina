@@ -5,6 +5,9 @@
 
 (function () {
 
+    // Capture the script URL synchronously during script evaluation (crucial for async/defer scripts)
+    const scriptSrc = document.currentScript ? document.currentScript.src : '';
+
     // 1. Global Styling Injection (Light DOM structure integration)
     const style = document.createElement('style');
     style.textContent = `
@@ -41,23 +44,21 @@
 
         ICONS_PROMISE = (async () => {
             try {
-                // Dev Hostname Auto-Resolver
-                let scriptSrc = document.currentScript ? document.currentScript.src : '';
                 let bundleUrl;
 
-                const isLocal = window.location.hostname === 'localhost' ||
-                    window.location.hostname === '127.0.0.1' ||
-                    window.location.protocol === 'file:';
-
-                if (isLocal) {
-                    // Try to construct URL relative to the script location
-                    if (scriptSrc) {
-                        bundleUrl = new URL('../icons/untitled-ui-line.v1.json', scriptSrc).href;
-                    } else {
-                        bundleUrl = '../../cdn/icons/untitled-ui-line.v1.json';
-                    }
+                if (scriptSrc) {
+                    // Dynamically resolve bundle URL relative to the script location (works universally for local and cdn subdomains!)
+                    bundleUrl = new URL('../icons/untitled-ui-line.v1.json', scriptSrc).href;
                 } else {
-                    bundleUrl = 'https://cdn.zanxa.site/icons/untitled-ui-line.v1.json';
+                    // Safe Fallback if scriptSrc is empty
+                    const isLocal = window.location.hostname === 'localhost' ||
+                        window.location.hostname === '127.0.0.1' ||
+                        window.location.protocol === 'file:';
+                    if (isLocal) {
+                        bundleUrl = '../../cdn/icons/untitled-ui-line.v1.json';
+                    } else {
+                        bundleUrl = 'https://cdn.zanxa.site/icons/untitled-ui-line.v1.json';
+                    }
                 }
 
                 console.log(`[Icon] Fetching bundle from: ${bundleUrl}`);

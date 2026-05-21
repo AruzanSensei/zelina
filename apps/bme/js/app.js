@@ -127,6 +127,82 @@ document.addEventListener('DOMContentLoaded', () => {
             if (eyeIconD) eyeIconD.style.display = 'block';
             if (eyeClosedIconD) eyeClosedIconD.style.display = 'none';
         }
+
+        // Sync Desktop Premium Toolbar Dropdown Pills
+        // 1. Pill Tampilan
+        const pillTampilan = document.getElementById('pill-tampilan');
+        if (pillTampilan) {
+            const trigger = pillTampilan.querySelector('.pill-trigger');
+            const icon = trigger?.querySelector('i-ui');
+            const label = trigger?.querySelector('span');
+            const optCard = document.getElementById('opt-view-card');
+            const optTable = document.getElementById('opt-view-table');
+
+            if (viewMode === 'table') {
+                icon?.setAttribute('name', 'list');
+                if (label) label.textContent = 'Tabel';
+                optTable?.classList.add('active');
+                optCard?.classList.remove('active');
+            } else {
+                icon?.setAttribute('name', 'layout-grid-01');
+                if (label) label.textContent = 'Kartu';
+                optCard?.classList.add('active');
+                optTable?.classList.remove('active');
+            }
+        }
+
+        // 2. Pill Label/Mode
+        const pillLabel = document.getElementById('pill-label');
+        if (pillLabel) {
+            const trigger = pillLabel.querySelector('.pill-trigger');
+            const icon = trigger?.querySelector('i-ui');
+            const label = trigger?.querySelector('span');
+            const optDetail = document.getElementById('opt-label-detail');
+            const optSederhana = document.getElementById('opt-label-sederhana');
+
+            if (labelHidden) {
+                icon?.setAttribute('name', 'eye-off');
+                if (label) label.textContent = 'sederhana';
+                optSederhana?.classList.add('active');
+                optDetail?.classList.remove('active');
+            } else {
+                icon?.setAttribute('name', 'eye');
+                if (label) label.textContent = 'detail';
+                optDetail?.classList.add('active');
+                optSederhana?.classList.remove('active');
+            }
+        }
+
+        // 3. Pill Tema
+        const pillTema = document.getElementById('pill-tema');
+        if (pillTema) {
+            const trigger = pillTema.querySelector('.pill-trigger');
+            const icon = trigger?.querySelector('i-ui');
+            const label = trigger?.querySelector('span');
+            const optDark = document.getElementById('opt-theme-dark');
+            const optLight = document.getElementById('opt-theme-light');
+            const optSystem = document.getElementById('opt-theme-system');
+
+            const currentTheme = appState.state.settings.theme || 'system';
+
+            optDark?.classList.remove('active');
+            optLight?.classList.remove('active');
+            optSystem?.classList.remove('active');
+
+            if (currentTheme === 'dark') {
+                icon?.setAttribute('name', 'moon-01');
+                if (label) label.textContent = 'Gelap';
+                optDark?.classList.add('active');
+            } else if (currentTheme === 'light') {
+                icon?.setAttribute('name', 'sun');
+                if (label) label.textContent = 'Terang';
+                optLight?.classList.add('active');
+            } else {
+                icon?.setAttribute('name', 'monitor-02');
+                if (label) label.textContent = 'Sistem';
+                optSystem?.classList.add('active');
+            }
+        }
     };
 
     // Dynamically compute the correct CSS scale for preview thumbnails.
@@ -280,6 +356,16 @@ document.addEventListener('DOMContentLoaded', () => {
         syncPreviewPanelDOM();
     };
 
+    // Helper to sync sidebar toggle button icon dynamically
+    const syncSidebarToggleIcon = () => {
+        const toggleBtn = document.getElementById('btn-sidebar-toggle');
+        const icon = toggleBtn?.querySelector('i-ui');
+        if (icon) {
+            const isCollapsed = document.body.classList.contains('sidebar-collapsed');
+            icon.setAttribute('name', isCollapsed ? 'flex-align-right' : 'flex-align-left');
+        }
+    };
+
     // Load and apply cached collapsible states
     const initCollapseStates = () => {
         const sidebarCollapsed = localStorage.getItem('bme_sidebar_collapsed') === 'true';
@@ -293,6 +379,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (toolbar) {
             toolbar.classList.toggle('collapsed', toolbarCollapsed);
         }
+
+        // Sync icon on init
+        syncSidebarToggleIcon();
     };
 
     // Connect Sidebar Collapse click
@@ -300,6 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnSidebarToggle?.addEventListener('click', () => {
         const collapsed = document.body.classList.toggle('sidebar-collapsed');
         localStorage.setItem('bme_sidebar_collapsed', collapsed);
+        syncSidebarToggleIcon();
         syncActiveTabUI();
     });
 
@@ -388,6 +478,46 @@ document.addEventListener('DOMContentLoaded', () => {
     bindProxyClick('desktop-mode-advance-btn', 'mode-advance-btn');
     bindProxyClick('desktop-btn-label-toggle', 'btn-label-toggle');
     bindProxyClick('desktop-btn-theme-cycle', 'btn-theme-cycle');
+
+    // Connect Premium Desktop Toolbar Dropdown items
+    const optViewCard = document.getElementById('opt-view-card');
+    const optViewTable = document.getElementById('opt-view-table');
+    optViewCard?.addEventListener('click', () => {
+        document.getElementById('view-card-btn')?.click();
+        syncControlToggles();
+    });
+    optViewTable?.addEventListener('click', () => {
+        document.getElementById('view-table-btn')?.click();
+        syncControlToggles();
+    });
+
+    const optLabelDetail = document.getElementById('opt-label-detail');
+    const optLabelSederhana = document.getElementById('opt-label-sederhana');
+    optLabelDetail?.addEventListener('click', () => {
+        if (document.body.classList.contains('hide-labels')) {
+            document.getElementById('btn-label-toggle')?.click();
+            syncControlToggles();
+        }
+    });
+    optLabelSederhana?.addEventListener('click', () => {
+        if (!document.body.classList.contains('hide-labels')) {
+            document.getElementById('btn-label-toggle')?.click();
+            syncControlToggles();
+        }
+    });
+
+    const bindThemeOption = (optId, themeValue) => {
+        const opt = document.getElementById(optId);
+        opt?.addEventListener('click', () => {
+            appState.updateSettings({ theme: themeValue });
+            applyTheme(themeValue);
+            updateThemeIcon(themeValue);
+            syncControlToggles();
+        });
+    };
+    bindThemeOption('opt-theme-dark', 'dark');
+    bindThemeOption('opt-theme-light', 'light');
+    bindThemeOption('opt-theme-system', 'system');
 
     // Split Format Download Menu triggers
     const splitArrow = document.getElementById('btn-download-split-arrow');

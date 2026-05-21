@@ -490,9 +490,8 @@
         align-items: center;
         justify-content: space-between;
         gap: 20px;
-        padding-bottom: 16px;
+        padding: 16px 24px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-        margin-bottom: 20px;
         width: 100%;
         box-sizing: border-box;
     }
@@ -943,172 +942,246 @@
        POIN 3: TOOLBAR → HOVER DROPDOWN TRIGGER
        ============================================ */
 
-    /* Transform toolbar into a compact trigger pill */
+    /* ============================================
+       POIN 3: TOOLBAR → HORIZONTAL SLIDE & HOVER PILLS
+       ============================================ */
+
+    /* Glassy pill-shaped container supporting smooth slide transition */
     .workspace-header-toolbar {
         position: relative !important;
         display: flex !important;
         align-items: center !important;
-        gap: 0 !important;
-        padding: 0 !important;
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
+        background: rgba(18, 18, 18, 0.45) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.06) !important;
+        border-radius: 100px !important;
+        padding: 3px !important;
+        gap: 6px !important;
+        width: auto !important;
+        max-width: 600px !important;
+        height: 36px !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15) !important;
         overflow: visible !important;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-sizing: border-box !important;
     }
 
-    /* The trigger button (the "> " chevron pill visible always) */
+    [data-theme="light"] .workspace-header-toolbar {
+        background: rgba(255, 255, 255, 0.75) !important;
+        border: 1px solid rgba(0, 0, 0, 0.06) !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    /* Collapsed state (horizontal collapse) */
+    .workspace-header-toolbar.collapsed {
+        width: 36px !important;
+        max-width: 36px !important;
+        overflow: hidden !important;
+        gap: 0 !important;
+        padding: 3px !important;
+        border-color: rgba(255, 255, 255, 0.04) !important;
+    }
+
+    [data-theme="light"] .workspace-header-toolbar.collapsed {
+        border-color: rgba(0, 0, 0, 0.04) !important;
+    }
+
+    /* Rotation and style of the chevron button */
     .toolbar-toggle {
-        background: var(--glass-bg) !important;
-        border: var(--glass-border) !important;
-        backdrop-filter: var(--glass-blur) !important;
-        -webkit-backdrop-filter: var(--glass-blur) !important;
-        box-shadow: var(--glass-shadow) !important;
-        border-radius: var(--radius-md) !important;
+        background: rgba(255, 255, 255, 0.06) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
         color: var(--text-muted) !important;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 34px;
-        height: 34px;
-        padding: 0;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        flex-shrink: 0;
+        border-radius: 50% !important;
+        width: 28px !important;
+        height: 28px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        flex-shrink: 0 !important;
+        padding: 0 !important;
     }
 
     [data-theme="light"] .toolbar-toggle {
-        background: rgba(255, 255, 255, 0.75) !important;
-        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        background: rgba(0, 0, 0, 0.03) !important;
+        border: 1px solid rgba(0, 0, 0, 0.05) !important;
     }
 
     .toolbar-toggle:hover {
+        background: rgba(255, 255, 255, 0.12) !important;
         color: var(--text-main) !important;
-        background: var(--glass-bg-hover) !important;
     }
 
-    /* Dropdown popup — hidden by default */
+    [data-theme="light"] .toolbar-toggle:hover {
+        background: rgba(0, 0, 0, 0.06) !important;
+    }
+
+    /* Chevron rotation in collapsed state */
+    .workspace-header-toolbar.collapsed .toolbar-toggle {
+        transform: rotate(180deg) !important;
+    }
+
+    /* Content container containing the pills */
     .toolbar-content {
-        display: grid !important;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 6px;
-        position: absolute !important;
-        top: calc(100% + 10px);
-        right: 0;
-        min-width: 220px;
-        background: rgba(18, 18, 18, 0.92);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: var(--radius-md);
-        box-shadow:
-            0 16px 40px rgba(0, 0, 0, 0.4),
-            inset 0 1px 0 rgba(255, 255, 255, 0.08);
-        padding: 10px;
-        z-index: 200;
-        opacity: 0;
-        pointer-events: none;
-        transform: translateY(-6px) scale(0.97);
-        transition:
-            opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-            transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    [data-theme="light"] .toolbar-content {
-        background: rgba(255, 255, 255, 0.96);
-        border: 1px solid rgba(0, 0, 0, 0.08);
-        box-shadow:
-            0 16px 40px rgba(0, 0, 0, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.8);
-    }
-
-    /* Show dropdown on hover of toolbar parent */
-    .workspace-header-toolbar:hover .toolbar-content,
-    .workspace-header-toolbar:focus-within .toolbar-content {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
         opacity: 1 !important;
-        pointer-events: all !important;
-        transform: translateY(0) scale(1) !important;
+        transition: opacity 0.3s ease !important;
+        flex-shrink: 0 !important;
+        position: static !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        pointer-events: auto !important;
+        transform: none !important;
+        width: auto !important;
+        height: auto !important;
     }
 
-    /* Each toggle group inside becomes a grid cell button */
-    .toolbar-content>div {
+    /* Fade out pills when toolbar is collapsed */
+    .workspace-header-toolbar.collapsed .toolbar-content {
+        opacity: 0 !important;
+        pointer-events: none !important;
+    }
+
+    /* The elegant option dropdown pills */
+    .toolbar-dropdown-pill {
+        position: relative !important;
+        display: inline-block !important;
+    }
+
+    /* Pill trigger styling */
+    .pill-trigger {
+        background: rgba(255, 255, 255, 0.06) !important;
+        border: 1px solid rgba(255, 255, 255, 0.06) !important;
+        color: var(--text-main) !important;
+        padding: 4px 12px !important;
+        font-size: 0.76rem !important;
+        font-weight: 600 !important;
+        border-radius: 100px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        cursor: pointer !important;
+        height: 28px !important;
+        box-sizing: border-box !important;
+        transition: all 0.2s ease !important;
+        font-family: inherit !important;
+    }
+
+    [data-theme="light"] .pill-trigger {
+        background: rgba(0, 0, 0, 0.04) !important;
+        border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .pill-trigger:hover {
+        background: rgba(255, 255, 255, 0.12) !important;
+        border-color: rgba(255, 255, 255, 0.12) !important;
+    }
+
+    [data-theme="light"] .pill-trigger:hover {
+        background: rgba(0, 0, 0, 0.08) !important;
+        border-color: rgba(0, 0, 0, 0.08) !important;
+    }
+
+    .pill-trigger i-ui {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    /* Elegant absolute dropdown menu */
+    .pill-dropdown-menu {
+        position: absolute !important;
+        top: calc(100% + 6px) !important;
+        left: 0 !important;
+        background: rgba(20, 20, 20, 0.95) !important;
+        backdrop-filter: blur(24px) !important;
+        -webkit-backdrop-filter: blur(24px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-radius: 10px !important;
+        padding: 4px !important;
         display: flex !important;
         flex-direction: column !important;
-        align-items: center !important;
-        gap: 5px !important;
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-        border-radius: var(--radius-sm);
-        padding: 8px 4px;
+        gap: 2px !important;
+        min-width: 120px !important;
+        box-shadow: 
+            0 12px 30px rgba(0, 0, 0, 0.35),
+            inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+        z-index: 300 !important;
+        opacity: 0 !important;
+        transform: translateY(-8px) scale(0.95) !important;
+        pointer-events: none !important;
+        transition: 
+            opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+            transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        box-sizing: border-box !important;
     }
 
-    [data-theme="light"] .toolbar-content>div {
-        background: rgba(0, 0, 0, 0.03);
-        border: 1px solid rgba(0, 0, 0, 0.06);
+    [data-theme="light"] .pill-dropdown-menu {
+        background: rgba(255, 255, 255, 0.96) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
+        box-shadow: 
+            0 12px 30px rgba(0, 0, 0, 0.08),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
     }
 
-    /* Label inside each group */
-    .toolbar-content .view-label {
-        font-size: 0.65rem !important;
+    /* Show dropdown on hover of the pill parent */
+    .toolbar-dropdown-pill:hover .pill-dropdown-menu {
+        opacity: 1 !important;
+        transform: translateY(0) scale(1) !important;
+        pointer-events: all !important;
+    }
+
+    /* Individual dropdown button items */
+    .pill-dropdown-item {
+        background: transparent !important;
+        border: none !important;
         color: var(--text-muted) !important;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-weight: 700;
-        margin: 0 !important;
+        padding: 6px 12px !important;
+        font-size: 0.74rem !important;
+        font-weight: 500 !important;
+        border-radius: 6px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        cursor: pointer !important;
+        text-align: left !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        transition: all 0.15s ease !important;
+        font-family: inherit !important;
     }
 
-    /* Toggle group inside dropdown */
-    .toolbar-content .toggle-group {
-        display: flex;
-        gap: 3px;
-        margin: 0 !important;
+    .pill-dropdown-item:hover {
+        background: rgba(255, 255, 255, 0.08) !important;
+        color: var(--text-main) !important;
     }
 
-    .toolbar-content .toggle-btn {
-        width: 28px !important;
-        height: 28px !important;
-        padding: 0 !important;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: var(--radius-sm) !important;
-        font-size: 0.7rem !important;
+    [data-theme="light"] .pill-dropdown-item:hover {
+        background: rgba(0, 0, 0, 0.05) !important;
+        color: var(--text-main) !important;
     }
 
-    /* Eye + Theme icon-btn inside dropdown */
-    .toolbar-content .icon-btn {
-        width: 28px !important;
-        height: 28px !important;
-        border-radius: var(--radius-sm) !important;
-        border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    }
-
-    /* Collapsed state no longer needed (toolbar is always compact trigger) */
-    .workspace-header-toolbar.collapsed {
-        max-width: none !important;
-        padding: 0 !important;
-    }
-
-    .workspace-header-toolbar.collapsed .toolbar-content {
-        display: grid !important;
-        opacity: 0;
-        pointer-events: none;
-    }
-
-    .workspace-header-toolbar.collapsed .toolbar-toggle i-ui {
-        transform: none;
+    .pill-dropdown-item.active {
+        display: none !important; /* Hide active items from dropdown options */
     }
 
     /* ============================================
        POIN 4: PREVIEW PANEL — COMPACT THUMBNAIL
        ============================================ */
 
-    /* Panel wrapper stays full height */
+    /* Panel wrapper wraps to fit preview cards content perfectly */
     .desktop-preview-panel {
         display: flex;
         flex-direction: column;
-        height: 100%;
+        height: auto !important;
+        align-self: flex-start !important;
+        max-height: calc(100% - 32px) !important;
         overflow: hidden;
     }
 

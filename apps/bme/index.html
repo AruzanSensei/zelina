@@ -11,11 +11,30 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- Preload Icon Bundle -->
-    <link rel="preload" href="https://cdn.zanxa.site/icons/untitled-ui-line.v1.json" as="fetch" crossorigin />
-
-    <!-- Universal Web Component Icon System -->
-    <script src="../../cdn/js/i-ui.js" defer></script>
+    <!-- Dynamic CDN Asset Loader (Local Dev vs Production Subdomain) -->
+    <script>
+        (function () {
+            const isLocal = window.location.hostname === 'localhost' ||
+                window.location.hostname === '127.0.0.1' ||
+                window.location.protocol === 'file:';
+            
+            const cdnBase = isLocal ? '../../cdn' : 'https://cdn.zanxa.site';
+            
+            // 1. Inject Preload Icon Bundle JSON
+            const preloadLink = document.createElement('link');
+            preloadLink.rel = 'preload';
+            preloadLink.href = cdnBase + '/icons/untitled-ui-line.v1.json';
+            preloadLink.as = 'fetch';
+            preloadLink.crossOrigin = 'anonymous';
+            document.head.appendChild(preloadLink);
+            
+            // 2. Inject Universal Web Component Icon System Script
+            const scriptEl = document.createElement('script');
+            scriptEl.src = cdnBase + '/js/i-ui.js';
+            scriptEl.defer = true;
+            document.head.appendChild(scriptEl);
+        })();
+    </script>
 
     <!-- html-to-image Library -->
     <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
@@ -84,9 +103,10 @@
         <!-- DESKTOP SIDEBAR -->
         <aside class="desktop-sidebar">
             <div class="sidebar-brand">
-                <i-ui name="activity" size="24" style="color:var(--primary); filter: drop-shadow(0 0 8px var(--primary));"></i-ui>
+                <i-ui name="activity" size="24"
+                    style="color:var(--primary); filter: drop-shadow(0 0 8px var(--primary));"></i-ui>
                 <div class="sidebar-brand-text">
-                    <h2>BERKAH MAJU</h2>
+                    <h2>flowa.id</h2>
                     <p>Elektrik Generator</p>
                 </div>
             </div>
@@ -109,24 +129,25 @@
                 </button>
             </div>
             <div class="sidebar-bottom">
-                <button class="sidebar-item" id="btn-sidebar-settings" style="width:100%; border:none; background:transparent;">
+                <button class="sidebar-item" id="btn-sidebar-settings"
+                    style="width:100%; border:none; background:transparent;">
                     <i-ui name="settings-01" size="20"></i-ui>
                     <span>Pengaturan</span>
                 </button>
                 <div class="sidebar-profile">
                     <i-ui name="user-01" size="20"></i-ui>
-                    <span>Operator</span>
+                    <span>Berkah Maju Elektrik</span>
                 </div>
             </div>
         </aside>
 
         <!-- WORKSPACE CONTAINER -->
         <div class="workspace-container">
-            
+
             <!-- CHROME TABS BAR -->
             <div class="chrome-tabs-bar">
                 <button class="sidebar-toggle-btn" id="btn-sidebar-toggle" title="Kecilkan/Besarkan Sidebar">
-                    <i-ui name="menu-01" size="20"></i-ui>
+                    <i-ui name="flex-align-left" size="20"></i-ui>
                 </button>
                 <div id="chrome-tabs-list" style="display:flex; align-items:flex-end;">
                     <!-- Dynamically injected tabs -->
@@ -140,348 +161,377 @@
             <div class="workspace-header">
                 <div class="workspace-title-wrap">
                     <div class="workspace-title-label">JUDUL</div>
-                    <input type="text" id="manual-title-desktop" class="workspace-title-input" placeholder="Contoh: Invoice #001">
+                    <input type="text" id="manual-title-desktop" class="workspace-title-input"
+                        placeholder="Contoh: Invoice #001">
                 </div>
                 <div class="workspace-header-toolbar">
-                    <button class="toolbar-toggle" id="btn-toolbar-toggle">
+                    <button class="toolbar-toggle" id="btn-toolbar-toggle" title="Kecilkan/Besarkan Toolbar">
                         <i-ui name="chevron-right" size="16"></i-ui>
                     </button>
                     <div class="toolbar-content">
-                        <!-- Card/Table Toggle -->
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <span class="view-label" style="margin:0; font-size:0.75rem;">Tampilan</span>
-                            <div class="toggle-group orange-theme" style="margin:0;">
-                                <button class="toggle-btn active" id="desktop-view-card-btn" title="Card View">
-                                    <i-ui name="list" size="14"></i-ui>
-                                </button>
-                                <button class="toggle-btn" id="desktop-view-table-btn" title="Table View">
+                        <!-- Pill 1: Tampilan (Tabel / Kartu) -->
+                        <div class="toolbar-dropdown-pill" id="pill-tampilan">
+                            <button class="pill-trigger">
+                                <i-ui name="list" size="14"></i-ui>
+                                <span>Tabel</span>
+                            </button>
+                            <div class="pill-dropdown-menu">
+                                <button class="pill-dropdown-item" id="opt-view-card" data-value="card">
                                     <i-ui name="layout-grid-01" size="14"></i-ui>
+                                    <span>Kartu</span>
                                 </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Simple/Advance Card Mode Toggle -->
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <span class="view-label" style="margin:0; font-size:0.75rem;">Mode</span>
-                            <div class="toggle-group orange-theme" style="margin:0;">
-                                <button class="toggle-btn active" id="desktop-mode-simple-btn" title="Simple Mode">
-                                    <i-ui name="square" size="14"></i-ui>
-                                </button>
-                                <button class="toggle-btn" id="desktop-mode-advance-btn" title="Advance Mode">
-                                    <i-ui name="grid-01" size="14"></i-ui>
+                                <button class="pill-dropdown-item" id="opt-view-table" data-value="table">
+                                    <i-ui name="list" size="14"></i-ui>
+                                    <span>Tabel</span>
                                 </button>
                             </div>
                         </div>
 
-                        <!-- Label Visibility eye toggle -->
-                        <button id="desktop-btn-label-toggle" class="icon-btn" title="Sembunyikan / Tampilkan Label" style="border:1px solid rgba(255,255,255,0.08); border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer;">
-                            <span id="desktop-wrap-icon-eye"><i-ui name="eye" size="14"></i-ui></span>
-                            <span id="desktop-wrap-icon-eye-closed" style="display:none"><i-ui name="eye-off" size="14"></i-ui></span>
-                        </button>
+                        <!-- Pill 2: Label/Mode (detail / sederhana) -->
+                        <div class="toolbar-dropdown-pill" id="pill-label">
+                            <button class="pill-trigger">
+                                <i-ui name="eye" size="14"></i-ui>
+                                <span>detail</span>
+                            </button>
+                            <div class="pill-dropdown-menu">
+                                <button class="pill-dropdown-item" id="opt-label-detail" data-value="detail">
+                                    <i-ui name="eye" size="14"></i-ui>
+                                    <span>detail</span>
+                                </button>
+                                <button class="pill-dropdown-item" id="opt-label-sederhana" data-value="sederhana">
+                                    <i-ui name="eye-off" size="14"></i-ui>
+                                    <span>sederhana</span>
+                                </button>
+                            </div>
+                        </div>
 
-                        <!-- Theme cycle cycle -->
-                        <button id="desktop-btn-theme-cycle" class="icon-btn" title="Tema" style="background:transparent; border:1px solid rgba(255,255,255,0.08); border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--text-main);">
-                            <i-ui name="monitor-01" size="14"></i-ui>
-                        </button>
+                        <!-- Pill 3: Tema (Gelap / Terang / Sistem) -->
+                        <div class="toolbar-dropdown-pill" id="pill-tema">
+                            <button class="pill-trigger">
+                                <i-ui name="moon-01" size="14"></i-ui>
+                                <span>Gelap</span>
+                            </button>
+                            <div class="pill-dropdown-menu">
+                                <button class="pill-dropdown-item" id="opt-theme-dark" data-value="dark">
+                                    <i-ui name="moon-01" size="14"></i-ui>
+                                    <span>Gelap</span>
+                                </button>
+                                <button class="pill-dropdown-item" id="opt-theme-light" data-value="light">
+                                    <i-ui name="sun" size="14"></i-ui>
+                                    <span>Terang</span>
+                                </button>
+                                <button class="pill-dropdown-item" id="opt-theme-system" data-value="system">
+                                    <i-ui name="monitor-02" size="14"></i-ui>
+                                    <span>Sistem</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <!-- Workspace Body Wrapper (Holds Main Panels & Collapsible Right Preview Panel) -->
             <div class="workspace-body-wrapper">
-                
+
                 <!-- Main Content Area -->
                 <main id="app-content">
 
-        <!-- MODE 1: MANUAL -->
-        <section id="manual-view" class="view client-view active">
-            <div class="input-group item-field-wrap">
-                <label class="field-label">Judul Invoice</label>
-                <input type="text" id="manual-title" class="form-input title" placeholder="Contoh: Invoice #001">
-            </div>
+                    <!-- MODE 1: MANUAL -->
+                    <section id="manual-view" class="view client-view active">
+                        <div class="input-group item-field-wrap">
+                            <label class="field-label">Judul Invoice</label>
+                            <input type="text" id="manual-title" class="form-input title"
+                                placeholder="Contoh: Invoice #001">
+                        </div>
 
-            <div style="display:flex; justify-content:flex-end; align-items: center;">
-                <div class="view-toggle-container"
-                    style="display:flex; justify-content:space-between; align-items:center; width:100%;">
-                    <!-- Tampilan (List & Table View) -->
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <span class="view-label" style="margin:0;">Tampilan</span>
-                        <div class="toggle-group orange-theme">
-                            <button class="toggle-btn active" id="view-card-btn" title="Card View">
-                                <i-ui name="list" size="15"></i-ui>
+                        <div style="display:flex; justify-content:flex-end; align-items: center;">
+                            <div class="view-toggle-container"
+                                style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+                                <!-- Tampilan (List & Table View) -->
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <span class="view-label" style="margin:0;">Tampilan</span>
+                                    <div class="toggle-group orange-theme">
+                                        <button class="toggle-btn active" id="view-card-btn" title="Card View">
+                                            <i-ui name="list" size="15"></i-ui>
+                                        </button>
+                                        <button class="toggle-btn" id="view-table-btn" title="Table View">
+                                            <i-ui name="layout-grid-01" size="15"></i-ui>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div
+                                    style="width: 100px; height: 1px; background-color: var(--border-color); margin: 0 4px;">
+                                </div>
+
+                                <!-- Mode (Simple & Advance Card Mode) -->
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <span class="view-label" style="margin:0;">Mode</span>
+                                    <div class="toggle-group orange-theme">
+                                        <button class="toggle-btn active" id="mode-simple-btn" title="Simple Mode">
+                                            <i-ui name="square" size="15"></i-ui>
+                                        </button>
+                                        <button class="toggle-btn" id="mode-advance-btn" title="Advance Mode">
+                                            <i-ui name="grid-01" size="15"></i-ui>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="manual-items-wrapper" style="position:relative;">
+                            <div id="manual-edit-overlay" class="hidden"
+                                style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:10; display:none; flex-direction:column; justify-content:center; align-items:center; border:2px dashed #f39c12; border-radius:8px;">
+                                <i-ui name="alert-triangle" size="48" style="color:#f39c12; margin-bottom:15px"></i-ui>
+                                <h3 style="color:#d35400;">Mode Edit Manual Aktif</h3>
+                                <p style="text-align:center; padding:10px; font-weight:600; color:#333;">Input otomatis
+                                    dinonaktifkan<br>karena ada perubahan kustom.</p>
+                                <button id="btn-reset-manual-edit" class="btn btn-primary"
+                                    style="background:#e67e22; border-color:#d35400; margin-top:10px;">
+                                    <i-ui name="refresh-ccw-01" size="14"></i-ui> Reset &amp;
+                                    Lanjutkan Otomatis
+                                </button>
+                            </div>
+                            <div id="manual-items-container">
+                                <!-- Items will be injected here -->
+                            </div>
+
+                            <div class="mobile-add-group" style="display: flex; gap: 8px; align-items: stretch;">
+                                <button id="btn-add-item" class="btn btn-outline" style="flex: 1;">
+                                    <i-ui name="plus" size="15"></i-ui> Tambah Item
+                                </button>
+                                <button id="btn-global-template-picker" class="btn" title="Pilih dari Template Barang"
+                                    style="background: var(--tertiary); color: white; border: none; aspect-ratio: 1; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); flex-shrink: 0; min-width: 44px;">
+                                    <i-ui name="align-justify" size="18"></i-ui>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- MODE 2: AI -->
+                    <section id="ai-view" class="view hidden">
+                        <div class="input-group">
+                            <input type="text" id="ai-title" class="form-input" placeholder="Judul Invoice">
+                        </div>
+                        <div class="input-group">
+                            <textarea id="ai-prompt" class="form-textarea"
+                                placeholder="Contoh: Kabel NYM 50 meter harga 15rb, MCB 10 pcs harga 50rb..."></textarea>
+                        </div>
+                        <div class="ai-actions">
+                            <button id="btn-ai-generate" class="btn btn-primary btn-icon-right">
+                                Generate <i-ui name="magic-wand-01" size="15"></i-ui>
                             </button>
-                            <button class="toggle-btn" id="view-table-btn" title="Table View">
-                                <i-ui name="layout-grid-01" size="15"></i-ui>
+                        </div>
+                    </section>
+
+                    <!-- MODE 3: HISTORY -->
+                    <section id="history-view" class="view hidden">
+                        <div id="history-sticky-wrapper">
+                            <div class="history-toolbar">
+                                <div class="history-search-wrapper">
+                                    <i-ui name="search-lg" size="14"
+                                        style="position:absolute; left: 20px; top:50%; transform:translateY(-50%)"></i-ui>
+                                    <input type="text" id="history-search" class="form-input search-history"
+                                        placeholder="Cari riwayat..." style="padding-left:36px; font-size:0.9rem;">
+                                </div>
+                                <button id="btn-multi-select" class="icon-btn" title="Pilih Semua / Beberapa">
+                                    <i-ui name="check-done-01" size="17"></i-ui>
+                                </button>
+                                <button id="btn-history-filter" class="icon-btn" title="Filter Riwayat">
+                                    <i-ui name="filter-funnel-01" size="16"></i-ui>
+                                </button>
+                            </div>
+                            <!-- Filter chips injected here by JS -->
+                        </div>
+                        <div id="history-list" class="history-list">
+                            <!-- History items will be injected here -->
+                        </div>
+
+                        <!-- Batch Action Bar (fixed footer for multiselect) -->
+                        <div id="batch-delete-bar" class="batch-delete-bar hidden">
+                            <span id="batch-count">0 dipilih</span>
+                            <div style="display:flex; gap:8px; align-items:center;">
+                                <button id="btn-batch-download" class="btn btn-sm"
+                                    style="background:#27ae60; color:white; border:none;" title="Unduh semua terpilih">
+                                    <i-ui name="download-01" size="14"></i-ui> Unduh
+                                </button>
+                                <button id="btn-batch-delete" class="btn btn-sm"
+                                    style="background:#ff4d4f; color:white; border:none;">
+                                    <i-ui name="trash-01" size="14"></i-ui> Hapus
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- MODE 4: KEUANGAN -->
+                    <section id="finance-view" class="view hidden">
+                        <!-- Target & Mode Controls — single row -->
+                        <div class="finance-controls">
+                            <div class="finance-target-unit">
+                                <label class="field-label">Target Bulanan</label>
+                                <div class="finance-target-input-wrap">
+                                    <span class="finance-target-prefix">Rp</span>
+                                    <input type="text" id="finance-target-input" class="finance-target-input"
+                                        placeholder="3.800.000" inputmode="numeric">
+                                </div>
+                            </div>
+                            <div class="segmented-group" id="finance-mode-switcher">
+                                <button class="segmented-btn active" data-mode="bulan">Bulan</button>
+                                <button class="segmented-btn" data-mode="tahun">Tahun</button>
+                                <button class="segmented-btn" data-mode="semua">Semua</button>
+                            </div>
+                        </div>
+
+                        <!-- Pemasukan Summary Card -->
+                        <div class="finance-summary-card">
+                            <p class="finance-summary-label" id="finance-summary-label">Pemasukan bulan ini</p>
+                            <div class="finance-summary-amount">
+                                <span class="finance-rp">Rp.</span>
+                                <span id="finance-amount-value">0</span>
+                            </div>
+                            <p class="finance-summary-sub" id="finance-summary-sub"></p>
+                        </div>
+
+                        <!-- Bar Chart: Bulanan -->
+                        <div class="finance-chart-card" id="finance-monthly-card">
+                            <div class="finance-chart-header">
+                                <span class="finance-chart-title" id="finance-chart-year">2026</span>
+                                <div style="display:flex; gap:4px;">
+                                    <button class="finance-nav-btn" id="finance-year-prev">
+                                        <i-ui name="chevron-left" size="16"></i-ui>
+                                    </button>
+                                    <button class="finance-nav-btn" id="finance-year-next">
+                                        <i-ui name="chevron-right" size="16"></i-ui>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="finance-chart" id="finance-monthly-chart"></div>
+                        </div>
+
+                        <!-- Bar Chart: Tahunan -->
+                        <div class="finance-chart-card" id="finance-yearly-card">
+                            <div class="finance-chart-header">
+                                <span class="finance-chart-title">Tahunan</span>
+                            </div>
+                            <div class="finance-chart" id="finance-yearly-chart"></div>
+                        </div>
+
+                        <!-- Mini History -->
+                        <div class="finance-history-section">
+                            <div class="finance-history-header">
+                                <span class="finance-chart-title">History</span>
+                                <select id="finance-history-sort" class="finance-sort-select">
+                                    <option value="terbaru">Terbaru</option>
+                                    <option value="terlama">Terlama</option>
+                                </select>
+                            </div>
+                            <div id="finance-history-list"></div>
+                        </div>
+                    </section>
+
+                    <!-- PREVIEW & DOWNLOAD BAR -->
+                    <!-- Visible in Manual and AI modes -->
+                    <section id="preview-section" class="preview-section">
+                        <div class="preview-header" style="padding-bottom: 8px;">
+                            <h3>Preview</h3>
+                        </div>
+                        <div class="preview-cards">
+                            <div class="preview-card invoice-preview">
+                                <div id="invoice-preview-container" class="preview-content">
+                                    <!-- Real-time HTML render -->
+                                </div>
+                                <button class="btn preview-card-download-btn" data-download-type="invoice"
+                                    style="position:absolute; right:10px; bottom:10px; padding:8px 10px; font-size:0.8rem; background:#e67e22; border-color:#d35400; color:white;">
+                                    <i-ui name="download-01" size="15"></i-ui>
+                                </button>
+                            </div>
+                            <div class="preview-card letter-preview">
+                                <div id="letter-preview-container" class="preview-content">
+                                    <!-- Real-time HTML render -->
+                                </div>
+                                <button class="btn preview-card-download-btn" data-download-type="surat"
+                                    style="position:absolute; right:10px; bottom:10px; padding:8px 10px; font-size:0.8rem; background:#e67e22; border-color:#d35400; color:white;">
+                                    <i-ui name="download-01" size="15"></i-ui>
+                                </button>
+                            </div>
+                        </div>
+
+                    </section>
+
+                    <!-- FLOATING ACTION BAR -->
+                    <div class="action-bar-sticky">
+                        <!-- Floating Required Fields Indicator (Inside to sync position) -->
+                        <div id="required-fields-indicator" class="floating-indicator hidden">
+                            <div class="indicator-badge">0</div>
+                            <span>Data Kosong</span>
+                        </div>
+
+                        <!-- Quick Add Button (Desktop Only) -->
+                        <button id="btn-quick-add-action" class="btn-quick-add" title="Tambah Item Cepat">
+                            <i-ui name="plus" size="20"></i-ui>
+                        </button>
+
+                        <div class="total-display">
+                            <small>Total</small>
+                            <span id="grand-total">Rp 0</span>
+                        </div>
+
+                        <div style="display:flex; gap:10px; align-items: center; position: relative;">
+                            <button id="btn-save-only" class="btn btn-outline"
+                                style="border-width:2px; font-weight:600;">
+                                Simpan
                             </button>
+                            <!-- Split Dropdown button for Unduh -->
+                            <div class="download-split-btn">
+                                <button id="btn-download" class="btn btn-primary btn-lg"
+                                    style="border-radius: 50px 0 0 50px; border-right: 1px solid rgba(255,255,255,0.15);">
+                                    Unduh
+                                </button>
+                                <button id="btn-download-split-arrow" class="split-arrow" title="Format Ekspor Lainnya"
+                                    style="border-radius: 0 50px 50px 0;">
+                                    <i-ui name="chevron-up" size="14"></i-ui>
+                                </button>
+                                <!-- Options Dropdown Menu above it -->
+                                <div class="glass-dropdown-menu" id="download-format-dropdown">
+                                    <button class="glass-dropdown-item" data-format="pdf">
+                                        <i-ui name="file-02" size="14"></i-ui> PDF
+                                    </button>
+                                    <button class="glass-dropdown-item" data-format="png">
+                                        <i-ui name="image-01" size="14"></i-ui> PNG
+                                    </button>
+                                    <button class="glass-dropdown-item" data-format="jpeg">
+                                        <i-ui name="image-02" size="14"></i-ui> JPG
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div style="width: 100px; height: 1px; background-color: var(--border-color); margin: 0 4px;"></div>
+                </main>
 
-                    <!-- Mode (Simple & Advance Card Mode) -->
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <span class="view-label" style="margin:0;">Mode</span>
-                        <div class="toggle-group orange-theme">
-                            <button class="toggle-btn active" id="mode-simple-btn" title="Simple Mode">
-                                <i-ui name="square" size="15"></i-ui>
-                            </button>
-                            <button class="toggle-btn" id="mode-advance-btn" title="Advance Mode">
-                                <i-ui name="grid-01" size="15"></i-ui>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="manual-items-wrapper" style="position:relative;">
-                <div id="manual-edit-overlay" class="hidden"
-                    style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.8); z-index:10; display:none; flex-direction:column; justify-content:center; align-items:center; border:2px dashed #f39c12; border-radius:8px;">
-                    <i-ui name="alert-triangle" size="48" style="color:#f39c12; margin-bottom:15px"></i-ui>
-                    <h3 style="color:#d35400;">Mode Edit Manual Aktif</h3>
-                    <p style="text-align:center; padding:10px; font-weight:600; color:#333;">Input otomatis
-                        dinonaktifkan<br>karena ada perubahan kustom.</p>
-                    <button id="btn-reset-manual-edit" class="btn btn-primary"
-                        style="background:#e67e22; border-color:#d35400; margin-top:10px;">
-                        <i-ui name="refresh-ccw-01" size="14"></i-ui> Reset &amp;
-                        Lanjutkan Otomatis
-                    </button>
-                </div>
-                <div id="manual-items-container">
-                    <!-- Items will be injected here -->
-                </div>
-
-                <div class="mobile-add-group" style="display: flex; gap: 8px; align-items: stretch;">
-                    <button id="btn-add-item" class="btn btn-outline" style="flex: 1;">
-                        <i-ui name="plus" size="15"></i-ui> Tambah Item
-                    </button>
-                    <button id="btn-global-template-picker" class="btn" title="Pilih dari Template Barang"
-                        style="background: var(--tertiary); color: white; border: none; aspect-ratio: 1; padding: 0; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); flex-shrink: 0; min-width: 44px;">
-                        <i-ui name="align-justify" size="18"></i-ui>
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- MODE 2: AI -->
-        <section id="ai-view" class="view hidden">
-            <div class="input-group">
-                <input type="text" id="ai-title" class="form-input" placeholder="Judul Invoice">
-            </div>
-            <div class="input-group">
-                <textarea id="ai-prompt" class="form-textarea"
-                    placeholder="Contoh: Kabel NYM 50 meter harga 15rb, MCB 10 pcs harga 50rb..."></textarea>
-            </div>
-            <div class="ai-actions">
-                <button id="btn-ai-generate" class="btn btn-primary btn-icon-right">
-                    Generate <i-ui name="magic-wand-01" size="15"></i-ui>
-                </button>
-            </div>
-        </section>
-
-        <!-- MODE 3: HISTORY -->
-        <section id="history-view" class="view hidden">
-            <div id="history-sticky-wrapper">
-                <div class="history-toolbar">
-                    <div class="history-search-wrapper">
-                        <i-ui name="search-lg" size="14" style="position:absolute; left: 20px; top:50%; transform:translateY(-50%)"></i-ui>
-                        <input type="text" id="history-search" class="form-input search-history"
-                            placeholder="Cari riwayat..." style="padding-left:36px; font-size:0.9rem;">
-                    </div>
-                    <button id="btn-multi-select" class="icon-btn" title="Pilih Semua / Beberapa">
-                        <i-ui name="check-done-01" size="17"></i-ui>
-                    </button>
-                    <button id="btn-history-filter" class="icon-btn" title="Filter Riwayat">
-                        <i-ui name="filter-funnel-01" size="16"></i-ui>
-                    </button>
-                </div>
-                <!-- Filter chips injected here by JS -->
-            </div>
-            <div id="history-list" class="history-list">
-                <!-- History items will be injected here -->
-            </div>
-
-            <!-- Batch Action Bar (fixed footer for multiselect) -->
-            <div id="batch-delete-bar" class="batch-delete-bar hidden">
-                <span id="batch-count">0 dipilih</span>
-                <div style="display:flex; gap:8px; align-items:center;">
-                    <button id="btn-batch-download" class="btn btn-sm"
-                        style="background:#27ae60; color:white; border:none;" title="Unduh semua terpilih">
-                        <i-ui name="download-01" size="14"></i-ui> Unduh
-                    </button>
-                    <button id="btn-batch-delete" class="btn btn-sm"
-                        style="background:#ff4d4f; color:white; border:none;">
-                        <i-ui name="trash-01" size="14"></i-ui> Hapus
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- MODE 4: KEUANGAN -->
-        <section id="finance-view" class="view hidden">
-            <!-- Target & Mode Controls — single row -->
-            <div class="finance-controls">
-                <div class="finance-target-unit">
-                    <label class="field-label">Target Bulanan</label>
-                    <div class="finance-target-input-wrap">
-                        <span class="finance-target-prefix">Rp</span>
-                        <input type="text" id="finance-target-input" class="finance-target-input"
-                            placeholder="3.800.000" inputmode="numeric">
-                    </div>
-                </div>
-                <div class="segmented-group" id="finance-mode-switcher">
-                    <button class="segmented-btn active" data-mode="bulan">Bulan</button>
-                    <button class="segmented-btn" data-mode="tahun">Tahun</button>
-                    <button class="segmented-btn" data-mode="semua">Semua</button>
-                </div>
-            </div>
-
-            <!-- Pemasukan Summary Card -->
-            <div class="finance-summary-card">
-                <p class="finance-summary-label" id="finance-summary-label">Pemasukan bulan ini</p>
-                <div class="finance-summary-amount">
-                    <span class="finance-rp">Rp.</span>
-                    <span id="finance-amount-value">0</span>
-                </div>
-                <p class="finance-summary-sub" id="finance-summary-sub"></p>
-            </div>
-
-            <!-- Bar Chart: Bulanan -->
-            <div class="finance-chart-card" id="finance-monthly-card">
-                <div class="finance-chart-header">
-                    <span class="finance-chart-title" id="finance-chart-year">2026</span>
-                    <div style="display:flex; gap:4px;">
-                        <button class="finance-nav-btn" id="finance-year-prev">
-                            <i-ui name="chevron-left" size="16"></i-ui>
-                        </button>
-                        <button class="finance-nav-btn" id="finance-year-next">
-                            <i-ui name="chevron-right" size="16"></i-ui>
+                <!-- Collapsible Preview Panel (Right column on desktop) -->
+                <aside class="desktop-preview-panel" id="desktop-preview-panel">
+                    <div class="preview-panel-header">
+                        <h3>Pratinjau</h3>
+                        <button class="icon-btn" id="btn-preview-collapse" title="Sembunyikan Preview">
+                            <i-ui name="chevron-right" size="18"></i-ui>
                         </button>
                     </div>
-                </div>
-                <div class="finance-chart" id="finance-monthly-chart"></div>
-            </div>
-
-            <!-- Bar Chart: Tahunan -->
-            <div class="finance-chart-card" id="finance-yearly-card">
-                <div class="finance-chart-header">
-                    <span class="finance-chart-title">Tahunan</span>
-                </div>
-                <div class="finance-chart" id="finance-yearly-chart"></div>
-            </div>
-
-            <!-- Mini History -->
-            <div class="finance-history-section">
-                <div class="finance-history-header">
-                    <span class="finance-chart-title">History</span>
-                    <select id="finance-history-sort" class="finance-sort-select">
-                        <option value="terbaru">Terbaru</option>
-                        <option value="terlama">Terlama</option>
-                    </select>
-                </div>
-                <div id="finance-history-list"></div>
-            </div>
-        </section>
-
-        <!-- PREVIEW & DOWNLOAD BAR -->
-        <!-- Visible in Manual and AI modes -->
-        <section id="preview-section" class="preview-section">
-            <div class="preview-header" style="padding-bottom: 8px;">
-                <h3>Preview</h3>
-            </div>
-            <div class="preview-cards">
-                <div class="preview-card invoice-preview">
-                    <div id="invoice-preview-container" class="preview-content">
-                        <!-- Real-time HTML render -->
+                    <div class="preview-panel-body" id="desktop-preview-body">
+                        <!-- Dynamically injected preview cards -->
                     </div>
-                    <button class="btn preview-card-download-btn" data-download-type="invoice"
-                        style="position:absolute; right:10px; bottom:10px; padding:8px 10px; font-size:0.8rem; background:#e67e22; border-color:#d35400; color:white;">
-                        <i-ui name="download-01" size="15"></i-ui>
+                </aside>
+
+                <!-- Collapsed vertical strip for preview -->
+                <div class="collapsed-preview-strip" id="collapsed-preview-strip" title="Tampilkan Pratinjau">
+                    <button class="strip-btn" id="btn-preview-expand">
+                        <i-ui name="chevron-left" size="16"></i-ui>
                     </button>
+                    <div class="strip-text">Pratinjau</div>
                 </div>
-                <div class="preview-card letter-preview">
-                    <div id="letter-preview-container" class="preview-content">
-                        <!-- Real-time HTML render -->
-                    </div>
-                    <button class="btn preview-card-download-btn" data-download-type="surat"
-                        style="position:absolute; right:10px; bottom:10px; padding:8px 10px; font-size:0.8rem; background:#e67e22; border-color:#d35400; color:white;">
-                        <i-ui name="download-01" size="15"></i-ui>
-                    </button>
-                </div>
-            </div>
 
-        </section>
-
-        <!-- FLOATING ACTION BAR -->
-        <div class="action-bar-sticky">
-            <!-- Floating Required Fields Indicator (Inside to sync position) -->
-            <div id="required-fields-indicator" class="floating-indicator hidden">
-                <div class="indicator-badge">0</div>
-                <span>Data Kosong</span>
-            </div>
-
-            <!-- Quick Add Button (Desktop Only) -->
-            <button id="btn-quick-add-action" class="btn-quick-add" title="Tambah Item Cepat">
-                <i-ui name="plus" size="20"></i-ui>
-            </button>
-
-            <div class="total-display">
-                <small>Total</small>
-                <span id="grand-total">Rp 0</span>
-            </div>
-            
-            <div style="display:flex; gap:10px; align-items: center; position: relative;">
-                <button id="btn-save-only" class="btn btn-outline" style="border-width:2px; font-weight:600;">
-                    Simpan
-                </button>
-                <!-- Split Dropdown button for Unduh -->
-                <div class="download-split-btn">
-                    <button id="btn-download" class="btn btn-primary btn-lg" style="border-radius: 50px 0 0 50px; border-right: 1px solid rgba(255,255,255,0.15);">
-                        Unduh
-                    </button>
-                    <button id="btn-download-split-arrow" class="split-arrow" title="Format Ekspor Lainnya" style="border-radius: 0 50px 50px 0;">
-                        <i-ui name="chevron-up" size="14"></i-ui>
-                    </button>
-                    <!-- Options Dropdown Menu above it -->
-                    <div class="glass-dropdown-menu" id="download-format-dropdown">
-                        <button class="glass-dropdown-item" data-format="pdf">
-                            <i-ui name="file-02" size="14"></i-ui> PDF
-                        </button>
-                        <button class="glass-dropdown-item" data-format="png">
-                            <i-ui name="image-01" size="14"></i-ui> PNG
-                        </button>
-                        <button class="glass-dropdown-item" data-format="jpeg">
-                            <i-ui name="image-02" size="14"></i-ui> JPG
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Collapsible Preview Panel (Right column on desktop) -->
-    <aside class="desktop-preview-panel" id="desktop-preview-panel">
-        <div class="preview-panel-header">
-            <h3>Pratinjau</h3>
-            <button class="icon-btn" id="btn-preview-collapse" title="Sembunyikan Preview">
-                <i-ui name="chevron-right" size="18"></i-ui>
-            </button>
-        </div>
-        <div class="preview-panel-body" id="desktop-preview-body">
-            <!-- Dynamically injected preview cards -->
-        </div>
-    </aside>
-
-    <!-- Collapsed vertical strip for preview -->
-    <div class="collapsed-preview-strip" id="collapsed-preview-strip" title="Tampilkan Pratinjau">
-        <button class="strip-btn" id="btn-preview-expand">
-            <i-ui name="chevron-left" size="16"></i-ui>
-        </button>
-        <div class="strip-text">Pratinjau</div>
-    </div>
-
-    </div> <!-- Close .workspace-body-wrapper -->
-    </div> <!-- Close .workspace-container -->
+            </div> <!-- Close .workspace-body-wrapper -->
+        </div> <!-- Close .workspace-container -->
     </div> <!-- Close .app-container -->
 
     <!-- Footer (Mobile Only) -->
