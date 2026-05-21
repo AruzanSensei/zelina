@@ -32,7 +32,6 @@
         width: 100vw;
         height: 100vh;
         overflow: hidden;
-        transition: grid-template-columns 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     /* Mobile headers and standard navigation hidden on desktop */
@@ -59,7 +58,6 @@
         box-sizing: border-box;
         overflow-y: auto;
         overflow-x: hidden;
-        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 100;
         position: relative;
     }
@@ -87,13 +85,11 @@
         margin-bottom: 24px;
         overflow: hidden;
         white-space: nowrap;
-        transition: padding 0.3s ease;
     }
 
     .sidebar-brand-text {
         display: flex;
         flex-direction: column;
-        transition: opacity 0.25s ease;
     }
 
     .sidebar-brand-text h2 {
@@ -146,7 +142,6 @@
         font-weight: 600;
         cursor: pointer;
         text-align: left;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         white-space: nowrap;
     }
 
@@ -528,17 +523,10 @@
     }
 
     .workspace-title-input {
-        background: transparent !important;
-        border: none !important;
-        color: var(--text-main) !important;
         padding: 8px 16px !important;
         font-size: 0.9rem !important;
         font-weight: 600 !important;
         flex: 1;
-    }
-
-    .workspace-title-input:focus {
-        box-shadow: none !important;
     }
 
     /* Top control toolbar */
@@ -615,7 +603,6 @@
     .workspace-body-wrapper {
         display: flex;
         align-items: stretch;
-        gap: 20px;
         height: calc(100% - 68px);
         width: 100%;
         overflow: hidden;
@@ -764,7 +751,7 @@
     .preview-panel-header {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        /* justify-content: space-between; */
         padding: 16px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         box-sizing: border-box;
@@ -838,8 +825,8 @@
         /* Floating pill fixed to viewport bottom, horizontally centred in the workspace main column */
         position: fixed;
         bottom: 24px !important;
-        /* default: sidebar expanded (240px) + preview expanded (~340px) → centre of middle column */
-        left: calc(240px + (100vw - 240px - 340px) / 2);
+        /* default: sidebar expanded (240px) + preview expanded (170px + 16px margin = 186px) → centre of middle column */
+        left: calc(240px + (100vw - 240px - 186px) / 2);
         transform: translateX(-50%);
         width: calc(100% - 48px) !important;
         max-width: 70%;
@@ -851,8 +838,8 @@
         justify-content: space-between;
         gap: 14px;
         background: rgba(14, 14, 14, 0.72) !important;
-        backdrop-filter: blur(24px) saturate(160%) !important;
-        -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
+        backdrop-filter: blur(6px) !important;
+        -webkit-backdrop-filter: blur(6px) !important;
         border: 1px solid rgba(255, 255, 255, 0.10) !important;
         box-shadow:
             0 8px 32px rgba(0, 0, 0, 0.45),
@@ -861,15 +848,14 @@
         z-index: 200;
         /* Animate in by default */
         animation: actionBarIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-        transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-            box-shadow 0.2s ease,
+        transition: box-shadow 0.2s ease,
             background 0.2s ease;
         will-change: transform, opacity;
     }
 
     /* Adjust centre when sidebar collapses (72px) */
     .sidebar-collapsed .action-bar-sticky {
-        left: calc(72px + (100vw - 72px - 340px) / 2);
+        left: calc(72px + (100vw - 72px - 186px) / 2);
     }
 
     /* Adjust centre when preview collapses (48px strip) */
@@ -902,6 +888,7 @@
         display: flex;
         flex-direction: column;
         gap: 1px;
+        margin-left: 6px;
         flex-shrink: 0;
     }
 
@@ -1338,10 +1325,10 @@
     /* Header stays compact and floats */
     .preview-panel-header {
         flex-shrink: 0;
-        padding: 6px 18px 6px 18px !important;
+        padding: 6px 18px 6px 8px !important;
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 18px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
     }
 
@@ -1352,12 +1339,18 @@
     .preview-panel-header h3 {
         order: 2;
         /* Put heading second */
-        font-size: 0.82rem !important;
-        font-weight: 700;
+        font-size: 0.7rem !important;
+        font-weight: 600;
         margin: 0;
         color: var(--text-muted);
         text-transform: uppercase;
         letter-spacing: 0.8px;
+    }
+
+
+    #history-view {
+        margin-left: calc(1 * var(--spacing-md));
+        margin-right: calc(1 * var(--spacing-md));
     }
 
     .preview-panel-header .icon-btn {
@@ -1391,7 +1384,7 @@
         flex: 1;
         overflow-y: auto;
         overflow-x: hidden;
-        padding: 24px 16px !important;
+        padding: 14px 16px !important;
         display: flex;
         flex-direction: column;
         gap: 28px !important;
