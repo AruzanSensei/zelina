@@ -7,6 +7,21 @@
  */
 
 /* ============================================
+   SETTINGS MODAL TABS (3 tabs compact)
+   ============================================ */
+#settings-modal .toggle-group {
+    gap: 2px;
+}
+
+#settings-modal .toggle-group .toggle-btn {
+    font-size: 0.78rem;
+    padding: 7px 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ============================================
    SETTINGS CARD (Accordion container)
    ============================================ */
 .setting-item {
@@ -229,4 +244,89 @@ input:focus+.ios-slider {
 
 input:checked+.ios-slider:before {
     transform: translateX(20px);
+}
+
+/* ============================================
+   ACCOUNT & SAAS ADMIN PREMIUM STYLING
+   ============================================ */
+.guest-banner {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(243, 156, 18, 0.05);
+}
+
+.guest-banner:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(243, 156, 18, 0.1);
+}
+
+.btn-google {
+    transition: all 0.2s ease;
+}
+
+.btn-google:hover {
+    background: #f8f9fa !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.btn-google:active {
+    transform: translateY(0);
+}
+
+.admin-profile-card {
+    background: rgba(255, 255, 255, 0.03) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.05);
+    transition: transform 0.3s ease;
+}
+
+.admin-profile-card:hover {
+    transform: scale(1.01);
+}
+
+.admin-badge {
+    animation: adminBadgePulse 2s infinite ease-in-out;
+}
+
+@keyframes adminBadgePulse {
+    0% {
+        box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 2px 14px rgba(243, 156, 18, 0.5);
+    }
+
+    100% {
+        box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
+    }
+}
+
+.account-spinner {
+    border-top: 2px solid var(--primary) !important;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Sidebar profile hover styling */
+.sidebar-profile {
+    transition: all 0.2s ease;
+    border-radius: 12px;
+}
+
+.sidebar-profile:hover {
+    background: rgba(255, 255, 255, 0.05);
 }

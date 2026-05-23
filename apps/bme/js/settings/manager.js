@@ -67,8 +67,10 @@ export function initSettings() {
     // Tabs
     const tabGeneral = document.getElementById('tab-general');
     const tabTemplates = document.getElementById('tab-templates');
+    const tabAccount = document.getElementById('tab-account');
     const viewGeneral = document.getElementById('settings-general');
     const viewTemplates = document.getElementById('settings-templates');
+    const viewAccount = document.getElementById('settings-account');
 
     // Template UI
     const templateList = document.getElementById('template-list');
@@ -82,7 +84,11 @@ export function initSettings() {
         else modal.classList.remove('active');
     };
 
-    btnParams.addEventListener('click', () => toggleModal(true));
+    btnParams.addEventListener('click', () => {
+        toggleModal(true);
+        // Refresh account tab rendering when modal opens
+        renderAccountTab();
+    });
     btnClose.addEventListener('click', () => toggleModal(false));
     modal.addEventListener('click', (e) => {
         if (e.target === modal) toggleModal(false);
@@ -94,19 +100,205 @@ export function initSettings() {
     tabGeneral.addEventListener('click', () => {
         tabGeneral.classList.add('active');
         tabTemplates.classList.remove('active');
+        tabAccount.classList.remove('active');
         viewGeneral.style.display = 'block';
         viewTemplates.style.display = 'none';
         viewTemplates.classList.add('hidden');
+        viewAccount.style.display = 'none';
+        viewAccount.classList.add('hidden');
     });
 
     tabTemplates.addEventListener('click', () => {
         tabTemplates.classList.add('active');
         tabGeneral.classList.remove('active');
+        tabAccount.classList.remove('active');
         viewGeneral.style.display = 'none';
         viewTemplates.style.display = 'block';
         viewTemplates.classList.remove('hidden');
+        viewAccount.style.display = 'none';
+        viewAccount.classList.add('hidden');
         renderTemplates(); // Refresh list
     });
+
+    tabAccount.addEventListener('click', () => {
+        tabAccount.classList.add('active');
+        tabGeneral.classList.remove('active');
+        tabTemplates.classList.remove('active');
+        viewGeneral.style.display = 'none';
+        viewTemplates.style.display = 'none';
+        viewTemplates.classList.add('hidden');
+        viewAccount.style.display = 'block';
+        viewAccount.classList.remove('hidden');
+        renderAccountTab(); // Render Account details
+    });
+
+    // ===================================
+    // ACCOUNT TAB LOGIC (Supabase & OAuth)
+    // ===================================
+    // Deklarasikan di scope luar agar bisa diakses oleh semua handler
+    const loadingDiv = document.getElementById('account-loading');
+    const guestDiv = document.getElementById('account-unauthenticated');
+    const adminDiv = document.getElementById('account-authenticated');
+
+    const renderAccountTab = () => {
+        if (!loadingDiv || !guestDiv || !adminDiv) return;
+
+        // Hide loading initially unless actively logging in
+        loadingDiv.style.display = 'none';
+        loadingDiv.classList.add('hidden');
+
+        if (!appState.state.isLoggedIn) {
+            guestDiv.style.display = 'block';
+            guestDiv.classList.remove('hidden');
+            adminDiv.style.display = 'none';
+            adminDiv.classList.add('hidden');
+        } else {
+            guestDiv.style.display = 'none';
+            guestDiv.classList.add('hidden');
+            adminDiv.style.display = 'block';
+            adminDiv.classList.remove('hidden');
+
+            // Render profile details
+            const profile = appState.state.adminProfile;
+            const email = profile?.email || '';
+            const fullName = profile?.raw_user_meta_data?.full_name || profile?.full_name || 'Administrator';
+            const avatarUrl = profile?.raw_user_meta_data?.avatar_url || profile?.avatar_url || '';
+
+            const imgEl = document.getElementById('admin-avatar');
+            const placeholderEl = document.getElementById('admin-avatar-placeholder');
+            const nameEl = document.getElementById('admin-name');
+            const emailEl = document.getElementById('admin-email');
+
+            if (nameEl) nameEl.textContent = fullName;
+            if (emailEl) emailEl.textContent = email;
+
+            if (avatarUrl && imgEl && placeholderEl) {
+                imgEl.src = avatarUrl;
+                imgEl.style.display = 'block';
+                placeholderEl.style.display = 'none';
+            } else if (imgEl && placeholderEl) {
+                imgEl.style.display = 'none';
+                placeholderEl.style.display = 'flex';
+                placeholderEl.textContent = fullName.charAt(0).toUpperCase();
+            }
+
+            // Sync Status
+            const syncStatusText = document.getElementById('sync-status-text');
+            if (syncStatusText) {
+                const status = appState.state.syncStatus;
+                if (status === 'syncing') {
+                    syncStatusText.textContent = 'Menyinkronkan data ke cloud...';
+                    syncStatusText.style.color = 'var(--text-muted)';
+                } else if (status === 'synced') {
+                    syncStatusText.textContent = 'Semua data tersinkronisasi aman ke cloud.';
+                    syncStatusText.style.color = '#27ae60';
+                } else if (status === 'error') {
+                    syncStatusText.textContent = 'Gagal sinkronisasi. Klik Sync untuk mencoba lagi.';
+                    syncStatusText.style.color = '#ff4d4f';
+                } else {
+                    syncStatusText.textContent = 'Terhubung.';
+                    syncStatusText.style.color = 'var(--text-main)';
+                }
+            }
+        }
+    };
+
+    // Bind Auth Buttons
+    const btnLoginGoogle = document.getElementById('btn-login-google');
+    const formLoginEmail = document.getElementById('form-login-email');
+    const btnLogout = document.getElementById('btn-logout');
+    const btnManualSync = document.getElementById('btn-manual-sync');
+
+    btnLoginGoogle?.addEventListener('click', async () => {
+        try {
+            const { loginWithGoogle } = await import('../../js/supabase.js');
+            await loginWithGoogle();
+        } catch (err) {
+            console.error('Google login failed:', err);
+            window.showBMEAlert('Gagal memulai login Google: ' + err.message, 'error');
+        }
+    });
+
+    formLoginEmail?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const emailInput = document.getElementById('login-email');
+        const passwordInput = document.getElementById('login-password');
+        if (!emailInput || !passwordInput) return;
+
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
+
+        // Show Loading state
+        if (loadingDiv && guestDiv) {
+            loadingDiv.style.display = 'block';
+            loadingDiv.classList.remove('hidden');
+            guestDiv.style.display = 'none';
+            guestDiv.classList.add('hidden');
+        }
+
+        try {
+            const { loginWithEmail, validateAdminServer } = await import('../../js/supabase.js');
+            const data = await loginWithEmail(email, password);
+            
+            if (data && data.session) {
+                // Verifikasi Admin via Server
+                try {
+                    const result = await validateAdminServer(data.session.access_token);
+                    if (result && result.isAdmin) {
+                        window.supabaseSession = data.session;
+                        appState.state.isLoggedIn = true;
+                        appState.state.adminProfile = result.user;
+                        appState.notify('isLoggedIn', true);
+                        appState.notify('adminProfile', result.user);
+                        
+                        window.showBMEAlert('Selamat datang kembali, Administrator!', 'success');
+                        
+                        // Memicu pencocokan data konflik
+                        document.dispatchEvent(new CustomEvent('admin-logged-in', {
+                            detail: { session: data.session, user: result.user }
+                        }));
+                    }
+                } catch (verifyErr) {
+                    if (verifyErr.message === '403') {
+                        const { logout } = await import('../../js/supabase.js');
+                        await logout();
+                        appState.handleLogoutCleanup();
+                        window.showBMEAlert('Akses administrator ditolak. Anda masuk sebagai Guest.', 'warning');
+                    } else {
+                        throw verifyErr;
+                    }
+                }
+            }
+        } catch (err) {
+            console.error('Email login failed:', err);
+            window.showBMEAlert('Gagal login: ' + err.message, 'error');
+        } finally {
+            renderAccountTab();
+        }
+    });
+
+    btnLogout?.addEventListener('click', async () => {
+        try {
+            const { logout } = await import('../../js/supabase.js');
+            await logout();
+            appState.handleLogoutCleanup();
+            window.showBMEAlert('Berhasil keluar akun. Sesi diakhiri.', 'info');
+        } catch (err) {
+            console.error('Logout failed:', err);
+            window.showBMEAlert('Gagal keluar akun: ' + err.message, 'error');
+        } finally {
+            renderAccountTab();
+        }
+    });
+
+    btnManualSync?.addEventListener('click', () => {
+        appState.triggerCloudSync();
+    });
+
+    // Subscribe to state changes
+    appState.subscribe('isLoggedIn', () => renderAccountTab());
+    appState.subscribe('adminProfile', () => renderAccountTab());
+    appState.subscribe('syncStatus', () => renderAccountTab());
 
     // ===================================
     // THEME TOGGLE

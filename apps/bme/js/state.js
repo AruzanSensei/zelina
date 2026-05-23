@@ -32,7 +32,8 @@ const DEFAULTS = {
         fileNameFormat: {
             invoice: 'Invoice-{judul}',
             suratJalan: 'Surat Jalan-{judul}'
-        }
+        },
+        lastLocalUpdate: null
     },
     manualItems: [],
     manualTitle: '',
@@ -67,7 +68,10 @@ class StateManager {
             history: this.load(STORAGE_KEYS.HISTORY, []),
             templates: this.load(STORAGE_KEYS.TEMPLATES, DEFAULTS.templates),
             tabs: cachedTabs || [],
-            activeTabId: cachedActiveId
+            activeTabId: cachedActiveId,
+            isLoggedIn: false,
+            adminProfile: null,
+            syncStatus: 'idle' // idle, syncing, synced, error
         };
 
         // If tabs are empty, create default tab
@@ -271,12 +275,14 @@ class StateManager {
         this.state.settings = { ...this.state.settings, ...newSettings };
         this.save(STORAGE_KEYS.SETTINGS, this.state.settings);
         this.notify('settings', this.state.settings);
+        this.updateLocalTimestamp();
     }
 
     addToHistory(entry) {
         this.state.history.unshift(entry);
         this.save(STORAGE_KEYS.HISTORY, this.state.history);
         this.notify('history', this.state.history);
+        this.updateLocalTimestamp();
     }
 
     updateItems(items) {
@@ -285,6 +291,7 @@ class StateManager {
             tab.data.invoiceItems = items;
             this.saveTabs();
             this.notify('items', items);
+            this.updateLocalTimestamp();
         }
     }
 
@@ -295,6 +302,7 @@ class StateManager {
             this.saveTabs();
             this.notify('manualTitle', title);
             this.notify('tabs', this.state.tabs);
+            this.updateLocalTimestamp();
         }
     }
 
@@ -302,6 +310,7 @@ class StateManager {
         this.state.manualCardMode = mode;
         this.save(STORAGE_KEYS.MANUAL_CARD_MODE, mode);
         this.notify('manualCardMode', mode);
+        this.updateLocalTimestamp();
     }
 
     updateHistoryTitle(id, newTitle) {
@@ -310,6 +319,7 @@ class StateManager {
             item.title = newTitle;
             this.save(STORAGE_KEYS.HISTORY, this.state.history);
             this.notify('history', this.state.history);
+            this.updateLocalTimestamp();
         }
     }
 
@@ -319,6 +329,7 @@ class StateManager {
             Object.assign(item, updates);
             this.save(STORAGE_KEYS.HISTORY, this.state.history);
             this.notify('history', this.state.history);
+            this.updateLocalTimestamp();
         }
     }
 
@@ -326,12 +337,14 @@ class StateManager {
         this.state.history.splice(index, 1);
         this.save(STORAGE_KEYS.HISTORY, this.state.history);
         this.notify('history', this.state.history);
+        this.updateLocalTimestamp();
     }
 
     addTemplate(template) {
         this.state.templates.push(template);
         this.save(STORAGE_KEYS.TEMPLATES, this.state.templates);
         this.notify('templates', this.state.templates);
+        this.updateLocalTimestamp();
     }
 
     removeMultipleFromHistory(indices) {
@@ -339,12 +352,80 @@ class StateManager {
         sorted.forEach(i => this.state.history.splice(i, 1));
         this.save(STORAGE_KEYS.HISTORY, this.state.history);
         this.notify('history', this.state.history);
+        this.updateLocalTimestamp();
     }
 
     resetSettings() {
         this.state.settings = JSON.parse(JSON.stringify(DEFAULTS.settings));
         this.save(STORAGE_KEYS.SETTINGS, this.state.settings);
         this.notify('settings', this.state.settings);
+        this.updateLocalTimestamp();
+    }
+
+    // ============================================
+    // CLOUD SYNC & AUTH OPERATIONS
+    // ============================================
+    updateLocalTimestamp() {
+        this.state.settings.lastLocalUpdate = new Date().toISOString();
+        this.save(STORAGE_KEYS.SETTINGS, this.state.settings);
+        this.notify('settings', this.state.settings);
+        this.triggerCloudSync();
+    }
+
+    async triggerCloudSync() {
+        if (!this.state.isLoggedIn) return;
+        
+        this.state.syncStatus = 'syncing';
+        this.notify('syncStatus', 'syncing');
+
+        try {
+            const session = window.supabaseSession;
+            if (!session) {
+                this.state.syncStatus = 'error';
+                this.notify('syncStatus', 'error');
+                return;
+            }
+
+            const dataToSync = {
+                settings: {
+                    ...this.state.settings,
+                    // Keep auth local
+                    lastLocalUpdate: this.state.settings.lastLocalUpdate
+                },
+                history: this.state.history,
+                templates: this.state.templates,
+                tabs: this.state.tabs
+            };
+
+            const { saveUserData } = await import('./supabase.js');
+            const success = await saveUserData(session.access_token, dataToSync);
+            
+            if (success) {
+                this.state.syncStatus = 'synced';
+                this.notify('syncStatus', 'synced');
+            } else {
+                this.state.syncStatus = 'error';
+                this.notify('syncStatus', 'error');
+            }
+        } catch (e) {
+            console.error('[StateManager] Cloud sync failed:', e);
+            this.state.syncStatus = 'error';
+            this.notify('syncStatus', 'error');
+        }
+    }
+
+    handleLogoutCleanup() {
+        this.state.isLoggedIn = false;
+        this.state.adminProfile = null;
+        this.state.syncStatus = 'idle';
+        window.supabaseSession = null;
+        
+        this.notify('isLoggedIn', false);
+        this.notify('adminProfile', null);
+        this.notify('syncStatus', 'idle');
+        
+        // Dispatch global event
+        document.dispatchEvent(new CustomEvent('admin-logout'));
     }
 
     subscribe(key, callback) {

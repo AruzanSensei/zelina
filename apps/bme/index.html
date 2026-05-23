@@ -596,6 +596,7 @@
                 <div class="toggle-group" style="margin-bottom: 16px;">
                     <button class="toggle-btn active" id="tab-general">Umum</button>
                     <button class="toggle-btn" id="tab-templates">Templates</button>
+                    <button class="toggle-btn" id="tab-account">Akun</button>
                 </div>
 
                 <div id="settings-general">
@@ -736,6 +737,94 @@
                         </div>
                         <button id="btn-add-template" class="btn btn-sm btn-outline btn-full">+ Tambah Template
                             Baru</button>
+                    </div>
+                </div>
+
+                <div id="settings-account" class="hidden" style="display:none;">
+                    <div class="setting-section" style="padding: 4px 8px;">
+                        <!-- Loading State -->
+                        <div id="account-loading" style="padding:30px; text-align:center;">
+                            <div class="account-spinner" style="border:2px solid rgba(255,255,255,0.1); border-top:2px solid var(--primary); border-radius:50%; width:24px; height:24px; animation:spin 1s linear infinite; margin:0 auto 10px auto;"></div>
+                            <p style="font-size:0.85rem; color:var(--text-muted);">Memeriksa status otentikasi...</p>
+                        </div>
+
+                        <!-- Unauthenticated / Guest State -->
+                        <div id="account-unauthenticated" class="hidden" style="display:none;">
+                            <div class="guest-banner" style="background:rgba(243,156,18,0.08); border:1px solid rgba(243,156,18,0.2); border-radius:12px; padding:12px; margin-bottom:16px; display:flex; align-items:flex-start; gap:10px;">
+                                <i-ui name="alert-triangle" size="20" style="color:#f39c12; flex-shrink:0; margin-top:2px;"></i-ui>
+                                <div style="font-size:0.8rem; line-height:1.4; color:var(--text-main); text-align:left;">
+                                    <strong>Guest Mode Aktif</strong><br>
+                                    Seluruh data disimpan secara lokal di peramban ini. Masuk sebagai Administrator untuk mengaktifkan sinkronisasi aman ke Cloud.
+                                </div>
+                            </div>
+
+                            <h3 style="margin-bottom:12px; text-align:left; font-size:1rem; font-weight:600; color:var(--text-main);">Login Administrator</h3>
+                            
+                            <!-- Google OAuth Button -->
+                            <button id="btn-login-google" class="btn btn-full btn-google" style="background:#fff; color:#333; border:1px solid #ddd; display:flex; align-items:center; justify-content:center; gap:10px; font-weight:600; margin-bottom:16px; padding:10px 12px; border-radius:8px; width:100%; cursor:pointer;">
+                                <svg width="18" height="18" viewBox="0 0 18 18" style="flex-shrink:0;">
+                                    <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/>
+                                    <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.938 5.48 18 9 18z" fill="#34A853"/>
+                                    <path d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707 0-.59.102-1.167.282-1.707V4.961H.957C.347 6.173 0 7.549 0 9s.347 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/>
+                                    <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.896 11.426 0 9 0 5.48 0 2.438 2.062.957 5.061l3.007 2.332C4.672 5.164 6.656 3.58 9 3.58z" fill="#EA4335"/>
+                                </svg>
+                                Masuk dengan Google
+                            </button>
+
+                            <div style="display:flex; align-items:center; margin-bottom:16px;">
+                                <div style="flex:1; height:1px; background:var(--border-color);"></div>
+                                <span style="font-size:0.75rem; color:var(--text-muted); padding:0 8px;">atau</span>
+                                <div style="flex:1; height:1px; background:var(--border-color);"></div>
+                            </div>
+
+                            <!-- Email / Password Form -->
+                            <form id="form-login-email" style="display:flex; flex-direction:column; gap:12px; text-align:left;">
+                                <div class="input-group" style="text-align:left; margin-bottom:0;">
+                                    <label class="field-label" style="margin-bottom:6px;">Email Administrator</label>
+                                    <input type="email" id="login-email" class="form-input" placeholder="admin@flowa.id" required style="width:100%;">
+                                </div>
+                                <div class="input-group" style="text-align:left; margin-bottom:4px;">
+                                    <label class="field-label" style="margin-bottom:6px;">Kata Sandi</label>
+                                    <input type="password" id="login-password" class="form-input" placeholder="••••••••" required style="width:100%;">
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-full" style="padding:10px 12px; margin-top:4px;">Masuk Sistem</button>
+                            </form>
+                        </div>
+
+                        <!-- Authenticated / Admin State -->
+                        <div id="account-authenticated" class="hidden" style="display:none;">
+                            <div class="admin-profile-card" style="background:rgba(255,255,255,0.02); border:1px solid var(--border-color); border-radius:16px; padding:16px; text-align:center; position:relative; overflow:hidden; margin-bottom:16px;">
+                                <div class="admin-glow" style="position:absolute; top:-50px; left:50%; transform:translateX(-50%); width:100px; height:100px; background:var(--primary); filter:blur(40px); opacity:0.15; pointer-events:none;"></div>
+                                
+                                <div style="position:relative; display:inline-block; margin-bottom:10px;">
+                                    <img id="admin-avatar" src="" alt="Avatar" style="width:64px; height:64px; border-radius:50%; object-fit:cover; border:2px solid var(--primary); background:var(--bg-body); display:none; margin: 0 auto;">
+                                    <div id="admin-avatar-placeholder" style="width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg, var(--primary), #d4880d); display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.5rem; font-weight:700; border:2px solid var(--primary); margin: 0 auto;">A</div>
+                                </div>
+
+                                <h3 id="admin-name" style="font-size:1.05rem; margin-top:4px; margin-bottom:2px; font-weight:600; color:var(--text-main);">Administrator</h3>
+                                <p id="admin-email" style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;"></p>
+                                
+                                <span class="admin-badge" style="display:inline-block; padding:4px 10px; font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; background:linear-gradient(90deg, #d4880d, #f39c12); color:#fff; border-radius:50px; box-shadow:0 2px 8px rgba(243,156,18,0.3);">Administrator</span>
+                            </div>
+
+                            <div class="settings-list" style="margin-bottom:20px;">
+                                <div class="setting-row" style="padding:12px 4px;">
+                                    <div class="setting-info" style="text-align:left;">
+                                        <span class="setting-label" style="font-size:0.95rem;">Sinkronisasi Cloud</span>
+                                        <span class="setting-subtext" id="sync-status-text" style="font-size:0.8rem;">Menghubungkan ke server cloud...</span>
+                                    </div>
+                                    <div class="setting-control">
+                                        <button id="btn-manual-sync" class="btn btn-sm btn-outline" style="padding:6px 12px; font-size:0.8rem; display:flex; align-items:center; gap:6px; cursor:pointer;">
+                                            <i-ui name="refresh-ccw-01" size="12"></i-ui> Sync
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button id="btn-logout" class="btn btn-outline btn-full" style="color:#ff4d4f; border-color:#ff4d4f; display:flex; align-items:center; justify-content:center; gap:8px; padding:12px; width:100%; cursor:pointer;">
+                                <i-ui name="log-out-01" size="14"></i-ui> Keluar Akun
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

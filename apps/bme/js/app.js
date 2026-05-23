@@ -845,6 +845,168 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ============================================
+    // SUPABASE SESSION & SIDEBAR SYNC INTEGRATION
+    // ============================================
+    const syncSidebarProfile = () => {
+        const sidebarProfile = document.querySelector('.sidebar-profile');
+        if (!sidebarProfile) return;
+
+        if (appState.state.isLoggedIn && appState.state.adminProfile) {
+            const profile = appState.state.adminProfile;
+            const fullName = profile.raw_user_meta_data?.full_name || profile.full_name || 'Admin';
+            const avatarUrl = profile.raw_user_meta_data?.avatar_url || profile.avatar_url || '';
+
+            if (avatarUrl) {
+                sidebarProfile.innerHTML = `
+                    <div style="position:relative; display:flex; align-items:center; gap:8px;">
+                        <img src="${avatarUrl}" alt="Avatar" style="width:24px; height:24px; border-radius:50%; border:1.5px solid var(--primary); object-fit:cover; margin:0;">
+                        <span style="font-weight:600; font-size:0.82rem; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:90px; text-align:left;">${fullName}</span>
+                        <span style="font-size:0.55rem; font-weight:700; color:#fff; background:linear-gradient(90deg, #d4880d, #f39c12); padding:1px 5px; border-radius:50px; text-transform:uppercase; flex-shrink:0;">Admin</span>
+                    </div>
+                `;
+            } else {
+                sidebarProfile.innerHTML = `
+                    <div style="position:relative; display:flex; align-items:center; gap:8px;">
+                        <div style="width:24px; height:24px; border-radius:50%; background:linear-gradient(135deg, var(--primary), #d4880d); display:flex; align-items:center; justify-content:center; color:#fff; font-size:0.75rem; font-weight:700; border:1.5px solid var(--primary); flex-shrink:0; margin:0;">${fullName.charAt(0).toUpperCase()}</div>
+                        <span style="font-weight:600; font-size:0.82rem; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:90px; text-align:left;">${fullName}</span>
+                        <span style="font-size:0.55rem; font-weight:700; color:#fff; background:linear-gradient(90deg, #d4880d, #f39c12); padding:1px 5px; border-radius:50px; text-transform:uppercase; flex-shrink:0;">Admin</span>
+                    </div>
+                `;
+            }
+        } else {
+            // Guest Mode
+            sidebarProfile.innerHTML = `
+                <i-ui name="user-01" size="20"></i-ui>
+                <span>Berkah Maju Elektrik</span>
+            `;
+        }
+    };
+
+    // Resolusi Konflik Sinkronisasi (Merge Conflict Strategy)
+    const resolveConflictSync = async (session, user) => {
+        try {
+            const { fetchUserData } = await import('./supabase.js');
+            const cloudData = await fetchUserData(session.access_token);
+            
+            if (cloudData) {
+                const localUpdate = appState.state.settings.lastLocalUpdate ? new Date(appState.state.settings.lastLocalUpdate).getTime() : 0;
+                const cloudUpdate = cloudData.updated_at ? new Date(cloudData.updated_at).getTime() : 0;
+
+                console.log(`[BME Conflict Resolution] Local: ${localUpdate}, Cloud: ${cloudUpdate}`);
+
+                if (cloudUpdate > localUpdate) {
+                    console.log('[BME Conflict Resolution] Cloud lebih baru. Menimpa LocalStorage...');
+                    
+                    // Overwrite LocalStorage & State
+                    if (cloudData.settings) {
+                        appState.state.settings = { ...appState.state.settings, ...cloudData.settings };
+                        localStorage.setItem('bme_settings', JSON.stringify(appState.state.settings));
+                    }
+                    if (cloudData.history) {
+                        appState.state.history = cloudData.history;
+                        localStorage.setItem('bme_history', JSON.stringify(appState.state.history));
+                    }
+                    if (cloudData.templates) {
+                        appState.state.templates = cloudData.templates;
+                        localStorage.setItem('bme_templates', JSON.stringify(appState.state.templates));
+                    }
+                    if (cloudData.tabs) {
+                        appState.state.tabs = cloudData.tabs;
+                        localStorage.setItem('bme_tabs', JSON.stringify(appState.state.tabs));
+                    }
+                    
+                    appState.notify('settings', appState.state.settings);
+                    appState.notify('history', appState.state.history);
+                    appState.notify('templates', appState.state.templates);
+                    appState.notify('tabs', appState.state.tabs);
+                    
+                    // Refresh UI
+                    syncActiveTabUI();
+                    
+                    if (window.showBMEAlert) {
+                        window.showBMEAlert('Data cloud berhasil disinkronkan ke lokal.', 'success');
+                    }
+                } else if (localUpdate > cloudUpdate) {
+                    console.log('[BME Conflict Resolution] Lokal lebih baru. Mengunggah data lokal ke Cloud...');
+                    await appState.triggerCloudSync();
+                } else {
+                    console.log('[BME Conflict Resolution] Data lokal dan cloud sudah selaras.');
+                    appState.state.syncStatus = 'synced';
+                    appState.notify('syncStatus', 'synced');
+                }
+            } else {
+                // Cloud kosong, unggah data lokal saat ini
+                console.log('[BME Conflict Resolution] Cloud kosong. Mengunggah data lokal...');
+                await appState.triggerCloudSync();
+            }
+        } catch (e) {
+            console.error('[BME Conflict Resolution] Gagal menyelesaikan konflik sinkronisasi:', e);
+        }
+    };
+
+    // Sesi Supabase Startup Initialization
+    const initSupabaseSession = async () => {
+        try {
+            const { getSupabase, validateAdminServer, logout } = await import('./supabase.js');
+            const supabase = getSupabase();
+            if (!supabase) return;
+
+            const { data: { session }, error } = await supabase.auth.getSession();
+            if (error) throw error;
+
+            if (session) {
+                // Verifikasi Admin di Sisi Server
+                try {
+                    const result = await validateAdminServer(session.access_token);
+                    if (result && result.isAdmin) {
+                        window.supabaseSession = session;
+                        appState.state.isLoggedIn = true;
+                        appState.state.adminProfile = result.user;
+                        appState.notify('isLoggedIn', true);
+                        appState.notify('adminProfile', result.user);
+                        
+                        console.log('[BME Supabase] Berhasil login otomatis sebagai Administrator:', result.user.email);
+                        
+                        // Selesaikan konflik sinkronisasi
+                        await resolveConflictSync(session, result.user);
+                    }
+                } catch (verifyErr) {
+                    if (verifyErr.message === '403') {
+                        console.warn('[BME Supabase] Sesi otomatis dibatalkan. Pengguna non-admin terdeteksi.');
+                        await logout();
+                        appState.handleLogoutCleanup();
+                    } else {
+                        throw verifyErr;
+                    }
+                }
+            }
+        } catch (err) {
+            console.error('[BME Supabase] Sesi inisialisasi startup gagal:', err);
+        } finally {
+            syncSidebarProfile();
+        }
+    };
+
+    // Menangani Event Login
+    document.addEventListener('admin-logged-in', async (e) => {
+        const { session, user } = e.detail;
+        syncSidebarProfile();
+        await resolveConflictSync(session, user);
+    });
+
+    // Menangani Event Logout
+    document.addEventListener('admin-logout', () => {
+        syncSidebarProfile();
+    });
+
+    // Subscribe to changes
+    appState.subscribe('isLoggedIn', () => syncSidebarProfile());
+    appState.subscribe('adminProfile', () => syncSidebarProfile());
+
+    // Jalankan sesi Supabase inisialisasi
+    initSupabaseSession();
+
     // Initial show
     showFooter();
 });
