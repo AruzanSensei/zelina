@@ -11,7 +11,9 @@ const STORAGE_KEYS = {
     MANUAL_TITLE: 'bme_manual_title',
     MANUAL_CARD_MODE: 'bme_manual_card_mode',
     TABS: 'bme_tabs',
-    ACTIVE_TAB_ID: 'bme_active_tab_id'
+    ACTIVE_TAB_ID: 'bme_active_tab_id',
+    IS_LOGGED_IN: 'bme_is_logged_in',
+    ADMIN_PROFILE: 'bme_admin_profile'
 };
 
 const DEFAULTS = {
@@ -69,8 +71,8 @@ class StateManager {
             templates: this.load(STORAGE_KEYS.TEMPLATES, DEFAULTS.templates),
             tabs: cachedTabs || [],
             activeTabId: cachedActiveId,
-            isLoggedIn: false,
-            adminProfile: null,
+            isLoggedIn: this.load(STORAGE_KEYS.IS_LOGGED_IN, false),
+            adminProfile: this.load(STORAGE_KEYS.ADMIN_PROFILE, null),
             syncStatus: 'idle' // idle, syncing, synced, error
         };
 
@@ -282,7 +284,13 @@ class StateManager {
         this.state.history.unshift(entry);
         this.save(STORAGE_KEYS.HISTORY, this.state.history);
         this.notify('history', this.state.history);
-        this.updateLocalTimestamp();
+        
+        if (this.state.isLoggedIn) {
+            // Optimasi: Atomic prepend ke cloud
+            this.prependHistoryItemCloud(entry);
+        } else {
+            this.updateLocalTimestamp();
+        }
     }
 
     updateItems(items) {
@@ -414,11 +422,55 @@ class StateManager {
         }
     }
 
+    setLoginSession(session, profile) {
+        window.supabaseSession = session;
+        this.state.isLoggedIn = true;
+        this.state.adminProfile = profile;
+        this.save(STORAGE_KEYS.IS_LOGGED_IN, true);
+        this.save(STORAGE_KEYS.ADMIN_PROFILE, profile);
+        this.notify('isLoggedIn', true);
+        this.notify('adminProfile', profile);
+    }
+
+    async prependHistoryItemCloud(entry) {
+        try {
+            const session = window.supabaseSession;
+            if (!session) return;
+
+            this.state.syncStatus = 'syncing';
+            this.notify('syncStatus', 'syncing');
+
+            const response = await fetch(`${this.state.settings.supabaseUrl || 'https://qydhvqhkmmrfizawfgvx.supabase.co'}/functions/v1/user-data-proxy`, {
+                method: 'PATCH',
+                headers: {
+                    'Authorization': `Bearer ${session.access_token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ new_history_item: entry })
+            });
+
+            if (!response.ok) {
+                console.error('[StateManager] Cloud atomic prepend failed, falling back to full sync:', response.status);
+                this.updateLocalTimestamp();
+            } else {
+                console.log('[StateManager] Cloud atomic prepend history success!');
+                this.state.syncStatus = 'synced';
+                this.notify('syncStatus', 'synced');
+            }
+        } catch (e) {
+            console.error('[StateManager] Cloud atomic prepend failed, falling back to full sync:', e);
+            this.updateLocalTimestamp();
+        }
+    }
+
     handleLogoutCleanup() {
         this.state.isLoggedIn = false;
         this.state.adminProfile = null;
         this.state.syncStatus = 'idle';
         window.supabaseSession = null;
+        
+        this.save(STORAGE_KEYS.IS_LOGGED_IN, false);
+        this.save(STORAGE_KEYS.ADMIN_PROFILE, null);
         
         this.notify('isLoggedIn', false);
         this.notify('adminProfile', null);

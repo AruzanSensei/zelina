@@ -188,3 +188,14 @@ export async function saveUserData(accessToken, data) {
 
     return true;
 }
+
+// ============================================================
+// COMPATIBILITY EXPORTS FOR APP.JS
+// ============================================================
+export function getSupabase() {
+    return supabase;
+}
+
+export async function fetchUserData(accessToken) {
+    return await loadUserData(accessToken);
+}

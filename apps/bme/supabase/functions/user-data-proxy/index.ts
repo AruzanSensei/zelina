@@ -93,6 +93,29 @@ serve(async (req) => {
             )
         }
 
+        // PATCH: Tambahkan satu item history baru secara atomic (prepend)
+        if (method === 'PATCH') {
+            const body = await req.json()
+            const { new_history_item } = body
+
+            const { error } = await supabase.rpc('prepend_history_item', {
+                user_id_param: user.id,
+                new_item: new_history_item
+            })
+
+            if (error) {
+                return new Response(
+                    JSON.stringify({ error: error.message }),
+                    { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+                )
+            }
+
+            return new Response(
+                JSON.stringify({ success: true }),
+                { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            )
+        }
+
         return new Response('Method Not Allowed', { status: 405, headers: corsHeaders })
     } catch (err) {
         return new Response(err.message, { status: 500, headers: corsHeaders })

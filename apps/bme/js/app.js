@@ -884,71 +884,241 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // Resolusi Konflik Sinkronisasi (Merge Conflict Strategy)
-    const resolveConflictSync = async (session, user) => {
-        try {
-            const { fetchUserData } = await import('./supabase.js');
-            const cloudData = await fetchUserData(session.access_token);
-            
-            if (cloudData) {
-                const localUpdate = appState.state.settings.lastLocalUpdate ? new Date(appState.state.settings.lastLocalUpdate).getTime() : 0;
-                const cloudUpdate = cloudData.updated_at ? new Date(cloudData.updated_at).getTime() : 0;
+    // Visual badge & banner controller for sync conflicts
+    const toggleConflictBadge = (show) => {
+        const desktopBtn = document.querySelector('.sidebar-item[data-tab="history"]');
+        const mobileBtn = document.querySelector('.tab-btn[data-tab="history"]');
 
-                console.log(`[BME Conflict Resolution] Local: ${localUpdate}, Cloud: ${cloudUpdate}`);
-
-                if (cloudUpdate > localUpdate) {
-                    console.log('[BME Conflict Resolution] Cloud lebih baru. Menimpa LocalStorage...');
-                    
-                    // Overwrite LocalStorage & State
-                    if (cloudData.settings) {
-                        appState.state.settings = { ...appState.state.settings, ...cloudData.settings };
-                        localStorage.setItem('bme_settings', JSON.stringify(appState.state.settings));
-                    }
-                    if (cloudData.history) {
-                        appState.state.history = cloudData.history;
-                        localStorage.setItem('bme_history', JSON.stringify(appState.state.history));
-                    }
-                    if (cloudData.templates) {
-                        appState.state.templates = cloudData.templates;
-                        localStorage.setItem('bme_templates', JSON.stringify(appState.state.templates));
-                    }
-                    if (cloudData.tabs) {
-                        appState.state.tabs = cloudData.tabs;
-                        localStorage.setItem('bme_tabs', JSON.stringify(appState.state.tabs));
-                    }
-                    
-                    appState.notify('settings', appState.state.settings);
-                    appState.notify('history', appState.state.history);
-                    appState.notify('templates', appState.state.templates);
-                    appState.notify('tabs', appState.state.tabs);
-                    
-                    // Refresh UI
-                    syncActiveTabUI();
-                    
-                    if (window.showBMEAlert) {
-                        window.showBMEAlert('Data cloud berhasil disinkronkan ke lokal.', 'success');
-                    }
-                } else if (localUpdate > cloudUpdate) {
-                    console.log('[BME Conflict Resolution] Lokal lebih baru. Mengunggah data lokal ke Cloud...');
-                    await appState.triggerCloudSync();
-                } else {
-                    console.log('[BME Conflict Resolution] Data lokal dan cloud sudah selaras.');
-                    appState.state.syncStatus = 'synced';
-                    appState.notify('syncStatus', 'synced');
+        [desktopBtn, mobileBtn].forEach(btn => {
+            if (!btn) return;
+            let badge = btn.querySelector('.conflict-badge');
+            if (show) {
+                if (!badge) {
+                    btn.style.position = 'relative';
+                    badge = document.createElement('span');
+                    badge.className = 'conflict-badge';
+                    badge.innerHTML = '!';
+                    badge.style.cssText = `
+                        position: absolute;
+                        top: 2px;
+                        right: 2px;
+                        background: #ff4d4f;
+                        color: white;
+                        border-radius: 50%;
+                        width: 14px;
+                        height: 14px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 9px;
+                        font-weight: 800;
+                        border: 1px solid var(--bg-card);
+                        z-index: 10;
+                    `;
+                    btn.appendChild(badge);
                 }
             } else {
-                // Cloud kosong, unggah data lokal saat ini
-                console.log('[BME Conflict Resolution] Cloud kosong. Mengunggah data lokal...');
-                await appState.triggerCloudSync();
+                if (badge) badge.remove();
             }
-        } catch (e) {
-            console.error('[BME Conflict Resolution] Gagal menyelesaikan konflik sinkronisasi:', e);
+        });
+
+        const banner = document.getElementById('conflict-resolution-banner');
+        if (banner) {
+            if (show) {
+                banner.style.display = 'flex';
+                banner.classList.remove('hidden');
+            } else {
+                banner.style.display = 'none';
+                banner.classList.add('hidden');
+            }
         }
     };
+
+    // Deep conflict detector cloud vs local (comparing history content only)
+    const detectConflict = (cloudData) => {
+        if (!cloudData || !cloudData.history) return false;
+
+        const localHistory = appState.state.history || [];
+        const cloudHistory = cloudData.history || [];
+
+        if (localHistory.length !== cloudHistory.length) return true;
+
+        // Map cloud history entries by their ID for fast matching
+        const cloudMap = new Map();
+        cloudHistory.forEach(item => {
+            if (item && item.id) {
+                cloudMap.set(item.id, item);
+            }
+        });
+
+        for (let i = 0; i < localHistory.length; i++) {
+            const localItem = localHistory[i];
+            if (!localItem) continue;
+
+            let cloudItem = null;
+            if (localItem.id) {
+                cloudItem = cloudMap.get(localItem.id);
+            } else {
+                // Fallback for legacy items without ID: compare by index
+                cloudItem = cloudHistory[i];
+            }
+
+            if (!cloudItem) return true;
+
+            // Compare only significant business-logic data fields to avoid false positives (like tab ID or timestamps)
+            const cleanLocalItem = {
+                title: localItem.title || '',
+                date: localItem.date || '',
+                items: localItem.items || [],
+                cardMode: localItem.cardMode || 'simple'
+            };
+            const cleanCloudItem = {
+                title: cloudItem.title || '',
+                date: cloudItem.date || '',
+                items: cloudItem.items || [],
+                cardMode: cloudItem.cardMode || 'simple'
+            };
+
+            if (JSON.stringify(cleanLocalItem) !== JSON.stringify(cleanCloudItem)) {
+                return true;
+            }
+        }
+
+        return false;
+    };
+
+    // Merges cloud data into local storage safely
+    const mergeCloudIntoLocal = (cloudData) => {
+        if (!cloudData) return;
+
+        if (cloudData.settings) {
+            appState.state.settings = { ...appState.state.settings, ...cloudData.settings };
+            localStorage.setItem('bme_settings', JSON.stringify(appState.state.settings));
+        }
+
+        if (cloudData.history) {
+            const mergedHistory = [...appState.state.history];
+            const localIds = new Set(mergedHistory.map(h => h.id));
+            cloudData.history.forEach(item => {
+                if (!localIds.has(item.id)) {
+                    mergedHistory.push(item);
+                }
+            });
+            mergedHistory.sort((a, b) => new Date(b.timestamp || b.date).getTime() - new Date(a.timestamp || a.date).getTime());
+            appState.state.history = mergedHistory;
+            localStorage.setItem('bme_history', JSON.stringify(mergedHistory));
+        }
+
+        if (cloudData.templates) {
+            const mergedTemplates = [...appState.state.templates];
+            const localTemplateIds = new Set(mergedTemplates.map(t => t.id));
+            cloudData.templates.forEach(item => {
+                if (!localTemplateIds.has(item.id)) {
+                    mergedTemplates.push(item);
+                }
+            });
+            appState.state.templates = mergedTemplates;
+            localStorage.setItem('bme_templates', JSON.stringify(mergedTemplates));
+        }
+
+        if (cloudData.tabs) {
+            const mergedTabs = [...appState.state.tabs];
+            const localTabIds = new Set(mergedTabs.map(t => t.id));
+            cloudData.tabs.forEach(item => {
+                if (!localTabIds.has(item.id)) {
+                    mergedTabs.push(item);
+                }
+            });
+            appState.state.tabs = mergedTabs;
+            localStorage.setItem('bme_tabs', JSON.stringify(mergedTabs));
+        }
+
+        appState.notify('settings', appState.state.settings);
+        appState.notify('history', appState.state.history);
+        appState.notify('templates', appState.state.templates);
+        appState.notify('tabs', appState.state.tabs);
+
+        syncActiveTabUI();
+    };
+
+    // Binds interactive conflict resolution buttons
+    const initConflictResolutionHandlers = () => {
+        const btnKeep = document.getElementById('btn-conflict-keep');
+        const btnPull = document.getElementById('btn-conflict-pull');
+        const btnMerge = document.getElementById('btn-conflict-merge');
+
+        btnKeep?.addEventListener('click', async () => {
+            if (window.showBMEAlert) {
+                window.showBMEAlert('Memperbarui data Cloud dengan data Lokal...', 'info');
+            }
+            await appState.triggerCloudSync();
+            toggleConflictBadge(false);
+            if (window.showBMEAlert) {
+                window.showBMEAlert('Berhasil mempertahankan data lokal di cloud.', 'success');
+            }
+        });
+
+        btnPull?.addEventListener('click', async () => {
+            const cloudData = window.latestCloudData;
+            if (!cloudData) return;
+
+            if (window.showBMEAlert) {
+                window.showBMEAlert('Menimpa seluruh data dengan data Cloud...', 'info');
+            }
+            if (cloudData.settings) {
+                appState.state.settings = { ...appState.state.settings, ...cloudData.settings };
+                localStorage.setItem('bme_settings', JSON.stringify(appState.state.settings));
+            }
+            if (cloudData.history) {
+                appState.state.history = cloudData.history;
+                localStorage.setItem('bme_history', JSON.stringify(appState.state.history));
+            }
+            if (cloudData.templates) {
+                appState.state.templates = cloudData.templates;
+                localStorage.setItem('bme_templates', JSON.stringify(appState.state.templates));
+            }
+            if (cloudData.tabs) {
+                appState.state.tabs = cloudData.tabs;
+                localStorage.setItem('bme_tabs', JSON.stringify(appState.state.tabs));
+            }
+
+            appState.notify('settings', appState.state.settings);
+            appState.notify('history', appState.state.history);
+            appState.notify('templates', appState.state.templates);
+            appState.notify('tabs', appState.state.tabs);
+
+            syncActiveTabUI();
+            toggleConflictBadge(false);
+
+            if (window.showBMEAlert) {
+                window.showBMEAlert('Data lokal berhasil ditimpa dengan data Cloud.', 'success');
+            }
+        });
+
+        btnMerge?.addEventListener('click', async () => {
+            const cloudData = window.latestCloudData;
+            if (!cloudData) return;
+
+            if (window.showBMEAlert) {
+                window.showBMEAlert('Menggabungkan data Cloud dan data Lokal...', 'info');
+            }
+            mergeCloudIntoLocal(cloudData);
+            await appState.triggerCloudSync();
+            toggleConflictBadge(false);
+
+            if (window.showBMEAlert) {
+                window.showBMEAlert('Data cloud dan lokal berhasil digabungkan.', 'success');
+            }
+        });
+    };
+
+    // Initialize conflict buttons handlers
+    initConflictResolutionHandlers();
 
     // Sesi Supabase Startup Initialization
     const initSupabaseSession = async () => {
         try {
-            const { getSupabase, validateAdminServer, logout } = await import('./supabase.js');
+            const { getSupabase, validateAdminServer, logout, fetchUserData } = await import('./supabase.js');
             const supabase = getSupabase();
             if (!supabase) return;
 
@@ -960,16 +1130,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     const result = await validateAdminServer(session.access_token);
                     if (result && result.isAdmin) {
-                        window.supabaseSession = session;
-                        appState.state.isLoggedIn = true;
-                        appState.state.adminProfile = result.user;
-                        appState.notify('isLoggedIn', true);
-                        appState.notify('adminProfile', result.user);
+                        appState.setLoginSession(session, result.user);
                         
                         console.log('[BME Supabase] Berhasil login otomatis sebagai Administrator:', result.user.email);
                         
-                        // Selesaikan konflik sinkronisasi
-                        await resolveConflictSync(session, result.user);
+                        // Periksa perbedaan Cloud vs Lokal (Alur Saat Refresh Halaman)
+                        const cloudData = await fetchUserData(session.access_token);
+                        if (cloudData) {
+                            window.latestCloudData = cloudData; // Cache untuk tombol resolusi konflik
+                            const hasConflict = detectConflict(cloudData);
+                            if (hasConflict) {
+                                console.log('[BME Sync] Konflik data terdeteksi antara cloud dan lokal.');
+                                toggleConflictBadge(true);
+                            } else {
+                                console.log('[BME Sync] Data cloud dan lokal selaras.');
+                                appState.state.syncStatus = 'synced';
+                                appState.notify('syncStatus', 'synced');
+                            }
+                        }
                     }
                 } catch (verifyErr) {
                     if (verifyErr.message === '403') {
@@ -988,11 +1166,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Menangani Event Login
+    // Menangani Event Login Baru (Paksa sinkronisasi satu arah dari Cloud ke Lokal)
     document.addEventListener('admin-logged-in', async (e) => {
         const { session, user } = e.detail;
         syncSidebarProfile();
-        await resolveConflictSync(session, user);
+
+        try {
+            const { fetchUserData } = await import('./supabase.js');
+            const cloudData = await fetchUserData(session.access_token);
+            if (cloudData) {
+                mergeCloudIntoLocal(cloudData);
+                if (window.showBMEAlert) {
+                    window.showBMEAlert('Data cloud berhasil digabungkan ke lokal.', 'success');
+                }
+            }
+        } catch (err) {
+            console.error('[BME Sync] Gagal sinkronisasi login baru:', err);
+        }
     });
 
     // Menangani Event Logout

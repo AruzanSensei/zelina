@@ -67,10 +67,8 @@ export function initSettings() {
     // Tabs
     const tabGeneral = document.getElementById('tab-general');
     const tabTemplates = document.getElementById('tab-templates');
-    const tabAccount = document.getElementById('tab-account');
     const viewGeneral = document.getElementById('settings-general');
     const viewTemplates = document.getElementById('settings-templates');
-    const viewAccount = document.getElementById('settings-account');
 
     // Template UI
     const templateList = document.getElementById('template-list');
@@ -86,7 +84,7 @@ export function initSettings() {
 
     btnParams.addEventListener('click', () => {
         toggleModal(true);
-        // Refresh account tab rendering when modal opens
+        // Refresh account rendering when modal opens
         renderAccountTab();
     });
     btnClose.addEventListener('click', () => toggleModal(false));
@@ -100,36 +98,18 @@ export function initSettings() {
     tabGeneral.addEventListener('click', () => {
         tabGeneral.classList.add('active');
         tabTemplates.classList.remove('active');
-        tabAccount.classList.remove('active');
         viewGeneral.style.display = 'block';
         viewTemplates.style.display = 'none';
         viewTemplates.classList.add('hidden');
-        viewAccount.style.display = 'none';
-        viewAccount.classList.add('hidden');
     });
 
     tabTemplates.addEventListener('click', () => {
         tabTemplates.classList.add('active');
         tabGeneral.classList.remove('active');
-        tabAccount.classList.remove('active');
         viewGeneral.style.display = 'none';
         viewTemplates.style.display = 'block';
         viewTemplates.classList.remove('hidden');
-        viewAccount.style.display = 'none';
-        viewAccount.classList.add('hidden');
         renderTemplates(); // Refresh list
-    });
-
-    tabAccount.addEventListener('click', () => {
-        tabAccount.classList.add('active');
-        tabGeneral.classList.remove('active');
-        tabTemplates.classList.remove('active');
-        viewGeneral.style.display = 'none';
-        viewTemplates.style.display = 'none';
-        viewTemplates.classList.add('hidden');
-        viewAccount.style.display = 'block';
-        viewAccount.classList.remove('hidden');
-        renderAccountTab(); // Render Account details
     });
 
     // ===================================
@@ -141,22 +121,55 @@ export function initSettings() {
     const adminDiv = document.getElementById('account-authenticated');
 
     const renderAccountTab = () => {
-        if (!loadingDiv || !guestDiv || !adminDiv) return;
-
-        // Hide loading initially unless actively logging in
-        loadingDiv.style.display = 'none';
-        loadingDiv.classList.add('hidden');
+        const loginContainer = document.getElementById('settings-login-container');
+        const authenticatedContent = document.getElementById('settings-authenticated-content');
 
         if (!appState.state.isLoggedIn) {
-            guestDiv.style.display = 'block';
-            guestDiv.classList.remove('hidden');
-            adminDiv.style.display = 'none';
-            adminDiv.classList.add('hidden');
+            // Sembunyikan tabs & tampilkan form login
+            if (loginContainer) {
+                loginContainer.style.display = 'block';
+                loginContainer.classList.remove('hidden');
+            }
+            if (authenticatedContent) {
+                authenticatedContent.style.display = 'none';
+                authenticatedContent.classList.add('hidden');
+            }
+
+            if (guestDiv) {
+                guestDiv.style.display = 'block';
+                guestDiv.classList.remove('hidden');
+            }
+            if (adminDiv) {
+                adminDiv.style.display = 'none';
+                adminDiv.classList.add('hidden');
+            }
+            if (loadingDiv) {
+                loadingDiv.style.display = 'none';
+                loadingDiv.classList.add('hidden');
+            }
         } else {
-            guestDiv.style.display = 'none';
-            guestDiv.classList.add('hidden');
-            adminDiv.style.display = 'block';
-            adminDiv.classList.remove('hidden');
+            // Tampilkan tabs & sembunyikan form login
+            if (loginContainer) {
+                loginContainer.style.display = 'none';
+                loginContainer.classList.add('hidden');
+            }
+            if (authenticatedContent) {
+                authenticatedContent.style.display = 'block';
+                authenticatedContent.classList.remove('hidden');
+            }
+
+            if (guestDiv) {
+                guestDiv.style.display = 'none';
+                guestDiv.classList.add('hidden');
+            }
+            if (adminDiv) {
+                adminDiv.style.display = 'block';
+                adminDiv.classList.remove('hidden');
+            }
+            if (loadingDiv) {
+                loadingDiv.style.display = 'none';
+                loadingDiv.classList.add('hidden');
+            }
 
             // Render profile details
             const profile = appState.state.adminProfile;
@@ -229,6 +242,7 @@ export function initSettings() {
         const password = passwordInput.value;
 
         // Show Loading state
+        const loginContainer = document.getElementById('settings-login-container');
         if (loadingDiv && guestDiv) {
             loadingDiv.style.display = 'block';
             loadingDiv.classList.remove('hidden');
@@ -245,11 +259,7 @@ export function initSettings() {
                 try {
                     const result = await validateAdminServer(data.session.access_token);
                     if (result && result.isAdmin) {
-                        window.supabaseSession = data.session;
-                        appState.state.isLoggedIn = true;
-                        appState.state.adminProfile = result.user;
-                        appState.notify('isLoggedIn', true);
-                        appState.notify('adminProfile', result.user);
+                        appState.setLoginSession(data.session, result.user);
                         
                         window.showBMEAlert('Selamat datang kembali, Administrator!', 'success');
                         
