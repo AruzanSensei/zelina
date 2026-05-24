@@ -35,7 +35,7 @@ const DEFAULTS = {
             invoice: 'Invoice-{judul}',
             suratJalan: 'Surat Jalan-{judul}'
         },
-        aiDefaultPrompt: 'Ekstrak data faktur/invoice dari teks mentah berikut. Format harus terstruktur dengan membagi data menjadi beberapa judul invoice (maksimal 4 judul). Untuk setiap judul, kelompokkan item ke dalam list. Setiap item harus memiliki field: name (nama barang/jasa, default "..." jika kosong), tipe (pilih salah satu dari: "-", "ICA", "Protecta", "Prolink", "APC"), qtyUnit (unit kuantitas: "pcs" atau "lot", default "pcs"), qty (kuantitas integer, default 1), price (harga integer satuan, default 0), dan note (catatan tambahan, default "..." jika kosong).',
+        aiDefaultPrompt: 'Ekstrak data faktur/invoice dari teks mentah berikut. Format harus terstruktur dengan membagi data menjadi satu atau beberapa judul invoice. Untuk setiap judul, kelompokkan item ke dalam list. Setiap item harus memiliki field: name (nama barang/jasa, default "..." jika kosong), tipe (pilih salah satu dari: "-", "ICA", "Protecta", "Prolink", "APC"), qtyUnit (unit kuantitas: "pcs" atau "lot", default "pcs"), qty (kuantitas integer, default 1), price (harga integer satuan, default 0), dan note (catatan tambahan, default "..." jika kosong).',
         aiModel: 'gemini-3.5-flash',
         lastLocalUpdate: null
     },
@@ -286,7 +286,7 @@ class StateManager {
         this.state.history.unshift(entry);
         this.save(STORAGE_KEYS.HISTORY, this.state.history);
         this.notify('history', this.state.history);
-        
+
         if (this.state.isLoggedIn) {
             // Optimasi: Atomic prepend ke cloud
             this.prependHistoryItemCloud(entry);
@@ -384,7 +384,7 @@ class StateManager {
 
     async triggerCloudSync() {
         if (!this.state.isLoggedIn) return;
-        
+
         this.state.syncStatus = 'syncing';
         this.notify('syncStatus', 'syncing');
 
@@ -409,7 +409,7 @@ class StateManager {
 
             const { saveUserData } = await import('./supabase.js');
             const success = await saveUserData(session.access_token, dataToSync);
-            
+
             if (success) {
                 this.state.syncStatus = 'synced';
                 this.notify('syncStatus', 'synced');
@@ -470,14 +470,14 @@ class StateManager {
         this.state.adminProfile = null;
         this.state.syncStatus = 'idle';
         window.supabaseSession = null;
-        
+
         this.save(STORAGE_KEYS.IS_LOGGED_IN, false);
         this.save(STORAGE_KEYS.ADMIN_PROFILE, null);
-        
+
         this.notify('isLoggedIn', false);
         this.notify('adminProfile', null);
         this.notify('syncStatus', 'idle');
-        
+
         // Dispatch global event
         document.dispatchEvent(new CustomEvent('admin-logout'));
     }

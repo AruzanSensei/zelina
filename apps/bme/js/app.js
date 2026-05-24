@@ -481,10 +481,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Label Visibility Toggle (Mobile & Desktop Integration) ────────
     const btnLabelToggle = document.getElementById('btn-label-toggle');
-    
+
     // Restore saved state from localStorage
     let labelsHidden = localStorage.getItem('bme_labels_hidden') === 'true';
-    
+
     const applyLabelState = () => {
         if (labelsHidden) {
             document.body.classList.add('labels-hidden');
@@ -859,23 +859,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (appState.state.isLoggedIn && appState.state.adminProfile) {
             const profile = appState.state.adminProfile;
-            const fullName = profile.raw_user_meta_data?.full_name || profile.full_name || 'Admin';
-            const avatarUrl = profile.raw_user_meta_data?.avatar_url || profile.avatar_url || '';
+
+            // Robust extraction from Supabase user object metadata structure
+            const fullName = profile.user_metadata?.full_name ||
+                profile.raw_user_meta_data?.full_name ||
+                profile.full_name ||
+                'Admin';
+
+            const avatarUrl = profile.user_metadata?.avatar_url ||
+                profile.user_metadata?.picture ||
+                profile.raw_user_meta_data?.avatar_url ||
+                profile.raw_user_meta_data?.picture ||
+                profile.avatar_url ||
+                '';
+
+            const email = profile.email || '';
 
             if (avatarUrl) {
                 sidebarProfile.innerHTML = `
-                    <div style="position:relative; display:flex; align-items:center; gap:8px;">
-                        <img src="${avatarUrl}" alt="Avatar" style="width:24px; height:24px; border-radius:50%; border:1.5px solid var(--primary); object-fit:cover; margin:0;">
-                        <span style="font-weight:600; font-size:0.82rem; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:90px; text-align:left;">${fullName}</span>
-                        <span style="font-size:0.55rem; font-weight:700; color:#fff; background:linear-gradient(90deg, #d4880d, #f39c12); padding:1px 5px; border-radius:50px; text-transform:uppercase; flex-shrink:0;">Admin</span>
+                    <img src="${avatarUrl}" alt="Avatar" style="width:24px; height:24px; border-radius:50%; border:1.5px solid var(--primary); object-fit:cover; margin:0; flex-shrink:0;">
+                    <div style="display:flex; flex-direction:column; align-items:flex-start; min-width:0; flex:1; text-align:left; gap:1px;">
+                        <div style="display:flex; align-items:center; gap:6px; width:100%; min-width:0;">
+                            <span style="font-weight:600; font-size:0.82rem; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1;">${fullName}</span>
+                            <span style="font-size:0.55rem; font-weight:700; color:#fff; background:linear-gradient(90deg, #d4880d, #f39c12); padding:1px 5px; border-radius:50px; text-transform:uppercase; flex-shrink:0;">Admin</span>
+                        </div>
+                        <span style="font-weight:400; font-size:0.68rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%;">${email}</span>
                     </div>
                 `;
             } else {
                 sidebarProfile.innerHTML = `
-                    <div style="position:relative; display:flex; align-items:center; gap:8px;">
-                        <div style="width:24px; height:24px; border-radius:50%; background:linear-gradient(135deg, var(--primary), #d4880d); display:flex; align-items:center; justify-content:center; color:#fff; font-size:0.75rem; font-weight:700; border:1.5px solid var(--primary); flex-shrink:0; margin:0;">${fullName.charAt(0).toUpperCase()}</div>
-                        <span style="font-weight:600; font-size:0.82rem; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:90px; text-align:left;">${fullName}</span>
-                        <span style="font-size:0.55rem; font-weight:700; color:#fff; background:linear-gradient(90deg, #d4880d, #f39c12); padding:1px 5px; border-radius:50px; text-transform:uppercase; flex-shrink:0;">Admin</span>
+                    <div style="width:30px; height:30px; border-radius:50%; background:linear-gradient(135deg, var(--primary), #d4880d); display:flex; align-items:center; justify-content:center; color:#fff; font-size:0.75rem; font-weight:700; flex-shrink:0; margin:0;">${fullName.charAt(0).toUpperCase()}</div>
+                    <div style="display:flex; flex-direction:column; align-items:flex-start; min-width:0; flex:1; text-align:left; gap:1px;">
+                        <div style="display:flex; align-items:center; gap:6px; width:100%; min-width:0;">
+                            <span style="font-weight:600; font-size:0.82rem; color:var(--text-main); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1;">${fullName}</span>
+                            <span style="font-size:0.55rem; font-weight:700; color:#fff; background:linear-gradient(90deg, #d4880d, #f39c12); padding:1px 5px; border-radius:50px; text-transform:uppercase; flex-shrink:0;">Admin</span>
+                        </div>
+                        <span style="font-weight:400; font-size:0.68rem; color:var(--text-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%;">${email}</span>
                     </div>
                 `;
             }
@@ -1166,9 +1185,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const result = await validateAdminServer(session.access_token);
                     if (result && result.isAdmin) {
                         appState.setLoginSession(session, result.user);
-                        
+
                         console.log('[BME Supabase] Berhasil login otomatis sebagai Administrator:', result.user.email);
-                        
+
                         // Periksa perbedaan Cloud vs Lokal (Alur Saat Refresh Halaman)
                         const cloudData = await fetchUserData(session.access_token);
                         if (cloudData) {

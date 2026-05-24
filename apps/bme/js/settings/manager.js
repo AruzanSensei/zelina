@@ -174,8 +174,17 @@ export function initSettings() {
             // Render profile details
             const profile = appState.state.adminProfile;
             const email = profile?.email || '';
-            const fullName = profile?.raw_user_meta_data?.full_name || profile?.full_name || 'Administrator';
-            const avatarUrl = profile?.raw_user_meta_data?.avatar_url || profile?.avatar_url || '';
+            const fullName = profile?.user_metadata?.full_name || 
+                             profile?.raw_user_meta_data?.full_name || 
+                             profile?.full_name || 
+                             'Administrator';
+            
+            const avatarUrl = profile?.user_metadata?.avatar_url || 
+                              profile?.user_metadata?.picture || 
+                              profile?.raw_user_meta_data?.avatar_url || 
+                              profile?.raw_user_meta_data?.picture || 
+                              profile?.avatar_url || 
+                              '';
 
             const imgEl = document.getElementById('admin-avatar');
             const placeholderEl = document.getElementById('admin-avatar-placeholder');
