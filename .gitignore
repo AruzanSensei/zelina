@@ -43,3 +43,7 @@
 **/.todo
 
 **/.obsidian
+
+
+**/supabase/
+**/supabase/*
