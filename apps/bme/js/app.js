@@ -936,54 +936,84 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Deep conflict detector cloud vs local (comparing history content only)
     const detectConflict = (cloudData) => {
-        if (!cloudData || !cloudData.history) return false;
+        console.log('[BME Sync Debug] Running detectConflict...');
+        if (!cloudData) {
+            console.log('[BME Sync Debug] No cloud data found.');
+            return false;
+        }
+        if (!cloudData.history) {
+            console.log('[BME Sync Debug] No cloud history found in payload.');
+            return false;
+        }
 
         const localHistory = appState.state.history || [];
         const cloudHistory = cloudData.history || [];
 
-        if (localHistory.length !== cloudHistory.length) return true;
+        console.log(`[BME Sync Debug] History lengths - Local: ${localHistory.length}, Cloud: ${cloudHistory.length}`);
 
-        // Map cloud history entries by their ID for fast matching
+        if (localHistory.length !== cloudHistory.length) {
+            console.log('[BME Sync Debug] Length mismatch. Conflict detected.');
+            return true;
+        }
+
+        // Map cloud history entries by their stringified ID for type-safe fast matching
         const cloudMap = new Map();
         cloudHistory.forEach(item => {
-            if (item && item.id) {
-                cloudMap.set(item.id, item);
+            if (item && item.id !== undefined && item.id !== null) {
+                cloudMap.set(String(item.id), item);
             }
         });
+
+        // Helper to normalize transaction item fields to ensure type-safe comparison (preventing number vs string mismatches)
+        const normalizeItemFields = (itemObj) => {
+            if (!itemObj) return {};
+            const normItems = (itemObj.items || []).map(e => {
+                if (!e) return {};
+                return {
+                    name: String(e.name || '').trim(),
+                    price: Number(e.price) || 0,
+                    qty: Number(e.qty) || 0,
+                    note: String(e.note || '').trim(),
+                    tipe: String(e.tipe || '').trim(),
+                    invKeterangan: String(e.invKeterangan || '').trim(),
+                    sjKeterangan: String(e.sjKeterangan || '').trim()
+                };
+            });
+            return {
+                title: String(itemObj.title || '').trim(),
+                date: String(itemObj.date || '').trim(),
+                cardMode: String(itemObj.cardMode || 'simple').trim(),
+                items: normItems
+            };
+        };
 
         for (let i = 0; i < localHistory.length; i++) {
             const localItem = localHistory[i];
             if (!localItem) continue;
 
             let cloudItem = null;
-            if (localItem.id) {
-                cloudItem = cloudMap.get(localItem.id);
+            if (localItem.id !== undefined && localItem.id !== null) {
+                cloudItem = cloudMap.get(String(localItem.id));
             } else {
-                // Fallback for legacy items without ID: compare by index
+                // Fallback for legacy items: match by index
                 cloudItem = cloudHistory[i];
             }
 
-            if (!cloudItem) return true;
+            if (!cloudItem) {
+                console.log(`[BME Sync Debug] Conflict: Local item ID ${localItem.id} not found in Cloud.`);
+                return true;
+            }
 
-            // Compare only significant business-logic data fields to avoid false positives (like tab ID or timestamps)
-            const cleanLocalItem = {
-                title: localItem.title || '',
-                date: localItem.date || '',
-                items: localItem.items || [],
-                cardMode: localItem.cardMode || 'simple'
-            };
-            const cleanCloudItem = {
-                title: cloudItem.title || '',
-                date: cloudItem.date || '',
-                items: cloudItem.items || [],
-                cardMode: cloudItem.cardMode || 'simple'
-            };
+            const cleanLocal = normalizeItemFields(localItem);
+            const cleanCloud = normalizeItemFields(cloudItem);
 
-            if (JSON.stringify(cleanLocalItem) !== JSON.stringify(cleanCloudItem)) {
+            if (JSON.stringify(cleanLocal) !== JSON.stringify(cleanCloud)) {
+                console.log(`[BME Sync Debug] Content mismatch for item ID ${localItem.id || i}:`, { cleanLocal, cleanCloud });
                 return true;
             }
         }
 
+        console.log('[BME Sync Debug] No conflict detected. History is in perfect sync.');
         return false;
     };
 
