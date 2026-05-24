@@ -23,8 +23,15 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 // ============================================================
 // Inisialisasi Supabase Client (hanya untuk Auth/OAuth)
+// Menggunakan flowType: 'implicit' untuk memaksimalkan kompatibilitas browser mobile / in-app browser
 // ============================================================
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+        flowType: 'implicit',
+        persistSession: true,
+        detectSessionInUrl: true
+    }
+});
 
 // ============================================================
 // URL Edge Functions (server-side — tidak menyentuh browser)
@@ -44,7 +51,10 @@ export async function loginWithGoogle() {
     const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-            redirectTo: window.location.href
+            redirectTo: window.location.href,
+            queryParams: {
+                prompt: 'select_account' // Memaksa Google menampilkan pemilih akun (Account Chooser)
+            }
         }
     });
     if (error) throw new Error(error.message);
