@@ -1,42 +1,398 @@
 /**
- * pages/ai.css — AI Mode
- * Locked overlay for the AI invoice generation feature.
+ * pages/ai.css — AI Mode Premium Stylesheet
+ * Fully-featured visual system for prompt container, structured card output, and sticky action bar.
  */
 
 /* ============================================
-   AI LOCKED STATE OVERLAY
+   AI PROMPT CONTAINER
    ============================================ */
-.ai-locked-overlay {
-    position: absolute;
-    box-shadow: var(--app-shadow-md);
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.85);
+.ai-prompt-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 12px;
     display: flex;
     flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ai-prompt-textarea {
+    width: 100%;
+    min-height: 80px;
+    max-height: 400px;
+    background: transparent;
+    border: none;
+    resize: none;
+    color: var(--text-main);
+    font-size: 0.75rem;
+    line-height: 1.1;
+    font-weight: 400;
+    padding: 4px;
+    font-family: inherit;
+    outline: none;
+    transition: height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ai-prompt-textarea:focus {
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* Height states for prompt resize */
+.ai-prompt-textarea.minimized {
+    height: 90px !important;
+    min-height: 90px !important;
+}
+
+.ai-prompt-textarea.maximized {
+    height: 240px !important;
+}
+
+/* Actions bar under prompt */
+.ai-prompt-actions-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-color);
+    padding-top: 10px;
+    margin-top: 4px;
+}
+
+.ai-prompt-actions-left,
+.ai-prompt-actions-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Model selector in prompt actions */
+.ai-model-select {
+    position: relative;
+}
+
+.ai-model-select .select-selected {
+    padding: 6px 12px !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    border-radius: 50px !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    min-height: auto !important;
+    height: 30px !important;
+}
+
+.ai-model-select .select-items {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-md);
+    z-index: 100;
+    min-width: 140px;
+    padding: 4px;
+}
+
+.ai-model-select .select-items div {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    color: var(--text-main);
+}
+
+.ai-model-select .select-items div:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--primary);
+}
+
+/* ============================================
+   AI CARDS LAYOUT & ALIGNMENT
+   ============================================ */
+.ai-output-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 80px;
+    /* space for sticky bar */
+}
+
+@media (min-width: 768px) {
+    .ai-output-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.ai-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+}
+
+/* Selected state glow */
+.ai-card.is-selected {
+    border: 2px solid var(--primary) !important;
+    box-shadow: 0 0 16px rgba(245, 166, 35, 0.25), var(--shadow-md) !important;
+}
+
+/* Card Header */
+.ai-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed var(--border-color);
+    padding-bottom: 8px;
+    margin-bottom: 4px;
+}
+
+.ai-card-title-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid transparent;
+    color: var(--text-main);
+    font-weight: 700;
+    font-size: 1rem;
+    width: 100%;
+    outline: none;
+    padding: 2px 0;
+    transition: border-bottom 0.2s;
+}
+
+.ai-card-title-input:focus {
+    border-bottom: 1px solid var(--primary);
+}
+
+/* CSS Grid/Flex alignment system for form items */
+.ai-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: max-height 0.25s ease-out, opacity 0.2s;
+    overflow: hidden;
+}
+
+.ai-card-body.collapsed {
+    max-height: 0 !important;
+    opacity: 0;
+    pointer-events: none;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.ai-item-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.ai-field-label {
+    width: 72px;
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.ai-field-value-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.ai-field-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+    font-size: 0.88rem;
+    width: 100%;
+    outline: none;
+    padding: 4px 0;
+    transition: border-bottom 0.2s;
+    font-family: inherit;
+}
+
+.ai-field-input:focus {
+    border-bottom: 1px solid var(--primary) !important;
+}
+
+/* Multi-field rows (tipe + item, qty + harga) */
+.ai-item-split-row {
+    display: flex;
+    width: 100%;
+    gap: 16px;
+}
+
+.ai-item-split-col {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.ai-field-label-sub {
+    width: 50px;
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Variable states: Empty vs Filled */
+.required-empty-orange {
+    color: #e67e22 !important;
+    border-bottom: 1px solid #e67e22 !important;
+}
+
+/* Custom select inside AI card */
+.ai-card .custom-select {
+    flex: 1;
+    position: relative;
+    min-width: 0;
+}
+
+.ai-card .select-selected {
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    background: transparent;
+    border-radius: 0;
+    padding: 4px 0;
+    font-size: 0.88rem;
+    min-height: auto;
+    color: var(--text-main);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+/* Flexible Catatan Textarea */
+.ai-note-textarea {
+    resize: none;
+    overflow: hidden;
+    min-height: 28px;
+    max-height: 200px;
+    padding: 4px 0;
+    line-height: 1.4;
+}
+
+/* ============================================
+   AI CARD BOTTOM ACTIONS
+   ============================================ */
+.ai-card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px dashed var(--border-color);
+    padding-top: 10px;
+    margin-top: 4px;
+}
+
+/* Hide card actions completely in Select Mode */
+.select-mode-active .ai-card-actions {
+    display: none !important;
+}
+
+.ai-card-actions-left,
+.ai-card-actions-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ai-card-actions-left .btn-delete-card {
+    background: transparent;
+    border: none;
+    color: #ff4d4f;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 10;
-    border-radius: var(--radius-sm);
-    backdrop-filter: blur(2px);
+    transition: background 0.2s;
 }
 
-.ai-locked-overlay i {
-    font-size: 2.5rem;
-    color: #9B51E0;
-    margin-bottom: 12px;
-    opacity: 0.7;
+.ai-card-actions-left .btn-delete-card:hover {
+    background: rgba(255, 77, 79, 0.1);
 }
 
-.ai-locked-overlay p {
-    font-weight: 600;
-    font-size: 1rem;
-    color: #333;
+.ai-card-actions-right .btn-card-action {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
 }
 
-.ai-locked-overlay small {
-    color: var(--text-muted);
-    margin-top: 4px;
+.ai-card-actions-right .btn-card-action:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.ai-card-actions-right .btn-card-action.active-collapse {
+    transform: rotate(90deg);
+}
+
+/* Selection checkmark icon overlay on top-right of card in select mode */
+.ai-card-select-overlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-color);
+    background: rgba(0, 0, 0, 0.4);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    transition: all 0.2s;
+}
+
+.select-mode-active .ai-card-select-overlay {
+    display: flex;
+}
+
+.ai-card.is-selected .ai-card-select-overlay {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: white;
+}
+
+.ai-card.is-selected .ai-card-select-overlay::after {
+    content: '✓';
+    font-size: 0.75rem;
+    font-weight: bold;
 }

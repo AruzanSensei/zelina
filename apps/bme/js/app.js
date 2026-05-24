@@ -318,13 +318,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // 5. Action bar visibility (Manual & AI modes only)
-        const footer = document.querySelector('.action-bar-sticky');
-        if (footer) {
-            if (isPreviewEnabled) {
-                footer.style.display = 'flex';
-            } else {
-                footer.style.display = 'none';
-            }
+        const manualFooter = document.getElementById('manual-action-bar');
+        const aiFooter = document.getElementById('ai-action-bar');
+        if (manualFooter) {
+            manualFooter.style.display = (currentMode === 'manual') ? 'flex' : 'none';
+        }
+        if (aiFooter) {
+            aiFooter.style.display = (currentMode === 'ai') ? 'flex' : 'none';
         }
 
         // 6. Sync manual titles inputs
@@ -568,6 +568,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!e.target.closest('.download-split-btn') && !e.target.closest('.action-download-group')) {
             formatDropdown?.classList.remove('show');
             formatDropdownMobile?.classList.remove('show');
+        }
+
+        // Close custom select portals when clicking outside
+        if (!e.target.closest('.select-selected') && !e.target.closest('.select-items-portal')) {
+            document.querySelectorAll('.select-items-portal').forEach(el => el.remove());
         }
     });
 

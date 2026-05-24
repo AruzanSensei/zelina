@@ -241,11 +241,11 @@ export function initManualMode() {
                     
                     <div class="item-row">
                         <div class="item-price-wrap" style="flex: 2.2; padding-top: 4px;">
-                            <label class="field-label"><i-ui name="bank-note-01" size="12" style="vertical-align:middle;margin-top:-2px"></i-ui> Harga</label>
+                            <label class="field-label">Harga</label>
                             <input type="text" class="form-input item-price-format ${!item.price || item.price <= 0 ? 'required-empty-orange' : ''}" value="${formatNumberStr(String(item.price))}" data-index="${index}" placeholder="0" inputmode="numeric">
                         </div>
                         <div class="item-tipe-wrap" style="flex: 2; padding-top: 4px;">
-                            <label class="field-label"><i-ui name="tag-01" size="12" style="vertical-align:middle;margin-top:-2px"></i-ui> Tipe</label>
+                            <label class="field-label">Tipe</label>
                             <div class="custom-select item-tipe" data-index="${index}" data-value="${item.tipe || ''}">
                                 <div class="select-selected form-input ${!item.tipe ? 'required-empty-orange' : ''}" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
                                     <span class="selected-text" style="opacity: ${!item.tipe ? '0.5' : '1'}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.tipe || 'Tipe'}</span>
@@ -638,16 +638,22 @@ export function initManualMode() {
 
         // Global click to close menu or exit multi-select
         document.addEventListener('click', (e) => {
+            if (appState.state.currentMode !== 'manual') return;
             if (!e.target.closest('#bme-context-menu')) closeContextMenu();
 
             // Handle custom select portal option click
             const portalOption = e.target.closest('.select-items-portal div');
             if (portalOption) {
                 const portal = portalOption.closest('.select-items-portal');
-                const index = parseInt(portal.dataset.sourceIndex);
-                items[index].tipe = portalOption.dataset.value;
-                portal.remove();
-                render();
+                const sourceIdxStr = portal.dataset.sourceIndex;
+                if (sourceIdxStr && !sourceIdxStr.includes('_')) {
+                    const index = parseInt(sourceIdxStr);
+                    if (items[index]) {
+                        items[index].tipe = portalOption.dataset.value;
+                        portal.remove();
+                        render();
+                    }
+                }
                 return;
             }
 

@@ -303,7 +303,7 @@
                         </div>
 
                         <!-- ACTION BAR FLOATING (Mobile + Desktop) -->
-                        <div class="action-bar-sticky">
+                        <div id="manual-action-bar" class="action-bar-sticky">
                             <!-- Floating Required Fields Indicator -->
                             <div id="required-fields-indicator" class="floating-indicator hidden">
                                 <div class="indicator-badge">0</div>
@@ -392,36 +392,146 @@
                     </section>
 
                     <!-- MODE 2: AI -->
-                    <section id="ai-view" class="view hidden">
-                        <div class="input-group">
-                            <input type="text" id="ai-title" class="form-input" placeholder="Judul Invoice">
-                        </div>
-                        <div class="input-group">
-                            <textarea id="ai-prompt" class="form-textarea"
+                    <section id="ai-view" class="view hidden" style="position: relative;">
+                        <div class="ai-prompt-container">
+                            <textarea id="ai-prompt" class="form-textarea ai-prompt-textarea"
                                 placeholder="Contoh: Kabel NYM 50 meter harga 15rb, MCB 10 pcs harga 50rb..."></textarea>
+
+                            <div class="ai-prompt-actions-bar">
+                                <!-- Div 1: Kiri (Resize & Model Dropdown) -->
+                                <div class="ai-prompt-actions-left">
+                                    <button id="btn-ai-prompt-resize" class="icon-btn" title="Besarkan / Kecilkan">
+                                        <i-ui name="maximize-02" size="16"></i-ui>
+                                    </button>
+                                    <div class="custom-select ai-model-select" id="ai-model-select"
+                                        data-value="gemini-3.5-flash">
+                                        <div class="select-selected form-input">
+                                            <span class="selected-text">Gemini 3.5 Flash</span>
+                                            <i-ui name="chevron-down" size="14"
+                                                style="opacity:0.5;flex-shrink:0;margin-left:4px"></i-ui>
+                                        </div>
+                                        <div class="select-items select-hide">
+                                            <div data-value="gemini-3.5-flash" class="same-as-selected">Gemini 3.5 Flash
+                                            </div>
+                                            <div data-value="gemini-3.1-flash-lite-preview">Gemini 3.1 Lite</div>
+                                            <div data-value="gemini-2.5-flash">Gemini 2.5 Flash</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Div 2: Kanan (Salin, Clipboard, Generate) -->
+                                <div class="ai-prompt-actions-right">
+                                    <button id="btn-ai-prompt-copy" class="icon-btn" title="Salin Prompt">
+                                        <i-ui name="copy-01" size="16"></i-ui>
+                                    </button>
+                                    <button id="btn-ai-prompt-paste" class="icon-btn" title="Tempel dari Clipboard">
+                                        <i-ui name="clipboard" size="16"></i-ui>
+                                    </button>
+                                    <button id="btn-ai-generate" class="btn btn-primary btn-sm">
+                                        <i-ui name="star-04" size="15" style="margin-right: 4px;"></i-ui></button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="ai-actions">
-                            <button id="btn-ai-generate" class="btn btn-primary btn-icon-right">
-                                Generate <i-ui name="magic-wand-01" size="15"></i-ui>
-                            </button>
+
+                        <!-- Wadah Card Output Hasil Generate -->
+                        <div id="ai-output-container" class="ai-output-container">
+                            <!-- Cards will be dynamically injected here -->
+                        </div>
+
+                        <!-- AI ACTION BAR FLOATING (Mobile + Desktop) -->
+                        <div id="ai-action-bar" class="action-bar-sticky" style="display:none;">
+                            <!-- Normal Mode Elements -->
+                            <div id="ai-action-normal" class="ai-action-mode-wrapper"
+                                style="display: flex; width: 100%; justify-content: space-between; align-items: center;">
+                                <div class="total-display"
+                                    style="display: flex; flex-direction: column; align-items: flex-start;">
+                                    <small
+                                        style="color: var(--text-muted); font-size: 0.75rem; margin-bottom: 2px;">Jumlah
+                                        Data</small>
+                                    <span id="ai-generated-count" class="action-bar-total-value"
+                                        style="font-size: 1.1rem; color: var(--primary); font-weight: 700;">0
+                                        Judul</span>
+                                </div>
+                                <div class="action-bar-buttons" style="display: flex; gap: 8px; align-items: center;">
+                                    <button id="btn-ai-delete-all" class="strip-btn action-strip-btn"
+                                        title="Hapus Semua">
+                                        <i-ui name="trash-04" size="16" style="color: #ff4d4f;"></i-ui>
+                                        <span>Hapus Semua</span>
+                                    </button>
+                                    <button id="btn-ai-save-all"
+                                        class="strip-btn action-strip-btn action-strip-btn--primary"
+                                        title="Simpan Semua">
+                                        <i-ui name="save-01" size="16"></i-ui>
+                                        <span>Simpan Semua</span>
+                                    </button>
+                                    <button id="btn-ai-select-mode" class="strip-btn action-strip-btn"
+                                        title="Pilih Beberapa" style="border: 1px solid var(--border-color);">
+                                        <i-ui name="check-done-01" size="16"></i-ui>
+                                        <span>Pilih</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Select Mode Elements -->
+                            <div id="ai-action-select" class="ai-action-mode-wrapper hidden"
+                                style="display: none; width: 100%; justify-content: space-between; align-items: center;">
+                                <!-- Div 1: Kiri (Delete) -->
+                                <div style="display: flex; align-items: center;">
+                                    <button id="btn-ai-delete-selected" class="strip-btn action-strip-btn"
+                                        title="Hapus Terpilih">
+                                        <i-ui name="trash-04" size="16" style="color: #ff4d4f;"></i-ui>
+                                        <span style="color: #ff4d4f;">Hapus</span>
+                                    </button>
+                                </div>
+                                <!-- Div 2: Kanan (Unduh, Simpan, Pilih + Badge) -->
+                                <div class="action-bar-buttons" style="display: flex; gap: 8px; align-items: center;">
+                                    <button id="btn-ai-download-selected" class="strip-btn action-strip-btn"
+                                        title="Unduh Terpilih">
+                                        <i-ui name="download-02" size="16"></i-ui>
+                                        <span>Unduh</span>
+                                    </button>
+                                    <button id="btn-ai-save-selected"
+                                        class="strip-btn action-strip-btn action-strip-btn--primary"
+                                        title="Simpan Terpilih">
+                                        <i-ui name="save-01" size="16"></i-ui>
+                                        <span>Simpan</span>
+                                    </button>
+                                    <button id="btn-ai-exit-select" class="strip-btn action-strip-btn" title="Kembali"
+                                        style="border: 1px solid var(--primary); background: rgba(245, 166, 35, 0.15); position: relative;">
+                                        <i-ui name="check-done-01" size="16" style="color: var(--primary);"></i-ui>
+                                        <span style="color: var(--primary);">Pilih</span>
+                                        <span id="ai-select-badge" class="indicator-badge"
+                                            style="position: absolute; top: -8px; right: -8px; background: var(--primary); color: white; width: 18px; height: 18px; border-radius: 50%; font-size: 0.65rem; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 1px solid var(--bg-card);">0</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </section>
 
                     <!-- MODE 3: HISTORY -->
                     <section id="history-view" class="view hidden">
                         <!-- Conflict Resolution Banner -->
-                        <div id="conflict-resolution-banner" class="conflict-banner hidden" style="margin-bottom: 16px; padding: 16px; background: rgba(255, 77, 79, 0.08); border: 1px solid rgba(255, 77, 79, 0.2); border-radius: 12px; display: none; flex-direction: column; gap: 12px;">
+                        <div id="conflict-resolution-banner" class="conflict-banner hidden"
+                            style="margin-bottom: 16px; padding: 16px; background: rgba(255, 77, 79, 0.08); border: 1px solid rgba(255, 77, 79, 0.2); border-radius: 12px; display: none; flex-direction: column; gap: 12px;">
                             <div style="display: flex; align-items: flex-start; gap: 10px;">
-                                <i-ui name="alert-triangle" size="20" style="color: #ff4d4f; flex-shrink: 0; margin-top: 2px;"></i-ui>
-                                <div style="font-size: 0.85rem; line-height: 1.4; color: var(--text-main); text-align: left;">
+                                <i-ui name="alert-triangle" size="20"
+                                    style="color: #ff4d4f; flex-shrink: 0; margin-top: 2px;"></i-ui>
+                                <div
+                                    style="font-size: 0.85rem; line-height: 1.4; color: var(--text-main); text-align: left;">
                                     <strong>Konflik Data Terdeteksi</strong><br>
-                                    Terdapat perbedaan antara data di Cloud (Server) dan Lokal (Browser ini). Silakan pilih resolusi di bawah:
+                                    Terdapat perbedaan antara data di Cloud (Server) dan Lokal (Browser ini). Silakan
+                                    pilih resolusi di bawah:
                                 </div>
                             </div>
                             <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                                <button id="btn-conflict-keep" class="btn btn-sm btn-outline" style="border-color: #ff4d4f; color: #ff4d4f; padding: 6px 12px; border-radius: 6px; font-weight: 500; cursor: pointer;">Pertahankan Lokal</button>
-                                <button id="btn-conflict-pull" class="btn btn-sm btn-primary" style="background: #ff4d4f; border-color: #ff4d4f; color: white; padding: 6px 12px; border-radius: 6px; font-weight: 500; cursor: pointer;">Sync dari Cloud</button>
-                                <button id="btn-conflict-merge" class="btn btn-sm btn-outline" style="border-color: var(--primary); color: var(--primary); padding: 6px 12px; border-radius: 6px; font-weight: 500; cursor: pointer;">Timpa (Merge)</button>
+                                <button id="btn-conflict-keep" class="btn btn-sm btn-outline"
+                                    style="border-color: #ff4d4f; color: #ff4d4f; padding: 6px 12px; border-radius: 6px; font-weight: 500; cursor: pointer;">Pertahankan
+                                    Lokal</button>
+                                <button id="btn-conflict-pull" class="btn btn-sm btn-primary"
+                                    style="background: #ff4d4f; border-color: #ff4d4f; color: white; padding: 6px 12px; border-radius: 6px; font-weight: 500; cursor: pointer;">Sync
+                                    dari Cloud</button>
+                                <button id="btn-conflict-merge" class="btn btn-sm btn-outline"
+                                    style="border-color: var(--primary); color: var(--primary); padding: 6px 12px; border-radius: 6px; font-weight: 500; cursor: pointer;">Timpa
+                                    (Merge)</button>
                             </div>
                         </div>
                         <div id="history-sticky-wrapper">
@@ -611,23 +721,37 @@
                 <div id="settings-login-container" class="hidden" style="display:none; padding: 16px;">
                     <!-- Unauthenticated / Guest State -->
                     <div id="account-unauthenticated">
-                        <div class="guest-banner" style="background:rgba(243,156,18,0.08); border:1px solid rgba(243,156,18,0.2); border-radius:12px; padding:12px; margin-bottom:16px; display:flex; align-items:flex-start; gap:10px;">
-                            <i-ui name="alert-triangle" size="20" style="color:#f39c12; flex-shrink:0; margin-top:2px;"></i-ui>
+                        <div class="guest-banner"
+                            style="background:rgba(243,156,18,0.08); border:1px solid rgba(243,156,18,0.2); border-radius:12px; padding:12px; margin-bottom:16px; display:flex; align-items:flex-start; gap:10px;">
+                            <i-ui name="alert-triangle" size="20"
+                                style="color:#f39c12; flex-shrink:0; margin-top:2px;"></i-ui>
                             <div style="font-size:0.8rem; line-height:1.4; color:var(--text-main); text-align:left;">
                                 <strong>Guest Mode Aktif</strong><br>
-                                Seluruh data disimpan secara lokal di peramban ini. Masuk sebagai Administrator untuk mengaktifkan sinkronisasi aman ke Cloud.
+                                Seluruh data disimpan secara lokal di peramban ini. Masuk sebagai Administrator untuk
+                                mengaktifkan sinkronisasi aman ke Cloud.
                             </div>
                         </div>
 
-                        <h3 style="margin-bottom:12px; text-align:left; font-size:1rem; font-weight:600; color:var(--text-main);">Login Administrator</h3>
-                        
+                        <h3
+                            style="margin-bottom:12px; text-align:left; font-size:1rem; font-weight:600; color:var(--text-main);">
+                            Login Administrator</h3>
+
                         <!-- Google OAuth Button -->
-                        <button id="btn-login-google" class="btn btn-full btn-google" style="background:#fff; color:#333; border:1px solid #ddd; display:flex; align-items:center; justify-content:center; gap:10px; font-weight:600; margin-bottom:16px; padding:10px 12px; border-radius:8px; width:100%; cursor:pointer;">
+                        <button id="btn-login-google" class="btn btn-full btn-google"
+                            style="background:#fff; color:#333; border:1px solid #ddd; display:flex; align-items:center; justify-content:center; gap:10px; font-weight:600; margin-bottom:16px; padding:10px 12px; border-radius:8px; width:100%; cursor:pointer;">
                             <svg width="18" height="18" viewBox="0 0 18 18" style="flex-shrink:0;">
-                                <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z" fill="#4285F4"/>
-                                <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.938 5.48 18 9 18z" fill="#34A853"/>
-                                <path d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707 0-.59.102-1.167.282-1.707V4.961H.957C.347 6.173 0 7.549 0 9s.347 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/>
-                                <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.896 11.426 0 9 0 5.48 0 2.438 2.062.957 5.061l3.007 2.332C4.672 5.164 6.656 3.58 9 3.58z" fill="#EA4335"/>
+                                <path
+                                    d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.874 2.684-6.615z"
+                                    fill="#4285F4" />
+                                <path
+                                    d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332C2.438 15.938 5.48 18 9 18z"
+                                    fill="#34A853" />
+                                <path
+                                    d="M3.964 10.707c-.18-.54-.282-1.117-.282-1.707 0-.59.102-1.167.282-1.707V4.961H.957C.347 6.173 0 7.549 0 9s.347 2.827.957 4.039l3.007-2.332z"
+                                    fill="#FBBC05" />
+                                <path
+                                    d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.896 11.426 0 9 0 5.48 0 2.438 2.062.957 5.061l3.007 2.332C4.672 5.164 6.656 3.58 9 3.58z"
+                                    fill="#EA4335" />
                             </svg>
                             Masuk dengan Google
                         </button>
@@ -639,16 +763,20 @@
                         </div>
 
                         <!-- Email / Password Form -->
-                        <form id="form-login-email" style="display:flex; flex-direction:column; gap:12px; text-align:left;">
+                        <form id="form-login-email"
+                            style="display:flex; flex-direction:column; gap:12px; text-align:left;">
                             <div class="input-group" style="text-align:left; margin-bottom:0;">
                                 <label class="field-label" style="margin-bottom:6px;">Email Administrator</label>
-                                <input type="email" id="login-email" class="form-input" placeholder="admin@flowa.id" required style="width:100%;">
+                                <input type="email" id="login-email" class="form-input" placeholder="admin@flowa.id"
+                                    required style="width:100%;">
                             </div>
                             <div class="input-group" style="text-align:left; margin-bottom:4px;">
                                 <label class="field-label" style="margin-bottom:6px;">Kata Sandi</label>
-                                <input type="password" id="login-password" class="form-input" placeholder="••••••••" required style="width:100%;">
+                                <input type="password" id="login-password" class="form-input" placeholder="••••••••"
+                                    required style="width:100%;">
                             </div>
-                            <button type="submit" class="btn btn-primary btn-full" style="padding:10px 12px; margin-top:4px;">Masuk Sistem</button>
+                            <button type="submit" class="btn btn-primary btn-full"
+                                style="padding:10px 12px; margin-top:4px;">Masuk Sistem</button>
                         </form>
                     </div>
                 </div>
@@ -663,44 +791,62 @@
 
                     <div id="settings-general">
                         <!-- Account Section (Integrated at the top of General tab) -->
-                        <div class="setting-section" style="padding: 4px 8px 16px 8px; border-bottom: 1px solid var(--border-color); margin-bottom: 16px;">
+                        <div class="setting-section"
+                            style="padding: 4px 8px 16px 8px; border-bottom: 1px solid var(--border-color); margin-bottom: 16px;">
                             <!-- Loading State -->
                             <div id="account-loading" style="padding:30px; text-align:center;">
-                                <div class="account-spinner" style="border:2px solid rgba(255,255,255,0.1); border-top:2px solid var(--primary); border-radius:50%; width:24px; height:24px; animation:spin 1s linear infinite; margin:0 auto 10px auto;"></div>
-                                <p style="font-size:0.85rem; color:var(--text-muted);">Memeriksa status otentikasi...</p>
+                                <div class="account-spinner"
+                                    style="border:2px solid rgba(255,255,255,0.1); border-top:2px solid var(--primary); border-radius:50%; width:24px; height:24px; animation:spin 1s linear infinite; margin:0 auto 10px auto;">
+                                </div>
+                                <p style="font-size:0.85rem; color:var(--text-muted);">Memeriksa status otentikasi...
+                                </p>
                             </div>
 
                             <!-- Authenticated / Admin State -->
                             <div id="account-authenticated" class="hidden" style="display:none;">
-                                <div class="admin-profile-card" style="background:rgba(255,255,255,0.02); border:1px solid var(--border-color); border-radius:16px; padding:16px; text-align:center; position:relative; overflow:hidden; margin-bottom:16px;">
-                                    <div class="admin-glow" style="position:absolute; top:-50px; left:50%; transform:translateX(-50%); width:100px; height:100px; background:var(--primary); filter:blur(40px); opacity:0.15; pointer-events:none;"></div>
-                                    
-                                    <div style="position:relative; display:inline-block; margin-bottom:10px;">
-                                        <img id="admin-avatar" src="" alt="Avatar" style="width:64px; height:64px; border-radius:50%; object-fit:cover; border:2px solid var(--primary); background:var(--bg-body); display:none; margin: 0 auto;">
-                                        <div id="admin-avatar-placeholder" style="width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg, var(--primary), #d4880d); display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.5rem; font-weight:700; border:2px solid var(--primary); margin: 0 auto;">A</div>
+                                <div class="admin-profile-card"
+                                    style="background:rgba(255,255,255,0.02); border:1px solid var(--border-color); border-radius:16px; padding:16px; text-align:center; position:relative; overflow:hidden; margin-bottom:16px;">
+                                    <div class="admin-glow"
+                                        style="position:absolute; top:-50px; left:50%; transform:translateX(-50%); width:100px; height:100px; background:var(--primary); filter:blur(40px); opacity:0.15; pointer-events:none;">
                                     </div>
 
-                                    <h3 id="admin-name" style="font-size:1.05rem; margin-top:4px; margin-bottom:2px; font-weight:600; color:var(--text-main);">Administrator</h3>
-                                    <p id="admin-email" style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;"></p>
-                                    
-                                    <span class="admin-badge" style="display:inline-block; padding:4px 10px; font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; background:linear-gradient(90deg, #d4880d, #f39c12); color:#fff; border-radius:50px; box-shadow:0 2px 8px rgba(243,156,18,0.3);">Administrator</span>
+                                    <div style="position:relative; display:inline-block; margin-bottom:10px;">
+                                        <img id="admin-avatar" src="" alt="Avatar"
+                                            style="width:64px; height:64px; border-radius:50%; object-fit:cover; border:2px solid var(--primary); background:var(--bg-body); display:none; margin: 0 auto;">
+                                        <div id="admin-avatar-placeholder"
+                                            style="width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg, var(--primary), #d4880d); display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.5rem; font-weight:700; border:2px solid var(--primary); margin: 0 auto;">
+                                            A</div>
+                                    </div>
+
+                                    <h3 id="admin-name"
+                                        style="font-size:1.05rem; margin-top:4px; margin-bottom:2px; font-weight:600; color:var(--text-main);">
+                                        Administrator</h3>
+                                    <p id="admin-email"
+                                        style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;"></p>
+
+                                    <span class="admin-badge"
+                                        style="display:inline-block; padding:4px 10px; font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; background:linear-gradient(90deg, #d4880d, #f39c12); color:#fff; border-radius:50px; box-shadow:0 2px 8px rgba(243,156,18,0.3);">Administrator</span>
                                 </div>
 
                                 <div class="settings-list" style="margin-bottom:20px;">
                                     <div class="setting-row" style="padding:12px 4px;">
                                         <div class="setting-info" style="text-align:left;">
-                                            <span class="setting-label" style="font-size:0.95rem;">Sinkronisasi Cloud</span>
-                                            <span class="setting-subtext" id="sync-status-text" style="font-size:0.8rem;">Menghubungkan ke server cloud...</span>
+                                            <span class="setting-label" style="font-size:0.95rem;">Sinkronisasi
+                                                Cloud</span>
+                                            <span class="setting-subtext" id="sync-status-text"
+                                                style="font-size:0.8rem;">Menghubungkan ke server cloud...</span>
                                         </div>
                                         <div class="setting-control">
-                                            <button id="btn-manual-sync" class="btn btn-sm btn-outline" style="padding:6px 12px; font-size:0.8rem; display:flex; align-items:center; gap:6px; cursor:pointer;">
+                                            <button id="btn-manual-sync" class="btn btn-sm btn-outline"
+                                                style="padding:6px 12px; font-size:0.8rem; display:flex; align-items:center; gap:6px; cursor:pointer;">
                                                 <i-ui name="refresh-ccw-01" size="12"></i-ui> Sync
                                             </button>
                                         </div>
                                     </div>
                                 </div>
 
-                                <button id="btn-logout" class="btn btn-outline btn-full" style="color:#ff4d4f; border-color:#ff4d4f; display:flex; align-items:center; justify-content:center; gap:8px; padding:12px; width:100%; cursor:pointer;">
+                                <button id="btn-logout" class="btn btn-outline btn-full"
+                                    style="color:#ff4d4f; border-color:#ff4d4f; display:flex; align-items:center; justify-content:center; gap:8px; padding:12px; width:100%; cursor:pointer;">
                                     <i-ui name="log-out-01" size="14"></i-ui> Keluar Akun
                                 </button>
                             </div>
@@ -721,11 +867,11 @@
                             </div>
                         </div>
                         <!-- PDF page mode (Segmented Control) -->
-                        <div class="setting-row"
-                            style="flex-direction: column; align-items: flex-start; gap: 12px;">
+                        <div class="setting-row" style="flex-direction: column; align-items: flex-start; gap: 12px;">
                             <div class="setting-info">
                                 <span class="setting-label">Mode Halaman PDF</span>
-                                <span class="setting-subtext">Cetak Invoice &amp; Surat Jalan terpisah atau dalam satu dokumen.</span>
+                                <span class="setting-subtext">Cetak Invoice &amp; Surat Jalan terpisah atau dalam satu
+                                    dokumen.</span>
                             </div>
                             <div class="setting-control" style="width: 100%;">
                                 <div class="segmented-control" id="pdf-page-mode-selector">
@@ -753,7 +899,8 @@
                             <div class="setting-row">
                                 <div class="setting-info">
                                     <span class="setting-label">Unduh & Simpan</span>
-                                    <span class="setting-subtext">Tombol unduh juga akan menyimpan data ke histori.</span>
+                                    <span class="setting-subtext">Tombol unduh juga akan menyimpan data ke
+                                        histori.</span>
                                 </div>
                                 <div class="setting-control">
                                     <label class="ios-switch">
@@ -770,8 +917,10 @@
                                 </div>
                                 <div class="setting-control" style="flex: 1; max-width: 140px;">
                                     <div class="segmented-control" style="width: 100%;">
-                                        <button id="btn-import-data" class="segmented-btn" style="flex:1;">Import</button>
-                                        <button id="btn-export-data" class="segmented-btn" style="flex:1;">Export</button>
+                                        <button id="btn-import-data" class="segmented-btn"
+                                            style="flex:1;">Import</button>
+                                        <button id="btn-export-data" class="segmented-btn"
+                                            style="flex:1;">Export</button>
                                     </div>
                                 </div>
                             </div>
@@ -780,22 +929,41 @@
                                 style="flex-direction: column; align-items: flex-start; gap: 8px; border-bottom: none;">
                                 <div class="setting-info">
                                     <span class="setting-label">Format Nama File</span>
-                                    <span class="setting-subtext">Gunakan <code>{judul}</code> sebagai placeholder.</span>
+                                    <span class="setting-subtext">Gunakan <code>{judul}</code> sebagai
+                                        placeholder.</span>
                                 </div>
-                                <div style="width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
+                                <div
+                                    style="width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
                                     <div style="position: relative;">
                                         <small
                                             style="position: absolute; right: 16px; top: 16px; color: var(--muted); font-size: 0.65rem; font-weight: 500; ">Invoice</small>
-                                        <input type="text" id="format-invoice" class="form-input" value="Invoice-{judul}"
-                                            placeholder="Invoice-{judul}" style="font-size: 0.85rem;">
+                                        <input type="text" id="format-invoice" class="form-input"
+                                            value="Invoice-{judul}" placeholder="Invoice-{judul}"
+                                            style="font-size: 0.85rem;">
                                     </div>
                                     <div style="position: relative;">
                                         <small
-                                            style="position: absolute; right: 16px; top: 16px; color: var(--muted); font-size: 0.65rem; font-weight: 500;">Surat Jalan</small>
+                                            style="position: absolute; right: 16px; top: 16px; color: var(--muted); font-size: 0.65rem; font-weight: 500;">Surat
+                                            Jalan</small>
                                         <input type="text" id="format-surat-jalan" class="form-input"
                                             value="Surat Jalan-{judul}" placeholder="Surat Jalan-{judul}"
                                             style="font-size: 0.85rem;">
                                     </div>
+                                </div>
+                            </div>
+
+                            <div class="setting-row"
+                                style="flex-direction: column; align-items: flex-start; gap: 8px; border-bottom: none;">
+                                <div class="setting-info">
+                                    <span class="setting-label">Prompt Default AI</span>
+                                    <span class="setting-subtext">Instruksi dasar yang dikirimkan ke sistem kecerdasan
+                                        buatan.</span>
+                                </div>
+                                <div
+                                    style="width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
+                                    <textarea id="setting-ai-default-prompt" class="form-input"
+                                        style="font-size: 0.85rem; min-height: 80px; resize: vertical;"
+                                        placeholder="Masukkan instruksi default AI..."></textarea>
                                 </div>
                             </div>
                         </div>
@@ -820,7 +988,8 @@
                             <div id="template-list" style="max-height: 300px; overflow-y: auto; margin: 10px 0;">
                                 <!-- Templates Rendered Here -->
                             </div>
-                            <button id="btn-add-template" class="btn btn-sm btn-outline btn-full">+ Tambah Template Baru</button>
+                            <button id="btn-add-template" class="btn btn-sm btn-outline btn-full">+ Tambah Template
+                                Baru</button>
                         </div>
                     </div>
                 </div>

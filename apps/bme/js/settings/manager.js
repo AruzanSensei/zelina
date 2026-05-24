@@ -347,6 +347,11 @@ export function initSettings() {
                 btn.classList.toggle('active', btn.dataset.value === settings.pdfPageMode);
             });
         }
+
+        if (settings.aiDefaultPrompt !== undefined) {
+            const aiPromptTextarea = document.getElementById('setting-ai-default-prompt');
+            if (aiPromptTextarea) aiPromptTextarea.value = settings.aiDefaultPrompt;
+        }
     });
 
     // Init Theme on load
@@ -439,6 +444,14 @@ export function initSettings() {
         });
     }
 
+    const settingAiDefaultPrompt = document.getElementById('setting-ai-default-prompt');
+    if (settingAiDefaultPrompt) {
+        settingAiDefaultPrompt.value = appState.state.settings.aiDefaultPrompt || '';
+        settingAiDefaultPrompt.addEventListener('input', (e) => {
+            appState.updateSettings({ aiDefaultPrompt: e.target.value });
+        });
+    }
+
     // Format Help Button
     const btnFormatHelp = document.getElementById('btn-format-help');
     if (btnFormatHelp) {
@@ -517,6 +530,8 @@ export function initSettings() {
                     if (downloadSaveToggle) downloadSaveToggle.checked = s.downloadAndSave === true;
                     if (formatInvoice) formatInvoice.value = (s.fileNameFormat || {}).invoice || 'Invoice-{judul}';
                     if (formatSuratJalan) formatSuratJalan.value = (s.fileNameFormat || {}).suratJalan || 'Surat Jalan-{judul}';
+                    const settingAiDefaultPrompt = document.getElementById('setting-ai-default-prompt');
+                    if (settingAiDefaultPrompt) settingAiDefaultPrompt.value = s.aiDefaultPrompt || '';
 
                     window.showBMEAlert('Pengaturan telah direset!', 'success');
                 }

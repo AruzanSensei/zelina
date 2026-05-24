@@ -35,6 +35,8 @@ const DEFAULTS = {
             invoice: 'Invoice-{judul}',
             suratJalan: 'Surat Jalan-{judul}'
         },
+        aiDefaultPrompt: 'Ekstrak data faktur/invoice dari teks mentah berikut. Format harus terstruktur dengan membagi data menjadi beberapa judul invoice (maksimal 4 judul). Untuk setiap judul, kelompokkan item ke dalam list. Setiap item harus memiliki field: name (nama barang/jasa, default "..." jika kosong), tipe (pilih salah satu dari: "-", "ICA", "Protecta", "Prolink", "APC"), qtyUnit (unit kuantitas: "pcs" atau "lot", default "pcs"), qty (kuantitas integer, default 1), price (harga integer satuan, default 0), dan note (catatan tambahan, default "..." jika kosong).',
+        aiModel: 'gemini-3.5-flash',
         lastLocalUpdate: null
     },
     manualItems: [],
