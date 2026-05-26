@@ -62,7 +62,8 @@
     justify-content: space-around;
     align-items: center;
     background-color: var(--bg-card);
-    padding: 6px 8px 10px 8px; /* Extra bottom padding for mobile safe area */
+    padding: 6px 8px 10px 8px;
+    /* Extra bottom padding for mobile safe area */
     border-top: 1px solid var(--border-color);
     border-bottom: none;
     box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.12);
@@ -71,22 +72,6 @@
     overflow: visible;
 }
 
-/* Add custom curved notch background behind the circular AI button */
-.tab-nav::after {
-    content: '';
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 64px;
-    height: 32px;
-    background-color: var(--bg-card);
-    border-radius: 50% 50% 0 0;
-    z-index: 999;
-    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.04);
-    border-top: 1px solid var(--border-color);
-    pointer-events: none;
-}
 
 /* Global active tab state — propagates to all shadows */
 :root:has(.tab-btn[data-tab="dashboard"].active) {
@@ -176,17 +161,19 @@
     position: relative;
     height: 100%;
     overflow: visible;
-    z-index: 1001; /* High enough to render on top of the notch background */
+    z-index: 1001;
+    /* High enough to render on top of the notch background */
 }
 
-/* The actual circular button */
+/* The actual circular button (floating, standing completely alone) */
 .tab-btn-ai {
     position: absolute;
-    top: -20px; /* Elevated high over the notch */
+    top: -24px;
+    /* Elevated significantly higher to float above the straight tab bar border */
     left: 50%;
     transform: translateX(-50%);
-    width: 48px;
-    height: 48px;
+    width: 66px;
+    height: 66px;
     border-radius: 50% !important;
     /* Soft crimson-to-coral gradient inspired by Gojek QR Pay */
     background: linear-gradient(135deg, #ff4d6d, #ff758f) !important;
@@ -194,8 +181,10 @@
     display: flex !important;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 12px rgba(255, 77, 109, 0.3) !important;
-    border: 3px solid var(--bg-card) !important; /* dynamic border matches the backing notch */
+    /* High-end floating colored drop shadow */
+    /* box-shadow: 0 8px 20px rgba(255, 77, 109, 0.4) !important; */
+    /* Thin elegant border separates it from the straight bar */
+    border: 5px solid var(--bg-card) !important;
     z-index: 1002;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     padding: 0 !important;
@@ -204,9 +193,10 @@
 
 /* Active AI center button */
 .tab-btn-ai.active {
-    background: linear-gradient(135deg, var(--secondary), #a78bfa) !important; /* Vibrant violet gradient in active mode */
-    box-shadow: 0 4px 16px rgba(155, 81, 224, 0.4) !important;
-    transform: translateX(-50%) scale(1.08) translateY(-2px);
+    background: linear-gradient(135deg, var(--secondary), #a78bfa) !important;
+    /* Vibrant violet gradient in active mode */
+    box-shadow: 0 8px 24px rgba(155, 81, 224, 0.5) !important;
+    transform: translateX(-50%) scale(1.08) translateY(-3px);
 }
 
 .tab-btn-ai i-ui {
@@ -227,7 +217,8 @@
     font-weight: 600;
     margin-bottom: 4px;
     transition: color 0.25s ease;
-    pointer-events: none; /* Make clicks pass through to the wrapper */
+    pointer-events: none;
+    /* Make clicks pass through to the wrapper */
 }
 
 .tab-btn-ai-wrapper:has(.tab-btn-ai.active) .tab-btn-ai-label {
