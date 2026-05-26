@@ -65,7 +65,7 @@ class StateManager {
         const cachedActiveId = this.load(STORAGE_KEYS.ACTIVE_TAB_ID, null);
 
         this.state = {
-            currentMode: 'manual', // manual, ai, history, finance
+            currentMode: 'dashboard', // dashboard, manual, ai, history, finance
             manualViewMode: 'card', // card, table
             manualCardMode: this.load(STORAGE_KEYS.MANUAL_CARD_MODE, 'simple'), // simple, advance
             settings: this.load(STORAGE_KEYS.SETTINGS, DEFAULTS.settings),
@@ -78,8 +78,26 @@ class StateManager {
             syncStatus: 'idle' // idle, syncing, synced, error
         };
 
-        // If tabs are empty, create default tab
-        if (this.state.tabs.length === 0) {
+        // Ensure a dashboard tab always exists at index 0
+        const dashboardTabIdx = this.state.tabs.findIndex(t => t.mode === 'dashboard');
+        if (dashboardTabIdx === -1) {
+            const dashboardTab = {
+                id: 'tab_dashboard',
+                mode: 'dashboard',
+                title: 'Beranda',
+                data: {}
+            };
+            this.state.tabs.unshift(dashboardTab);
+            this.saveTabs();
+        } else if (dashboardTabIdx > 0) {
+            // Keep dashboard at index 0
+            const [dbTab] = this.state.tabs.splice(dashboardTabIdx, 1);
+            this.state.tabs.unshift(dbTab);
+            this.saveTabs();
+        }
+
+        // If tabs only contain dashboard, create initial manual tab too
+        if (this.state.tabs.length === 1) {
             const initialTab = {
                 id: 'tab_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
                 mode: 'manual',
@@ -88,8 +106,13 @@ class StateManager {
                     invoiceItems: legacyItems && legacyItems.length > 0 ? legacyItems : []
                 }
             };
-            this.state.tabs = [initialTab];
-            this.state.activeTabId = initialTab.id;
+            this.state.tabs.push(initialTab);
+            this.saveTabs();
+        }
+
+        // If activeTabId is not set, or points to something missing, default to dashboard
+        if (!this.state.activeTabId || !this.state.tabs.some(t => t.id === this.state.activeTabId)) {
+            this.state.activeTabId = 'tab_dashboard';
             this.saveTabs();
         }
 
@@ -190,12 +213,13 @@ class StateManager {
         if (!title) {
             const count = this.state.tabs.filter(t => t.mode === mode).length + 1;
             const modeNames = {
+                dashboard: 'Beranda',
                 manual: 'Manual',
                 ai: 'AI Mode',
                 finance: 'Keuangan',
                 history: 'Histori'
             };
-            title = `${modeNames[mode] || 'Tab'} ${count}`;
+            title = mode === 'dashboard' ? 'Beranda' : `${modeNames[mode] || 'Tab'} ${count}`;
         }
         if (!data) {
             data = mode === 'manual' ? { invoiceItems: [] } : {};

@@ -2,6 +2,7 @@
  * Main Application Entry Point
  */
 import { appState } from './state.js';
+import { initDashboardMode } from './modes/dashboard.js';
 import { initManualMode } from './modes/manual.js';
 import { initAIMode } from './modes/ai.js';
 import { initHistoryMode } from './modes/history.js';
@@ -22,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    initSafely('DashboardMode', initDashboardMode);
     initSafely('ManualMode', initManualMode);
     initSafely('AIMode', initAIMode);
     initSafely('HistoryMode', initHistoryMode);
@@ -42,13 +44,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         appState.state.tabs.forEach(tab => {
             const isActive = tab.id === appState.state.activeTabId;
+            const isDashboard = tab.mode === 'dashboard';
             const tabEl = document.createElement('div');
             tabEl.className = `chrome-tab ${isActive ? 'active' : ''} ${tab.mode}`;
             tabEl.dataset.id = tab.id;
             tabEl.innerHTML = `
                 <div class="tab-color-indicator"></div>
                 <span class="tab-title">${tab.title || 'Tab Baru'}</span>
-                <button class="tab-close" data-id="${tab.id}"><i-ui name="x" size="20"></i-ui></button>
+                ${isDashboard ? '' : `<button class="tab-close" data-id="${tab.id}"><i-ui name="x" size="20"></i-ui></button>`}
             `;
 
             // Click to switch tab
@@ -59,10 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Close tab
             const closeBtn = tabEl.querySelector('.tab-close');
-            closeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                appState.closeTab(tab.id);
-            });
+            if (closeBtn) {
+                closeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    appState.closeTab(tab.id);
+                });
+            }
 
             tabsList.appendChild(tabEl);
         });
@@ -345,10 +350,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // 7. Desktop workspace-title-wrap: only visible in Manual Mode
-        const titleWrap = document.querySelector('.workspace-title-wrap');
-        if (titleWrap) {
-            titleWrap.style.display = (currentMode === 'manual') ? 'flex' : 'none';
+        // 7. Desktop workspace-header: only visible in Manual Mode
+        const workspaceHeader = document.querySelector('.workspace-header');
+        if (workspaceHeader) {
+            workspaceHeader.style.display = (currentMode === 'manual') ? 'flex' : 'none';
         }
 
         // 8. Sync control toggles & DOM previews
@@ -432,6 +437,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 appState.createNewTab(mode);
             }
         });
+    });
+
+    // Connect AI wrapper click to button click for better mobile tap targets
+    const aiWrapper = document.querySelector('.tab-btn-ai-wrapper');
+    aiWrapper?.addEventListener('click', (e) => {
+        const aiBtn = aiWrapper.querySelector('.tab-btn-ai');
+        if (aiBtn && e.target !== aiBtn) {
+            aiBtn.click();
+        }
     });
 
     // Connect desktop sidebar navigation links
@@ -851,9 +865,89 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ============================================
-    // SUPABASE SESSION & SIDEBAR SYNC INTEGRATION
+    // SUPABASE SESSION, HEADER & SIDEBAR SYNC INTEGRATION
     // ============================================
+    const syncHeaderProfile = () => {
+        const logoContainer = document.getElementById('header-logo-container');
+        const logoImg = document.getElementById('header-logo-img');
+        const logoPlaceholder = document.getElementById('header-logo-placeholder');
+        const welcomeTitle = document.getElementById('header-welcome-title');
+        const welcomeSub = document.getElementById('header-welcome-sub');
+
+        if (!logoContainer || !welcomeTitle || !welcomeSub) return;
+
+        if (appState.state.isLoggedIn && appState.state.adminProfile) {
+            const profile = appState.state.adminProfile;
+
+            // Extract values safely
+            const fullName = profile.user_metadata?.full_name ||
+                profile.raw_user_meta_data?.full_name ||
+                profile.full_name ||
+                '';
+
+            const avatarUrl = profile.user_metadata?.avatar_url ||
+                profile.user_metadata?.picture ||
+                profile.raw_user_meta_data?.avatar_url ||
+                profile.raw_user_meta_data?.picture ||
+                profile.avatar_url ||
+                '';
+
+            const email = profile.email || '';
+
+            // 1. Title: Hai, [FirstName]!
+            let firstName = 'Admin';
+            if (fullName) {
+                const parts = fullName.trim().split(/\s+/);
+                if (parts.length > 0) {
+                    const rawFirst = parts[0];
+                    firstName = rawFirst.charAt(0).toUpperCase() + rawFirst.slice(1).toLowerCase();
+                }
+            }
+            welcomeTitle.textContent = `Hai, ${firstName}!`;
+
+            // 2. Subtitle: email
+            welcomeSub.textContent = email;
+
+            // 3. Avatar Image & Border
+            if (avatarUrl) {
+                if (logoImg) {
+                    logoImg.src = avatarUrl;
+                    logoImg.style.display = 'block';
+                    logoImg.style.borderRadius = '50%';
+                    logoImg.style.objectFit = 'cover';
+                }
+                if (logoPlaceholder) logoPlaceholder.style.display = 'none';
+                logoContainer.style.borderRadius = '50%';
+                logoContainer.style.border = '1.5px solid var(--primary)';
+            } else {
+                if (logoImg) logoImg.style.display = 'none';
+                if (logoPlaceholder) {
+                    logoPlaceholder.style.display = 'flex';
+                    logoPlaceholder.textContent = firstName.charAt(0).toUpperCase();
+                }
+                logoContainer.style.borderRadius = '50%';
+                logoContainer.style.border = '1.5px solid var(--primary)';
+            }
+        } else {
+            // Guest Mode / Default State
+            welcomeTitle.textContent = 'BERKAH MAJU ELEKTRIK';
+            welcomeSub.textContent = 'Invoice & Surat Jalan';
+
+            if (logoImg) {
+                logoImg.src = 'assets/icons/logo-bme.png';
+                logoImg.style.display = 'block';
+                logoImg.style.borderRadius = '0';
+                logoImg.style.objectFit = 'contain';
+            }
+            if (logoPlaceholder) logoPlaceholder.style.display = 'none';
+            logoContainer.style.borderRadius = '0';
+            logoContainer.style.border = 'none';
+        }
+    };
+
     const syncSidebarProfile = () => {
+        // Sync mobile header brand area first
+        syncHeaderProfile();
         const sidebarProfile = document.querySelector('.sidebar-profile');
         if (!sidebarProfile) return;
 

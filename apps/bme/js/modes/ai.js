@@ -80,7 +80,7 @@ export function initAIMode() {
         btnResize.addEventListener('click', () => {
             const isMaximized = promptInput.classList.toggle('maximized');
             promptInput.classList.toggle('minimized', !isMaximized);
-            
+
             // Toggle icon maximize vs minimize
             const icon = btnResize.querySelector('i-ui');
             if (icon) {
@@ -148,7 +148,7 @@ export function initAIMode() {
                     const val = item.dataset.value;
                     modelSelect.dataset.value = val;
                     if (selectedText) selectedText.textContent = item.textContent;
-                    
+
                     portal.querySelectorAll('div').forEach(el => el.classList.remove('same-as-selected'));
                     item.classList.add('same-as-selected');
                     portal.remove();
@@ -193,7 +193,7 @@ export function initAIMode() {
                 }
 
                 const resData = await response.json();
-                
+
                 if (resData.cards && Array.isArray(resData.cards)) {
                     const cards = resData.cards.map((c, index) => ({
                         id: 'ai_card_' + Date.now() + '_' + index + '_' + Math.random().toString(36).substr(2, 5),
@@ -210,11 +210,11 @@ export function initAIMode() {
                     }));
 
                     appState.updateActiveTabData({ aiCards: cards });
-                    
+
                     // Exit select mode if active
                     exitSelectMode();
                     renderAICards();
-                    
+
                     if (window.showBMEAlert) window.showBMEAlert(`AI berhasil memproses ${cards.length} data invoice!`, "success");
                 } else {
                     throw new Error("Format respons JSON tidak valid dari Worker.");
@@ -280,7 +280,7 @@ export function initAIMode() {
             // Render Card Header
             const headerHTML = `
                 <div class="ai-card-header">
-                    <input type="text" class="ai-card-title-input ${!card.title || card.title === 'masukan judul' ? 'required-empty-orange' : ''}" 
+                    <input type="text" class="ai-card-title-input ${!card.title || card.title === 'masukan judul' ? 'line-required-empty-orange' : ''}" 
                         value="${card.title || ''}" 
                         placeholder="masukan judul" 
                         data-card-index="${cardIndex}">
@@ -303,7 +303,7 @@ export function initAIMode() {
                         <div class="ai-item-row" style="margin-bottom: 6px;">
                             <span class="ai-field-label">barang</span>
                             <div class="ai-field-value-wrap">
-                                <input type="text" class="ai-field-input item-name ${isNameEmpty ? 'required-empty-orange' : ''}" 
+                                <input type="text" class="ai-field-input item-name ${isNameEmpty ? 'line-required-empty-orange' : ''}" 
                                     value="${item.name || ''}" 
                                     placeholder="..." 
                                     data-card-index="${cardIndex}" 
@@ -316,7 +316,7 @@ export function initAIMode() {
                             <div class="ai-item-split-col">
                                 <span class="ai-field-label">tipe</span>
                                 <div class="custom-select ai-item-tipe" data-card-index="${cardIndex}" data-item-index="${itemIndex}" data-value="${item.tipe || ''}">
-                                    <div class="select-selected ${isTipeEmpty ? 'required-empty-orange' : ''}">
+                                    <div class="select-selected ${isTipeEmpty ? 'line-required-empty-orange' : ''}">
                                         <span class="selected-text">${item.tipe || '...'}</span>
                                         <i-ui name="chevron-down" size="12" style="opacity:0.5;flex-shrink:0"></i-ui>
                                     </div>
@@ -349,7 +349,7 @@ export function initAIMode() {
                             <div class="ai-item-split-col">
                                 <span class="ai-field-label">qty</span>
                                 <div class="ai-field-value-wrap">
-                                    <input type="number" class="ai-field-input item-qty ${isQtyEmpty ? 'required-empty-orange' : ''}" 
+                                    <input type="number" class="ai-field-input item-qty ${isQtyEmpty ? 'line-required-empty-orange' : ''}" 
                                         value="${item.qty || ''}" 
                                         placeholder="..." 
                                         data-card-index="${cardIndex}" 
@@ -360,7 +360,7 @@ export function initAIMode() {
                             <div class="ai-item-split-col">
                                 <span class="ai-field-label-sub">harga</span>
                                 <div class="ai-field-value-wrap">
-                                    <input type="text" class="ai-field-input item-price-format ${isPriceEmpty ? 'required-empty-orange' : ''}" 
+                                    <input type="text" class="ai-field-input item-price-format ${isPriceEmpty ? 'line-required-empty-orange' : ''}" 
                                         value="${item.price > 0 ? formatNumberStr(String(item.price)) : ''}" 
                                         placeholder="..." 
                                         data-card-index="${cardIndex}" 
@@ -374,7 +374,7 @@ export function initAIMode() {
                         <div class="ai-item-row" style="margin-bottom: 4px;">
                             <span class="ai-field-label">catatan</span>
                             <div class="ai-field-value-wrap">
-                                <textarea class="ai-field-input ai-note-textarea item-note ${isNoteEmpty ? 'required-empty-orange' : ''}" 
+                                <textarea class="ai-field-input ai-note-textarea item-note ${isNoteEmpty ? 'line-required-empty-orange' : ''}" 
                                     placeholder="..." 
                                     data-card-index="${cardIndex}" 
                                     data-item-index="${itemIndex}" 
@@ -481,7 +481,7 @@ export function initAIMode() {
                         const val = div.dataset.value;
                         const activeTab = appState.getActiveTab();
                         const cards = activeTab?.data?.aiCards || [];
-                        
+
                         if (isTipe) {
                             cards[cardIdx].items[itemIdx].tipe = val;
                         } else {
@@ -502,7 +502,7 @@ export function initAIMode() {
                 const cardIdx = parseInt(deleteBtn.dataset.cardIndex);
                 const activeTab = appState.getActiveTab();
                 const cards = activeTab?.data?.aiCards || [];
-                
+
                 if (window.showBMEAlert) {
                     window.showBMEAlert("Hapus data invoice ini?", "error", {
                         confirm: true,
@@ -522,13 +522,13 @@ export function initAIMode() {
                 const cardIdx = parseInt(collapseBtn.dataset.cardIndex);
                 const activeTab = appState.getActiveTab();
                 const cards = activeTab?.data?.aiCards || [];
-                
+
                 cards[cardIdx].isCollapsed = !cards[cardIdx].isCollapsed;
                 appState.updateActiveTabData({ aiCards: cards });
-                
+
                 const cardEl = collapseBtn.closest('.ai-card');
                 const body = cardEl?.querySelector('.ai-card-body');
-                
+
                 if (body) {
                     body.classList.toggle('collapsed', cards[cardIdx].isCollapsed);
                     collapseBtn.classList.toggle('active-collapse', !cards[cardIdx].isCollapsed);
@@ -542,7 +542,7 @@ export function initAIMode() {
                 const cardIdx = parseInt(previewBtn.dataset.cardIndex);
                 const activeTab = appState.getActiveTab();
                 const card = activeTab?.data?.aiCards[cardIdx];
-                
+
                 if (card) {
                     openPreviewModal(card.items, card.title);
                 }
@@ -555,7 +555,7 @@ export function initAIMode() {
                 const cardIdx = parseInt(downloadBtn.dataset.cardIndex);
                 const activeTab = appState.getActiveTab();
                 const card = activeTab?.data?.aiCards[cardIdx];
-                
+
                 if (card) {
                     executeDownload(card.items, card.title);
                 }
@@ -568,7 +568,7 @@ export function initAIMode() {
                 const cardIdx = parseInt(saveBtn.dataset.cardIndex);
                 const activeTab = appState.getActiveTab();
                 const card = activeTab?.data?.aiCards[cardIdx];
-                
+
                 if (card) {
                     saveToHistory(card.items, card.title);
                     if (window.showBMEAlert) window.showBMEAlert(`Invoice "${card.title}" berhasil disimpan ke riwayat!`, "success");
@@ -596,7 +596,7 @@ export function initAIMode() {
             const target = e.target;
             const cardIdx = parseInt(target.dataset.cardIndex);
             const itemIdx = parseInt(target.dataset.itemIndex);
-            
+
             const activeTab = appState.getActiveTab();
             const cards = activeTab?.data?.aiCards || [];
 
@@ -606,9 +606,9 @@ export function initAIMode() {
             if (target.classList.contains('ai-card-title-input')) {
                 cards[cardIdx].title = target.value;
                 if (!target.value.trim()) {
-                    target.classList.add('required-empty-orange');
+                    target.classList.add('line-required-empty-orange');
                 } else {
-                    target.classList.remove('required-empty-orange');
+                    target.classList.remove('line-required-empty-orange');
                 }
             }
 
@@ -616,9 +616,9 @@ export function initAIMode() {
             else if (target.classList.contains('item-name')) {
                 cards[cardIdx].items[itemIdx].name = target.value;
                 if (!target.value.trim()) {
-                    target.classList.add('required-empty-orange');
+                    target.classList.add('line-required-empty-orange');
                 } else {
-                    target.classList.remove('required-empty-orange');
+                    target.classList.remove('line-required-empty-orange');
                 }
             }
 
@@ -627,9 +627,9 @@ export function initAIMode() {
                 const qtyVal = parseInt(target.value) || 0;
                 cards[cardIdx].items[itemIdx].qty = qtyVal;
                 if (qtyVal <= 0) {
-                    target.classList.add('required-empty-orange');
+                    target.classList.add('line-required-empty-orange');
                 } else {
-                    target.classList.remove('required-empty-orange');
+                    target.classList.remove('line-required-empty-orange');
                 }
             }
 
@@ -638,14 +638,14 @@ export function initAIMode() {
                 const raw = target.value.replace(/\D/g, '');
                 const num = parseInt(raw) || 0;
                 cards[cardIdx].items[itemIdx].price = num;
-                
+
                 if (raw === '') target.value = '';
                 else target.value = formatNumberStr(raw);
 
                 if (num <= 0) {
-                    target.classList.add('required-empty-orange');
+                    target.classList.add('line-required-empty-orange');
                 } else {
-                    target.classList.remove('required-empty-orange');
+                    target.classList.remove('line-required-empty-orange');
                 }
             }
 
@@ -654,9 +654,9 @@ export function initAIMode() {
                 cards[cardIdx].items[itemIdx].note = target.value;
                 autoResize(target);
                 if (!target.value.trim()) {
-                    target.classList.add('required-empty-orange');
+                    target.classList.add('line-required-empty-orange');
                 } else {
-                    target.classList.remove('required-empty-orange');
+                    target.classList.remove('line-required-empty-orange');
                 }
             }
 
@@ -669,7 +669,7 @@ export function initAIMode() {
         selectModeActive = false;
         selectedCardsSet.clear();
         if (outputContainer) outputContainer.classList.remove('select-mode-active');
-        
+
         // Remove .is-selected classes
         if (outputContainer) {
             outputContainer.querySelectorAll('.ai-card').forEach(card => card.classList.remove('is-selected'));
@@ -693,7 +693,7 @@ export function initAIMode() {
     btnSelectMode?.addEventListener('click', () => {
         selectModeActive = true;
         if (outputContainer) outputContainer.classList.add('select-mode-active');
-        
+
         if (actionNormal) actionNormal.style.display = 'none';
         if (actionSelect) {
             actionSelect.style.display = 'flex';
@@ -753,10 +753,10 @@ export function initAIMode() {
                 onConfirm: () => {
                     const activeTab = appState.getActiveTab();
                     let cards = activeTab?.data?.aiCards || [];
-                    
+
                     // Filter out selected ones
                     cards = cards.filter(card => !selectedCardsSet.has(card.id));
-                    
+
                     appState.updateActiveTabData({ aiCards: cards });
                     exitSelectMode();
                     renderAICards();
@@ -805,7 +805,7 @@ export function initAIMode() {
         if (defaultMethod === 'pdf') {
             const pageMode = appState.state.settings.pdfPageMode || 'single';
             pdfPrintQueue._reset();
-            
+
             selectedCards.forEach(card => {
                 const { items, title } = card;
                 if (pageMode === 'combined') {
@@ -815,25 +815,25 @@ export function initAIMode() {
                         if (!w) return;
                         w.document.open(); w.document.write(html); w.document.close();
                         w.document.title = title;
-                        setTimeout(() => { try { w.focus(); w.print(); } catch {} }, 300);
+                        setTimeout(() => { try { w.focus(); w.print(); } catch { } }, 300);
                     });
                 } else {
                     const invHtml = buildInvoiceHTML(items, title);
-                    const sjHtml  = buildSuratJalanHTML(items);
+                    const sjHtml = buildSuratJalanHTML(items);
                     pdfPrintQueue
                         .add(`Invoice — ${title}`, () => {
                             const w = window.open('', '_blank');
                             if (!w) return;
                             w.document.open(); w.document.write(invHtml); w.document.close();
                             w.document.title = `Invoice-${title}`;
-                            setTimeout(() => { try { w.focus(); w.print(); } catch {} }, 300);
+                            setTimeout(() => { try { w.focus(); w.print(); } catch { } }, 300);
                         })
                         .add(`Surat Jalan — ${title}`, () => {
                             const w = window.open('', '_blank');
                             if (!w) return;
                             w.document.open(); w.document.write(sjHtml); w.document.close();
                             w.document.title = `Surat Jalan-${title}`;
-                            setTimeout(() => { try { w.focus(); w.print(); } catch {} }, 300);
+                            setTimeout(() => { try { w.focus(); w.print(); } catch { } }, 300);
                         });
                 }
             });
@@ -856,7 +856,7 @@ export function initAIMode() {
         if (formatToUse === 'pdf') {
             const pdfMode = appState.state.settings.pdfPageMode || 'single';
             pdfPrintQueue._reset();
-            
+
             if (pdfMode === 'combined') {
                 const html = buildCombinedPDFHTML(items, title);
                 pdfPrintQueue.add(`${title} (Invoice + Surat Jalan)`, () => {
@@ -864,31 +864,31 @@ export function initAIMode() {
                     if (!w) return;
                     w.document.open(); w.document.write(html); w.document.close();
                     w.document.title = title;
-                    setTimeout(() => { try { w.focus(); w.print(); } catch {} }, 300);
+                    setTimeout(() => { try { w.focus(); w.print(); } catch { } }, 300);
                 });
             } else {
                 const invHtml = buildInvoiceHTML(items, title);
-                const sjHtml  = buildSuratJalanHTML(items);
+                const sjHtml = buildSuratJalanHTML(items);
                 pdfPrintQueue
                     .add(`Invoice — ${title}`, () => {
                         const w = window.open('', '_blank');
                         if (!w) return;
                         w.document.open(); w.document.write(invHtml); w.document.close();
                         w.document.title = `Invoice-${title}`;
-                        setTimeout(() => { try { w.focus(); w.print(); } catch {} }, 300);
+                        setTimeout(() => { try { w.focus(); w.print(); } catch { } }, 300);
                     })
                     .add(`Surat Jalan — ${title}`, () => {
                         const w = window.open('', '_blank');
                         if (!w) return;
                         w.document.open(); w.document.write(sjHtml); w.document.close();
                         w.document.title = `Surat Jalan-${title}`;
-                        setTimeout(() => { try { w.focus(); w.print(); } catch {} }, 300);
+                        setTimeout(() => { try { w.focus(); w.print(); } catch { } }, 300);
                     });
             }
             pdfPrintQueue.start();
         } else {
             const sourceInvoice = buildInvoiceHTML;
-            const sourceLetter  = buildSuratJalanHTML;
+            const sourceLetter = buildSuratJalanHTML;
             await exportBothDocuments(sourceInvoice, sourceLetter, items, title, formatToUse);
         }
     };
