@@ -381,8 +381,8 @@ export function initAIMode() {
     if (btnGenerate && promptInput) {
         btnGenerate.addEventListener('click', async () => {
             const prompt = promptInput.value.trim();
-            if (!prompt) {
-                if (window.showBMEAlert) window.showBMEAlert("Silakan ketik deskripsi barang terlebih dahulu!", "warning");
+            if (!prompt && !activeFileContext) {
+                if (window.showBMEAlert) window.showBMEAlert("Silakan ketik deskripsi barang atau tambahkan berkas (foto/suara) terlebih dahulu!", "warning");
                 return;
             }
 

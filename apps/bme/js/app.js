@@ -729,7 +729,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============================================
     let lastScrollY = window.scrollY;
     const header = document.querySelector('.app-header');
-    const footer = document.querySelector('.action-bar-sticky');
 
     // Header Logic
     if (header) {
@@ -762,16 +761,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Footer Logic (Idle Detection)
+    // Footer Logic (Idle Detection with Active Mode Selection)
     let idleTimer;
 
     const showFooter = () => {
-        if (!footer) return;
-        footer.classList.remove('hide');
+        const activeTab = appState.getActiveTab();
+        const curMode = activeTab ? activeTab.mode : appState.state.currentMode;
+        
+        let activeFooter = null;
+        if (curMode === 'manual') {
+            activeFooter = document.getElementById('manual-action-bar');
+        } else if (curMode === 'ai') {
+            activeFooter = document.getElementById('ai-action-bar');
+        }
+
+        if (!activeFooter) return;
+        activeFooter.classList.remove('hide');
         clearTimeout(idleTimer);
         // Hide again after 2s
         idleTimer = setTimeout(() => {
-            footer.classList.add('hide');
+            activeFooter.classList.add('hide');
         }, 2000);
     };
 
