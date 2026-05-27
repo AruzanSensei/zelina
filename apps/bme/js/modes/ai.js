@@ -129,6 +129,18 @@ export function initAIMode() {
         if (!activeFileContext) return;
 
         const isImage = activeFileContext.mimeType.startsWith('image/');
+        const isAudio = activeFileContext.mimeType.startsWith('audio/');
+
+        // Format label dari mimeType dinamis (misal: audio/webm → "Audio (webm)")
+        let metaLabel = '';
+        if (isImage) {
+            metaLabel = 'Gambar';
+        } else if (isAudio) {
+            const ext = activeFileContext.mimeType.split('/')[1] || 'audio';
+            metaLabel = `Audio (${ext})`;
+        } else {
+            metaLabel = activeFileContext.mimeType || 'Berkas';
+        }
         
         const tag = document.createElement('div');
         tag.className = 'file-context-tag';
@@ -148,7 +160,7 @@ export function initAIMode() {
             ${iconHTML}
             <div class="file-tag-info">
                 <span class="file-tag-name">${activeFileContext.name}</span>
-                <span class="file-tag-meta">${isImage ? 'Gambar' : 'Audio (wav)'}</span>
+                <span class="file-tag-meta">${metaLabel}</span>
             </div>
             <button class="btn-remove-tag" title="Hapus Berkas">×</button>
         `;
