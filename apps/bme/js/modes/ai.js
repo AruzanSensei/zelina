@@ -237,22 +237,39 @@ export function initAIMode() {
                 return;
             }
 
-            mediaRecorder = new MediaRecorder(stream);
+            // Pilih format terbaik yang didukung browser dan Gemini
+            const mimeTypeOptions = [
+                'audio/webm;codecs=opus',
+                'audio/webm',
+                'audio/ogg;codecs=opus',
+                'audio/ogg',
+                'audio/mp4',
+            ];
+            const supportedMime = mimeTypeOptions.find(m => MediaRecorder.isTypeSupported(m)) || '';
+            
+            mediaRecorder = supportedMime
+                ? new MediaRecorder(stream, { mimeType: supportedMime })
+                : new MediaRecorder(stream);
+            
+            const actualMime = mediaRecorder.mimeType || supportedMime || 'audio/webm';
             audioChunks = [];
             
             mediaRecorder.addEventListener("dataavailable", event => {
-                audioChunks.push(event.data);
+                if (event.data.size > 0) audioChunks.push(event.data);
             });
 
             mediaRecorder.addEventListener("stop", async () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const audioBlob = new Blob(audioChunks, { type: actualMime });
                 const reader = new FileReader();
                 reader.readAsDataURL(audioBlob);
                 reader.onloadend = () => {
                     const base64data = reader.result;
+                    // Normalisasi mimeType ke versi dasar (tanpa codecs) agar Gemini menerima
+                    const baseMime = actualMime.split(';')[0];
+                    const ext = baseMime.includes('ogg') ? 'ogg' : baseMime.includes('mp4') ? 'mp4' : 'webm';
                     setFileContext({
-                        name: `rekaman-suara_${Date.now().toString().slice(-4)}.wav`,
-                        mimeType: 'audio/wav',
+                        name: `rekaman-suara_${Date.now().toString().slice(-4)}.${ext}`,
+                        mimeType: baseMime,
                         base64: base64data
                     });
                 };
@@ -387,12 +404,19 @@ export function initAIMode() {
             }
 
             // Gunakan endpoint worker tepercaya
-            const activeModel = modelSelect?.dataset.value || 'gemini-3.5-flash';
+            const activeModel = modelSelect?.dataset.value || 'gemini-2.5-flash';
             const defaultInstruction = appState.state.settings.aiDefaultPrompt || '';
 
-            // Show loading spinner
+            // Show loading spinner — pesan kontekstual
+            let loadingLabel = 'Generating...';
+            if (activeFileContext) {
+                const isAudio = activeFileContext.mimeType?.startsWith('audio/');
+                const isImage = activeFileContext.mimeType?.startsWith('image/');
+                if (isAudio) loadingLabel = 'Mentranskrip suara...';
+                else if (isImage) loadingLabel = 'Menganalisis foto...';
+            }
             btnGenerate.disabled = true;
-            btnGenerate.innerHTML = `<i-ui name="loading-01" size="14" class="spin-icon" style="margin-right: 4px;"></i-ui> Generating...`;
+            btnGenerate.innerHTML = `<i-ui name="loading-01" size="14" class="spin-icon" style="margin-right: 4px;"></i-ui> ${loadingLabel}`;
             promptInput.disabled = true;
 
             const payloadBody = {
