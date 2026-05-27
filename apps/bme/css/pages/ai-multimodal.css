@@ -167,8 +167,8 @@
 
 .radial-action-btn {
     position: absolute;
-    width: 52px;
-    height: 52px;
+    width: 62px;
+    height: 62px;
     border-radius: 50% !important;
     color: #444444 !important;
     display: flex !important;
@@ -204,40 +204,42 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     transition: color 0.25s;
 }
 
+/* Camera: 11 o'clock — further out */
 .radial-action-btn.btn-camera {
-    transform: translate(-55px, -55px) scale(0.9);
+    transform: translate(-76px, -76px) scale(1.0);
 }
 
-/* Gallery: 12 o'clock — top center, slightly higher than camera & mic */
+/* Gallery: 12 o'clock — top center, further out and higher */
 .radial-action-btn.btn-gallery {
-    transform: translate(0px, -75px) scale(0.9);
+    transform: translate(0px, -98px) scale(1.0);
 }
 
+/* Mic: 1 o'clock — further out */
 .radial-action-btn.btn-mic {
-    transform: translate(55px, -55px) scale(0.9);
+    transform: translate(76px, -76px) scale(1.0);
 }
 
 /* Enlarge active button */
 .radial-action-btn.btn-camera.active,
 .radial-action-btn.btn-camera:hover {
-    transform: translate(-55px, -55px) scale(1.22);
+    transform: translate(-76px, -76px) scale(1.18);
     box-shadow: 0 0 20px rgba(245, 166, 35, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3) !important;
 }
 
 .radial-action-btn.btn-gallery.active,
 .radial-action-btn.btn-gallery:hover {
-    transform: translate(0px, -75px) scale(1.22);
+    transform: translate(0px, -98px) scale(1.18);
     box-shadow: 0 0 20px rgba(245, 166, 35, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3) !important;
 }
 
 .radial-action-btn.btn-mic.active,
 .radial-action-btn.btn-mic:hover {
-    transform: translate(55px, -55px) scale(1.22);
+    transform: translate(76px, -76px) scale(1.18);
     box-shadow: 0 0 20px rgba(245, 166, 35, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3) !important;
 }
 
@@ -246,21 +248,21 @@
 .radial-ring-menu:has(.btn-gallery.active) .btn-camera {
     opacity: 0.35;
     filter: brightness(0.7) saturate(0.6);
-    transform: translate(-55px, -55px) scale(0.8);
+    transform: translate(-76px, -76px) scale(0.85);
 }
 
 .radial-ring-menu:has(.btn-mic.active) .btn-gallery,
 .radial-ring-menu:has(.btn-camera.active) .btn-gallery {
     opacity: 0.35;
     filter: brightness(0.7) saturate(0.6);
-    transform: translate(0px, -75px) scale(0.8);
+    transform: translate(0px, -98px) scale(0.85);
 }
 
 .radial-ring-menu:has(.btn-camera.active) .btn-mic,
 .radial-ring-menu:has(.btn-gallery.active) .btn-mic {
     opacity: 0.35;
     filter: brightness(0.7) saturate(0.6);
-    transform: translate(55px, -55px) scale(0.8);
+    transform: translate(76px, -76px) scale(0.85);
 }
 
 /* ============================================

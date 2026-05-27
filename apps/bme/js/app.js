@@ -1404,11 +1404,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             let activeTarget = null;
-            if (distMic < 45) {
+            if (distMic < 52) {
                 activeTarget = 'mic';
-            } else if (distCam < 45) {
+            } else if (distCam < 52) {
                 activeTarget = 'camera';
-            } else if (distGal < 45) {
+            } else if (distGal < 52) {
                 activeTarget = 'gallery';
             }
 
