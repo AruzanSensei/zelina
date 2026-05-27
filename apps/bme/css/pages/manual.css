@@ -313,7 +313,7 @@
 @media (max-width: 1023px) {
     .action-bar-sticky {
         position: fixed;
-        bottom: 0;
+        bottom: 76px;
         left: 0;
         right: 0;
         background: var(--bg-card);
@@ -324,13 +324,133 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        z-index: 90;
+        z-index: 990;
         transition: transform 0.3s ease;
         border-top: 1px solid var(--border-color);
     }
 
     .action-bar-sticky.hide {
-        transform: translateY(110%);
+        transform: translateY(220%);
+    }
+
+    /* Target #manual-action-bar specifically on mobile for dual-pill layout */
+    #manual-action-bar {
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 16px !important;
+        pointer-events: none;
+    }
+
+    #manual-action-bar .mobile-action-content {
+        display: flex !important;
+        flex-direction: row !important;
+        /* Total on left, buttons on right */
+        flex-wrap: wrap !important;
+        /* Wrap gracefully on very narrow screens */
+        align-items: center;
+        justify-content: space-between !important;
+        /* Centered layout for symmetry */
+        width: 100%;
+        gap: 24px !important;
+        pointer-events: none;
+        /* Clicks pass through the gap between pills */
+    }
+
+    /* Right pill: Save and Download buttons */
+    #manual-action-bar .mobile-action-content>div:not(.total-display) {
+        background: var(--bg-card) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 20px !important;
+        padding: 6px 8px !important;
+        display: flex !important;
+        gap: 4px !important;
+        align-items: center;
+        justify-content: center !important;
+        /* Centrally align buttons inside the pill */
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+        height: 46px !important;
+        width: 160px !important;
+        max-width: 160px !important;
+        flex: 0 0 160px !important;
+        box-sizing: border-box;
+        pointer-events: auto;
+        /* Enable clicks only on this pill */
+    }
+
+    /* Left pill: Total amount display */
+    #manual-action-bar .mobile-action-content .total-display {
+        background: var(--bg-card) !important;
+        border: 1px solid var(--border-color) !important;
+        border-radius: 20px !important;
+        padding: 4px 8px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+        height: 46px !important;
+        width: 150px !important;
+        max-width: 150px !important;
+        flex: 0 0 150px !important;
+        box-sizing: border-box;
+        pointer-events: auto;
+        /* Enable clicks only on this pill */
+    }
+
+    #manual-action-bar .total-display small {
+        font-size: 0.6rem !important;
+        line-height: 1 !important;
+        margin-bottom: 2px !important;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-muted);
+    }
+
+    #manual-action-bar .total-display span {
+        font-size: 0.85rem !important;
+        line-height: 1.1 !important;
+        font-weight: 700 !important;
+        color: var(--active-tab-glow) !important;
+    }
+
+    /* Compact button styling on mobile inside the left pill */
+    #manual-action-bar #btn-save-only-mobile {
+        height: 32px !important;
+        padding: 0 8px !important;
+        font-size: 0.75rem !important;
+        border-radius: 20px !important;
+        border: 1.5px solid var(--border-color) !important;
+        background: transparent !important;
+        color: var(--text-main) !important;
+    }
+
+    #manual-action-bar .download-split-btn {
+        height: 32px !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    #manual-action-bar #btn-download-mobile {
+        height: 32px !important;
+        padding: 0 8px !important;
+        font-size: 0.75rem !important;
+        border-radius: 20px 0 0 20px !important;
+        border: none !important;
+        background: var(--primary) !important;
+        color: white !important;
+    }
+
+    #manual-action-bar #btn-download-split-arrow-mobile {
+        height: 32px !important;
+        padding: 0 6px !important;
+        border-radius: 0 20px 20px 0 !important;
+        border: none !important;
+        background: var(--primary) !important;
+        color: white !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
 }
 

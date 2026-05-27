@@ -53,6 +53,7 @@
     <link rel="stylesheet" href="css/pages/dashboard.css">
     <link rel="stylesheet" href="css/pages/manual.css">
     <link rel="stylesheet" href="css/pages/ai.css">
+    <link rel="stylesheet" href="css/pages/ai-multimodal.css">
     <link rel="stylesheet" href="css/pages/history.css">
     <link rel="stylesheet" href="css/pages/finance.css">
     <link rel="stylesheet" href="css/pages/settings.css">
@@ -70,7 +71,7 @@
 
     <!-- App Header (Mobile Only) -->
     <header class="app-header">
-        <div class="brand">
+        <div class="brand" id="header-brand-container">
             <div class="logo-container" id="header-logo-container">
                 <img id="header-logo-img" src="assets/icons/logo-bme.png" alt="Logo" class="app-logo"
                     onerror="this.style.display='none'">
@@ -83,6 +84,9 @@
                 <p id="header-welcome-sub">Invoice & Surat Jalan</p>
             </div>
         </div>
+        <h1 id="header-page-title"
+            style="display:none; font-size:1.15rem; font-weight:700; color:var(--text-main); margin:0; text-transform:capitalize; text-align:left; flex:1;">
+        </h1>
         <div style="display:flex;align-items:center;gap:4px;">
             <button id="btn-label-toggle" class="icon-btn" title="Sembunyikan / Tampilkan Label">
                 <span id="wrap-icon-eye"><i-ui name="eye" size="20"></i-ui></span>
@@ -557,6 +561,7 @@
                     <!-- MODE 2: AI -->
                     <section id="ai-view" class="view hidden" style="position: relative;">
                         <div class="ai-prompt-container">
+                            <div id="ai-file-context-container" class="ai-file-context-container"></div>
                             <textarea id="ai-prompt" class="form-textarea ai-prompt-textarea"
                                 placeholder="Contoh: Kabel NYM 50 meter harga 15rb, MCB 10 pcs harga 50rb..."></textarea>
 
@@ -581,19 +586,20 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Div 2: Kanan (Salin, Clipboard, Generate) -->
+                                <!-- Div 2: Kanan (Kamera, Mic, Generate) -->
                                 <div class="ai-prompt-actions-right">
-                                    <button id="btn-ai-prompt-copy" class="icon-btn" title="Salin Prompt">
-                                        <i-ui name="copy-01" size="16"></i-ui>
+                                    <button id="btn-ai-camera" class="icon-btn" title="Kamera & Unggah">
+                                        <i-ui name="camera-02" size="16"></i-ui>
                                     </button>
-                                    <button id="btn-ai-prompt-paste" class="icon-btn" title="Tempel dari Clipboard">
-                                        <i-ui name="clipboard" size="16"></i-ui>
+                                    <button id="btn-ai-mic" class="icon-btn" title="Mikrofon">
+                                        <i-ui name="microphone-02" size="16"></i-ui>
                                     </button>
                                     <button id="btn-ai-generate" class="btn btn-primary btn-sm">
-                                        <i-ui name="star-04" size="15" style="margin-right: 4px;"></i-ui></button>
+                                        <i-ui name="chevron-right" size="15" style="margin-right: 4px;"></i-ui></button>
                                 </div>
                             </div>
                         </div>
+                        <input type="file" id="ai-camera-input" accept="image/*" style="display:none">
 
                         <!-- Wadah Card Output Hasil Generate -->
                         <div id="ai-output-container" class="ai-output-container">
@@ -1359,6 +1365,44 @@
             <button id="btn-onboarding-start" class="btn btn-primary btn-full" style="margin-top: 20px; padding: 14px;">
                 Mulai Sekarang <i-ui name="arrow-right" size="16"></i-ui>
             </button>
+        </div>
+    </div>
+
+    <!-- AI Radial Overlay for Mobile Gestures -->
+    <div id="ai-radial-overlay" class="ai-radial-overlay hidden">
+        <div class="radial-center-anchor">
+            <div class="radial-ring-menu">
+                <!-- Camera Button at 11 o'clock -->
+                <button id="btn-radial-camera" class="radial-action-btn btn-camera" title="Ambil Foto">
+                    <i-ui name="camera-02" size="20"></i-ui>
+                </button>
+                <!-- Mic Button at 1 o'clock -->
+                <button id="btn-radial-mic" class="radial-action-btn btn-mic" title="Rekam Suara">
+                    <i-ui name="microphone-02" size="20"></i-ui>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Multimodal File Preview Modal -->
+    <div id="file-preview-modal" class="modal file-preview-modal hidden" style="z-index: 99999; display: none; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.65);">
+        <div class="modal-content" style="max-width: 500px; padding: 20px; border-radius: var(--radius-md); background: var(--bg-card); border: 1px solid var(--border-color); width: calc(100% - 32px); box-shadow: var(--shadow-lg);">
+            <div class="modal-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <h2 id="preview-modal-title" style="font-size: 1.1rem; font-weight: 600; margin: 0;">Pratinjau Berkas</h2>
+                <button class="close-preview-modal icon-btn" id="btn-close-preview-modal" style="background: transparent; border: none; cursor: pointer; color: var(--text-main);">
+                    <i-ui name="x" size="20"></i-ui>
+                </button>
+            </div>
+            <div class="preview-modal-body" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px; width: 100%;">
+                <div id="preview-image-container" class="hidden" style="width: 100%; display: none; text-align: center;">
+                    <img id="preview-img-element" src="" alt="Pratinjau Foto" style="max-width: 100%; max-height: 350px; border-radius: 8px; object-fit: contain; box-shadow: var(--shadow-md);">
+                </div>
+                <div id="preview-audio-container" class="hidden" style="width: 100%; display: none; flex-direction: column; align-items: center; gap: 12px; padding: 20px;">
+                    <i-ui name="microphone-02" size="48" style="color: var(--primary);"></i-ui>
+                    <span id="preview-audio-filename" style="font-size: 0.85rem; color: var(--text-muted);">rekaman-suara.wav</span>
+                    <audio id="preview-audio-element" controls style="width: 100%; margin-top: 10px;"></audio>
+                </div>
+            </div>
         </div>
     </div>
 

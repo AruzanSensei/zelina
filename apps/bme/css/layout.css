@@ -66,7 +66,7 @@
     /* Extra bottom padding for mobile safe area */
     border-top: 1px solid var(--border-color);
     border-bottom: none;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
     height: 66px;
     box-sizing: border-box;
     overflow: visible;
@@ -109,7 +109,8 @@
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: visible !important;
-    font-weight: 600;
+    font-weight: 400 !important;
+    /* Thin by default for inactive */
     gap: 4px;
     height: 100%;
     border-radius: 0 !important;
@@ -117,38 +118,38 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-/* Active states for mobile bottom nav (tab-nav) */
-.tab-nav .tab-btn.active {
+/* Active states for mobile bottom nav (tab-nav) - clean black/bold active look */
+.tab-nav .tab-btn.active:not(.tab-btn-ai) {
     background: transparent !important;
     border: none !important;
-    color: var(--active-tab-glow) !important;
+    color: #000000 !important;
+    /* Active text color is black */
+    font-weight: 700 !important;
+    /* Active text is bold */
     box-shadow: none !important;
 }
 
+[data-theme="dark"] .tab-nav .tab-btn.active:not(.tab-btn-ai) {
+    color: #ffffff !important;
+    /* Active is white in dark theme */
+}
+
 .tab-nav .tab-btn i-ui {
-    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.25s ease;
+    transition: color 0.25s ease;
+    color: var(--text-muted) !important;
+    /* Inactive is gray */
 }
 
-.tab-nav .tab-btn.active i-ui {
-    transform: scale(1.15) translateY(-2px);
-    color: var(--active-tab-glow) !important;
+.tab-nav .tab-btn.active:not(.tab-btn-ai) i-ui {
+    color: #000000 !important;
+    /* Active icon color is black */
+    transform: none !important;
+    /* No zoom/scale animation on click */
 }
 
-/* Specific styling for the 5 tabs' active states */
-.tab-nav .tab-btn[data-tab="dashboard"].active {
-    color: var(--primary) !important;
-}
-
-.tab-nav .tab-btn[data-tab="manual"].active {
-    color: var(--primary) !important;
-}
-
-.tab-nav .tab-btn[data-tab="finance"].active {
-    color: var(--finance-green) !important;
-}
-
-.tab-nav .tab-btn[data-tab="history"].active {
-    color: var(--tertiary) !important;
+[data-theme="dark"] .tab-nav .tab-btn.active:not(.tab-btn-ai) i-ui {
+    color: #ffffff !important;
+    /* Active is white in dark theme */
 }
 
 /* Center AI Button Raised Layout */
@@ -162,67 +163,194 @@
     height: 100%;
     overflow: visible;
     z-index: 1001;
-    /* High enough to render on top of the notch background */
 }
 
-/* The actual circular button (floating, standing completely alone) */
+/* Register Houdini properties for premium smooth animated mesh gradient */
+@property --c-0 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: hsla(190, 100%, 88%, 0.66)
+}
+
+@property --s-start-0 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 4.038772213247173%
+}
+
+@property --s-end-0 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 37.2265767974114%
+}
+
+@property --y-0 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 11%
+}
+
+@property --x-0 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 91%
+}
+
+@property --c-1 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: hsla(136, 100%, 88%, 1)
+}
+
+@property --x-1 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 69.11764778558965%
+}
+
+@property --y-1 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 54.30547154879501%
+}
+
+@property --s-start-1 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 3%
+}
+
+@property --s-end-1 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 56%
+}
+
+@property --c-2 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: hsla(280, 64%, 64%, 1)
+}
+
+@property --y-2 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 87%
+}
+
+@property --s-start-2 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 12.107536057085522%
+}
+
+@property --s-end-2 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 63.33640956108327%
+}
+
+@property --x-2 {
+    syntax: '<percentage>';
+    inherits: false;
+    initial-value: 36%
+}
+
+/* Mesh animation keyframes */
+@keyframes ani-tab-btn-ai {
+    0% {
+        --c-0: hsla(190, 100%, 88%, 0.66);
+        --s-start-0: 4.038772213247173%;
+        --s-end-0: 37.2265767974114%;
+        --y-0: 11%;
+        --x-0: 91%;
+        --c-1: hsla(136, 100%, 88%, 1);
+        --x-1: 69.11764778558965%;
+        --y-1: 54.30547154879501%;
+        --s-start-1: 3%;
+        --s-end-1: 56%;
+        --c-2: hsla(280, 64%, 64%, 1);
+        --y-2: 87%;
+        --s-start-2: 12.107536057085522%;
+        --s-end-2: 63.33640956108327%;
+        --x-2: 36%;
+    }
+
+    100% {
+        --c-0: hsla(190, 84%, 69%, 0.66);
+        --s-start-0: 3%;
+        --s-end-0: 56%;
+        --y-0: 92%;
+        --x-0: 94%;
+        --c-1: hsla(136, 100%, 72%, 1);
+        --x-1: 53.71148564984649%;
+        --y-1: 40.953546619049796%;
+        --s-start-1: 3%;
+        --s-end-1: 56%;
+        --c-2: hsla(280, 100%, 88%, 1);
+        --y-2: 24.02200177863751%;
+        --s-start-2: 18%;
+        --s-end-2: 56%;
+        --x-2: 28.422618506987362%;
+    }
+}
+
+/* The actual circular button (floating, standing completely alone, with animated mesh gradient) */
 .tab-btn-ai {
     position: absolute;
     top: -24px;
-    /* Elevated significantly higher to float above the straight tab bar border */
     left: 50%;
     transform: translateX(-50%);
     width: 66px;
     height: 66px;
     border-radius: 50% !important;
-    /* Soft crimson-to-coral gradient inspired by Gojek QR Pay */
-    background: linear-gradient(135deg, #ff4d6d, #ff758f) !important;
-    color: #ffffff !important;
+    color: #444444 !important;
+    /* Dark charcoal icon color for high contrast on pastels */
     display: flex !important;
     align-items: center;
     justify-content: center;
-    /* High-end floating colored drop shadow */
-    /* box-shadow: 0 8px 20px rgba(255, 77, 109, 0.4) !important; */
-    /* Thin elegant border separates it from the straight bar */
-    border: 5px solid var(--bg-card) !important;
+    border: 1.5px solid var(--bg-card) !important;
     z-index: 1002;
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     padding: 0 !important;
     box-sizing: border-box;
+
+    /* Animated Mesh Gradient Styles */
+    --c-0: hsla(190, 100%, 88%, 0.66);
+    --y-0: 11%;
+    --x-0: 91%;
+    --c-1: hsla(136, 100%, 88%, 1);
+    --x-1: 69.11764778558965%;
+    --y-1: 54.30547154879501%;
+    --c-2: hsla(280, 64%, 64%, 1);
+    --y-2: 87%;
+    --x-2: 36%;
+    background-color: hsla(0, 0%, 100%, 0.77) !important;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 623 623' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"), radial-gradient(circle at var(--x-0) var(--y-0), var(--c-0) var(--s-start-0), transparent var(--s-end-0)), radial-gradient(circle at var(--x-1) var(--y-1), var(--c-1) var(--s-start-1), transparent var(--s-end-1)), radial-gradient(circle at var(--x-2) var(--y-2), var(--c-2) var(--s-start-2), transparent var(--s-end-2)) !important;
+    animation: ani-tab-btn-ai 2s linear infinite alternate;
+    background-blend-mode: overlay, normal, normal, normal;
+    will-change: transform, opacity;
+    contain: paint;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Active AI center button */
+/* Active AI center button - faster animation (0.8s) & 20% dimmer (brightness(0.8)) */
 .tab-btn-ai.active {
-    background: linear-gradient(135deg, var(--secondary), #a78bfa) !important;
-    /* Vibrant violet gradient in active mode */
-    box-shadow: 0 8px 24px rgba(155, 81, 224, 0.5) !important;
+    animation: ani-tab-btn-ai 0.8s linear infinite alternate !important;
+    /* 2.5x faster animation speed */
+    /* Dimmed by exactly 20% */
     transform: translateX(-50%) scale(1.08) translateY(-3px);
 }
 
 .tab-btn-ai i-ui {
-    color: #ffffff !important;
+    color: #444444 !important;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .tab-btn-ai.active i-ui {
-    transform: scale(1.1);
-}
-
-/* The label below the raised AI button */
-.tab-btn-ai-label {
-    font-size: 0.65rem;
-    color: var(--text-muted);
-    font-weight: 600;
-    margin-bottom: 4px;
-    transition: color 0.25s ease;
-    pointer-events: none;
-    /* Make clicks pass through to the wrapper */
-}
-
-.tab-btn-ai-wrapper:has(.tab-btn-ai.active) .tab-btn-ai-label {
-    color: var(--secondary);
+    color: #111111 !important;
 }
 
 /* ============================================

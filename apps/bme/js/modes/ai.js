@@ -33,8 +33,9 @@ export function initAIMode() {
     const promptInput = document.getElementById('ai-prompt');
     const btnResize = document.getElementById('btn-ai-prompt-resize');
     const modelSelect = document.getElementById('ai-model-select');
-    const btnCopy = document.getElementById('btn-ai-prompt-copy');
-    const btnPaste = document.getElementById('btn-ai-prompt-paste');
+    const btnCamera = document.getElementById('btn-ai-camera');
+    const btnMic = document.getElementById('btn-ai-mic');
+    const cameraInput = document.getElementById('ai-camera-input');
     const btnGenerate = document.getElementById('btn-ai-generate');
     const outputContainer = document.getElementById('ai-output-container');
 
@@ -89,30 +90,249 @@ export function initAIMode() {
         });
     }
 
-    if (btnCopy && promptInput) {
-        btnCopy.addEventListener('click', () => {
-            const val = promptInput.value.trim();
-            if (!val) return;
-            navigator.clipboard.writeText(val).then(() => {
-                if (window.showBMEAlert) window.showBMEAlert("Prompt berhasil disalin ke clipboard", "success");
-            });
+    // ── MULTIMODAL CONTEXT LOGIC (Mic, Camera, Previews) ────
+    let activeFileContext = null;
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let isRecording = false;
+    let recordRequested = false;
+
+    // Helper: Update Microphone UI (Both in actions bar and radial menu)
+    function updateMicUI(recording) {
+        const micBtns = [document.getElementById('btn-ai-mic'), document.getElementById('btn-radial-mic')];
+        micBtns.forEach(btn => {
+            if (!btn) return;
+            const icon = btn.querySelector('i-ui');
+            if (recording) {
+                btn.classList.add('recording');
+                if (icon) icon.setAttribute('name', 'microphone-02');
+            } else {
+                btn.classList.remove('recording');
+                if (icon) icon.setAttribute('name', 'microphone-02');
+            }
         });
     }
 
-    if (btnPaste && promptInput) {
-        btnPaste.addEventListener('click', () => {
-            navigator.clipboard.readText().then(text => {
-                if (text) {
-                    promptInput.value = text;
-                    autoResize(promptInput);
-                    if (window.showBMEAlert) window.showBMEAlert("Teks berhasil ditempel dari clipboard", "success");
+    // Set File Context and trigger tag rendering
+    function setFileContext(fileObj) {
+        activeFileContext = fileObj;
+        renderFileContextTag();
+    }
+
+    function renderFileContextTag() {
+        const container = document.getElementById('ai-file-context-container');
+        if (!container) return;
+        container.innerHTML = '';
+
+        if (!activeFileContext) return;
+
+        const isImage = activeFileContext.mimeType.startsWith('image/');
+        
+        const tag = document.createElement('div');
+        tag.className = 'file-context-tag';
+        
+        let iconHTML = '';
+        if (isImage) {
+            iconHTML = `<img src="${activeFileContext.base64}" class="file-tag-thumbnail" alt="Thumb">`;
+        } else {
+            iconHTML = `
+                <div class="file-tag-icon-wrap">
+                    <i-ui name="microphone-02" size="16"></i-ui>
+                </div>
+            `;
+        }
+
+        tag.innerHTML = `
+            ${iconHTML}
+            <div class="file-tag-info">
+                <span class="file-tag-name">${activeFileContext.name}</span>
+                <span class="file-tag-meta">${isImage ? 'Gambar' : 'Audio (wav)'}</span>
+            </div>
+            <button class="btn-remove-tag" title="Hapus Berkas">×</button>
+        `;
+
+        // Click tag to open preview modal
+        tag.addEventListener('click', (e) => {
+            if (e.target.closest('.btn-remove-tag')) return;
+            
+            const modal = document.getElementById('file-preview-modal');
+            const imgContainer = document.getElementById('preview-image-container');
+            const imgEl = document.getElementById('preview-img-element');
+            const audioContainer = document.getElementById('preview-audio-container');
+            const audioEl = document.getElementById('preview-audio-element');
+            const audioFilename = document.getElementById('preview-audio-filename');
+
+            if (modal) {
+                modal.style.display = 'flex';
+                modal.classList.add('active');
+                modal.classList.remove('hidden');
+                
+                if (isImage) {
+                    imgContainer.style.display = 'block';
+                    imgContainer.classList.remove('hidden');
+                    audioContainer.style.display = 'none';
+                    audioContainer.classList.add('hidden');
+                    
+                    imgEl.src = activeFileContext.base64;
+                } else {
+                    imgContainer.style.display = 'none';
+                    imgContainer.classList.add('hidden');
+                    audioContainer.style.display = 'flex';
+                    audioContainer.classList.remove('hidden');
+                    
+                    audioFilename.textContent = activeFileContext.name;
+                    audioEl.src = activeFileContext.base64;
+                    audioEl.load();
+                    audioEl.play().catch(err => console.log("Play blocked:", err));
                 }
-            }).catch(err => {
-                console.warn("Gagal mengakses clipboard: ", err);
-                if (window.showBMEAlert) window.showBMEAlert("Gagal membaca clipboard. Mohon berikan izin browser.", "warning");
-            });
+            }
+        });
+
+        tag.querySelector('.btn-remove-tag').addEventListener('click', (e) => {
+            e.stopPropagation();
+            setFileContext(null);
+        });
+
+        container.appendChild(tag);
+    }
+
+    // Modal Close logic
+    const closePreviewModal = () => {
+        const modal = document.getElementById('file-preview-modal');
+        if (modal) {
+            modal.classList.remove('active');
+            modal.classList.add('hidden');
+            modal.style.display = 'none';
+            const audioEl = document.getElementById('preview-audio-element');
+            if (audioEl) audioEl.pause();
+        }
+    };
+
+    const btnCloseModal = document.getElementById('btn-close-preview-modal');
+    if (btnCloseModal) {
+        btnCloseModal.addEventListener('click', closePreviewModal);
+    }
+
+    const modalOverlay = document.getElementById('file-preview-modal');
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                closePreviewModal();
+            }
         });
     }
+
+    // MediaRecorder Microphone APIs
+    async function startAudioRecording() {
+        if (isRecording || recordRequested) return; // Prevent state stream collisions
+        recordRequested = true;
+        updateMicUI(true); // Eager UI state feedback
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            
+            // If user cancelled/stopped recording while startup was pending:
+            if (!recordRequested) {
+                stream.getTracks().forEach(track => track.stop());
+                updateMicUI(false);
+                return;
+            }
+
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
+            
+            mediaRecorder.addEventListener("dataavailable", event => {
+                audioChunks.push(event.data);
+            });
+
+            mediaRecorder.addEventListener("stop", async () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const reader = new FileReader();
+                reader.readAsDataURL(audioBlob);
+                reader.onloadend = () => {
+                    const base64data = reader.result;
+                    setFileContext({
+                        name: `rekaman-suara_${Date.now().toString().slice(-4)}.wav`,
+                        mimeType: 'audio/wav',
+                        base64: base64data
+                    });
+                };
+                
+                stream.getTracks().forEach(track => track.stop());
+            });
+
+            mediaRecorder.start();
+            isRecording = true;
+            updateMicUI(true);
+            if (window.showBMEAlert) window.showBMEAlert("Sedang merekam suara...", "success");
+        } catch (err) {
+            console.error("Gagal merekam suara:", err);
+            recordRequested = false;
+            isRecording = false;
+            updateMicUI(false);
+            if (window.showBMEAlert) window.showBMEAlert("Akses mikrofon ditolak atau tidak didukung browser ini", "error");
+        }
+    }
+
+    function stopAudioRecording() {
+        recordRequested = false;
+        if (mediaRecorder && isRecording) {
+            mediaRecorder.stop();
+            isRecording = false;
+            updateMicUI(false);
+            if (window.showBMEAlert) window.showBMEAlert("Perekaman suara selesai.", "success");
+        } else {
+            isRecording = false;
+            updateMicUI(false);
+        }
+    }
+
+    // Camera Input change trigger
+    if (cameraInput) {
+        cameraInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFileContext({
+                    name: file.name,
+                    mimeType: file.type,
+                    base64: reader.result
+                });
+                if (window.showBMEAlert) window.showBMEAlert("Foto berhasil dimuat!", "success");
+            };
+            reader.readAsDataURL(file);
+            cameraInput.value = ''; // Reset
+        });
+    }
+
+    // Action button listeners
+    if (btnCamera) {
+        btnCamera.addEventListener('click', () => {
+            cameraInput?.click();
+        });
+    }
+
+    if (btnMic) {
+        btnMic.addEventListener('click', () => {
+            if (isRecording || recordRequested) {
+                stopAudioRecording();
+            } else {
+                startAudioRecording();
+            }
+        });
+    }
+
+    // Expose window.bmeAI for app.js (radial mobile menu interaction math)
+    window.bmeAI = {
+        startRecording: startAudioRecording,
+        stopRecording: stopAudioRecording,
+        isRecording: () => isRecording || recordRequested,
+        triggerCamera: () => {
+            cameraInput?.click();
+        },
+        setFileContext: setFileContext
+    };
 
     // ── MODEL DROPDOWN SELECT ─────────────────────────────────
     if (modelSelect) {
@@ -166,26 +386,36 @@ export function initAIMode() {
                 return;
             }
 
+            // Gunakan endpoint worker tepercaya
+            const activeModel = modelSelect?.dataset.value || 'gemini-3.5-flash';
+            const defaultInstruction = appState.state.settings.aiDefaultPrompt || '';
+
             // Show loading spinner
             btnGenerate.disabled = true;
             btnGenerate.innerHTML = `<i-ui name="loading-01" size="14" class="spin-icon" style="margin-right: 4px;"></i-ui> Generating...`;
             promptInput.disabled = true;
 
-            const activeModel = modelSelect?.dataset.value || 'gemini-3.5-flash';
-            const defaultInstruction = appState.state.settings.aiDefaultPrompt || '';
+            const payloadBody = {
+                prompt: prompt,
+                model: activeModel,
+                systemInstruction: defaultInstruction
+            };
+
+            if (activeFileContext) {
+                payloadBody.fileContext = {
+                    name: activeFileContext.name,
+                    mimeType: activeFileContext.mimeType,
+                    base64: activeFileContext.base64
+                };
+            }
 
             try {
-                // Gunakan endpoint worker tepercaya
                 const response = await fetch('https://api.zanxa.site/bme-api/generate', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        prompt: prompt,
-                        model: activeModel,
-                        systemInstruction: defaultInstruction
-                    })
+                    body: JSON.stringify(payloadBody)
                 });
 
                 if (!response.ok) {
@@ -213,6 +443,7 @@ export function initAIMode() {
 
                     // Exit select mode if active
                     exitSelectMode();
+                    setFileContext(null); // Clear file context tag on success
                     renderAICards();
 
                     if (window.showBMEAlert) window.showBMEAlert(`AI berhasil memproses ${cards.length} data invoice!`, "success");

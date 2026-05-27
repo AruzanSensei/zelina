@@ -350,15 +350,49 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // 7. Desktop workspace-header: only visible in Manual Mode
+        // 7. Desktop workspace-header: only visible in Manual Mode on Desktop (prevent mobile bleeding)
         const workspaceHeader = document.querySelector('.workspace-header');
         if (workspaceHeader) {
-            workspaceHeader.style.display = (currentMode === 'manual') ? 'flex' : 'none';
+            const isDesktop = window.innerWidth >= 1024;
+            if (isDesktop) {
+                workspaceHeader.style.display = (currentMode === 'manual') ? 'flex' : 'none';
+            } else {
+                workspaceHeader.style.display = ''; // Reset inline style so CSS stylesheet rules take control on mobile
+            }
         }
 
         // 8. Sync control toggles & DOM previews
         syncControlToggles();
         syncPreviewPanelDOM();
+
+        // 9. Sync Mobile App Header layout and sticky state
+        const headerBrandContainer = document.getElementById('header-brand-container');
+        const headerPageTitle = document.getElementById('header-page-title');
+        const headerEl = document.querySelector('.app-header');
+
+        if (headerEl) {
+            if (currentMode === 'dashboard') {
+                if (headerBrandContainer) headerBrandContainer.style.display = 'flex';
+                if (headerPageTitle) headerPageTitle.style.display = 'none';
+                headerEl.style.position = 'relative';
+                headerEl.style.top = '';
+                headerEl.classList.remove('hide');
+            } else {
+                if (headerBrandContainer) headerBrandContainer.style.display = 'none';
+                if (headerPageTitle) {
+                    headerPageTitle.style.display = 'block';
+                    const modeNames = {
+                        manual: 'manual',
+                        ai: 'AI Mode',
+                        finance: 'Keuangan',
+                        history: 'Histori'
+                    };
+                    headerPageTitle.textContent = modeNames[currentMode] || currentMode;
+                }
+                headerEl.style.position = 'sticky';
+                headerEl.style.top = '0';
+            }
+        }
     };
 
     // Helper to sync sidebar toggle button icon dynamically
@@ -699,46 +733,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Header Logic
     if (header) {
-        const applyHeaderMode = (mode) => {
-            if (mode === 'history' || mode === 'finance') {
-                // In history/finance mode: non-sticky, can be scrolled past
-                header.style.position = 'relative';
-                header.style.top = '';
-                header.classList.remove('hide');
-            } else {
-                // In other modes: sticky with smart hide/show
-                header.style.position = '';
-                header.style.top = '';
-            }
-        };
-
-        // Apply initial mode
-        applyHeaderMode(appState.state.currentMode);
-
-        // Reapply on tab switch
-        mobileTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                applyHeaderMode(tab.dataset.tab);
-                lastScrollY = window.scrollY;
-                header.classList.remove('hide');
-            });
-        });
+        // Apply initial mode on boot
+        if (typeof syncActiveTabUI === 'function') {
+            syncActiveTabUI();
+        }
 
         window.addEventListener('scroll', () => {
             const currentScrollY = window.scrollY;
+            const activeTab = appState.getActiveTab();
+            const curMode = activeTab ? activeTab.mode : appState.state.currentMode;
 
-            const curMode = appState.state.currentMode;
-            if (curMode === 'history' || curMode === 'finance') {
-                // In history/finance mode: reveal if within 100px from top
-                if (currentScrollY <= 100) {
-                    header.style.position = 'sticky';
-                    header.style.top = '0';
-                    header.classList.remove('hide');
-                } else {
-                    header.style.position = 'relative';
-                    header.style.top = '';
-                    header.classList.remove('hide');
-                }
+            if (curMode === 'dashboard') {
+                // Dashboard mode header is static/relative and never hides
+                header.style.position = 'relative';
+                header.style.top = '';
+                header.classList.remove('hide');
                 lastScrollY = currentScrollY;
                 return;
             }
@@ -1344,6 +1353,178 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Jalankan sesi Supabase inisialisasi
     initSupabaseSession();
+
+    // ============================================
+    // AI RADIAL GESTURE INTERACTIONS
+    // ============================================
+    const initAIRadialGestures = () => {
+        const tabBtnAi = document.querySelector('.tab-btn-ai');
+        const radialOverlay = document.getElementById('ai-radial-overlay');
+        if (!tabBtnAi || !radialOverlay) return;
+
+        const radialAnchor = radialOverlay.querySelector('.radial-center-anchor');
+        let gestureTimer = null;
+        let isGestureMode = false;
+        let lastActiveTarget = null;
+        let isGlobalRecording = false;
+
+        const checkCollision = (clientX, clientY) => {
+            const micBtn = document.getElementById('btn-radial-mic');
+            const camBtn = document.getElementById('btn-radial-camera');
+            if (!micBtn || !camBtn) return null;
+
+            const micRect = micBtn.getBoundingClientRect();
+            const camRect = camBtn.getBoundingClientRect();
+
+            const micCenterX = micRect.left + micRect.width / 2;
+            const micCenterY = micRect.top + micRect.height / 2;
+
+            const camCenterX = camRect.left + camRect.width / 2;
+            const camCenterY = camRect.top + camRect.height / 2;
+
+            const distMic = Math.hypot(clientX - micCenterX, clientY - micCenterY);
+            const distCam = Math.hypot(clientX - camCenterX, clientY - camCenterY);
+
+            let activeTarget = null;
+            if (distMic < 45) {
+                activeTarget = 'mic';
+            } else if (distCam < 45) {
+                activeTarget = 'camera';
+            }
+
+            if (activeTarget === 'mic') {
+                micBtn.classList.add('active');
+                camBtn.classList.remove('active');
+            } else if (activeTarget === 'camera') {
+                camBtn.classList.add('active');
+                micBtn.classList.remove('active');
+            } else {
+                micBtn.classList.remove('active');
+                camBtn.classList.remove('active');
+            }
+
+            return activeTarget;
+        };
+
+        const handleActiveTargetChange = (target) => {
+            if (target === 'mic') {
+                if (!isGlobalRecording) {
+                    window.bmeAI?.startRecording();
+                    isGlobalRecording = true;
+                }
+            }
+        };
+
+        const onStart = (e) => {
+            // Stop any active background recording before starting gesture menu
+            if (window.bmeAI?.isRecording()) {
+                window.bmeAI?.stopRecording();
+            }
+
+            const touch = e.touches ? e.touches[0] : e;
+            const clientX = touch.clientX;
+            const clientY = touch.clientY;
+
+            // Compute exact button center
+            const rect = tabBtnAi.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            radialAnchor.style.left = `${centerX}px`;
+            radialAnchor.style.top = `${centerY}px`;
+
+            isGestureMode = false;
+            lastActiveTarget = null;
+            isGlobalRecording = false;
+
+            gestureTimer = setTimeout(() => {
+                isGestureMode = true;
+                radialOverlay.classList.remove('hidden');
+                radialOverlay.classList.add('active');
+                radialOverlay.style.display = 'block';
+
+                lastActiveTarget = checkCollision(clientX, clientY);
+                handleActiveTargetChange(lastActiveTarget);
+            }, 250);
+
+            document.addEventListener('touchmove', onMove, { passive: false });
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('touchend', onEnd);
+            document.addEventListener('mouseup', onEnd);
+        };
+
+        const onMove = (e) => {
+            if (!gestureTimer) return;
+            const touch = e.touches ? e.touches[0] : e;
+            
+            if (isGestureMode) {
+                if (e.cancelable) e.preventDefault();
+                const target = checkCollision(touch.clientX, touch.clientY);
+                if (target !== lastActiveTarget) {
+                    lastActiveTarget = target;
+                    handleActiveTargetChange(target);
+                }
+            }
+        };
+
+        const onEnd = (e) => {
+            clearTimeout(gestureTimer);
+            gestureTimer = null;
+
+            document.removeEventListener('touchmove', onMove);
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('touchend', onEnd);
+            document.removeEventListener('mouseup', onEnd);
+
+            if (isGestureMode) {
+                if (e.cancelable) e.preventDefault();
+
+                // Switch to AI tab
+                const existingTab = appState.state.tabs.find(t => t.mode === 'ai');
+                if (existingTab) {
+                    appState.switchTab(existingTab.id);
+                } else {
+                    appState.createNewTab('ai');
+                }
+
+                if (lastActiveTarget === 'mic') {
+                    if (window.bmeAI?.isRecording()) {
+                        window.bmeAI?.stopRecording();
+                    }
+                } else if (lastActiveTarget === 'camera') {
+                    if (window.bmeAI?.isRecording()) {
+                        window.bmeAI?.stopRecording();
+                    }
+                    setTimeout(() => {
+                        window.bmeAI?.triggerCamera();
+                    }, 100);
+                } else {
+                    if (window.bmeAI?.isRecording()) {
+                        window.bmeAI?.stopRecording();
+                    }
+                }
+
+                radialOverlay.classList.remove('active');
+                setTimeout(() => {
+                    if (!radialOverlay.classList.contains('active')) {
+                        radialOverlay.style.display = 'none';
+                        radialOverlay.classList.add('hidden');
+                    }
+                }, 250);
+
+                const micBtn = document.getElementById('btn-radial-mic');
+                const camBtn = document.getElementById('btn-radial-camera');
+                if (micBtn) micBtn.classList.remove('active');
+                if (camBtn) camBtn.classList.remove('active');
+            }
+            isGlobalRecording = false;
+        };
+
+        tabBtnAi.addEventListener('touchstart', onStart, { passive: true });
+        tabBtnAi.addEventListener('mousedown', onStart);
+    };
+
+    initSafely('AIRadialGestures', initAIRadialGestures);
 
     // Initial show
     showFooter();
