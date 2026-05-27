@@ -586,10 +586,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- Div 2: Kanan (Kamera, Mic, Generate) -->
+                                <!-- Div 2: Kanan (Kamera, Galeri, Mic, Generate) -->
                                 <div class="ai-prompt-actions-right">
-                                    <button id="btn-ai-camera" class="icon-btn" title="Kamera & Unggah">
+                                    <button id="btn-ai-camera" class="icon-btn" title="Buka Kamera">
                                         <i-ui name="camera-02" size="16"></i-ui>
+                                    </button>
+                                    <button id="btn-ai-gallery" class="icon-btn" title="Pilih dari Galeri">
+                                        <i-ui name="image-01" size="16"></i-ui>
                                     </button>
                                     <button id="btn-ai-mic" class="icon-btn" title="Mikrofon">
                                         <i-ui name="microphone-02" size="16"></i-ui>
@@ -599,7 +602,10 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="file" id="ai-camera-input" accept="image/*" style="display:none">
+                        <!-- Input kamera: langsung buka kamera perangkat (capture) -->
+                        <input type="file" id="ai-camera-input" accept="image/*" capture="environment" style="display:none">
+                        <!-- Input galeri: pilih gambar dari galeri/penyimpanan -->
+                        <input type="file" id="ai-gallery-input" accept="image/*" style="display:none">
 
                         <!-- Wadah Card Output Hasil Generate -->
                         <div id="ai-output-container" class="ai-output-container">
@@ -1375,6 +1381,10 @@
                 <!-- Camera Button at 11 o'clock -->
                 <button id="btn-radial-camera" class="radial-action-btn btn-camera" title="Ambil Foto">
                     <i-ui name="camera-02" size="20"></i-ui>
+                </button>
+                <!-- Gallery Button at 12 o'clock (top center, slightly higher) -->
+                <button id="btn-radial-gallery" class="radial-action-btn btn-gallery" title="Pilih Gambar">
+                    <i-ui name="image-01" size="20"></i-ui>
                 </button>
                 <!-- Mic Button at 1 o'clock -->
                 <button id="btn-radial-mic" class="radial-action-btn btn-mic" title="Rekam Suara">

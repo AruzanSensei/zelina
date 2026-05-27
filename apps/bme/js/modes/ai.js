@@ -34,8 +34,10 @@ export function initAIMode() {
     const btnResize = document.getElementById('btn-ai-prompt-resize');
     const modelSelect = document.getElementById('ai-model-select');
     const btnCamera = document.getElementById('btn-ai-camera');
+    const btnGallery = document.getElementById('btn-ai-gallery');
     const btnMic = document.getElementById('btn-ai-mic');
     const cameraInput = document.getElementById('ai-camera-input');
+    const galleryInput = document.getElementById('ai-gallery-input');
     const btnGenerate = document.getElementById('btn-ai-generate');
     const outputContainer = document.getElementById('ai-output-container');
 
@@ -303,23 +305,33 @@ export function initAIMode() {
         }
     }
 
-    // Camera Input change trigger
+    // Camera Input: membuka kamera perangkat (capture="environment")
     if (cameraInput) {
         cameraInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
-            
             const reader = new FileReader();
             reader.onloadend = () => {
-                setFileContext({
-                    name: file.name,
-                    mimeType: file.type,
-                    base64: reader.result
-                });
-                if (window.showBMEAlert) window.showBMEAlert("Foto berhasil dimuat!", "success");
+                setFileContext({ name: file.name, mimeType: file.type, base64: reader.result });
+                if (window.showBMEAlert) window.showBMEAlert("Foto dari kamera berhasil dimuat!", "success");
             };
             reader.readAsDataURL(file);
-            cameraInput.value = ''; // Reset
+            cameraInput.value = '';
+        });
+    }
+
+    // Gallery Input: memilih dari galeri/penyimpanan (tanpa capture)
+    if (galleryInput) {
+        galleryInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setFileContext({ name: file.name, mimeType: file.type, base64: reader.result });
+                if (window.showBMEAlert) window.showBMEAlert("Gambar dari galeri berhasil dimuat!", "success");
+            };
+            reader.readAsDataURL(file);
+            galleryInput.value = '';
         });
     }
 
@@ -327,6 +339,12 @@ export function initAIMode() {
     if (btnCamera) {
         btnCamera.addEventListener('click', () => {
             cameraInput?.click();
+        });
+    }
+
+    if (btnGallery) {
+        btnGallery.addEventListener('click', () => {
+            galleryInput?.click();
         });
     }
 
@@ -347,6 +365,9 @@ export function initAIMode() {
         isRecording: () => isRecording || recordRequested,
         triggerCamera: () => {
             cameraInput?.click();
+        },
+        triggerGallery: () => {
+            galleryInput?.click();
         },
         setFileContext: setFileContext
     };

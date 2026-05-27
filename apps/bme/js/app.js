@@ -1380,6 +1380,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const checkCollision = (clientX, clientY) => {
             const micBtn = document.getElementById('btn-radial-mic');
             const camBtn = document.getElementById('btn-radial-camera');
+            const galBtn = document.getElementById('btn-radial-gallery');
             if (!micBtn || !camBtn) return null;
 
             const micRect = micBtn.getBoundingClientRect();
@@ -1394,22 +1395,39 @@ document.addEventListener('DOMContentLoaded', () => {
             const distMic = Math.hypot(clientX - micCenterX, clientY - micCenterY);
             const distCam = Math.hypot(clientX - camCenterX, clientY - camCenterY);
 
+            let distGal = Infinity;
+            if (galBtn) {
+                const galRect = galBtn.getBoundingClientRect();
+                const galCenterX = galRect.left + galRect.width / 2;
+                const galCenterY = galRect.top + galRect.height / 2;
+                distGal = Math.hypot(clientX - galCenterX, clientY - galCenterY);
+            }
+
             let activeTarget = null;
             if (distMic < 45) {
                 activeTarget = 'mic';
             } else if (distCam < 45) {
                 activeTarget = 'camera';
+            } else if (distGal < 45) {
+                activeTarget = 'gallery';
             }
 
             if (activeTarget === 'mic') {
                 micBtn.classList.add('active');
                 camBtn.classList.remove('active');
+                if (galBtn) galBtn.classList.remove('active');
             } else if (activeTarget === 'camera') {
                 camBtn.classList.add('active');
                 micBtn.classList.remove('active');
+                if (galBtn) galBtn.classList.remove('active');
+            } else if (activeTarget === 'gallery') {
+                if (galBtn) galBtn.classList.add('active');
+                micBtn.classList.remove('active');
+                camBtn.classList.remove('active');
             } else {
                 micBtn.classList.remove('active');
                 camBtn.classList.remove('active');
+                if (galBtn) galBtn.classList.remove('active');
             }
 
             return activeTarget;
@@ -1507,6 +1525,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     setTimeout(() => {
                         window.bmeAI?.triggerCamera();
                     }, 100);
+                } else if (lastActiveTarget === 'gallery') {
+                    if (window.bmeAI?.isRecording()) {
+                        window.bmeAI?.stopRecording();
+                    }
+                    setTimeout(() => {
+                        window.bmeAI?.triggerGallery();
+                    }, 100);
                 } else {
                     if (window.bmeAI?.isRecording()) {
                         window.bmeAI?.stopRecording();
@@ -1523,8 +1548,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const micBtn = document.getElementById('btn-radial-mic');
                 const camBtn = document.getElementById('btn-radial-camera');
+                const galBtn = document.getElementById('btn-radial-gallery');
                 if (micBtn) micBtn.classList.remove('active');
                 if (camBtn) camBtn.classList.remove('active');
+                if (galBtn) galBtn.classList.remove('active');
             }
             isGlobalRecording = false;
         };

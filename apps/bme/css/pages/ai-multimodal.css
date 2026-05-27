@@ -213,6 +213,11 @@
     transform: translate(-55px, -55px) scale(0.9);
 }
 
+/* Gallery: 12 o'clock — top center, slightly higher than camera & mic */
+.radial-action-btn.btn-gallery {
+    transform: translate(0px, -75px) scale(0.9);
+}
+
 .radial-action-btn.btn-mic {
     transform: translate(55px, -55px) scale(0.9);
 }
@@ -224,20 +229,35 @@
     box-shadow: 0 0 20px rgba(245, 166, 35, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3) !important;
 }
 
+.radial-action-btn.btn-gallery.active,
+.radial-action-btn.btn-gallery:hover {
+    transform: translate(0px, -75px) scale(1.22);
+    box-shadow: 0 0 20px rgba(245, 166, 35, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3) !important;
+}
+
 .radial-action-btn.btn-mic.active,
 .radial-action-btn.btn-mic:hover {
     transform: translate(55px, -55px) scale(1.22);
     box-shadow: 0 0 20px rgba(245, 166, 35, 0.4), 0 8px 24px rgba(0, 0, 0, 0.3) !important;
 }
 
-/* Fade out the non-active sibling button dramatically when one is hovered/active */
-.radial-ring-menu:has(.btn-mic.active) .btn-camera {
+/* Fade out the non-active sibling buttons dramatically when one is hovered/active */
+.radial-ring-menu:has(.btn-mic.active) .btn-camera,
+.radial-ring-menu:has(.btn-gallery.active) .btn-camera {
     opacity: 0.35;
     filter: brightness(0.7) saturate(0.6);
     transform: translate(-55px, -55px) scale(0.8);
 }
 
-.radial-ring-menu:has(.btn-camera.active) .btn-mic {
+.radial-ring-menu:has(.btn-mic.active) .btn-gallery,
+.radial-ring-menu:has(.btn-camera.active) .btn-gallery {
+    opacity: 0.35;
+    filter: brightness(0.7) saturate(0.6);
+    transform: translate(0px, -75px) scale(0.8);
+}
+
+.radial-ring-menu:has(.btn-camera.active) .btn-mic,
+.radial-ring-menu:has(.btn-gallery.active) .btn-mic {
     opacity: 0.35;
     filter: brightness(0.7) saturate(0.6);
     transform: translate(55px, -55px) scale(0.8);
