@@ -72,6 +72,20 @@ class SyncEngine {
         } catch (e) {
             console.error('[SyncEngine] Failed to sync IndexedDB to localStorage on init:', e);
         }
+
+        // Reset any dead/stuck sync queue operations back to pending to recover from past errors
+        try {
+            const { resetDeadSyncOps } = await import('./db.js');
+            const recoveredCount = await resetDeadSyncOps();
+            if (recoveredCount > 0) {
+                console.log(`[SyncEngine] Successfully recovered ${recoveredCount} stuck sync operations.`);
+                // Flush the queue immediately to retry
+                const { syncQueue } = await import('./sync-queue.js');
+                syncQueue.scheduleFlush();
+            }
+        } catch (e) {
+            console.error('[SyncEngine] Failed to recover dead sync operations:', e);
+        }
     }
 
     /**

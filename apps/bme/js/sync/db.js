@@ -466,6 +466,24 @@ export async function clearSyncQueue() {
 }
 
 /**
+ * Reset all dead sync queue operations back to pending status.
+ * Used to recover from historical failures (e.g., old Edge Function errors).
+ * @returns {Promise<number>} Count of recovered operations
+ */
+export async function resetDeadSyncOps() {
+    return db.transaction('rw', db.sync_queue, async () => {
+        const deadOps = await db.sync_queue.where('status').equals('dead').toArray();
+        if (deadOps.length > 0) {
+            console.log(`[BME DB] Resetting ${deadOps.length} dead sync operations to pending...`);
+            for (const op of deadOps) {
+                await db.sync_queue.update(op.id, { status: 'pending', retry_count: 0 });
+            }
+        }
+        return deadOps.length;
+    });
+}
+
+/**
  * Clear all sync metadata.
  * @returns {Promise<void>}
  */

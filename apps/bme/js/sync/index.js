@@ -10,7 +10,7 @@
  */
 
 import { db, migrateFromLocalStorage, getAll, putRecord, bulkPut, softDelete,
-         replaceAllForUser, getUserDataCounts, enqueueSyncOp, clearAccountData } from './db.js';
+         replaceAllForUser, getUserDataCounts, enqueueSyncOp, clearAccountData, resetDeadSyncOps } from './db.js';
 import { getDeviceId, getDeviceIdSync, isCurrentDevice } from './device.js';
 import { syncQueue } from './sync-queue.js';
 import { syncEngine } from './sync-engine.js';
@@ -134,6 +134,7 @@ export {
     getUserDataCounts,
     enqueueSyncOp,
     clearAccountData,
+    resetDeadSyncOps,
     getDeviceId,
     getDeviceIdSync,
     isCurrentDevice,
