@@ -51,6 +51,27 @@ class SyncEngine {
         await getDeviceId();
 
         console.log('[SyncEngine] Initialized for user:', userId);
+
+        // Load source-of-truth from IndexedDB and populate localStorage for the UI
+        try {
+            const [history, templates, tabs] = await Promise.all([
+                getAll('history', userId),
+                getAll('templates', userId),
+                getAll('tabs', userId)
+            ]);
+
+            if (history && history.length > 0) {
+                localStorage.setItem('bme_history', JSON.stringify(history.map(h => this._stripSyncMeta(h))));
+            }
+            if (templates && templates.length > 0) {
+                localStorage.setItem('bme_templates', JSON.stringify(templates.map(t => this._stripSyncMeta(t))));
+            }
+            if (tabs && tabs.length > 0) {
+                localStorage.setItem('bme_tabs', JSON.stringify(tabs.map(t => this._stripSyncMeta(t))));
+            }
+        } catch (e) {
+            console.error('[SyncEngine] Failed to sync IndexedDB to localStorage on init:', e);
+        }
     }
 
     /**
@@ -200,15 +221,18 @@ class SyncEngine {
             const mergedTemplates = await this._mergeTable('templates', cloudData.templates || []);
             const mergedTabs = await this._mergeTable('tabs', cloudData.tabs || []);
 
-            // Write merged data to IndexedDB
+            // Write merged data to IndexedDB & localStorage
             if (mergedHistory.length > 0) {
                 await replaceAllForUser('history', this._userId, mergedHistory);
+                localStorage.setItem('bme_history', JSON.stringify(mergedHistory.map(r => this._stripSyncMeta(r))));
             }
             if (mergedTemplates.length > 0) {
                 await replaceAllForUser('templates', this._userId, mergedTemplates);
+                localStorage.setItem('bme_templates', JSON.stringify(mergedTemplates.map(r => this._stripSyncMeta(r))));
             }
             if (mergedTabs.length > 0) {
                 await replaceAllForUser('tabs', this._userId, mergedTabs);
+                localStorage.setItem('bme_tabs', JSON.stringify(mergedTabs.map(r => this._stripSyncMeta(r))));
             }
 
             // Merge settings (cloud settings override, local settings fill gaps)
@@ -244,9 +268,15 @@ class SyncEngine {
             return { case: 'EMPTY', localCounts: {}, cloudCounts: {}, cloudData: null };
         }
 
-        // Get local data counts (guest data that exists before login)
-        const localCounts = await getUserDataCounts('guest');
-        const localHasData = (localCounts.history + localCounts.templates) > 0;
+        // Get local data counts (check guest data first, then user data if no guest data)
+        const guestCounts = await getUserDataCounts('guest');
+        const guestHasData = (guestCounts.history + guestCounts.templates) > 0;
+
+        const userCounts = await getUserDataCounts(this._userId);
+        const userHasData = (userCounts.history + userCounts.templates) > 0;
+
+        const localCounts = guestHasData ? guestCounts : userCounts;
+        const localHasData = guestHasData ? guestHasData : userHasData;
 
         // Get cloud data
         let cloudData = null;
@@ -369,6 +399,7 @@ class SyncEngine {
                 deleted_at: item.deleted_at || null
             }));
             await replaceAllForUser('history', this._userId, records);
+            localStorage.setItem('bme_history', JSON.stringify(records.map(r => this._stripSyncMeta(r))));
         }
 
         if (cloudData.templates && Array.isArray(cloudData.templates)) {
@@ -384,6 +415,7 @@ class SyncEngine {
                 deleted_at: item.deleted_at || null
             }));
             await replaceAllForUser('templates', this._userId, records);
+            localStorage.setItem('bme_templates', JSON.stringify(records.map(r => this._stripSyncMeta(r))));
         }
 
         if (cloudData.tabs && Array.isArray(cloudData.tabs)) {
@@ -399,6 +431,7 @@ class SyncEngine {
                 device_id: item.device_id || deviceId
             }));
             await replaceAllForUser('tabs', this._userId, records);
+            localStorage.setItem('bme_tabs', JSON.stringify(records.map(r => this._stripSyncMeta(r))));
         }
 
         if (cloudData.settings) {

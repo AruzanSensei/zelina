@@ -205,8 +205,63 @@ class StateManager {
     save(key, data) {
         try {
             localStorage.setItem(key, JSON.stringify(data));
+            // Mirror to IndexedDB asynchronously
+            this._mirrorToIndexedDB(key, data);
         } catch (e) {
             console.error('Error saving state:', e);
+        }
+    }
+
+    async _mirrorToIndexedDB(key, data) {
+        try {
+            if (key === STORAGE_KEYS.HISTORY) {
+                const userId = this.state.isLoggedIn && this.state.adminProfile ? this.state.adminProfile.id : 'guest';
+                const sync = await getSyncModule();
+                const records = data.map((item, i) => ({
+                    id: item.id || `local_${Date.now()}_${i}`,
+                    user_id: userId,
+                    title: item.title || '',
+                    date: item.date || new Date().toISOString(),
+                    items: item.items || [],
+                    cardMode: item.cardMode || 'simple',
+                    timestamp: item.timestamp || new Date().toISOString(),
+                    created_at: item.timestamp || item.date || new Date().toISOString(),
+                    updated_at: item.updated_at || new Date().toISOString(),
+                    version: item.version || 1,
+                    deleted_at: item.deleted_at || null
+                }));
+                await sync.replaceAllForUser('history', userId, records);
+            } else if (key === STORAGE_KEYS.TEMPLATES) {
+                const userId = this.state.isLoggedIn && this.state.adminProfile ? this.state.adminProfile.id : 'guest';
+                const sync = await getSyncModule();
+                const records = data.map((item, i) => ({
+                    id: item.id || `tmpl_${Date.now()}_${i}`,
+                    user_id: userId,
+                    name: item.name || '',
+                    items: item.items || [],
+                    created_at: item.created_at || new Date().toISOString(),
+                    updated_at: item.updated_at || new Date().toISOString(),
+                    version: item.version || 1,
+                    deleted_at: item.deleted_at || null
+                }));
+                await sync.replaceAllForUser('templates', userId, records);
+            } else if (key === STORAGE_KEYS.TABS) {
+                const userId = this.state.isLoggedIn && this.state.adminProfile ? this.state.adminProfile.id : 'guest';
+                const sync = await getSyncModule();
+                const records = data.map(item => ({
+                    id: item.id,
+                    user_id: userId,
+                    mode: item.mode,
+                    title: item.title || '',
+                    data: item.data || {},
+                    created_at: item.created_at || new Date().toISOString(),
+                    updated_at: item.updated_at || new Date().toISOString(),
+                    version: item.version || 1
+                }));
+                await sync.replaceAllForUser('tabs', userId, records);
+            }
+        } catch (e) {
+            console.error('[StateManager] Mirroring to IndexedDB failed:', e);
         }
     }
 
