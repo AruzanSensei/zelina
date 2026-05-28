@@ -92,14 +92,16 @@ class LoginSyncOrchestrator {
                 return { case: 'B', action: 'auto-pushed' };
 
             case 'C':
-                // Both exist → show conflict dialog
-                this._notifyListeners('conflict', {
-                    case: 'C',
-                    localCounts: result.localCounts,
-                    cloudCounts: result.cloudCounts,
-                    cloudData: result.cloudData
-                });
-                return { case: 'C', action: 'conflict-dialog' };
+                // Both exist → merge automatically in the background
+                this._notifyListeners('sync-start', { case: 'C', message: 'Sinkronisasi data latar belakang...' });
+                const mergeSuccess = await syncEngine.mergeData();
+                if (mergeSuccess) {
+                    this._notifyListeners('sync-complete', { case: 'C', message: 'Data berhasil disinkronkan.' });
+                    realtimeManager.broadcastSyncComplete();
+                } else {
+                    this._notifyListeners('sync-error', { case: 'C', message: 'Gagal menyinkronkan data.' });
+                }
+                return { case: 'C', action: 'auto-merged' };
 
             case 'EMPTY':
                 // Both empty — nothing to sync
@@ -139,12 +141,10 @@ class LoginSyncOrchestrator {
             const result = await syncEngine.determineLoginCase();
 
             if (result.case === 'C') {
-                // Conflict exists but on refresh, just notify — don't block UI
-                this._notifyListeners('conflict-detected', {
-                    localCounts: result.localCounts,
-                    cloudCounts: result.cloudCounts,
-                    cloudData: result.cloudData
-                });
+                // Conflict exists on refresh — silently merge automatically in the background
+                console.log('[LoginSync] Conflict detected on restore — auto-merging data...');
+                await syncEngine.mergeData();
+                this._notifyListeners('sync-complete', { case: 'C', message: 'Data berhasil disinkronkan.' });
             } else if (result.case === 'A') {
                 // Only cloud has data — pull silently
                 await syncEngine.handleCaseA(result.cloudData);

@@ -1031,6 +1031,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Resolusi Konflik Sinkronisasi (Merge Conflict Strategy)
     // Visual badge & banner controller for sync conflicts
     const toggleConflictBadge = (show) => {
+        // No-op: Always hide conflict badges and banners to keep background sync 100% automatic!
+        show = false;
+
         const desktopBtn = document.querySelector('.sidebar-item[data-tab="history"]');
         const mobileBtn = document.querySelector('.tab-btn[data-tab="history"]');
 
