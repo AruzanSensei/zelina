@@ -57,7 +57,6 @@
     <link rel="stylesheet" href="css/pages/history.css">
     <link rel="stylesheet" href="css/pages/finance.css">
     <link rel="stylesheet" href="css/pages/settings.css">
-    <link rel="stylesheet" href="css/pages/sync-dialog.css">
 
     <!-- Manifest -->
     <link rel="manifest" href="manifest.json">
@@ -604,7 +603,8 @@
                             </div>
                         </div>
                         <!-- Input kamera: langsung buka kamera perangkat (capture) -->
-                        <input type="file" id="ai-camera-input" accept="image/*" capture="environment" style="display:none">
+                        <input type="file" id="ai-camera-input" accept="image/*" capture="environment"
+                            style="display:none">
                         <!-- Input galeri: pilih gambar dari galeri/penyimpanan -->
                         <input type="file" id="ai-gallery-input" accept="image/*" style="display:none">
 
@@ -1396,21 +1396,31 @@
     </div>
 
     <!-- Multimodal File Preview Modal -->
-    <div id="file-preview-modal" class="modal file-preview-modal hidden" style="z-index: 99999; display: none; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.65);">
-        <div class="modal-content" style="max-width: 500px; padding: 20px; border-radius: var(--radius-md); background: var(--bg-card); border: 1px solid var(--border-color); width: calc(100% - 32px); box-shadow: var(--shadow-lg);">
-            <div class="modal-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
-                <h2 id="preview-modal-title" style="font-size: 1.1rem; font-weight: 600; margin: 0;">Pratinjau Berkas</h2>
-                <button class="close-preview-modal icon-btn" id="btn-close-preview-modal" style="background: transparent; border: none; cursor: pointer; color: var(--text-main);">
+    <div id="file-preview-modal" class="modal file-preview-modal hidden"
+        style="z-index: 99999; display: none; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.65);">
+        <div class="modal-content"
+            style="max-width: 500px; padding: 20px; border-radius: var(--radius-md); background: var(--bg-card); border: 1px solid var(--border-color); width: calc(100% - 32px); box-shadow: var(--shadow-lg);">
+            <div class="modal-header"
+                style="border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;">
+                <h2 id="preview-modal-title" style="font-size: 1.1rem; font-weight: 600; margin: 0;">Pratinjau Berkas
+                </h2>
+                <button class="close-preview-modal icon-btn" id="btn-close-preview-modal"
+                    style="background: transparent; border: none; cursor: pointer; color: var(--text-main);">
                     <i-ui name="x" size="20"></i-ui>
-                </button>
+                    </buttozn>
             </div>
-            <div class="preview-modal-body" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px; width: 100%;">
-                <div id="preview-image-container" class="hidden" style="width: 100%; display: none; text-align: center;">
-                    <img id="preview-img-element" src="" alt="Pratinjau Foto" style="max-width: 100%; max-height: 350px; border-radius: 8px; object-fit: contain; box-shadow: var(--shadow-md);">
+            <div class="preview-modal-body"
+                style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px; width: 100%;">
+                <div id="preview-image-container" class="hidden"
+                    style="width: 100%; display: none; text-align: center;">
+                    <img id="preview-img-element" src="" alt="Pratinjau Foto"
+                        style="max-width: 100%; max-height: 350px; border-radius: 8px; object-fit: contain; box-shadow: var(--shadow-md);">
                 </div>
-                <div id="preview-audio-container" class="hidden" style="width: 100%; display: none; flex-direction: column; align-items: center; gap: 12px; padding: 20px;">
+                <div id="preview-audio-container" class="hidden"
+                    style="width: 100%; display: none; flex-direction: column; align-items: center; gap: 12px; padding: 20px;">
                     <i-ui name="microphone-02" size="48" style="color: var(--primary);"></i-ui>
-                    <span id="preview-audio-filename" style="font-size: 0.85rem; color: var(--text-muted);">rekaman-suara.wav</span>
+                    <span id="preview-audio-filename"
+                        style="font-size: 0.85rem; color: var(--text-muted);">rekaman-suara.wav</span>
                     <audio id="preview-audio-element" controls style="width: 100%; margin-top: 10px;"></audio>
                 </div>
             </div>
