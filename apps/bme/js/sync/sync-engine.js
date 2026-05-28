@@ -33,6 +33,10 @@ class SyncEngine {
         this._isInitialized = false;
         this._syncInProgress = false;
 
+        this._realtimePatchPromise = Promise.resolve();
+        this._patchDebounceTimer = null;
+        this._pendingResolvers = [];
+
         // Register as the sync handler for the queue
         syncQueue.setSyncHandler(async (pendingOps) => this._processSyncBatch(pendingOps));
     }
@@ -122,10 +126,9 @@ class SyncEngine {
         this._notifyListeners('syncing');
 
         try {
-            const [history, templates, tabs] = await Promise.all([
+            const [history, templates] = await Promise.all([
                 getAll('history', this._userId),
-                getAll('templates', this._userId),
-                getAll('tabs', this._userId)
+                getAll('templates', this._userId)
             ]);
 
             // Read settings from localStorage (kept there for fast sync access)
@@ -139,7 +142,6 @@ class SyncEngine {
                 settings,
                 history: history.map(h => this._stripSyncMeta(h)),
                 templates: templates.map(t => this._stripSyncMeta(t)),
-                tabs: tabs.map(t => this._stripSyncMeta(t)),
                 _sync_meta: {
                     device_id: deviceId,
                     synced_at: new Date().toISOString(),
@@ -237,35 +239,47 @@ class SyncEngine {
                 return this.pushFullState();
             }
 
-            // Merge each table
-            const mergedHistory = await this._mergeTable('history', cloudData.history || []);
-            const mergedTemplates = await this._mergeTable('templates', cloudData.templates || []);
-            const mergedTabs = await this._mergeTable('tabs', cloudData.tabs || []);
+            // Check if there is guest data to preserve (e.g. newly created invoice before login)
+            const guestCounts = await getUserDataCounts('guest');
+            const guestHasData = (guestCounts.history + guestCounts.templates) > 0;
 
-            // Write merged data to IndexedDB & localStorage
-            if (mergedHistory.length > 0) {
-                await replaceAllForUser('history', this._userId, mergedHistory);
-                localStorage.setItem('bme_history', JSON.stringify(mergedHistory.map(r => this._stripSyncMeta(r))));
-            }
-            if (mergedTemplates.length > 0) {
-                await replaceAllForUser('templates', this._userId, mergedTemplates);
-                localStorage.setItem('bme_templates', JSON.stringify(mergedTemplates.map(r => this._stripSyncMeta(r))));
-            }
-            if (mergedTabs.length > 0) {
-                await replaceAllForUser('tabs', this._userId, mergedTabs);
-                localStorage.setItem('bme_tabs', JSON.stringify(mergedTabs.map(r => this._stripSyncMeta(r))));
+            if (guestHasData) {
+                console.log('[SyncEngine] Guest data detected during merge. Merging guest data with cloud...');
+                // Merge each table including guest records (tabs is excluded from cloud sync)
+                const mergedHistory = await this._mergeTable('history', cloudData.history || []);
+                const mergedTemplates = await this._mergeTable('templates', cloudData.templates || []);
+
+                // Write merged data to IndexedDB & localStorage
+                if (mergedHistory.length > 0) {
+                    await replaceAllForUser('history', this._userId, mergedHistory);
+                    localStorage.setItem('bme_history', JSON.stringify(mergedHistory.map(r => this._stripSyncMeta(r))));
+                }
+                if (mergedTemplates.length > 0) {
+                    await replaceAllForUser('templates', this._userId, mergedTemplates);
+                    localStorage.setItem('bme_templates', JSON.stringify(mergedTemplates.map(r => this._stripSyncMeta(r))));
+                }
+
+                // Merge settings (cloud settings override, local settings fill gaps)
+                if (cloudData.settings) {
+                    const localSettings = JSON.parse(localStorage.getItem('bme_settings') || '{}');
+                    const mergedSettings = { ...localSettings, ...cloudData.settings };
+                    localStorage.setItem('bme_settings', JSON.stringify(mergedSettings));
+                }
+
+                // Clear guest data since it is now merged
+                await clearAccountData('guest');
+
+                // Push merged state back to cloud
+                await this.pushFullState();
+            } else {
+                // No guest data — cloud is the absolute source of truth!
+                // Directly overwrite local state to follow cloud, discarding stale local data
+                console.log('[SyncEngine] Overwriting local state with cloud data (source of truth)...');
+                await this._applyCloudData(cloudData);
+                await updateLastSyncTimestamp();
             }
 
-            // Merge settings (cloud settings override, local settings fill gaps)
-            if (cloudData.settings) {
-                const localSettings = JSON.parse(localStorage.getItem('bme_settings') || '{}');
-                const mergedSettings = { ...localSettings, ...cloudData.settings };
-                localStorage.setItem('bme_settings', JSON.stringify(mergedSettings));
-            }
-
-            // Push merged state back to cloud
-            await this.pushFullState();
-
+            this._notifyListeners('synced');
             console.log('[SyncEngine] Data merged successfully');
             return true;
 
@@ -302,17 +316,19 @@ class SyncEngine {
         // Get cloud data
         let cloudData = null;
         let cloudHasData = false;
-        let cloudCounts = { history: 0, templates: 0, tabs: 0 };
+        let cloudCounts = { history: 0, templates: 0 };
 
         try {
             cloudData = await this._fetchCloudData();
             if (cloudData) {
                 cloudCounts = {
                     history: (cloudData.history || []).length,
-                    templates: (cloudData.templates || []).length,
-                    tabs: (cloudData.tabs || []).length
+                    templates: (cloudData.templates || []).length
                 };
-                cloudHasData = (cloudCounts.history + cloudCounts.templates) > 0;
+                // Redefined so that even if the cloud row is empty (deleted by user),
+                // it is treated as "cloudHasData = true" to enforce adopting the empty state
+                // rather than assuming the cloud is "new and empty" and pushing stale local data.
+                cloudHasData = (cloudData !== null);
             }
         } catch (e) {
             console.error('[SyncEngine] Failed to fetch cloud data for login case:', e);
@@ -322,9 +338,9 @@ class SyncEngine {
         if (!localHasData && cloudHasData) {
             syncCase = 'A'; // Local empty, cloud exists
         } else if (localHasData && !cloudHasData) {
-            syncCase = 'B'; // Local exists, cloud empty
+            syncCase = 'B'; // Local exists, cloud empty (no row in DB at all)
         } else if (localHasData && cloudHasData) {
-            syncCase = 'C'; // Both exist — conflict
+            syncCase = 'C'; // Both exist
         } else {
             syncCase = 'EMPTY'; // Both empty
         }
@@ -404,56 +420,40 @@ class SyncEngine {
         const now = new Date().toISOString();
         const deviceId = getDeviceIdSync();
 
-        if (cloudData.history && Array.isArray(cloudData.history)) {
-            const records = cloudData.history.map((item, i) => ({
-                id: item.id || `cloud_${Date.now()}_${i}`,
-                user_id: this._userId,
-                title: item.title || '',
-                date: item.date || now,
-                items: item.items || [],
-                cardMode: item.cardMode || 'simple',
-                timestamp: item.timestamp || now,
-                created_at: item.timestamp || item.date || now,
-                updated_at: item.updated_at || now,
-                version: item.version || 1,
-                device_id: item.device_id || deviceId,
-                deleted_at: item.deleted_at || null
-            }));
-            await replaceAllForUser('history', this._userId, records);
-            localStorage.setItem('bme_history', JSON.stringify(records.map(r => this._stripSyncMeta(r))));
-        }
+        // Safely extract arrays or default to empty arrays if missing from cloud data
+        const historyList = Array.isArray(cloudData.history) ? cloudData.history : [];
+        const templatesList = Array.isArray(cloudData.templates) ? cloudData.templates : [];
 
-        if (cloudData.templates && Array.isArray(cloudData.templates)) {
-            const records = cloudData.templates.map((item, i) => ({
-                id: item.id || `tmpl_cloud_${Date.now()}_${i}`,
-                user_id: this._userId,
-                name: item.name || '',
-                items: item.items || [],
-                created_at: item.created_at || now,
-                updated_at: item.updated_at || now,
-                version: item.version || 1,
-                device_id: item.device_id || deviceId,
-                deleted_at: item.deleted_at || null
-            }));
-            await replaceAllForUser('templates', this._userId, records);
-            localStorage.setItem('bme_templates', JSON.stringify(records.map(r => this._stripSyncMeta(r))));
-        }
+        const historyRecords = historyList.map((item, i) => ({
+            id: item.id || `cloud_${Date.now()}_${i}`,
+            user_id: this._userId,
+            title: item.title || '',
+            date: item.date || now,
+            items: item.items || [],
+            cardMode: item.cardMode || 'simple',
+            timestamp: item.timestamp || now,
+            created_at: item.timestamp || item.date || now,
+            updated_at: item.updated_at || now,
+            version: item.version || 1,
+            device_id: item.device_id || deviceId,
+            deleted_at: item.deleted_at || null
+        }));
+        await replaceAllForUser('history', this._userId, historyRecords);
+        localStorage.setItem('bme_history', JSON.stringify(historyRecords.map(r => this._stripSyncMeta(r))));
 
-        if (cloudData.tabs && Array.isArray(cloudData.tabs)) {
-            const records = cloudData.tabs.map(item => ({
-                id: item.id,
-                user_id: this._userId,
-                mode: item.mode,
-                title: item.title || '',
-                data: item.data || {},
-                created_at: item.created_at || now,
-                updated_at: item.updated_at || now,
-                version: item.version || 1,
-                device_id: item.device_id || deviceId
-            }));
-            await replaceAllForUser('tabs', this._userId, records);
-            localStorage.setItem('bme_tabs', JSON.stringify(records.map(r => this._stripSyncMeta(r))));
-        }
+        const templatesRecords = templatesList.map((item, i) => ({
+            id: item.id || `tmpl_cloud_${Date.now()}_${i}`,
+            user_id: this._userId,
+            name: item.name || '',
+            items: item.items || [],
+            created_at: item.created_at || now,
+            updated_at: item.updated_at || now,
+            version: item.version || 1,
+            device_id: item.device_id || deviceId,
+            deleted_at: item.deleted_at || null
+        }));
+        await replaceAllForUser('templates', this._userId, templatesRecords);
+        localStorage.setItem('bme_templates', JSON.stringify(templatesRecords.map(r => this._stripSyncMeta(r))));
 
         if (cloudData.settings) {
             const localSettings = JSON.parse(localStorage.getItem('bme_settings') || '{}');
@@ -608,30 +608,52 @@ class SyncEngine {
      * @param {Object} eventPayload - { table, record_id, action, device_id }
      * @returns {Promise<void>}
      */
-    async applyRealtimePatch(eventPayload) {
-        if (!this._isInitialized || !this._accessToken) return;
+    applyRealtimePatch(eventPayload) {
+        if (!this._isInitialized || !this._accessToken) return Promise.resolve();
 
         // Ignore events from this device
         const currentDeviceId = getDeviceIdSync();
         if (eventPayload.device_id === currentDeviceId) {
             console.log('[SyncEngine] Ignoring self-triggered realtime event');
-            return;
+            return Promise.resolve();
         }
 
-        console.log('[SyncEngine] Applying realtime patch:', eventPayload);
+        console.log('[SyncEngine] Realtime event received, scheduling patch:', eventPayload);
 
-        // For JSONB design, pull the full state and apply
-        // (since we can't fetch individual records from the JSONB blob)
-        try {
-            const cloudData = await this._fetchCloudData();
-            if (cloudData) {
-                await this._applyCloudData(cloudData);
-                await updateLastSyncTimestamp();
-                this._notifyListeners('patched', eventPayload);
-            }
-        } catch (e) {
-            console.error('[SyncEngine] Realtime patch failed:', e);
+        // Cancel any pending scheduled patch
+        if (this._patchDebounceTimer) {
+            clearTimeout(this._patchDebounceTimer);
         }
+
+        return new Promise((resolve) => {
+            this._pendingResolvers.push(resolve);
+
+            this._patchDebounceTimer = setTimeout(() => {
+                this._patchDebounceTimer = null;
+                const resolversToCall = [...this._pendingResolvers];
+                this._pendingResolvers = [];
+
+                // Serialize execution via sequential promise chain to avoid database overlap
+                this._realtimePatchPromise = this._realtimePatchPromise.then(async () => {
+                    console.log('[SyncEngine] Applying debounced realtime patch...');
+                    try {
+                        const cloudData = await this._fetchCloudData();
+                        if (cloudData) {
+                            await this._applyCloudData(cloudData);
+                            await updateLastSyncTimestamp();
+                            this._notifyListeners('patched', eventPayload);
+                        }
+                    } catch (e) {
+                        console.error('[SyncEngine] Realtime patch failed:', e);
+                    }
+                }).catch(err => {
+                    console.error('[SyncEngine] Error in patch chain:', err);
+                }).finally(() => {
+                    // Resolve all waiting promises in this batch
+                    resolversToCall.forEach(res => res());
+                });
+            }, 500);
+        });
     }
 
     // ============================================================

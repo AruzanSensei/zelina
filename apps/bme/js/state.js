@@ -70,6 +70,8 @@ const DEFAULTS = {
 
 class StateManager {
     constructor() {
+        this._mirrorPromise = Promise.resolve();
+
         // Load legacy data
         const legacyItems = this.load(STORAGE_KEYS.MANUAL_ITEMS, DEFAULTS.manualItems);
         const legacyTitle = this.load(STORAGE_KEYS.MANUAL_TITLE, DEFAULTS.manualTitle);
@@ -205,8 +207,10 @@ class StateManager {
     save(key, data) {
         try {
             localStorage.setItem(key, JSON.stringify(data));
-            // Mirror to IndexedDB asynchronously
-            this._mirrorToIndexedDB(key, data);
+            // Mirror to IndexedDB asynchronously via sequential promise chain
+            this._mirrorPromise = this._mirrorPromise
+                .then(() => this._mirrorToIndexedDB(key, data))
+                .catch(e => console.error('[StateManager] Mirroring error in chain:', e));
         } catch (e) {
             console.error('Error saving state:', e);
         }
@@ -302,6 +306,40 @@ class StateManager {
         this.notify('tabs', this.state.tabs);
         this.switchTab(id);
         return newTab;
+    }
+
+    navigateToMode(mode) {
+        const activeTab = this.getActiveTab();
+        if (activeTab) {
+            const modeNames = {
+                dashboard: 'Beranda',
+                manual: activeTab.title.startsWith('Invoice') ? activeTab.title : 'Invoice #001',
+                ai: 'AI Mode',
+                finance: 'Keuangan',
+                history: 'Histori'
+            };
+
+            let newTitle = modeNames[mode] || mode;
+            if (mode === 'manual') {
+                newTitle = activeTab.mode === 'manual' ? activeTab.title : (this.state.manualTitle || 'Invoice #001');
+            }
+
+            activeTab.mode = mode;
+            activeTab.title = newTitle;
+            activeTab.updated_at = new Date().toISOString();
+
+            this.state.currentMode = mode;
+            this.saveTabs();
+
+            this.notify('tabs', this.state.tabs);
+            this.notify('activeTabId', activeTab.id);
+            this.notify('currentMode', mode);
+
+            // Dispatch global event for features to react
+            document.dispatchEvent(new CustomEvent('tab-switched', {
+                detail: { tabId: activeTab.id, mode, title: newTitle }
+            }));
+        }
     }
 
     switchTab(tabId) {
@@ -480,6 +518,11 @@ class StateManager {
         this.notify('syncStatus', 'syncing');
 
         try {
+            // Await any pending mirror operations to finish writing to IndexedDB first
+            if (this._mirrorPromise) {
+                await this._mirrorPromise;
+            }
+
             const sync = await getSyncModule();
             await sync.syncQueue.enqueue('state', 'UPDATE', 'full_state', {
                 timestamp: new Date().toISOString()
@@ -501,6 +544,11 @@ class StateManager {
         this.notify('syncStatus', 'syncing');
 
         try {
+            // Await any pending mirror operations to finish writing to IndexedDB first
+            if (this._mirrorPromise) {
+                await this._mirrorPromise;
+            }
+
             // Try sync engine first
             const sync = await getSyncModule();
             if (sync.syncEngine.isInitialized) {

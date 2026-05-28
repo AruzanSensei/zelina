@@ -28,6 +28,7 @@ import {
 class SyncQueueManager {
     constructor() {
         this._isProcessing = false;
+        this._flushRequestedWhileProcessing = false;
         this._flushTimer = null;
         this._retryTimer = null;
         this._isOnline = navigator.onLine;
@@ -88,7 +89,11 @@ class SyncQueueManager {
      * @returns {Promise<{success: number, failed: number}>}
      */
     async flush() {
-        if (this._isProcessing) return { success: 0, failed: 0 };
+        if (this._isProcessing) {
+            this._flushRequestedWhileProcessing = true;
+            console.log('[SyncQueue] Already processing sync. Set flag to schedule subsequent flush.');
+            return { success: 0, failed: 0 };
+        }
         if (!this._isOnline) {
             console.log('[SyncQueue] Offline — skipping flush');
             return { success: 0, failed: 0 };
@@ -144,6 +149,11 @@ class SyncQueueManager {
             this._notifyListeners('error', { error: e.message });
         } finally {
             this._isProcessing = false;
+            if (this._flushRequestedWhileProcessing) {
+                this._flushRequestedWhileProcessing = false;
+                console.log('[SyncQueue] Flush requested while processing — scheduling sequential flush');
+                this.scheduleFlush();
+            }
         }
 
         return { success: successCount, failed: failedCount };

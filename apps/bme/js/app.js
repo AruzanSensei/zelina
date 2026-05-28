@@ -473,12 +473,7 @@ document.addEventListener('DOMContentLoaded', () => {
     mobileTabs.forEach(btn => {
         btn.addEventListener('click', () => {
             const mode = btn.getAttribute('data-tab');
-            const existingTab = appState.state.tabs.find(t => t.mode === mode);
-            if (existingTab) {
-                appState.switchTab(existingTab.id);
-            } else {
-                appState.createNewTab(mode);
-            }
+            appState.navigateToMode(mode);
         });
     });
 
@@ -496,12 +491,7 @@ document.addEventListener('DOMContentLoaded', () => {
     sidebarNavLinks.forEach(item => {
         item.addEventListener('click', () => {
             const mode = item.getAttribute('data-tab');
-            const existingTab = appState.state.tabs.find(t => t.mode === mode);
-            if (existingTab) {
-                appState.switchTab(existingTab.id);
-            } else {
-                appState.createNewTab(mode);
-            }
+            appState.navigateToMode(mode);
         });
     });
 
@@ -1444,22 +1434,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const _refreshStateFromStorage = () => {
         try {
             const historyRaw = localStorage.getItem('bme_history');
-            if (historyRaw) {
-                appState.state.history = JSON.parse(historyRaw);
-                appState.notify('history', appState.state.history);
-            }
+            appState.state.history = historyRaw ? JSON.parse(historyRaw) : [];
+            appState.notify('history', appState.state.history);
 
             const templatesRaw = localStorage.getItem('bme_templates');
-            if (templatesRaw) {
-                appState.state.templates = JSON.parse(templatesRaw);
-                appState.notify('templates', appState.state.templates);
-            }
+            appState.state.templates = templatesRaw ? JSON.parse(templatesRaw) : [];
+            appState.notify('templates', appState.state.templates);
 
             const tabsRaw = localStorage.getItem('bme_tabs');
-            if (tabsRaw) {
-                appState.state.tabs = JSON.parse(tabsRaw);
-                appState.notify('tabs', appState.state.tabs);
-            }
+            appState.state.tabs = tabsRaw ? JSON.parse(tabsRaw) : [];
+            appState.notify('tabs', appState.state.tabs);
 
             const settingsRaw = localStorage.getItem('bme_settings');
             if (settingsRaw) {
