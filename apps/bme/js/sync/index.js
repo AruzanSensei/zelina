@@ -42,15 +42,15 @@ export async function initSyncSystem() {
     }
 
     // 3. Wire Realtime events → SyncEngine
-    realtimeManager.onEvent((event, data) => {
+    realtimeManager.onEvent(async (event, data) => {
         if (event === 'data-changed') {
             // Another device changed data — pull incremental patch
-            syncEngine.applyRealtimePatch(data);
-            // Also notify this tab's UI
+            await syncEngine.applyRealtimePatch(data);
+            // Also notify this tab's UI AFTER the patch is fully applied!
             _notifyGlobalListeners('remote-update', data);
         } else if (event === 'sync-complete') {
             // Another device completed a full sync — refresh local
-            syncEngine.applyRealtimePatch({ action: 'FULL_SYNC', ...data });
+            await syncEngine.applyRealtimePatch({ action: 'FULL_SYNC', ...data });
             _notifyGlobalListeners('remote-sync', data);
         } else if (event === 'logout') {
             // Another device logged out — clean up locally too
