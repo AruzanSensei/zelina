@@ -548,8 +548,7 @@
     flex-direction: column !important;
     justify-content: center !important;
     align-items: center !important;
-    height: 100% !important;
-    min-height: calc(100vh - 180px) !important; /* Force stretch to fill full viewport height minus mobile header/nav */
+    min-height: calc(75vh - 100px) !important;
     width: 100% !important;
     box-sizing: border-box !important;
 }
@@ -557,5 +556,5 @@
 #ai-view.active.is-empty .ai-prompt-container {
     width: 100% !important;
     max-width: 500px !important;
-    margin: 300px auto auto auto !important;
+    margin: auto !important;
 }
