@@ -236,6 +236,7 @@
     position: relative;
     touch-action: none;
     -webkit-overflow-scrolling: auto;
+    pointer-events: none !important; /* Allow clicks to pass through to parent .preview-card */
 }
 
 /* A4 preview wrapper & iframe */

@@ -1,7 +1,21 @@
 /**
  * Global State Management
- * Handles persistence and shared state
+ * Handles persistence, shared state, and sync system integration.
+ * 
+ * Persistence priority:
+ *  - Settings/UI prefs → localStorage (fast synchronous reads)
+ *  - Business data → IndexedDB via sync system (persistent, indexed)
+ *  - Cloud sync → via sync queue (background, offline-resilient)
  */
+
+// Sync system imports (lazy-loaded to avoid circular deps)
+let _syncModule = null;
+async function getSyncModule() {
+    if (!_syncModule) {
+        _syncModule = await import('./sync/index.js');
+    }
+    return _syncModule;
+}
 
 const STORAGE_KEYS = {
     SETTINGS: 'bme_settings',
@@ -403,7 +417,32 @@ class StateManager {
         this.state.settings.lastLocalUpdate = new Date().toISOString();
         this.save(STORAGE_KEYS.SETTINGS, this.state.settings);
         this.notify('settings', this.state.settings);
-        this.triggerCloudSync();
+        this._enqueueSync();
+    }
+
+    /**
+     * Enqueue a sync operation via the sync queue.
+     * Replaces direct Supabase calls with queued background sync.
+     */
+    async _enqueueSync() {
+        if (!this.state.isLoggedIn) return;
+
+        this.state.syncStatus = 'syncing';
+        this.notify('syncStatus', 'syncing');
+
+        try {
+            const sync = await getSyncModule();
+            await sync.syncQueue.enqueue('state', 'UPDATE', 'full_state', {
+                timestamp: new Date().toISOString()
+            });
+
+            // Also notify other tabs
+            sync.tabSync.notifyDataUpdate('state', 'UPDATE');
+        } catch (e) {
+            console.error('[StateManager] Enqueue sync failed:', e);
+            // Fallback to legacy direct sync
+            this.triggerCloudSync();
+        }
     }
 
     async triggerCloudSync() {
@@ -412,6 +451,27 @@ class StateManager {
         this.state.syncStatus = 'syncing';
         this.notify('syncStatus', 'syncing');
 
+        try {
+            // Try sync engine first
+            const sync = await getSyncModule();
+            if (sync.syncEngine.isInitialized) {
+                const success = await sync.syncEngine.pushFullState();
+                if (success) {
+                    this.state.syncStatus = 'synced';
+                    this.notify('syncStatus', 'synced');
+                    sync.realtimeManager.broadcastSyncComplete();
+                    sync.tabSync.notifySyncStatus('synced');
+                } else {
+                    this.state.syncStatus = 'error';
+                    this.notify('syncStatus', 'error');
+                }
+                return;
+            }
+        } catch (e) {
+            console.warn('[StateManager] Sync engine not available, using legacy sync:', e);
+        }
+
+        // Legacy fallback: direct Supabase call
         try {
             const session = window.supabaseSession;
             if (!session) {
@@ -423,7 +483,6 @@ class StateManager {
             const dataToSync = {
                 settings: {
                     ...this.state.settings,
-                    // Keep auth local
                     lastLocalUpdate: this.state.settings.lastLocalUpdate
                 },
                 history: this.state.history,
@@ -482,6 +541,13 @@ class StateManager {
                 console.log('[StateManager] Cloud atomic prepend history success!');
                 this.state.syncStatus = 'synced';
                 this.notify('syncStatus', 'synced');
+
+                // Notify other devices/tabs
+                try {
+                    const sync = await getSyncModule();
+                    sync.realtimeManager.broadcastChange('history', 'INSERT', entry.id);
+                    sync.tabSync.notifyDataUpdate('history', 'INSERT', entry.id);
+                } catch (e) { /* ignore */ }
             }
         } catch (e) {
             console.error('[StateManager] Cloud atomic prepend failed, falling back to full sync:', e);
@@ -489,7 +555,12 @@ class StateManager {
         }
     }
 
-    handleLogoutCleanup() {
+    /**
+     * Handle logout cleanup.
+     * PRESERVES: theme, UI preferences, sidebar state, layout, animations
+     * REMOVES: history, templates, tabs, sync queue, auth session, sync metadata
+     */
+    async handleLogoutCleanup() {
         this.state.isLoggedIn = false;
         this.state.adminProfile = null;
         this.state.syncStatus = 'idle';
@@ -497,6 +568,26 @@ class StateManager {
 
         this.save(STORAGE_KEYS.IS_LOGGED_IN, false);
         this.save(STORAGE_KEYS.ADMIN_PROFILE, null);
+
+        // Remove account-specific localStorage keys
+        // but PRESERVE UI preferences
+        localStorage.removeItem(STORAGE_KEYS.HISTORY);
+        localStorage.removeItem(STORAGE_KEYS.TEMPLATES);
+        localStorage.removeItem(STORAGE_KEYS.TABS);
+        localStorage.removeItem(STORAGE_KEYS.ACTIVE_TAB_ID);
+        localStorage.removeItem(STORAGE_KEYS.MANUAL_ITEMS);
+        localStorage.removeItem(STORAGE_KEYS.MANUAL_TITLE);
+        // KEEP: bme_settings (contains theme, language, etc.)
+        // KEEP: bme_sidebar_collapsed, bme_preview_collapsed, bme_toolbar_collapsed
+        // KEEP: bme_labels_hidden, bme_device_id, bme_manual_card_mode
+
+        // Clean up sync system
+        try {
+            const sync = await getSyncModule();
+            await sync.loginSync.handleLogout();
+        } catch (e) {
+            console.warn('[StateManager] Sync logout cleanup failed:', e);
+        }
 
         this.notify('isLoggedIn', false);
         this.notify('adminProfile', null);

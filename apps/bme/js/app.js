@@ -10,6 +10,15 @@ import { initFinanceMode } from './modes/finance.js';
 import { initSettings } from './settings/manager.js';
 import { initPDFGenerator } from './pdf/generator.js';
 
+// Lazy import sync system (loaded after critical UI)
+let syncModulePromise = null;
+function loadSyncModule() {
+    if (!syncModulePromise) {
+        syncModulePromise = import('./sync/index.js');
+    }
+    return syncModulePromise;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize Modules safely
@@ -223,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const isDesktop = window.innerWidth >= 1024;
         const activeTab = appState.getActiveTab();
-        const isPreviewEnabled = activeTab && (activeTab.mode === 'manual' || activeTab.mode === 'ai');
+        const isPreviewEnabled = activeTab && (activeTab.mode === 'manual');
 
         if (isDesktop) {
             const desktopPreviewBody = document.getElementById('desktop-preview-body');
@@ -294,7 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const desktopPreviewPanel = document.getElementById('desktop-preview-panel');
         const collapsedPreviewStrip = document.getElementById('collapsed-preview-strip');
 
-        const isPreviewEnabled = (currentMode === 'manual' || currentMode === 'ai');
+        const isPreviewEnabled = (currentMode === 'manual');
 
         if (window.innerWidth >= 1024) {
             previewSection.style.display = 'none'; // always hide mobile block
@@ -767,7 +776,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const showFooter = () => {
         const activeTab = appState.getActiveTab();
         const curMode = activeTab ? activeTab.mode : appState.state.currentMode;
-        
+
         let activeFooter = null;
         if (curMode === 'manual') {
             activeFooter = document.getElementById('manual-action-bar');
@@ -1281,10 +1290,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize conflict buttons handlers
     initConflictResolutionHandlers();
 
-    // Sesi Supabase Startup Initialization
+    // Sesi Supabase Startup Initialization (Sync-Aware)
     const initSupabaseSession = async () => {
         try {
-            const { getSupabase, validateAdminServer, logout, fetchUserData } = await import('./supabase.js');
+            const { getSupabase, getSupabaseClient, validateAdminServer, logout, fetchUserData } = await import('./supabase.js');
             const supabase = getSupabase();
             if (!supabase) return;
 
@@ -1300,18 +1309,71 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         console.log('[BME Supabase] Berhasil login otomatis sebagai Administrator:', result.user.email);
 
-                        // Periksa perbedaan Cloud vs Lokal (Alur Saat Refresh Halaman)
-                        const cloudData = await fetchUserData(session.access_token);
-                        if (cloudData) {
-                            window.latestCloudData = cloudData; // Cache untuk tombol resolusi konflik
-                            const hasConflict = detectConflict(cloudData);
-                            if (hasConflict) {
-                                console.log('[BME Sync] Konflik data terdeteksi antara cloud dan lokal.');
+                        // Use sync system for session restore
+                        try {
+                            const syncModule = await loadSyncModule();
+                            const supabaseClient = getSupabaseClient();
+                            const loginResult = await syncModule.loginSync.handleSessionRestore(session, result.user, supabaseClient);
+
+                            if (loginResult.case === 'C') {
+                                // Conflict detected on refresh — show subtle notification
                                 toggleConflictBadge(true);
                             } else {
-                                console.log('[BME Sync] Data cloud dan lokal selaras.');
                                 appState.state.syncStatus = 'synced';
                                 appState.notify('syncStatus', 'synced');
+                            }
+
+                            // Listen for sync events to refresh UI
+                            syncModule.onSyncEvent((type, data) => {
+                                if (type === 'remote-update' || type === 'remote-sync' || type === 'tab-update') {
+                                    // Refresh local state from localStorage (which sync engine updates)
+                                    _refreshStateFromStorage();
+                                    syncActiveTabUI();
+                                } else if (type === 'tab-logout' || type === 'remote-logout') {
+                                    // Another tab/device logged out
+                                    appState.handleLogoutCleanup();
+                                    syncSidebarProfile();
+                                } else if (type === 'login-sync') {
+                                    if (data?.event === 'conflict') {
+                                        // Show conflict dialog
+                                        syncModule.conflictDialog.show({
+                                            localCounts: data.localCounts,
+                                            cloudCounts: data.cloudCounts,
+                                            cloudData: data.cloudData,
+                                            onResolved: (choice, success) => {
+                                                if (success) {
+                                                    _refreshStateFromStorage();
+                                                    syncActiveTabUI();
+                                                    toggleConflictBadge(false);
+                                                }
+                                            }
+                                        });
+                                    } else if (data?.event === 'sync-complete') {
+                                        _refreshStateFromStorage();
+                                        syncActiveTabUI();
+                                        if (window.showBMEAlert) {
+                                            window.showBMEAlert(data.message || 'Sinkronisasi selesai.', 'success');
+                                        }
+                                    } else if (data?.event === 'sync-error') {
+                                        if (window.showBMEAlert) {
+                                            window.showBMEAlert(data.message || 'Gagal sinkronisasi.', 'error');
+                                        }
+                                    }
+                                }
+                            });
+                        } catch (syncErr) {
+                            console.warn('[BME] Sync system unavailable, using legacy flow:', syncErr);
+                            // Fallback to legacy conflict detection
+                            const cloudData = await fetchUserData(session.access_token);
+                            if (cloudData) {
+                                window.latestCloudData = cloudData;
+                                const hasConflict = detectConflict(cloudData);
+                                if (hasConflict) {
+                                    toggleConflictBadge(true);
+                                } else {
+                                    appState.state.syncStatus = 'synced';
+                                    appState.notify('syncStatus', 'synced');
+                                }
                             }
                         }
                     }
@@ -1332,22 +1394,72 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Menangani Event Login Baru (Paksa sinkronisasi satu arah dari Cloud ke Lokal)
+    // Helper: Refresh in-memory state from localStorage
+    // (called when sync engine updates localStorage from cloud/other tabs)
+    const _refreshStateFromStorage = () => {
+        try {
+            const historyRaw = localStorage.getItem('bme_history');
+            if (historyRaw) {
+                appState.state.history = JSON.parse(historyRaw);
+                appState.notify('history', appState.state.history);
+            }
+
+            const templatesRaw = localStorage.getItem('bme_templates');
+            if (templatesRaw) {
+                appState.state.templates = JSON.parse(templatesRaw);
+                appState.notify('templates', appState.state.templates);
+            }
+
+            const tabsRaw = localStorage.getItem('bme_tabs');
+            if (tabsRaw) {
+                appState.state.tabs = JSON.parse(tabsRaw);
+                appState.notify('tabs', appState.state.tabs);
+            }
+
+            const settingsRaw = localStorage.getItem('bme_settings');
+            if (settingsRaw) {
+                appState.state.settings = { ...appState.state.settings, ...JSON.parse(settingsRaw) };
+                appState.notify('settings', appState.state.settings);
+            }
+        } catch (e) {
+            console.warn('[BME] State refresh from storage failed:', e);
+        }
+    };
+
+    // Menangani Event Login Baru (Sync-Aware)
     document.addEventListener('admin-logged-in', async (e) => {
         const { session, user } = e.detail;
         syncSidebarProfile();
 
         try {
-            const { fetchUserData } = await import('./supabase.js');
-            const cloudData = await fetchUserData(session.access_token);
-            if (cloudData) {
-                mergeCloudIntoLocal(cloudData);
-                if (window.showBMEAlert) {
-                    window.showBMEAlert('Data cloud berhasil digabungkan ke lokal.', 'success');
-                }
+            const syncModule = await loadSyncModule();
+            const { getSupabaseClient } = await import('./supabase.js');
+            const supabaseClient = getSupabaseClient();
+
+            const loginResult = await syncModule.loginSync.handleLogin(session, user, supabaseClient);
+
+            if (loginResult.case === 'C') {
+                // Conflict dialog will be shown via loginSync event listener
+            } else if (loginResult.case === 'A' || loginResult.case === 'B') {
+                // Auto-sync completed — refresh UI
+                _refreshStateFromStorage();
+                syncActiveTabUI();
             }
         } catch (err) {
-            console.error('[BME Sync] Gagal sinkronisasi login baru:', err);
+            console.warn('[BME Sync] Sync system login failed, using legacy merge:', err);
+            // Fallback to legacy merge
+            try {
+                const { fetchUserData } = await import('./supabase.js');
+                const cloudData = await fetchUserData(session.access_token);
+                if (cloudData) {
+                    mergeCloudIntoLocal(cloudData);
+                    if (window.showBMEAlert) {
+                        window.showBMEAlert('Data cloud berhasil digabungkan ke lokal.', 'success');
+                    }
+                }
+            } catch (fallbackErr) {
+                console.error('[BME Sync] Legacy fallback also failed:', fallbackErr);
+            }
         }
     });
 
@@ -1360,8 +1472,21 @@ document.addEventListener('DOMContentLoaded', () => {
     appState.subscribe('isLoggedIn', () => syncSidebarProfile());
     appState.subscribe('adminProfile', () => syncSidebarProfile());
 
-    // Jalankan sesi Supabase inisialisasi
-    initSupabaseSession();
+    // Initialize Sync System (non-blocking, after critical UI)
+    const initSyncSystemSafely = async () => {
+        try {
+            const syncModule = await loadSyncModule();
+            await syncModule.initSyncSystem();
+            console.log('[BME] Sync system initialized');
+        } catch (e) {
+            console.warn('[BME] Sync system initialization failed (app continues without sync):', e);
+        }
+    };
+
+    // Start sync system initialization, then Supabase session
+    initSyncSystemSafely().then(() => {
+        initSupabaseSession();
+    });
 
     // ============================================
     // AI RADIAL GESTURE INTERACTIONS
@@ -1483,7 +1608,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const onMove = (e) => {
             if (!gestureTimer) return;
             const touch = e.touches ? e.touches[0] : e;
-            
+
             if (isGestureMode) {
                 if (e.cancelable) e.preventDefault();
                 const target = checkCollision(touch.clientX, touch.clientY);

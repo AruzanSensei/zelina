@@ -206,6 +206,55 @@ export function getSupabase() {
     return supabase;
 }
 
+/**
+ * Alias for sync module compatibility.
+ * @returns {Object} Supabase client instance
+ */
+export function getSupabaseClient() {
+    return supabase;
+}
+
 export async function fetchUserData(accessToken) {
     return await loadUserData(accessToken);
 }
+
+// ============================================================
+// INCREMENTAL FETCH (for sync engine)
+// ============================================================
+/**
+ * Fetch user data that has changed since a given timestamp.
+ * Falls back to full fetch if server doesn't support incremental.
+ * 
+ * @param {string} accessToken
+ * @param {string} sinceTimestamp - ISO timestamp
+ * @returns {Promise<Object|null>}
+ */
+export async function loadUserDataSince(accessToken, sinceTimestamp) {
+    const url = sinceTimestamp
+        ? `${EDGE_USER_DATA}?since=${encodeURIComponent(sinceTimestamp)}`
+        : EDGE_USER_DATA;
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    });
+
+    if (response.status === 403) {
+        throw new Error('403');
+    }
+
+    if (!response.ok) {
+        throw new Error(`Gagal memuat data cloud: ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (!data || Object.keys(data).length === 0) return null;
+    return data;
+}
+
+// ============================================================
+// EXPORT CONFIGURATION (for sync modules)
+// ============================================================
+export { SUPABASE_URL };

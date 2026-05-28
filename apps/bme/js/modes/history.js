@@ -1149,82 +1149,74 @@ export function initHistoryMode() {
         previewSection.appendChild(previewHeader);
 
         const cardsRow = document.createElement('div');
-        cardsRow.style.cssText = 'display:flex; gap:12px; margin-bottom:12px;';
+        cardsRow.className = 'preview-cards';
         previewSection.appendChild(cardsRow);
         detailContent.appendChild(previewSection);
 
-        const buildPreviewCard = (htmlStr, bgColor) => {
+        const buildPreviewCard = (htmlStr, type) => {
             const card = document.createElement('div');
-            card.style.cssText = `flex:1; position:relative; border-radius:var(--radius-sm); border:1px solid var(--border-color); overflow:hidden; background:${bgColor}; aspect-ratio:1/1.414;`;
+            card.className = `preview-card ${type === 'invoice' ? 'invoice-preview' : 'letter-preview'}`;
             if (htmlStr) {
                 const frameWrap = document.createElement('div');
-                frameWrap.style.cssText = 'position:absolute; top:0; left:0; width:100%; overflow:hidden;';
+                frameWrap.className = 'preview-content a4-preview-wrapper';
                 card.appendChild(frameWrap);
                 const iframe = document.createElement('iframe');
-                iframe.style.cssText = 'border:0; pointer-events:none; display:block; width:794px; height:1123px; transform-origin:top left;';
+                iframe.className = 'a4-preview-frame';
                 iframe.srcdoc = htmlStr;
                 frameWrap.appendChild(iframe);
                 setTimeout(() => {
                     const availW = card.offsetWidth || cardsRow.offsetWidth / 2 || 150;
                     iframe.style.transform = `scale(${availW / 794})`;
                 }, 400);
+
+                // Make the entire card clickable to open full preview
+                card.addEventListener('click', (e) => {
+                    if (e.target.closest('button')) return; // ignore download button click
+
+                    const html = type === 'invoice' ? invoiceHTML : suratJalanHTML;
+                    const label = type === 'invoice' ? 'Preview Invoice' : 'Preview Surat Jalan';
+                    const editAction = () => {
+                        if (confirm('Buka riwayat ini di Mode Manual untuk diedit?')) {
+                            appState.state.invoiceItems = JSON.parse(JSON.stringify(items));
+                            const manualTitle = document.getElementById('manual-title');
+                            if (manualTitle) manualTitle.value = title;
+                            appState.save('bme_invoice_items', appState.state.invoiceItems);
+                            const previewModal = document.getElementById('preview-modal');
+                            if (previewModal) { previewModal.classList.add('hidden'); previewModal.classList.remove('active'); }
+                            closeDetail();
+                            const tabManual = document.querySelector('[data-tab="manual"]');
+                            if (tabManual) tabManual.click();
+                        }
+                    };
+                    openPreviewModal(html, label, type, async () => {
+                        const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
+                        const formats = appState.state.settings.fileNameFormat || { invoice: 'Invoice-{judul}', suratJalan: 'Surat Jalan-{judul}' };
+                        const template = type === 'surat' ? formats.suratJalan : formats.invoice;
+                        const now = new Date();
+                        const filename = template.replace(/\{judul\}/gi, title).replace(/%YYYY/g, String(now.getFullYear())).replace(/%MM/g, String(now.getMonth() + 1).padStart(2, '0')).replace(/%DD/g, String(now.getDate()).padStart(2, '0')).replace(/%HH/g, String(now.getHours()).padStart(2, '0')).replace(/%mm/g, String(now.getMinutes()).padStart(2, '0')).replace(/%ss/g, String(now.getSeconds()).padStart(2, '0'));
+                        if (defaultMethod === 'pdf') { _queuePDF([{ items, title }], appState.state.settings.pdfPageMode || 'single'); }
+                        else {
+                            const alertEl = document.getElementById('custom-alert');
+                            const messageEl = document.getElementById('alert-message');
+                            if (alertEl && messageEl) { messageEl.innerHTML = 'Mengekspor... <i-ui name="loading-01" size="14" class="spin-icon"></i-ui>'; alertEl.classList.remove('hidden'); alertEl.style.animation = 'alert-in 0.3s ease-out forwards'; }
+                            if (defaultMethod === 'jpeg') await exportToJPEG(html, filename);
+                            else await exportToPNG(html, filename);
+                            if (alertEl) alertEl.classList.add('hidden');
+                        }
+                    }, editAction, true);
+                });
             }
             return card;
         };
 
-        const invoiceCard = buildPreviewCard(invoiceHTML, 'var(--invoice-bg, #f0f4ff)');
-        const suratCard = buildPreviewCard(suratJalanHTML, 'var(--letter-bg, #f0fff4)');
-
-        const makePreviewBtn = (type) => {
-            const btn = document.createElement('button');
-            btn.className = 'btn btn-outline';
-            btn.textContent = 'Preview';
-            btn.style.cssText = 'position:absolute; right:8px; bottom:8px; padding:5px 10px; font-size:0.78rem; z-index:2;';
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const html = type === 'invoice' ? invoiceHTML : suratJalanHTML;
-                const label = type === 'invoice' ? 'Preview Invoice' : 'Preview Surat Jalan';
-                const editAction = () => {
-                    if (confirm('Buka riwayat ini di Mode Manual untuk diedit?')) {
-                        appState.state.invoiceItems = JSON.parse(JSON.stringify(items));
-                        const manualTitle = document.getElementById('manual-title');
-                        if (manualTitle) manualTitle.value = title;
-                        appState.save('bme_invoice_items', appState.state.invoiceItems);
-                        const previewModal = document.getElementById('preview-modal');
-                        if (previewModal) { previewModal.classList.add('hidden'); previewModal.classList.remove('active'); }
-                        closeDetail();
-                        const tabManual = document.querySelector('[data-tab="manual"]');
-                        if (tabManual) tabManual.click();
-                    }
-                };
-                openPreviewModal(html, label, type, async () => {
-                    const defaultMethod = appState.state.settings.defaultDownloadMethod || 'png';
-                    const formats = appState.state.settings.fileNameFormat || { invoice: 'Invoice-{judul}', suratJalan: 'Surat Jalan-{judul}' };
-                    const template = type === 'surat' ? formats.suratJalan : formats.invoice;
-                    const now = new Date();
-                    const filename = template.replace(/\{judul\}/gi, title).replace(/%YYYY/g, String(now.getFullYear())).replace(/%MM/g, String(now.getMonth() + 1).padStart(2, '0')).replace(/%DD/g, String(now.getDate()).padStart(2, '0')).replace(/%HH/g, String(now.getHours()).padStart(2, '0')).replace(/%mm/g, String(now.getMinutes()).padStart(2, '0')).replace(/%ss/g, String(now.getSeconds()).padStart(2, '0'));
-                    if (defaultMethod === 'pdf') { _queuePDF([{ items, title }], appState.state.settings.pdfPageMode || 'single'); }
-                    else {
-                        const alertEl = document.getElementById('custom-alert');
-                        const messageEl = document.getElementById('alert-message');
-                        if (alertEl && messageEl) { messageEl.innerHTML = 'Mengekspor... <i-ui name="loading-01" size="14" class="spin-icon"></i-ui>'; alertEl.classList.remove('hidden'); alertEl.style.animation = 'alert-in 0.3s ease-out forwards'; }
-                        if (defaultMethod === 'jpeg') await exportToJPEG(html, filename);
-                        else await exportToPNG(html, filename);
-                        if (alertEl) alertEl.classList.add('hidden');
-                    }
-                }, editAction, true);
-            });
-            return btn;
-        };
-
-        invoiceCard.appendChild(makePreviewBtn('invoice'));
-        suratCard.appendChild(makePreviewBtn('surat'));
+        const invoiceCard = buildPreviewCard(invoiceHTML, 'invoice');
+        const suratCard = buildPreviewCard(suratJalanHTML, 'surat');
 
         const makeDownloadBtn = (type) => {
             const btn = document.createElement('button');
-            btn.className = 'btn';
+            btn.className = 'btn preview-card-download-btn';
             btn.innerHTML = '<i-ui name="download-01" size="15"></i-ui>';
-            btn.style.cssText = 'position:absolute; right:10px; bottom:8px; padding:7px 11px; font-size:0.78rem; z-index:2; background:#e67e22; border-color:#d35400; color:white;';
+            btn.style.cssText = 'position:absolute; right:10px; bottom:10px; padding:8px 10px; font-size:0.8rem; background:#e67e22; border-color:#d35400; color:white;';
             setTimeout(() => {
             }, 10);
             btn.title = type === 'invoice' ? 'Unduh Invoice' : 'Unduh Surat Jalan';

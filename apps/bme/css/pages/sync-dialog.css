@@ -1,0 +1,608 @@
+/**
+ * sync-dialog.css — Conflict Dialog & Sync Status Styles
+ * 
+ * Glassmorphism design matching existing BME UI.
+ * Includes: conflict dialog, countdown timer, sync status badge,
+ * online/offline indicator, destructive action warnings.
+ */
+
+/* ============================================================
+   DIALOG OVERLAY
+   ============================================================ */
+
+.sync-dialog-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 9998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.sync-dialog-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ============================================================
+   DIALOG CONTAINER
+   ============================================================ */
+
+.sync-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.92);
+    width: min(92vw, 440px);
+    max-height: 90vh;
+    overflow-y: auto;
+    background: var(--bg-card, #fff);
+    border: 1px solid var(--border-color, rgba(0,0,0,0.08));
+    border-radius: 20px;
+    padding: 28px 24px;
+    z-index: 9999;
+    box-shadow:
+        0 8px 40px rgba(0,0,0,0.12),
+        0 2px 12px rgba(0,0,0,0.06);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sync-dialog.active {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* Scrollbar */
+.sync-dialog::-webkit-scrollbar {
+    width: 4px;
+}
+.sync-dialog::-webkit-scrollbar-track {
+    background: transparent;
+}
+.sync-dialog::-webkit-scrollbar-thumb {
+    background: var(--border-color, #ddd);
+    border-radius: 4px;
+}
+
+/* ============================================================
+   DIALOG HEADER
+   ============================================================ */
+
+.sync-dialog-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.sync-dialog-header.destructive .sync-dialog-title {
+    color: #e74c3c;
+}
+
+.sync-dialog-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.12), rgba(52, 152, 219, 0.06));
+    color: #3498db;
+    margin-bottom: 12px;
+}
+
+.sync-dialog-icon.warning {
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.12), rgba(231, 76, 60, 0.06));
+    color: #e74c3c;
+}
+
+.sync-dialog-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-main, #222);
+    margin: 0 0 8px 0;
+    letter-spacing: -0.01em;
+}
+
+.sync-dialog-subtitle {
+    font-size: 0.82rem;
+    color: var(--text-muted, #888);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.sync-dialog-subtitle.warning-text {
+    color: #e74c3c;
+    font-weight: 500;
+}
+
+/* ============================================================
+   DATA STATS CARDS
+   ============================================================ */
+
+.sync-dialog-stats {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.sync-stat-card {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: var(--bg-main, #f8f9fa);
+    border: 1px solid var(--border-color, rgba(0,0,0,0.06));
+    border-radius: 12px;
+}
+
+.sync-stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    flex-shrink: 0;
+}
+
+.sync-stat-icon.local {
+    background: linear-gradient(135deg, rgba(46, 204, 113, 0.15), rgba(46, 204, 113, 0.05));
+    color: #27ae60;
+}
+
+.sync-stat-icon.cloud {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(52, 152, 219, 0.05));
+    color: #3498db;
+}
+
+.sync-stat-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.sync-stat-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-muted, #999);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.sync-stat-count {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main, #222);
+}
+
+.sync-stat-detail {
+    font-size: 0.68rem;
+    color: var(--text-muted, #aaa);
+}
+
+.sync-stat-divider {
+    display: flex;
+    align-items: center;
+    color: var(--text-muted, #ccc);
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   OPTION BUTTONS
+   ============================================================ */
+
+.sync-dialog-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sync-option-btn {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border-color, rgba(0,0,0,0.08));
+    border-radius: 14px;
+    background: var(--bg-card, #fff);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+}
+
+.sync-option-btn:hover {
+    border-color: var(--primary, #3498db);
+    background: rgba(52, 152, 219, 0.03);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.08);
+}
+
+.sync-option-btn:active {
+    transform: translateY(0);
+}
+
+.sync-option-btn.recommended {
+    border-color: rgba(46, 204, 113, 0.4);
+    background: rgba(46, 204, 113, 0.04);
+}
+
+.sync-option-btn.recommended:hover {
+    border-color: #27ae60;
+    background: rgba(46, 204, 113, 0.08);
+    box-shadow: 0 2px 8px rgba(46, 204, 113, 0.1);
+}
+
+.sync-option-btn.destructive {
+    border-color: rgba(231, 76, 60, 0.2);
+}
+
+.sync-option-btn.destructive:hover {
+    border-color: rgba(231, 76, 60, 0.5);
+    background: rgba(231, 76, 60, 0.03);
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.08);
+}
+
+.sync-option-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.sync-option-title {
+    font-size: 0.88rem;
+    font-weight: 650;
+    color: var(--text-main, #222);
+}
+
+.sync-option-badge {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    padding: 2px 8px;
+    border-radius: 50px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-left: auto;
+}
+
+.sync-option-desc {
+    font-size: 0.76rem;
+    color: var(--text-muted, #888);
+    margin: 0;
+    line-height: 1.45;
+}
+
+.sync-option-warning {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #e74c3c;
+    margin-top: 2px;
+}
+
+.sync-option-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ============================================================
+   COUNTDOWN CONFIRMATION
+   ============================================================ */
+
+.sync-confirm-countdown {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin: 28px 0;
+}
+
+.countdown-circle {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    border: 3px solid #e74c3c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation: countdown-pulse 1s ease-in-out infinite;
+}
+
+.countdown-circle.complete {
+    border-color: #27ae60;
+    animation: none;
+}
+
+.countdown-number {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #e74c3c;
+    font-variant-numeric: tabular-nums;
+}
+
+.countdown-circle.complete .countdown-number {
+    color: #27ae60;
+}
+
+.countdown-circle.complete .countdown-number::after {
+    content: '✓';
+    font-size: 1.8rem;
+}
+
+.countdown-circle.complete .countdown-number {
+    font-size: 0;
+}
+
+.countdown-label {
+    font-size: 0.8rem;
+    color: var(--text-muted, #888);
+    text-align: center;
+    margin: 0;
+}
+
+@keyframes countdown-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.04); }
+}
+
+/* ============================================================
+   CONFIRM ACTIONS
+   ============================================================ */
+
+.sync-confirm-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.sync-confirm-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 0.84rem;
+    font-weight: 650;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1.5px solid var(--border-color, rgba(0,0,0,0.1));
+    background: var(--bg-card, #fff);
+    color: var(--text-main, #222);
+}
+
+.sync-confirm-btn:hover {
+    transform: translateY(-1px);
+}
+
+.sync-confirm-btn.cancel {
+    background: var(--bg-main, #f5f5f5);
+}
+
+.sync-confirm-btn.cancel:hover {
+    background: var(--bg-card, #eee);
+}
+
+.sync-confirm-btn.destructive {
+    background: #e74c3c;
+    color: #fff;
+    border-color: #c0392b;
+}
+
+.sync-confirm-btn.destructive:hover:not(:disabled) {
+    background: #c0392b;
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
+
+.sync-confirm-btn.destructive:disabled {
+    background: rgba(231, 76, 60, 0.3);
+    border-color: rgba(231, 76, 60, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+    cursor: not-allowed;
+    transform: none;
+}
+
+.sync-confirm-btn.destructive.enabled {
+    animation: destructive-ready 0.3s ease;
+}
+
+@keyframes destructive-ready {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+}
+
+/* ============================================================
+   LOADING SPINNER
+   ============================================================ */
+
+.sync-loading-spinner {
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid var(--border-color, #ddd);
+    border-top-color: var(--primary, #3498db);
+    border-radius: 50%;
+    animation: sync-spin 0.7s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes sync-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================================
+   SYNC STATUS BADGE (Header/Sidebar)
+   ============================================================ */
+
+.sync-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 50px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.sync-status-badge.syncing {
+    background: rgba(52, 152, 219, 0.12);
+    color: #3498db;
+}
+
+.sync-status-badge.syncing::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border: 1.5px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: sync-spin 0.7s linear infinite;
+}
+
+.sync-status-badge.synced {
+    background: rgba(46, 204, 113, 0.12);
+    color: #27ae60;
+}
+
+.sync-status-badge.synced::before {
+    content: '✓';
+    font-size: 0.7rem;
+}
+
+.sync-status-badge.error {
+    background: rgba(231, 76, 60, 0.12);
+    color: #e74c3c;
+}
+
+.sync-status-badge.error::before {
+    content: '!';
+    font-weight: 800;
+}
+
+.sync-status-badge.offline {
+    background: rgba(149, 165, 166, 0.12);
+    color: #7f8c8d;
+}
+
+.sync-status-badge.offline::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: currentColor;
+    border-radius: 50%;
+}
+
+/* ============================================================
+   ONLINE/OFFLINE INDICATOR DOT
+   ============================================================ */
+
+.network-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0;
+}
+
+.network-status-dot.online {
+    background: #27ae60;
+    box-shadow: 0 0 6px rgba(46, 204, 113, 0.4);
+}
+
+.network-status-dot.offline {
+    background: #e74c3c;
+    box-shadow: 0 0 6px rgba(231, 76, 60, 0.4);
+    animation: offline-blink 1.5s ease-in-out infinite;
+}
+
+@keyframes offline-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* ============================================================
+   DARK THEME OVERRIDES
+   ============================================================ */
+
+[data-theme="dark"] .sync-dialog {
+    background: var(--bg-card, #1e1e2e);
+    border-color: var(--border-color, rgba(255,255,255,0.08));
+    box-shadow:
+        0 8px 40px rgba(0,0,0,0.4),
+        0 2px 12px rgba(0,0,0,0.2);
+}
+
+[data-theme="dark"] .sync-dialog-overlay {
+    background: rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .sync-stat-card {
+    background: var(--bg-main, #12121a);
+    border-color: var(--border-color, rgba(255,255,255,0.06));
+}
+
+[data-theme="dark"] .sync-option-btn {
+    background: var(--bg-card, #1e1e2e);
+    border-color: var(--border-color, rgba(255,255,255,0.08));
+}
+
+[data-theme="dark"] .sync-option-btn:hover {
+    background: rgba(52, 152, 219, 0.08);
+}
+
+[data-theme="dark"] .sync-option-btn.recommended {
+    background: rgba(46, 204, 113, 0.06);
+}
+
+[data-theme="dark"] .sync-option-btn.recommended:hover {
+    background: rgba(46, 204, 113, 0.12);
+}
+
+[data-theme="dark"] .sync-confirm-btn {
+    background: var(--bg-card, #1e1e2e);
+    border-color: var(--border-color, rgba(255,255,255,0.08));
+    color: var(--text-main, #e0e0e0);
+}
+
+[data-theme="dark"] .sync-confirm-btn.cancel {
+    background: var(--bg-main, #12121a);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 480px) {
+    .sync-dialog {
+        width: 95vw;
+        padding: 20px 16px;
+        border-radius: 16px;
+    }
+
+    .sync-dialog-stats {
+        flex-direction: column;
+    }
+
+    .sync-stat-divider {
+        transform: rotate(90deg);
+    }
+
+    .sync-confirm-actions {
+        flex-direction: column;
+    }
+}

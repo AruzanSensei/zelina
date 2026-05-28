@@ -541,3 +541,20 @@
     opacity: 0.8 !important;
     transform: scale(1.05);
 }
+
+/* Centering AI prompt container when no AI cards are generated */
+#ai-view.is-empty {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    min-height: calc(75vh - 100px) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+#ai-view.is-empty .ai-prompt-container {
+    width: 100% !important;
+    max-width: 500px !important;
+    margin: auto 0 !important;
+}

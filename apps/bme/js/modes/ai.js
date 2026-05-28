@@ -532,16 +532,20 @@ export function initAIMode() {
         }
 
         if (cards.length === 0) {
-            outputContainer.innerHTML = `
-                <div style="padding: 40px; text-align: center; color: var(--text-muted); width: 100%; grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;">
-                    <i-ui name="star-04" size="32" style="opacity: 0.3; color: var(--primary);"></i-ui>
-                    <p style="font-weight: 500; font-size: 0.95rem; margin: 0;">Belum ada hasil generate</p>
-                    <small style="font-size: 0.8rem; opacity: 0.7;">Silakan masukkan data mentah di atas lalu klik Generate</small>
-                </div>
-            `;
+            outputContainer.innerHTML = '';
+            outputContainer.style.display = 'none';
+            if (aiView) {
+                aiView.classList.add('is-empty');
+            }
             // Hide AI Action Bar if no cards are generated
             if (aiActionBar) aiActionBar.style.display = 'none';
             return;
+        }
+
+        // Show outputContainer and restore layout
+        outputContainer.style.display = 'grid';
+        if (aiView) {
+            aiView.classList.remove('is-empty');
         }
 
         // Show AI action bar
@@ -832,7 +836,10 @@ export function initAIMode() {
                 const card = activeTab?.data?.aiCards[cardIdx];
 
                 if (card) {
-                    openPreviewModal(card.items, card.title);
+                    const html = buildInvoiceHTML(card.items, card.title);
+                    openPreviewModal(html, card.title, 'invoice', async () => {
+                        executeDownload(card.items, card.title);
+                    });
                 }
                 return;
             }
