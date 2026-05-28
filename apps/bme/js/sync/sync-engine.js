@@ -165,6 +165,13 @@ class SyncEngine {
             await updateLastSyncTimestamp();
             this._notifyListeners('synced');
             console.log('[SyncEngine] Full state pushed successfully');
+
+            // Broadcast sync complete to other devices so they update instantly!
+            try {
+                const { realtimeManager } = await import('./realtime.js');
+                realtimeManager.broadcastSyncComplete();
+            } catch (e) { /* ignore */ }
+
             return true;
 
         } catch (e) {

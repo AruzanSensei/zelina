@@ -379,13 +379,7 @@ class StateManager {
         this.state.history.unshift(entry);
         this.save(STORAGE_KEYS.HISTORY, this.state.history);
         this.notify('history', this.state.history);
-
-        if (this.state.isLoggedIn) {
-            // Optimasi: Atomic prepend ke cloud
-            this.prependHistoryItemCloud(entry);
-        } else {
-            this.updateLocalTimestamp();
-        }
+        this.updateLocalTimestamp();
     }
 
     updateItems(items) {

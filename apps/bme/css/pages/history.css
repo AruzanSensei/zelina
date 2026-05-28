@@ -696,3 +696,93 @@
     opacity: 0;
     pointer-events: none;
 }
+
+/* ============================================
+   REALTIME SYNC STATUS PILL
+   ============================================ */
+.sync-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 99px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    background: var(--bg-transparent);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--app-shadow-xs);
+    color: var(--text-muted);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 32px;
+}
+
+.sync-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #6b7280;
+    transition: all 0.25s ease;
+    flex-shrink: 0;
+}
+
+/* Status States */
+/* 1. Realtime (Connected & Synced) */
+.sync-status-pill.realtime {
+    background: rgba(34, 197, 94, 0.08);
+    border-color: rgba(34, 197, 94, 0.3);
+    color: #15803d;
+}
+.sync-status-pill.realtime .sync-status-dot {
+    background-color: #22c55e;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+    animation: sync-pulse 2s infinite;
+}
+
+/* 2. Syncing (Saving to cloud) */
+.sync-status-pill.syncing {
+    background: rgba(245, 166, 35, 0.08);
+    border-color: rgba(245, 166, 35, 0.3);
+    color: #b45309;
+}
+.sync-status-pill.syncing .sync-status-dot {
+    background-color: #f5a623;
+    animation: sync-rotate 1s linear infinite;
+}
+
+/* 3. Offline (No network) */
+.sync-status-pill.offline {
+    background: rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #b91c1c;
+}
+.sync-status-pill.offline .sync-status-dot {
+    background-color: #ef4444;
+    box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+}
+
+/* Animations */
+@keyframes sync-pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.6; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes sync-rotate {
+    0% { transform: scale(0.95); opacity: 0.7; }
+    50% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(0.95); opacity: 0.7; }
+}
+
+/* Dark theme overrides */
+[data-theme="dark"] .sync-status-pill.realtime {
+    background: rgba(34, 197, 94, 0.12);
+    color: #86efac;
+}
+[data-theme="dark"] .sync-status-pill.syncing {
+    background: rgba(245, 166, 35, 0.12);
+    color: #fde047;
+}
+[data-theme="dark"] .sync-status-pill.offline {
+    background: rgba(239, 68, 68, 0.12);
+    color: #fca5a5;
+}

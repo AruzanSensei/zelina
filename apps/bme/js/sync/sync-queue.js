@@ -33,7 +33,7 @@ class SyncQueueManager {
         this._isOnline = navigator.onLine;
         this._listeners = [];
         this._syncHandler = null; // Set by sync-engine
-        this._flushDelay = 300; // ms debounce
+        this._flushDelay = 1000; // ms debounce (1 second delay for batching rapid writes)
         this._retryBackoff = [1000, 2000, 4000, 8000, 16000]; // ms per retry
 
         // Listen for network status changes

@@ -1082,6 +1082,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Update premium sync status indicator UI
+    const updateSyncStatusUI = (status) => {
+        const indicator = document.getElementById('sync-status-indicator');
+        if (!indicator) return;
+
+        const text = indicator.querySelector('.sync-status-text');
+
+        // Clear existing classes
+        indicator.classList.remove('realtime', 'syncing', 'offline');
+
+        if (!navigator.onLine || status === 'offline') {
+            indicator.classList.add('offline');
+            if (text) text.textContent = 'Offline';
+            indicator.setAttribute('title', 'Koneksi terputus. Menggunakan database lokal (offline-first).');
+        } else if (status === 'syncing' || status === 'processing') {
+            indicator.classList.add('syncing');
+            if (text) text.textContent = 'Menyimpan...';
+            indicator.setAttribute('title', 'Sedang mengunggah perubahan ke cloud secara real-time.');
+        } else {
+            // Synced & Online -> Realtime!
+            indicator.classList.add('realtime');
+            if (text) text.textContent = 'Realtime';
+            indicator.setAttribute('title', 'Terhubung ke Supabase WebSocket. Data sinkron 100% dengan cloud.');
+        }
+    };
+
+    // Update initially on load
+    setTimeout(() => {
+        updateSyncStatusUI(navigator.onLine ? 'synced' : 'offline');
+    }, 100);
+
+    // Listen to browser network changes
+    window.addEventListener('online', () => updateSyncStatusUI('synced'));
+    window.addEventListener('offline', () => updateSyncStatusUI('offline'));
+
     // Deep conflict detector cloud vs local (comparing history content only)
     const detectConflict = (cloudData) => {
         console.log('[BME Sync Debug] Running detectConflict...');
@@ -1326,16 +1361,21 @@ document.addEventListener('DOMContentLoaded', () => {
                                 appState.notify('syncStatus', 'synced');
                             }
 
-                            // Listen for sync events to refresh UI
+                            // Listen for sync events to refresh UI and update status indicator
                             syncModule.onSyncEvent((type, data) => {
                                 if (type === 'remote-update' || type === 'remote-sync' || type === 'tab-update') {
                                     // Refresh local state from localStorage (which sync engine updates)
                                     _refreshStateFromStorage();
                                     syncActiveTabUI();
+                                    updateSyncStatusUI('synced');
                                 } else if (type === 'tab-logout' || type === 'remote-logout') {
                                     // Another tab/device logged out
                                     appState.handleLogoutCleanup();
                                     syncSidebarProfile();
+                                } else if (type === 'queue-status') {
+                                    updateSyncStatusUI(data.status);
+                                } else if (type === 'engine-status') {
+                                    updateSyncStatusUI(data.status);
                                 } else if (type === 'login-sync') {
                                     if (data?.event === 'conflict') {
                                         // Show conflict dialog
@@ -1354,10 +1394,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                     } else if (data?.event === 'sync-complete') {
                                         _refreshStateFromStorage();
                                         syncActiveTabUI();
+                                        updateSyncStatusUI('synced');
                                         if (window.showBMEAlert) {
                                             window.showBMEAlert(data.message || 'Sinkronisasi selesai.', 'success');
                                         }
                                     } else if (data?.event === 'sync-error') {
+                                        updateSyncStatusUI('offline');
                                         if (window.showBMEAlert) {
                                             window.showBMEAlert(data.message || 'Gagal sinkronisasi.', 'error');
                                         }
